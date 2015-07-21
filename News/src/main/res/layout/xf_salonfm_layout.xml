@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/gray_bg"
+              android:orientation="vertical">
+
+    <com.daimajia.numberprogressbar.NumberProgressBar
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/xf_salonfm_pb"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        custom:progress_reached_color="#FC0F1D"
+        custom:progress_text_visibility="invisible"
+        custom:progress_unreached_color="#84060B"/>
+
+    <com.handmark.pulltorefresh.library.PullToRefreshWebView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/xf_salonfm_wv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrHeaderSubTextColor="@color/grey_font"
+        ptr:ptrHeaderTextColor="@color/black"/>
+
+</LinearLayout>

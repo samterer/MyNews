@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:id="@+id/settig_main_root_id"
+            android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/title_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="50dip">
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/setting_shared_root_id"
+            android:clickable="true"
+            android:layout_width="match_parent"
+            android:layout_height="55dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="20dip"
+            >
+
+            <TextView
+                android:id="@+id/setting_txt1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:gravity="center_vertical"
+                android:text="绑定其他平台"
+                android:textColor="@color/black_bg"
+                android:textSize="18sp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dip"
+                android:background="@drawable/bbs_modle_jt"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/setting_font_root_id"
+            android:layout_width="match_parent"
+            android:layout_height="55dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="15dip"
+
+            android:clickable="true">
+
+            <TextView
+                android:id="@+id/setting_txt2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:gravity="center_vertical"
+                android:text="正文字号"
+                android:textColor="@color/black_bg"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/setting_font_modle_id"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_toLeftOf="@+id/setting_ziti_id"
+                android:gravity="center_vertical"
+                android:text="大"
+                android:textColor="@color/black_bg"
+                android:textSize="18sp"/>
+
+            <ImageView
+                android:id="@+id/setting_ziti_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dip"
+                android:background="@drawable/bbs_modle_jt"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/tuisong_layout_id"
+            android:layout_width="match_parent"
+            android:layout_height="55dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="15dip"
+            >
+
+            <TextView
+                android:id="@+id/setting_txt3"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:gravity="center_vertical"
+                android:text="推送开关"
+                android:textColor="@color/black_bg"
+                android:textSize="18sp"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true">
+
+                <com.hzpd.custorm.SlipButton
+                    android:id="@+id/setting_tuisong_id"
+                    android:layout_width="100dip"
+                    android:layout_height="30dip"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/img_layout_id"
+            android:layout_width="match_parent"
+            android:layout_height="55dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="15dip"
+            >
+
+            <TextView
+                android:id="@+id/setting_txt4"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:gravity="center_vertical"
+                android:text="省流量模式"
+                android:textColor="@color/black_bg"
+                android:textSize="18sp"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true">
+
+                <com.hzpd.custorm.SlipButton
+                    android:id="@+id/setting_offimg_id"
+                    android:layout_width="100dip"
+                    android:layout_height="30dip"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/setting_delete_root_id"
+            android:layout_width="match_parent"
+            android:layout_height="55dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="15dip"
+
+            android:clickable="true">
+
+            <TextView
+                android:id="@+id/setting_txt5"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:gravity="center_vertical"
+                android:text="清理缓存"
+                android:textColor="@color/black_bg"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/setting_delete_id"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dip"
+                android:gravity="center_vertical"
+                android:text="10m"
+                android:textColor="@color/black_bg"
+                android:textSize="18sp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/setting_faceback_root_id"
+            android:layout_width="match_parent"
+            android:layout_height="55dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="15dip"
+            >
+
+            <TextView
+                android:id="@+id/setting_txt6"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:gravity="center_vertical"
+                android:text="意见反馈"
+                android:textColor="@color/black_bg"
+                android:textSize="18sp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dip"
+                android:background="@drawable/bbs_modle_jt"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/setting_abort_root_id"
+            android:layout_width="match_parent"
+            android:layout_height="55dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="15dip"
+            >
+
+            <TextView
+                android:id="@+id/setting_txt7"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:gravity="center_vertical"
+                android:text="关于我们"
+                android:textColor="@color/black_bg"
+                android:textSize="18sp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dip"
+                android:background="@drawable/bbs_modle_jt"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+</ScrollView>

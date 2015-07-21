@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/edit_column_main_root_id"
+              android:background="@color/white"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dip">
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/edit_column_gridview_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f0f0f0"
+        android:orientation="vertical">
+
+        <com.hzpd.custorm.mygrild.DragGridView
+            android:id="@+id/gridview"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="20dip"
+            android:descendantFocusability="blocksDescendants"
+            android:gravity="center"
+            android:horizontalSpacing="5dip"
+            android:listSelector="@color/transparent"
+            android:numColumns="4"
+            android:scrollbars="vertical"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="5dp">
+        </com.hzpd.custorm.mygrild.DragGridView>
+
+        <TextView
+            android:id="@+id/mygrild_txt_id"
+            android:layout_width="wrap_content"
+            android:layout_height="40dip"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dip"
+            android:gravity="center"
+            android:text="长按上文调整，点击下文添加"
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/all_gridview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:layout_marginTop="10dip"
+        android:gravity="center"
+        android:horizontalSpacing="5dip"
+        android:listSelector="@color/transparent"
+        android:numColumns="4"
+        android:scrollbars="vertical"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="5dp">
+    </GridView>
+
+</LinearLayout>

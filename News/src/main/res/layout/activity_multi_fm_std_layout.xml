@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/zqzx_bg_lgrey"
+                android:orientation="vertical">
+
+    <include
+        android:id="@+id/std_title"
+        layout="@layout/stitle_layout"/>
+
+    <FrameLayout
+        android:id="@+id/std_fm"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/std_title"
+        />
+
+
+</RelativeLayout>

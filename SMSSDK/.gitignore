@@ -1,0 +1,12 @@
+# ignore all files first , then exclude some files later
+/*
+
+# project files
+!/libs
+!/src
+
+# git
+!/.gitignore
+
+# gradle
+!/build.gradle

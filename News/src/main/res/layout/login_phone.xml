@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/lg_hm_edittext_root"
+        android:layout_width="match_parent"
+        android:layout_height="130dip"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:layout_marginTop="20dip"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dip"
+            android:orientation="horizontal"
+            android:background="@drawable/login_shape">
+
+            <EditText
+                android:id="@+id/lg_ph_et"
+                android:layout_width="match_parent"
+                android:layout_height="60dip"
+                android:layout_marginLeft="8dip"
+                android:background="@color/transparent"
+                android:hint=" 请填写手机号"
+                android:maxLines="1"
+                android:drawableLeft="@drawable/icon_suppliers"
+                android:paddingBottom="3dip"
+                android:paddingLeft="3dip"
+                android:paddingRight="3dip"
+                android:paddingTop="3dip"
+                android:inputType="phone"
+                android:textCursorDrawable="@null"
+                android:textColor="@color/black"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dip"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="60dip"
+                android:background="@drawable/login_shape">
+
+                <EditText
+                    android:id="@+id/lg_sjb_et_passwd"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dip"
+                    android:background="@color/transparent"
+                    android:ellipsize="end"
+                    android:hint=" 短信验证码"
+                    android:drawableLeft="@drawable/icon_lock"
+                    android:maxLines="1"
+                    android:paddingBottom="3dip"
+                    android:paddingRight="3dip"
+                    android:paddingTop="3dip"
+                    android:paddingLeft="11dp"
+                    android:textCursorDrawable="@null"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"/>
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/lg_bt_getsms"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_horizontal"
+                android:text="获   取"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/login_bt_login_selector"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/lg_ph_bt_comfirm"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:layout_gravity="center_horizontal"
+            android:text="登    录"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/login_bt_login_selector"/>
+    </LinearLayout>
+</LinearLayout>

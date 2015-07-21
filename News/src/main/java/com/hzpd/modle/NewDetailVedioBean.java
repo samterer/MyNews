@@ -1,0 +1,46 @@
+package com.hzpd.modle;
+
+import java.io.Serializable;
+
+
+public class NewDetailVedioBean implements Serializable {
+
+	private String title;
+	private String mainpic;
+	private String videourl;
+	private String copyfrom;
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getMainpic() {
+		return mainpic;
+	}
+
+	public void setMainpic(String mainpic) {
+		this.mainpic = mainpic;
+	}
+
+	public String getVideourl() {
+		return videourl;
+	}
+
+	public void setVideourl(String videourl) {
+		this.videourl = videourl;
+	}
+
+	public String getCopyfrom() {
+		return copyfrom;
+	}
+
+	public void setCopyfrom(String copyfrom) {
+		this.copyfrom = copyfrom;
+	}
+
+
+}

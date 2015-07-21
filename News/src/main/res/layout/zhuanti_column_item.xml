@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:orientation="horizontal"
+    android:background="@color/zqzx_bg_grey">
+
+    <View
+        android:layout_width="6dp"
+        android:layout_height="match_parent"
+        android:background="@color/toolbar_bg"/>
+
+    <TextView
+        android:id="@+id/zhuanti_tv_column"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:gravity="center_vertical"
+        android:textSize="18sp"
+        android:textColor="@color/grey_font"/>
+
+</LinearLayout>

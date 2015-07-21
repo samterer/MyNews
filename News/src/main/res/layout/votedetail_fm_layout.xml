@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical">
+
+    <ScrollView
+        android:id="@+id/vote_body_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/vote_titlepic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/vote_txt_darbluebg"
+                android:padding="3dp"
+                android:text="投票规则"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/vote_info_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.2"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"/>
+
+            <com.viewpagerindicator.TabPageIndicator
+                android:id="@+id/vote_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/zqzx_bg_normal"/>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/vote_pager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/vote_btn_vote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:padding="4dp"
+                android:background="@drawable/login_bt_login_selector"
+                android:text="投 票"
+                android:textColor="@color/white"
+                android:textSize="18sp"/>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

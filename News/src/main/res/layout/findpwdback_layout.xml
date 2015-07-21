@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/findpwdback_root_ll"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical">
+
+    <include layout="@layout/stitle_layout"/>
+
+    <!-- 验证码 -->
+
+    <LinearLayout
+        android:id="@+id/fpb_ll_veify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/lgr_edittext_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="30dip"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dip"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/zq_register_icon_phone"/>
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/zqzx_bg_dark"/>
+
+                <EditText
+                    android:id="@+id/fpb_et_phone_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dip"
+                    android:layout_marginLeft="8dip"
+                    android:background="@color/transparent"
+                    android:hint="请填写手机号"
+                    android:inputType="phone"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/zqzx_bg_dark"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dip"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/zq_register_smscode_icon"/>
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/zqzx_bg_dark"/>
+
+                <EditText
+                    android:id="@+id/fpb_et_sms_id"
+                    android:layout_width="0dp"
+                    android:layout_height="50dip"
+                    android:layout_weight="1"
+                    android:background="@color/transparent"
+                    android:ellipsize="end"
+                    android:hint="短信验证码"
+                    android:maxLines="1"
+                    android:textColor="@color/zqzx_font_normal"
+                    android:textCursorDrawable="@null"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/fpb_bt_get"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/zq_special_greyborder_selector"
+                    android:drawablePadding="4dp"
+                    android:drawableRight="@drawable/zq_little_right"
+                    android:text="获取验证码"
+                    android:textColor="@drawable/zq_boderbtn_text_selector"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/zqzx_bg_dark"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/fpb_bt_verify"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dip"
+            android:background="@drawable/login_bt_login_selector"
+            android:text="验    证"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
+    </LinearLayout>
+    <!-- 密码找回 -->
+
+    <LinearLayout
+        android:id="@+id/fpb_ll_reset"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="30dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/zq_register_pwd_icon"/>
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/zqzx_bg_dark"/>
+
+            <EditText
+                android:id="@+id/fpb_et_pwd_id"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/transparent"
+                android:hint="输入新密码"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:textColor="@color/zqzx_font_normal"
+                android:textCursorDrawable="@null"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/zqzx_bg_dark"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/zq_register_pwd_icon"/>
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/zqzx_bg_dark"/>
+
+            <EditText
+                android:id="@+id/fpb_et_pwd_id2"
+                android:layout_width="match_parent"
+                android:layout_height="50dip"
+                android:background="@color/transparent"
+                android:hint="确认新密码"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:textColor="@color/zqzx_font_normal"
+                android:textCursorDrawable="@null"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/zqzx_bg_dark"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="20dip"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/fpb_bt_submmit"
+                android:layout_width="match_parent"
+                android:layout_height="50dip"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/login_bt_login_selector"
+                android:text="提    交"
+                android:textColor="@color/white"
+                android:textSize="20sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

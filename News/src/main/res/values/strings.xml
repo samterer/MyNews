@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+		"     (&#34; 或 &quot;) 
+		'     (&#39; 或 &apos;) 
+		&     (&#38; 或 &amp;) 
+		lt(<) (&#60; 或 &lt;) 
+		gt(>) (&#62; 或 &gt;) 
+
+    -->
+    <string name="app_name">JoyNews</string>
+    <string name="VideoView_error_text_unknown">对不起,这个视频不能播放。</string>
+    <string name="VideoView_error_text_invalid_progressive_playback">Sorry, this video is not valid for streaming to
+		this device.</string>
+    <string name="VideoView_error_button">OK</string>
+    <string name="VideoView_error_title">Cannot play video</string>
+    <string name="mediacontroller_play_pause">Play/Pause</string>
+    <string name="video_layout_loading">正在缓冲...</string>
+    <string name="init_decoders">正在进行第一次解压解码包...</string>
+    <string name="update_cencal">(点击取消下载)</string>
+    <string name="rf_co_des">%1$s客户端 V %2$s\n技术支持  慧度科技 99cms.cn</string>
+    <string name="shared_img">shared_img</string>
+    <string name="shared_appdownload">shared_appdownload</string>
+    <string name="shared_site">shared_site</string>
+    <!--  -->
+    <string name="smsappkey">smsappkey</string>
+    <string name="smsappsecret">smsappsecret</string>
+
+    <!--  -->
+    <string name="select_mode">选择模式</string>
+    <string name="mode_single">单选</string>
+    <string name="mode_multi">多选</string>
+    <string name="max_select_amount">最大选择数量</string>
+    <string name="hint_default_amount">默认数量为9</string>
+    <string name="enable_camera">是否启用照相机</string>
+    <string name="enable">是</string>
+    <string name="disable">否</string>
+    <string name="go_select">图片选择</string>
+    <string name="folder_all">所有照片</string>
+    <string name="preview">预览</string>
+    <string name="msg_no_camera">没有系统相机</string>
+    <string name="msg_amount_limit">已经达到最高选择数量</string>
+    <!--  -->
+
+    <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
+
+
+</resources>

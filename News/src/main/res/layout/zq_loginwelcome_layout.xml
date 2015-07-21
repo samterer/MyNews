@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/zq_loginwelbg_rl"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/zq_loginwel_iv_back"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:src="@drawable/zq_back_selector"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:text="登录"/>
+
+    <ImageView
+        android:id="@+id/zq_loginwel_iv_logo"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:src="@drawable/zq_loginwel_icon"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"/>
+
+    <ImageView
+        android:id="@+id/zq_loginwel_iv_account"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/zq_loginwel_iv_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/zq_login_account_selector"/>
+
+    <ImageView
+        android:id="@+id/zq_loginwel_iv_tenet"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="-10dp"
+        android:layout_toLeftOf="@id/zq_loginwel_iv_logo"
+        android:layout_marginBottom="80dp"
+        android:src="@drawable/zq_login_wechat_selector"/>
+
+
+    <ImageView
+        android:id="@+id/zq_loginwel_iv_sina"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp"
+        android:layout_marginLeft="-10dp"
+        android:layout_toRightOf="@id/zq_loginwel_iv_logo"
+        android:src="@drawable/zq_login_sina_selector"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:text="无需注册，用常用社交账户一键登录"
+        android:layout_above="@id/zq_loginwel_iv_sina"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        />
+
+</RelativeLayout>

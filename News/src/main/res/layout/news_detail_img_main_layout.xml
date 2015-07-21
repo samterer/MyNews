@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@color/black"
+                xmlns:app="http://schemas.android.com/apk/res/com.hzpd.hflt">
+
+    <com.hzpd.custorm.ImageViewPager
+        android:id="@+id/img_detail_test_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+    <!-- head -->
+    <RelativeLayout
+        android:id="@+id/album_rl_head"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <LinearLayout
+            android:id="@+id/main_title_personal"
+            android:layout_width="50dip"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dip"
+            android:clickable="true"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dip"
+                android:background="@drawable/back"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/imgdetails_title_pl"
+            android:layout_width="50dip"
+            android:layout_height="fill_parent"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:gravity="center"
+            android:visibility="invisible"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="4dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/bt_more_unselected"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/imgdetails_title_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:gravity="center"
+            android:layout_marginRight="5dp"
+            android:layout_centerVertical="true"
+            android:visibility="invisible"
+            android:layout_toLeftOf="@id/imgdetails_title_pl"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/imgdetails_title_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/yellow_font"
+                android:textSize="18sp"
+                android:background="@drawable/zqzx_commentsblue"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+    <com.hzpd.custorm.DonutProgress
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/album_donutProgress"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerInParent="true"
+        app:donut_progress="0"
+        app:donut_text_size="22sp"
+        app:donut_text_color="@color/zqzx_txt_darkblue"
+        app:donut_finished_color="@color/zqzx_txt_darkblue"
+        app:donut_background_color="@color/grey_font"
+        android:visibility="gone"
+        />
+
+
+    <!-- bottom -->
+    <RelativeLayout
+        android:id="@+id/album_rl_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="60dp"
+        android:background="@drawable/picloop_shape">
+
+        <RelativeLayout
+            android:id="@+id/img_detail_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dip">
+
+            <TextView
+                android:id="@+id/img_detail_title_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/img_detial_number_id"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/img_detial_number_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dip"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/img_detail_title">
+
+            <TextView
+                android:id="@+id/img_detail_content_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="14sp"/>
+        </ScrollView>
+    </RelativeLayout>
+
+    <!--    <LinearLayout
+          android:id="@+id/news_detail_ll_bottom2"
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:orientation="horizontal"
+          android:gravity="center_vertical"
+          android:paddingLeft="10dp"
+          android:paddingRight="10dp"
+          android:visibility="gone"
+          android:layout_alignParentBottom="true"
+          android:background="#dedede">
+              <EditText
+                  android:id="@+id/news_detail_etcom"
+               android:layout_width="0dp"
+               android:layout_weight="1"
+               android:layout_height="wrap_content"
+               android:textSize="16sp"
+               android:padding="3dp"
+               android:textColor="@color/black"
+               android:drawableLeft="@drawable/zqzx_et_lp"
+               android:background="@color/white"/>
+
+              <ImageView
+                  android:id="@+id/news_detail_ivcom"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginLeft="3dp"
+               android:src="@drawable/tijiao"
+               android:clickable="true"
+                  />
+
+       </LinearLayout> -->
+
+</RelativeLayout>

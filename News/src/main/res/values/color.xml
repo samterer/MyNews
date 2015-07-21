@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="vote_item_two">#696969</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000</color>
+    <color name="black_bg">#2f2f2f</color>
+    <color name="people_num">#0178c7</color>
+    <color name="translucency">#e0000000</color>
+    <color name="orange">#ffa500</color>
+    <color name="blue1">#836FFF</color>
+    <color name="transparent">#00000000</color>
+    <color name="trans">#50000000</color>
+    <color name="background">#e5e5e5</color>
+    <color name="transparent_background">#50000000</color>
+    <color name="text_gray">#4F4F4F</color>
+    <color name="grey21">#333333</color>
+    <color name="grey22">#757575</color>
+    <color name="button_bg">#ca3b41</color>
+    <color name="gray_bg">#9d9d9d</color>
+    <!-- 夜间颜色配置 -->
+    <color name="font_dialog_bg">#00000000</color>
+    <color name="form_bg">#F4F4F4</color>
+    <color name="form_content_bg">#EBEBEB</color>
+    <color name="checkComment_comment_red">#A24040</color>
+
+    <!-- 下面是蓝色样式颜色-->
+
+    <!-- 下面是蓝色样式的夜景模式 -->
+    <color name="blue_night_form_list_txt_bg">#999999</color>
+
+    <!--  -->
+    <color name="grey_divider">#c9c9c9</color>
+    <color name="grey_font">#666666</color>
+    <color name="grey_middle">#898989</color>
+
+    <color name="yellow_font">#eed300</color>
+    <color name="dark_grey_divider">#888888</color>
+    <color name="reply1_bg">#f3f3f3</color>
+    <color name="bottom_tab_bg">#f7f7f7</color>
+    <color name="rightfrag_login_bg">#1ab6f2</color>
+    <color name="blue_title_bg">#066db9</color>
+    <color name="blue_title_bg_selected">#c9eaf7</color>
+    <color name="bm_grey">#fafafa</color>
+
+    <color name="blue_light_divider_zqzx">#4bc6df</color>
+    <color name="blue_light_title_zqzx">#dfffff</color>
+
+    <color name="result_view">#b0000000</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
+
+
+    <color name="editColumn_frame">#bfbfbf</color>
+    <color name="editColumn_bannerbg">#f7f7f7</color>
+    <color name="editColumn_fontgrey">#999999</color>
+    <color name="editColumn_line">#c0c0c0</color>
+    <color name="editColumn_solid">#eeeeee</color>
+    <color name="editColumn_fontblue">#3399ff</color>
+    <color name="aboutus_greyfont">#c0c0c0</color>
+
+    <color name="red">#ff0000</color>
+    <!-- 红色 -->
+
+    <color name="albumback">#E1E0DE</color>
+    <!--  -->
+    <!-- vote -->
+    <!--  -->
+    <color name="vote_txt_darbluebg">#0045a2</color>
+    <color name="vote_txt_grey">#777777</color>
+    <color name="zqzx_txt_darkblue">#163e80</color>
+    <color name="zqzx_txt_relation_bg">#2991e0</color>
+    <color name="zqzx_bg_grey">#e4e4e4</color>
+    <color name="zqzx_channel_grey">#a0a0a0</color>
+    <color name="zqzx_bg_lgrey">#fcfcfc</color>
+    <color name="zqzx_welcome_blue">#24adfc</color>
+
+    <!-- ############################################################### -->
+
+
+    <!-- 新皮肤 -->
+    <color name="zqzx_bg_dark">#b5b5b6</color>
+    <color name="zqzx_bg_normal">#efefef</color>
+    <color name="zqzx_bg_light">#f4f4f4</color>
+    <color name="zqzx_font_dark">#231815</color>
+    <color name="zqzx_font_normal">#595757</color>
+    <color name="zqzx_font_light">#b5b5b7</color>
+
+
+    <color name="zqzx_green">#8fc31f</color>
+    <color name="zqzx_pink">#e4007f</color>
+    <color name="zqzx_yellow">#f39800</color>
+    <color name="zqzx_orage">#ea5514</color>
+    <color name="zqzx_logintxt_blue">#ea5514</color>
+
+    <color name="zqzx_album_darkgreen">#8fc31f</color>
+    <color name="zqzx_album_lightgreen">#888fc320</color>
+
+    <color name="zqzx_album_darkpink">#e4007f</color>
+    <color name="zqzx_album_lightpink">#88e50080</color>
+
+    <color name="zqzx_album_darkyellow">#f39800</color>
+    <color name="zqzx_album_lightyellow">#88f39900</color>
+
+    <color name="zqzx_album_darkorange">#ea5514</color>
+    <color name="zqzx_album_lightorange">#88eb5616</color>
+    <!--c0d986  -->
+    <color name="zqzx_btn_unpress_blue">#036eb8</color>
+    <color name="zqzx_btn_press_grey">#595757</color>
+    <color name="zqzx_login_btn_unpress_orange">#f39800</color>
+    <color name="zqzx_login_btn_press_grey">#595757</color>
+    <color name="zqzx_left_html">#368ac4</color>
+
+
+    <color name="nav_title_unselected">#b5b5b7</color>
+
+    <!-- color -->
+    <color name="toolbar_bg">#4B3359</color>
+    <color name="content_bg">#5A6FD8</color>
+    <color name="text_color">#5A6FD8</color>
+    <color name="text_grey_color">#5A6FD8</color>
+
+    <!-- color -->
+    <color name="zjxf_grey_font">#4f4745</color>
+    <color name="zjxf_grey_font_en">#cdcdcd</color>
+    <!-- forum -->
+    <color name="forum_list_bg">#E7E7DA</color>
+    <color name="forum_list_item_selected">#ECECEC</color>
+    <color name="forum_thread_blue">#567FB6</color>
+    <!-- 取消,发布蓝色样式 -->
+    <color name="forum_thread_red">#FF4141</color>
+    <!-- 取消,今天帖子,红色样式 -->
+
+</resources>

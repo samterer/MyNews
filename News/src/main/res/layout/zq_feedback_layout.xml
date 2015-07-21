@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/zqzx_bg_normal">
+
+    <include
+        layout="@layout/stitle_layout"/>
+
+    <EditText
+        android:id="@+id/zq_feedback_et_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:minLines="6"
+        android:gravity="left|top"
+        android:textSize="16sp"
+        android:textColor="@color/zqzx_font_normal"
+        android:hint="请留下您的意见或建议，我们将为您不断改进"
+        android:background="@drawable/zq_feedetbg_shape"
+        />
+
+
+    <EditText
+        android:id="@+id/zq_feedback_et_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="30dp"
+        android:textColor="@color/zqzx_font_normal"
+        android:hint="请留下您的邮箱以便我们给您回复"
+        android:background="@drawable/zq_feedetbg_shape"
+        />
+
+    <Button
+        android:id="@+id/zq_feedback_btn_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:background="@drawable/zq_feedback_btn_selector"
+        android:text="提交"/>
+
+</LinearLayout>

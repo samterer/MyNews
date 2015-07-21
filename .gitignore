@@ -1,0 +1,20 @@
+# ignore all files first , then exclude some files later
+/*
+
+# projects
+!/News
+!/MySilding
+!/OneKeyShare
+!/PullToRefreshlib
+!/ShareSDK
+!/SMSSDK
+
+# git
+!/.gitignore
+!/.gitmodules
+
+# gradle
+!/build.gradle
+!/settings.gradle
+!/gradlew
+!/gradlew.bat

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/special_header_iv"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:src="@drawable/default_bg"
+        android:scaleType="centerCrop"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/special_header_tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:textColor="@color/zqzx_font_normal"
+            android:drawableLeft="@drawable/zq_subscript_special"
+            android:drawablePadding="10dp"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/special_header_tv_con"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:background="@drawable/zq_special_greyborder_shape"
+            android:ellipsize="end"
+            android:layout_marginLeft="4dp"
+            android:textColor="@color/zqzx_font_light"
+            android:visibility="invisible"
+            android:maxLines="1"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>
+
+

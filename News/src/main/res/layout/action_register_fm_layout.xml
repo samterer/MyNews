@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical">
+
+    <ScrollView
+        android:id="@+id/reg_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/registration_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <!-- 1 -->
+
+            <LinearLayout
+                android:id="@+id/action_reg_ll1"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/login_shape"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="4dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/action_reg_item_star1_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="3dp"
+                    android:src="@drawable/littlestar"
+                    android:visibility="invisible"/>
+
+                <TextView
+                    android:id="@+id/action_reg_item_lable1_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:text="hello"
+                    android:textColor="@color/grey_font"
+                    android:textSize="20sp"/>
+
+                <EditText
+                    android:id="@+id/action_reg_item_content1_et"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+            <!-- 2 -->
+
+            <LinearLayout
+                android:id="@+id/action_reg_ll2"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/login_shape"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="4dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/action_reg_item_star2_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="3dp"
+                    android:src="@drawable/littlestar"
+                    android:visibility="invisible"/>
+
+                <TextView
+                    android:id="@+id/action_reg_item_lable2_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey_font"
+                    android:textSize="20sp"/>
+
+                <EditText
+                    android:id="@+id/action_reg_item_content2_et"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+            <!-- 3 -->
+
+            <LinearLayout
+                android:id="@+id/action_reg_ll3"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/login_shape"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="4dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/action_reg_item_star3_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="3dp"
+                    android:src="@drawable/littlestar"
+                    android:visibility="invisible"/>
+
+                <TextView
+                    android:id="@+id/action_reg_item_lable3_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey_font"
+                    android:textSize="20sp"/>
+
+                <EditText
+                    android:id="@+id/action_reg_item_content3_et"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+            <!-- 4 -->
+
+            <LinearLayout
+                android:id="@+id/action_reg_ll4"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/login_shape"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="4dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/action_reg_item_star4_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="3dp"
+                    android:src="@drawable/littlestar"
+                    android:visibility="invisible"/>
+
+                <TextView
+                    android:id="@+id/action_reg_item_lable4_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey_font"
+                    android:textSize="20sp"/>
+
+                <EditText
+                    android:id="@+id/action_reg_item_content4_et"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+            <!-- 5 -->
+
+            <LinearLayout
+                android:id="@+id/action_reg_ll5"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/login_shape"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="4dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/action_reg_item_star5_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="3dp"
+                    android:src="@drawable/littlestar"
+                    android:visibility="invisible"/>
+
+                <TextView
+                    android:id="@+id/action_reg_item_lable5_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey_font"
+                    android:textSize="20sp"/>
+
+                <EditText
+                    android:id="@+id/action_reg_item_content5_et"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+            <!-- 6 -->
+
+            <LinearLayout
+                android:id="@+id/action_reg_ll6"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/login_shape"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="4dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/action_reg_item_star6_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="3dp"
+                    android:src="@drawable/littlestar"
+                    android:visibility="invisible"/>
+
+                <TextView
+                    android:id="@+id/action_reg_item_lable6_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey_font"
+                    android:textSize="20sp"/>
+
+                <EditText
+                    android:id="@+id/action_reg_item_content6_et"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+            <!-- 7 -->
+
+            <LinearLayout
+                android:id="@+id/action_reg_ll7"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/login_shape"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="4dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/action_reg_item_star7_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="3dp"
+                    android:src="@drawable/littlestar"
+                    android:visibility="invisible"/>
+
+                <TextView
+                    android:id="@+id/action_reg_item_lable7_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey_font"
+                    android:textSize="20sp"/>
+
+                <EditText
+                    android:id="@+id/action_reg_item_content7_et"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+            <!-- 8 -->
+
+            <LinearLayout
+                android:id="@+id/action_reg_ll8"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/login_shape"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="4dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/action_reg_item_star8_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="3dp"
+                    android:src="@drawable/littlestar"
+                    android:visibility="invisible"/>
+
+                <TextView
+                    android:id="@+id/action_reg_item_lable8_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey_font"
+                    android:textSize="20sp"/>
+
+                <EditText
+                    android:id="@+id/action_reg_item_content8_et"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+            <!-- 9 -->
+
+            <LinearLayout
+                android:id="@+id/action_reg_ll9"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/login_shape"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="4dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/action_reg_item_star9_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="3dp"
+                    android:src="@drawable/littlestar"
+                    android:visibility="invisible"/>
+
+                <TextView
+                    android:id="@+id/action_reg_item_lable9_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey_font"
+                    android:textSize="20sp"/>
+
+                <EditText
+                    android:id="@+id/action_reg_item_content9_et"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+
+
+            <com.hzpd.custorm.GridViewInScrollView
+                android:id="@+id/action_reg_photo_gv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:horizontalSpacing="2dp"
+                android:verticalSpacing="2dp"
+                android:stretchMode="columnWidth"
+                android:clipToPadding="false"
+                android:cacheColorHint="@color/transparent"
+                android:listSelector="@color/transparent"
+                android:numColumns="3"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp"/>
+
+            <Button
+                android:id="@+id/registration_submit_bt"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/login_bt_login_selector"
+                android:text="报\t\t名"
+                android:textColor="@color/white"
+                android:textSize="20sp"/>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

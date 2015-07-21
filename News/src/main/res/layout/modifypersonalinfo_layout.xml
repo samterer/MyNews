@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/mi_ll_root"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/white">
+
+    <include
+        layout="@layout/stitle_layout"/>
+
+    <LinearLayout
+        android:id="@+id/mi_ll_nick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:layout_marginTop="50dp"
+        android:visibility="gone"
+        android:background="@color/bottom_tab_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="@color/blue_title_bg"
+            android:text="昵称："/>
+
+        <EditText
+            android:id="@+id/mi_et_context"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:hint="请输入新的昵称..."
+            android:textColor="@color/blue_title_bg"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="8dp"
+            android:maxLength="8"
+            android:background="@null"
+            android:textColorHint="@color/grey_font"/>
+
+        <ImageView
+            android:id="@+id/mi_im_clean"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/mi_close"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mi_ll_gender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        android:gravity="center_vertical"
+        android:background="@color/bottom_tab_bg"
+        android:layout_marginTop="50dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="@color/blue_title_bg"
+            android:text="性别："/>
+
+        <RadioGroup
+            android:id="@+id/mi_rg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <RadioButton
+                android:id="@+id/mi_rb1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 男"
+                android:textColor="@color/blue_title_bg"
+                android:button="@drawable/radiobutton_selector"
+                android:textSize="20sp"/>
+
+            <RadioButton
+                android:id="@+id/mi_rb2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 女"
+                android:layout_marginLeft="4dp"
+                android:textColor="@color/blue_title_bg"
+                android:button="@drawable/radiobutton_selector"
+                android:textSize="20sp"/>
+
+            <RadioButton
+                android:id="@+id/mi_rb3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 保密"
+                android:layout_marginLeft="4dp"
+                android:checked="true"
+                android:textColor="@color/blue_title_bg"
+                android:button="@drawable/radiobutton_selector"
+                android:textSize="20sp"/>
+        </RadioGroup>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/mi_bt_comfirm"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:layout_gravity="center_horizontal"
+        android:text="提   交"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/login_bt_login_selector"/>
+</LinearLayout>
