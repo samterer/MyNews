@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dip"
-            android:text="字体设置"
+            android:text="@string/settings_font"
             android:textColor="@color/zqzx_font_normal"
             android:textSize="20sp"/>
 
@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:button="@drawable/zq_textradiobtn_selector"
-                android:text="大"
+                android:text="@string/settings_option_font_large"
                 android:textColor="@color/zqzx_font_normal"
                 android:textSize="18sp"/>
 
@@ -48,7 +48,7 @@
                 android:layout_marginLeft="14dp"
                 android:layout_marginRight="14dp"
                 android:button="@drawable/zq_textradiobtn_selector"
-                android:text="中"
+                android:text="@string/settings_option_font_medium"
                 android:textColor="@color/zqzx_font_normal"
                 android:textSize="18sp"/>
 
@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:button="@drawable/zq_textradiobtn_selector"
-                android:text="小"
+                android:text="@string/settings_option_font_small"
                 android:textColor="@color/zqzx_font_normal"
                 android:textSize="18sp"/>
         </RadioGroup>
@@ -82,13 +82,13 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
             android:gravity="center_vertical"
-            android:text="推送开关"
+            android:text="@string/settings_push"
             android:textColor="@color/zqzx_font_normal"
             android:textSize="20sp"/>
 
         <com.hzpd.custorm.SlideSwitch
-            xmlns:slideswitch="http://schemas.android.com/apk/res-auto"
             android:id="@+id/zqzx_setting_push"
+            xmlns:slideswitch="http://schemas.android.com/apk/res-auto"
             android:layout_width="60dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
@@ -116,13 +116,13 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
             android:gravity="center_vertical"
-            android:text="微博绑定"
+            android:text="@string/settings_weibo_bind"
             android:textColor="@color/zqzx_font_normal"
             android:textSize="20sp"/>
 
         <com.hzpd.custorm.SlideSwitch
-            xmlns:slideswitch="http://schemas.android.com/apk/res-auto"
             android:id="@+id/zqzx_setting_weibo"
+            xmlns:slideswitch="http://schemas.android.com/apk/res-auto"
             android:layout_width="60dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
@@ -151,7 +151,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
             android:gravity="center_vertical"
-            android:text="清理缓存"
+            android:text="@string/settings_clear_cache"
             android:textColor="@color/zqzx_font_normal"
             android:textSize="20sp"/>
 
@@ -188,7 +188,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
             android:gravity="center_vertical"
-            android:text="检查更新"
+            android:text="@string/settings_check_update"
             android:textColor="@color/zqzx_font_normal"
             android:textSize="20sp"/>
 
@@ -225,7 +225,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
             android:gravity="center_vertical"
-            android:text="意见反馈"
+            android:text="@string/settings_feedback"
             android:textColor="@color/zqzx_font_normal"
             android:textSize="20sp"/>
 
@@ -252,14 +252,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/setting_item_selector"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
             android:gravity="center_vertical"
-            android:text="关于我们"
+            android:text="@string/settings_about_us"
             android:textColor="@color/zqzx_font_normal"
             android:textSize="20sp"/>
 

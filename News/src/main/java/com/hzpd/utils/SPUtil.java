@@ -15,6 +15,7 @@ import com.lidroid.xutils.util.LogUtils;
 public class SPUtil {
 	/** 配置名称 * */
 	private static final String SETTINGS = "HZPD";
+	/** 缓存 */
 	private ACache msp;
 	private static SPUtil mSPutil;
 

@@ -87,6 +87,7 @@ public class InitService extends IntentService {
 			SPUtil.getInstance().setCacheUpdatetime(
 					obj.getString("update_time"));
 			switch (obj.getIntValue("code")) {
+				// TODO 为什么要删除？
 				case 200: {
 					List<CacheBean> cacheList = FjsonUtil.parseArray(
 							obj.getString("data"), CacheBean.class);
@@ -196,6 +197,7 @@ public class InitService extends IntentService {
 	private void GetWelcomePicJson() {
 		LogUtils.i("GetWelcomePicJson");
 
+		// 请求网络，获取开屏图片信息
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
 		ResponseStream rs = null;
@@ -205,18 +207,16 @@ public class InitService extends IntentService {
 			e.printStackTrace();
 		}
 
+		// 读取请求结果
 		if (null == rs) {
 			return;
 		}
-
 		String response = null;
-
 		try {
 			response = rs.readString();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		if (TextUtils.isEmpty(response)) {
 			return;
 		}
@@ -228,15 +228,17 @@ public class InitService extends IntentService {
 			return;
 		}
 
+		// 解析JSON
 		if (200 == object.getIntValue("code")) {
-			JSONObject obj;
+			JSONObject joData;
 			try {
-				obj = object.getJSONObject("data");
+				joData = object.getJSONObject("data");
 			} catch (Exception e1) {
 				e1.printStackTrace();
 				return;
 			}
-			SPUtil.getInstance().setWelcome(obj);
+			// 缓存json到sd卡
+			SPUtil.getInstance().setWelcome(joData);
 
 			// 强制更新
 			/**
@@ -248,18 +250,18 @@ public class InitService extends IntentService {
 			 * UmengUpdateAgent.silentUpdate(InitService.this); }
 			 */
 			// 广告图片
-			downloadPic(obj.getString("imgurl"));
+			downloadPic(joData.getString("imgurl"));
 
 			// 登录背景
-			downloadPic(obj.getString("loginbg"));
+			downloadPic(joData.getString("loginbg"));
 
 			// 个人信息背景
-			downloadPic(obj.getString("userinfobg"));
+			downloadPic(joData.getString("userinfobg"));
 
 			// 广告
 			List<Adbean> arrayChannel;
 			try {
-				arrayChannel = JSONObject.parseArray(obj.getString("type"),
+				arrayChannel = JSONObject.parseArray(joData.getString("type"),
 						Adbean.class);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -273,7 +275,7 @@ public class InitService extends IntentService {
 			List<Adbean> arrayNewsdetail;
 			try {
 				arrayNewsdetail = JSONObject.parseArray(
-						obj.getJSONArray("content").toJSONString(),
+						joData.getJSONArray("content").toJSONString(),
 						Adbean.class);
 			} catch (Exception e) {
 				e.printStackTrace();

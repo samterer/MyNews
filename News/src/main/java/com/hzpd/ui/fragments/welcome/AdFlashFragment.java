@@ -63,11 +63,11 @@ public class AdFlashFragment extends BaseFragment {
 	}
 
 	private void setImageViewAnimation() {
+		// 获取动画时间
 		String duration = null;
 		if (null != obj) {
 			duration = obj.getString("timesize");
 		}
-
 		int dur = 2000;
 		if (!TextUtils.isEmpty(duration)) {
 			if (TextUtils.isDigitsOnly(duration)) {
@@ -78,6 +78,7 @@ public class AdFlashFragment extends BaseFragment {
 				}
 			}
 		}
+
 		// 初始化
 		animSetFadein = new AnimatorSet();
 		ObjectAnimator oanim = ObjectAnimator.ofFloat(adflash_img_ad, "alpha",

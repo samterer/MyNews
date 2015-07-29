@@ -69,10 +69,11 @@ public class App extends Application {
 	}
 
 	private void init() {
-
+		// 初始化广告容器
 		channelADMap = new HashMap<String, Adbean>();
 		newsDetailADMap = new HashMap<String, Adbean>();
 
+		// 获取应用当前版本号
 		PackageManager localPackageManager = this.getPackageManager();
 		try {
 			PackageInfo localPackageInfo =
@@ -81,11 +82,11 @@ public class App extends Application {
 
 			if (localPackageInfo != null)
 				versionName = localPackageInfo.versionName;
-
 		} catch (PackageManager.NameNotFoundException localNameNotFoundException) {
 			localNameNotFoundException.printStackTrace();
 		}
 
+		// 初始化UniversalImageLoader
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration
 				.Builder(getApplicationContext())
 				.threadPriority(Thread.NORM_PRIORITY - 2)
@@ -102,6 +103,7 @@ public class App extends Application {
 				.build();
 		ImageLoader.getInstance().init(config);
 
+		// xUtils日志控制
 		LogUtils.allowD = debug;
 		LogUtils.allowI = debug;
 		LogUtils.allowE = debug;
@@ -109,7 +111,11 @@ public class App extends Application {
 		LogUtils.allowW = debug;
 		LogUtils.allowWtf = debug;
 
+		// 极光推送
 		JPushInterface.setDebugMode(debug);    // 设置开启日志,发布时请关闭日志
+		JPushInterface.init(this);
+
+		// 友盟统计debug模式
 		MobclickAgent.setDebugMode(debug); // 设置开启日志,发布时请关闭日志
 
 		/**
@@ -140,19 +146,19 @@ public class App extends Application {
 
 		menuList = new SparseArray<>(40);
 
-		Menu_Item_Bean lfbean0 = new Menu_Item_Bean(CODE.MENU_NEWS, R.drawable.zy_icon_xinwenfabu, "新闻资讯");
-		Menu_Item_Bean lfbean1 = new Menu_Item_Bean(CODE.MENU_ALBUM, R.drawable.zy_icon_shuzibao, "图集");
-		Menu_Item_Bean lfbean2 = new Menu_Item_Bean(CODE.MENU_VIDEO_RECORDING, R.drawable.zy_icon_xinwenfabu, "视频点播");
-		Menu_Item_Bean lfbean5 = new Menu_Item_Bean(CODE.MENU_SPECIAL, R.drawable.zy_icon_zhuanti, "专题报道");
-		Menu_Item_Bean lfbean19 = new Menu_Item_Bean(CODE.MENU_SEARCH, R.drawable.zy_icon_xinwenfabu, "搜索");
-		Menu_Item_Bean lfbean21 = new Menu_Item_Bean(CODE.MENU_ACTION, R.drawable.zy_icon_xinwenfabu, "活动");
+		Menu_Item_Bean lfbean0 = new Menu_Item_Bean(CODE.MENU_NEWS, R.drawable.zy_icon_xinwenfabu, getString(R.string.menu_news));
+		Menu_Item_Bean lfbean1 = new Menu_Item_Bean(CODE.MENU_ALBUM, R.drawable.zy_icon_shuzibao, getString(R.string.menu_album));
+		Menu_Item_Bean lfbean2 = new Menu_Item_Bean(CODE.MENU_VIDEO_RECORDING, R.drawable.zy_icon_xinwenfabu, getString(R.string.menu_video));
+		Menu_Item_Bean lfbean5 = new Menu_Item_Bean(CODE.MENU_SPECIAL, R.drawable.zy_icon_zhuanti, getString(R.string.menu_subject));
+		Menu_Item_Bean lfbean19 = new Menu_Item_Bean(CODE.MENU_SEARCH, R.drawable.zy_icon_xinwenfabu, getString(R.string.menu_search));
+		Menu_Item_Bean lfbean21 = new Menu_Item_Bean(CODE.MENU_ACTION, R.drawable.zy_icon_xinwenfabu, getString(R.string.menu_activity));
 
 		menuList.put(lfbean0.getId(), lfbean0);
 		menuList.put(lfbean1.getId(), lfbean1);
 		menuList.put(lfbean2.getId(), lfbean2);
 		menuList.put(lfbean5.getId(), lfbean5);
-		menuList.put(lfbean21.getId(), lfbean21);
 		menuList.put(lfbean19.getId(), lfbean19);
+		menuList.put(lfbean21.getId(), lfbean21);
 
 	}
 
@@ -176,12 +182,20 @@ public class App extends Application {
 	public static final String albumListDb = "albumlist.db"; //图集列表
 	public static final String videoListDb = "videolist.db"; //视频列表
 
+	/** 频道信息 */
 	public static final String mTitle = "title.dat";//频道信息
 	public static List<String> mImageList;//
 
 
+	/**
+	 * 获取缓存存放路径
+	 *
+	 * @return 缓存存放路径
+	 */
 	public String getAllDiskCacheDir() {
 		String cachePath = "";
+
+		// 先获取SD卡缓存目录
 		String state = Environment.getExternalStorageState();
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
 			File externalFile = getApplicationContext().getExternalCacheDir();
@@ -190,6 +204,7 @@ public class App extends Application {
 			}
 		}
 
+		// 若无SD卡，在获取内部缓存目录
 		if (TextUtils.isEmpty(cachePath)) {
 			File dir = getApplicationContext().getCacheDir();
 			if (!dir.exists()) {
@@ -210,17 +225,18 @@ public class App extends Application {
 		return file.toString();
 	}
 
+	/** 获取指定路径的文件对象，确保该文件所在目录被创建，该路径创建一个空文件 */
 	public static File getFile(String path) {
-
+		// 创建目录
 		int fp = path.lastIndexOf(File.separator);
 		String sfp = path.substring(0, fp);
 		LogUtils.i("spf-->" + sfp);
 		File fpath = new File(sfp);
-
 		if (!fpath.exists() && !fpath.isDirectory()) {
 			fpath.mkdirs();
 		}
 
+		// 创建空文件
 		File f = new File(path);
 		if (!f.exists()) {
 			try {
@@ -240,6 +256,12 @@ public class App extends Application {
 		return f;
 	}
 
+	/**
+	 * 获取文本文件的全部字符内容
+	 *
+	 * @param file 文本文件
+	 * @return 文本文件的全部字符内容
+	 */
 	public static String getFileContext(File file) {
 		FileReader fileReader;
 		try {
@@ -270,7 +292,6 @@ public class App extends Application {
 	}
 
 	public static String getDateTimeByMillisecond(long l) {
-
 		Date date = new Date(l);
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.getDefault());
 		String time = format.format(date);

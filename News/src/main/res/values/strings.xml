@@ -9,7 +9,7 @@
 		gt(>) (&#62; 或 &gt;) 
 
     -->
-    <string name="app_name">JoyNews</string>
+    <string name="app_name">热点资讯</string>
     <string name="VideoView_error_text_unknown">对不起,这个视频不能播放。</string>
     <string name="VideoView_error_text_invalid_progressive_playback">Sorry, this video is not valid for streaming to
 		this device.</string>
@@ -45,5 +45,34 @@
 
     <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
 
+    <!-- 菜单 -->
+    <string name="menu_news">新闻资讯</string>
+    <string name="menu_album">图集</string>
+    <string name="menu_video">视频点播</string>
+    <string name="menu_subject">专题报道</string>
+    <string name="menu_activity">活动</string>
+    <string name="menu_search">搜索</string>
+
+    <string name="about_us">	乐堂动漫信息技术有限公司成立于2009年3月，是一家致力于手机动漫、手机游戏、网页游戏、社交游戏、手机软件的研发、运营、销售为一体的高新技术动漫企业。
+	公司现有员工400多人，90%以上为本科及以上学历，目前为安徽省最大的动漫游戏研发企业，自主知识产权的研发平台在全球处于领先地位，已于香港、南京、成都、广州建立子公司，并在北京、上海、深圳、台湾、美国、日本、韩国、新加坡、印尼设有分支机构。
+	公司目前为国内动漫类游戏类厂商中的领导者，目前拥有《熊出没》 、《蜡笔小新》、《倒霉熊》、 《奥特曼》、《龙骑侠》、《铠甲勇士》、《大头儿子小头爸爸》、《果宝特攻》 、 《大话西游》等全球知名、经典IP，并已研发发行了多款成功成品。全球用户2014年累计突破5亿，多款动漫产品月流水千万人民币以上，其中《铠甲勇士之英雄传说》累计用户数已突破一亿，《熊出没之熊大快跑》累计用户数更是突破4亿大关，创下无数纪录；已成为动漫游戏行业领导者。
+    </string>
+
+    <string name="settings_font">字体设置</string>
+    <string name="settings_option_font_large">大</string>
+    <string name="settings_option_font_medium">中</string>
+    <string name="settings_option_font_small">小</string>
+    <string name="settings_push">推送开关</string>
+    <string name="settings_weibo_bind">微博绑定</string>
+    <string name="settings_clear_cache">清理缓存</string>
+    <string name="settings_check_update">检查更新</string>
+    <string name="settings_feedback">意见反馈</string>
+    <string name="settings_about_us">关于我们</string>
+
+    <string name="title_login">登陆</string>
+    <string name="title_about_us">关于我们</string>
+    <string name="login">登陆</string>
+
+    <string name="prompt_no_network">请检查网络连接</string>
 
 </resources>

@@ -33,10 +33,8 @@ import cn.sharesdk.framework.ShareSDK;
  */
 public class WelcomeActivity extends MBaseActivity {
 
-	private String welcomeJsonPath;// 欢迎界面数据路径
 	private volatile int done;
 	private FragmentManager fm;
-	private long startTime;
 	private boolean isFirstStartApp;
 	private boolean isJump = false;
 
@@ -54,11 +52,8 @@ public class WelcomeActivity extends MBaseActivity {
 		LogUtils.i("isFirstStartApp->" + isFirstStartApp);
 
 		tran.replace(R.id.welcome_frame, new AdFlashFragment());
-		startTime = System.currentTimeMillis();
 
 		tran.commit();
-
-		welcomeJsonPath = App.getInstance().getJsonFileCacheRootDir();
 
 		getChannelJson();
 
@@ -77,7 +72,6 @@ public class WelcomeActivity extends MBaseActivity {
 				startActivity(intent);
 				finish();
 			} else {
-
 				if (!isJump) {
 					Intent intent = new Intent(this, MainActivity.class);
 					startActivity(intent);
@@ -85,81 +79,81 @@ public class WelcomeActivity extends MBaseActivity {
 				} else {
 					isJump = true;
 				}
-
 			}
 		}
 	}
 
 	public void getChannelJson() {
+		final String channelCachePath = App.getInstance().getJsonFileCacheRootDir()
+				+ File.separator
+				+ App.mTitle;
+		final File channelCacheFile = new File(channelCachePath);
+		final File target = App.getFile(App.getInstance().getJsonFileCacheRootDir() + File.separator + "News");
 
-		final File title = new File(App.getInstance().getJsonFileCacheRootDir()
-				+ File.separator + App.mTitle);
-		final File target = App.getFile(welcomeJsonPath + File.separator
-				+ "News");
-
-		if (title.exists()) {
+		if (channelCacheFile.exists()) {
 			loadMainUI();
 		} else {
-			httpUtils.download(InterfaceJsonfile.CHANNELLIST + "News",
-					target.getAbsolutePath(), new RequestCallBack<File>() {
+			String urlChannelList = InterfaceJsonfile.CHANNELLIST + "News";
+			httpUtils.download(urlChannelList,
+					target.getAbsolutePath(),
+					new RequestCallBack<File>() {
 						@Override
 						public void onSuccess(ResponseInfo<File> responseInfo) {
 							LogUtils.i("write  channel to file success");
-							String data = App
-									.getFileContext(responseInfo.result);
-							if (data != null) {
-								LogUtils.i("channel-->" + data);
-								JSONObject obj = null;
-
-								obj = FjsonUtil.parseObject(data);
+							String json = App.getFileContext(responseInfo.result);
+							if (json != null) {
+								LogUtils.i("channel-->" + json);
+								JSONObject obj = FjsonUtil.parseObject(json);
 								if (null == obj) {
 									return;
 								}
 
+								// 读取json，获取频道信息
 								JSONArray array = obj.getJSONArray("data");
-								List<NewsChannelBean> mList = JSONArray
+								List<NewsChannelBean> newestChannels = JSONArray
 										.parseArray(array.toJSONString(),
 												NewsChannelBean.class);
 
-								SerializeUtil<List<NewsChannelBean>> mSu = new SerializeUtil<List<NewsChannelBean>>();
-								List<NewsChannelBean> stl = mSu
-										.readyDataToFile(title
-												.getAbsolutePath());
-								HashMap<String, NewsChannelBean> saveTitleMap = new HashMap<String, NewsChannelBean>();
+								// 读取频道信息的本地缓存
+								SerializeUtil<List<NewsChannelBean>> serializeUtil = new SerializeUtil<List<NewsChannelBean>>();
+								List<NewsChannelBean> cacheChannels = serializeUtil
+										.readyDataToFile(channelCacheFile.getAbsolutePath());
 
-								if (null == stl || stl.size() < 1) {
+								// 如果没有缓存
+								if (null == cacheChannels || cacheChannels.size() < 1) {
 									LogUtils.i("setTitleData");
 
-									if (mList != null && mList.size() > 0) {
+									if (newestChannels != null && newestChannels.size() > 0) {
 										LogUtils.i("list != null && list.size() > 0");
 
-										mSu.writeDataToFile(mList, App
-												.getInstance()
-												.getJsonFileCacheRootDir()
-												+ File.separator + App.mTitle);
+										// 缓存频道信息到SD卡上
+										serializeUtil.writeDataToFile(newestChannels, channelCachePath);
 										LogUtils.i("write title data to disk!");
 									}
-								} else {
-									for (NewsChannelBean stb : mList) {
-										saveTitleMap.put(stb.getTid(), stb);
+								} else { // 如果有缓存
+									HashMap<String, NewsChannelBean> channelMap = new HashMap<String, NewsChannelBean>();
+									for (NewsChannelBean stb : newestChannels) {
+										channelMap.put(stb.getTid(), stb);
 									}
 
-									for (int i = 0; i < stl.size(); i++) {
-										NewsChannelBean stb = stl.get(i);
-										NewsChannelBean stbq = saveTitleMap
-												.get(stb.getTid());
-										if (null != stbq) {
-											stb.setStyle(stbq.getStyle());
-											stb.setCnname(stbq.getCnname());
+									for (int i = 0; i < cacheChannels.size(); i++) {
+										// 缓存的频道信息
+										NewsChannelBean cacheChannel = cacheChannels.get(i);
+										// 最新获取的频道信息
+										NewsChannelBean newestChannel = channelMap.get(cacheChannel.getTid());
+
+										if (null != newestChannel) {
+											// 最新的数据中有和缓存中对应的频道，则更新频道信息
+											cacheChannel.setStyle(newestChannel.getStyle());
+											cacheChannel.setCnname(newestChannel.getCnname());
 										} else {
-											stl.remove(i);
+											// 最新的数据中没有和缓存中对应的频道，删除该频道信息
+											cacheChannels.remove(i);
 										}
 									}
 
-									mSu.writeDataToFile(stl, App.getInstance()
-											.getJsonFileCacheRootDir()
-											+ File.separator
-											+ App.mTitle);
+									// 更新后信息再次保存到SD卡中
+									serializeUtil.writeDataToFile(cacheChannels, channelCachePath);
 
 									LogUtils.i("uptate title data to disk!");
 								}
@@ -170,8 +164,7 @@ public class WelcomeActivity extends MBaseActivity {
 						@Override
 						public void onFailure(HttpException error, String msg) {
 							LogUtils.i("write  channel to file Failed");
-							if (GetFileSizeUtil.getInstance().getFileSizes(
-									target) > 10) {
+							if (GetFileSizeUtil.getInstance().getFileSizes(target) > 10) {
 								loadMainUI();
 								return;
 							}
@@ -179,7 +172,6 @@ public class WelcomeActivity extends MBaseActivity {
 					});
 		}
 	}
-
 
 	public void jump(String url) {
 		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
@@ -194,6 +186,5 @@ public class WelcomeActivity extends MBaseActivity {
 			isJump = false;
 		}
 	}
-
 
 }

@@ -106,13 +106,13 @@ public class ZQ_LoginWelcomeFragment extends BaseFragment {
 			mImageLoader.loadImage(loginbg, new ImageLoadingListener() {
 				@Override
 				public void onLoadingStarted(String imageUri, View view) {
-					zq_loginwelbg_rl.setBackgroundResource(R.drawable.zq_loginwelbg);
+					zq_loginwelbg_rl.setBackgroundResource(R.drawable.zy_bg_cehua);
 				}
 
 				@Override
 				public void onLoadingFailed(String imageUri, View view,
 				                            FailReason failReason) {
-					zq_loginwelbg_rl.setBackgroundResource(R.drawable.zq_loginwelbg);
+					zq_loginwelbg_rl.setBackgroundResource(R.drawable.zy_bg_cehua);
 				}
 
 				@Override

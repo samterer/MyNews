@@ -520,6 +520,12 @@ public class ACache {
 			return isDue(str.getBytes());
 		}
 
+		/**
+		 * 给定数据是否过期了
+		 *
+		 * @param data 数据
+		 * @return true表示过期了，false表示尚未过期
+		 */
 		private static boolean isDue(byte[] data) {
 			String[] strs = getDateInfoFromDate(data);
 			if (strs != null && strs.length == 2) {
@@ -549,6 +555,12 @@ public class ACache {
 			return retdata;
 		}
 
+		/**
+		 * 删除数据中的时间信息头
+		 *
+		 * @param strInfo 给定数据
+		 * @return 删除时间信息后的数据
+		 */
 		private static String clearDateInfo(String strInfo) {
 			if (strInfo != null && hasDateInfo(strInfo.getBytes())) {
 				strInfo = strInfo.substring(strInfo.indexOf(mSeparator) + 1,
@@ -570,6 +582,12 @@ public class ACache {
 					&& indexOf(data, mSeparator) > 14;
 		}
 
+		/**
+		 * 从数据中获取相关时间，给定数据的前14位是时间信息头
+		 *
+		 * @param data 给定时间
+		 * @return 数据保存时间和多长时间后删除
+		 */
 		private static String[] getDateInfoFromDate(byte[] data) {
 			if (hasDateInfo(data)) {
 				String saveDate = new String(copyOfRange(data, 0, 13));

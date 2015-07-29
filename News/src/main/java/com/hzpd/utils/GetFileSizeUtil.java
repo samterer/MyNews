@@ -31,6 +31,7 @@ public class GetFileSizeUtil {
 	 * @throws Exception
 	 */
 	public long getFileSizes(File f) {
+		// XXX 这种读取文件大小的方式不精确
 		long s = 0;
 		FileInputStream fis = null;
 		try {

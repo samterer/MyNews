@@ -55,8 +55,6 @@ public abstract class MBaseActivity extends FragmentActivity {
 		startMills = System.currentTimeMillis();
 		analyMap = new HashMap<String, String>();
 		dbHelper = DBHelper.getInstance(this);
-
-
 	}
 
 	@Override

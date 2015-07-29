@@ -67,7 +67,11 @@ public class NewsFragment extends BaseFragment {
 		AAnim.ActivityStartAnimation(getActivity());
 	}
 
+	/**
+	 * 读取频道信息
+	 */
 	private void readTitleData() {
+		// 频道信息即tab，在开屏的时候获取过了，现在取出来
 		SerializeUtil<List<NewsChannelBean>> mSu = new SerializeUtil<List<NewsChannelBean>>();
 		List<NewsChannelBean> mList = mSu.readyDataToFile(App.getInstance().getJsonFileCacheRootDir()
 				+ File.separator + App.mTitle);
