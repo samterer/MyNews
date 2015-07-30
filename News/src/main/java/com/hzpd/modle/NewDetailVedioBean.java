@@ -10,6 +10,16 @@ public class NewDetailVedioBean implements Serializable {
 	private String videourl;
 	private String copyfrom;
 
+	@Override
+	public String toString() {
+		return "NewDetailVedioBean{" +
+				"title='" + title + '\'' +
+				", mainpic='" + mainpic + '\'' +
+				", videourl='" + videourl + '\'' +
+				", copyfrom='" + copyfrom + '\'' +
+				'}';
+	}
+
 	public String getTitle() {
 		return title;
 	}

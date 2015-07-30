@@ -60,4 +60,8 @@ public class BaseFragment extends Fragment {
 		}
 	}
 
+	public String getLogTag() {
+		return getClass().getSimpleName();
+	}
+
 }

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,6 +46,7 @@ import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.GetFileSizeUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
@@ -155,9 +155,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 	private MyJavascriptInterface jsInterface;// 跳转到图集接口
 
 	private void getThisIntent() {
-
 		Intent intent = getIntent();
 		String action = intent.getAction();
+		Log.d(getLogTag(), "action:" + action);
 		if (null != action && Intent.ACTION_VIEW.equals(action)) {
 			Uri uri = intent.getData();
 			if (uri != null) {
@@ -167,6 +167,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 				nb.setTid(tid);
 				nb.setType("news");
 				from = "browser";
+				Log.d(getLogTag(), "uri:" + uri + ",tid:" + tid);
 				getNewsDetails(nb.getTid());
 			}
 		} else {
@@ -184,7 +185,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 			} catch (Exception e) {
 				isVideo = null;
 			}
-
+			Log.d(getLogTag(), "from:" + from + ",isVideo:" + isVideo + ",NewsBean:" + nb);
 		}
 		if ("0".equals(nb.getTid())) {
 			detailPathRoot = App.getInstance().getJsonFileCacheRootDir() + File.separator + "subject" + File.separator
@@ -193,7 +194,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 			detailPathRoot = App.getInstance().getJsonFileCacheRootDir() + File.separator + "newsdetail"
 					+ File.separator;
 		}
-
+		Log.d(getLogTag(), "detailPathRoot->" + detailPathRoot);
 	}
 
 	private void initNew() {
@@ -466,22 +467,22 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 	}
 
 	private void initScroolParams() {
-		LinearLayout.LayoutParams rootPa = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-				LinearLayout.LayoutParams.WRAP_CONTENT);
+		LayoutParams rootPa = new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.WRAP_CONTENT);
 		mLayoutRoot.setLayoutParams(rootPa);
 	}
 
 	private void initRootParams() {
-		LinearLayout.LayoutParams rootPa = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-				LinearLayout.LayoutParams.WRAP_CONTENT);
+		LayoutParams rootPa = new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.WRAP_CONTENT);
 		root.setOrientation(LinearLayout.VERTICAL);
 		root.setLayoutParams(rootPa);
 		root.setPadding(20, 20, 19, 10);
 	}
 
 	private void initRootTitle() {
-		LinearLayout.LayoutParams rootTitlePa = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-				LinearLayout.LayoutParams.WRAP_CONTENT);
+		LayoutParams rootTitlePa = new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.WRAP_CONTENT);
 		rootTitle.setOrientation(LinearLayout.VERTICAL);
 		rootTitle.setLayoutParams(rootTitlePa);
 		rootTitle.setPadding(10, 0, 10, 0);
@@ -571,8 +572,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 			View view = mLayoutInflater.inflate(R.layout.news_detail_vedio_layout, root, false);
 			ImageView img = (ImageView) view.findViewById(R.id.news_detail_vedio_img_id);
 			int videoheight = MyCommonUtil.getDisplayMetric(getResources()).widthPixels / 16 * 9;
-			img.setLayoutParams(new android.widget.RelativeLayout.LayoutParams(
-					android.widget.RelativeLayout.LayoutParams.MATCH_PARENT, videoheight));
+			img.setLayoutParams(new RelativeLayout.LayoutParams(
+					RelativeLayout.LayoutParams.MATCH_PARENT, videoheight));
 			mImageLoader.displayImage(bean.getMainpic(), img, DisplayOptionFactory.getOption(OptionTp.Big));
 			img.setOnClickListener(new OnClickListener() {
 				@Override
@@ -630,6 +631,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 			LogUtils.i("data-->2" + data);
 			JSONObject obj = JSONObject.parseObject(data);
 			mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
+			Log.d(getLogTag(), "" + mBean);
 
 			int textSize = spu.getTextSize();
 
@@ -656,6 +658,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 					dialog.dismiss();
 				}
 				String data = App.getFileContext(responseInfo.result);
+				Log.d(getLogTag(), "data->" + data);
 				if (TextUtils.isEmpty(data)) {
 					TUtils.toast("请求失败");
 					return;
@@ -668,6 +671,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 					return;
 				}
 				mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
+				Log.d(getLogTag(), "" + mBean);
 
 				int textSize = spu.getTextSize();
 

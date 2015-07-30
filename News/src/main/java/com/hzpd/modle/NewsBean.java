@@ -1,6 +1,7 @@
 package com.hzpd.modle;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 
 public class NewsBean implements Serializable {
@@ -23,6 +24,27 @@ public class NewsBean implements Serializable {
 	private String subjectsort;//": "0",//0不能评论
 	private String columnid;
 
+	@Override
+	public String toString() {
+		return "NewsBean{" +
+				"nid='" + nid + '\'' +
+				", title='" + title + '\'' +
+				", sid='" + sid + '\'' +
+				", tid='" + tid + '\'' +
+				", outline='" + outline + '\'' +
+				", type='" + type + '\'' +
+				", update_time='" + update_time + '\'' +
+				", json_url='" + json_url + '\'' +
+				", imgs=" + Arrays.toString(imgs) +
+				", rtype='" + rtype + '\'' +
+				", comcount='" + comcount + '\'' +
+				", sort_order='" + sort_order + '\'' +
+				", status='" + status + '\'' +
+				", comflag='" + comflag + '\'' +
+				", subjectsort='" + subjectsort + '\'' +
+				", columnid='" + columnid + '\'' +
+				'}';
+	}
 
 	public String getTid() {
 		return tid;

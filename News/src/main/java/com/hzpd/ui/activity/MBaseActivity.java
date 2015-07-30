@@ -80,4 +80,8 @@ public abstract class MBaseActivity extends FragmentActivity {
 		AAnim.ActivityFinish(this);
 	}
 
+	public String getLogTag() {
+		return getClass().getSimpleName();
+	}
+
 }

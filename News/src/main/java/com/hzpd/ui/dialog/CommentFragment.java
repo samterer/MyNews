@@ -24,6 +24,7 @@ import com.hzpd.ui.activity.ZQ_ReplyActivity;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
@@ -153,6 +154,7 @@ public class CommentFragment extends BaseFragment {
 		if (isLoaded.equals(url)) {
 			return;
 		}
+		Log.d(getLogTag(), "url-->" + url);
 		LogUtils.i("url-->" + url);
 		xf_comments_wv_detail.getRefreshableView().loadUrl(url);
 		isLoaded = url;
@@ -163,7 +165,7 @@ public class CommentFragment extends BaseFragment {
 	private void comment(View view) {
 
 		if (null == spu.getUser()) {
-			TUtils.toast("璇风櫥褰�");
+			TUtils.toast(getString(R.string.prompt_login));
 			Intent intent = new Intent(activity, LoginActivity.class);
 			startActivity(intent);
 			AAnim.ActivityStartAnimation(activity);

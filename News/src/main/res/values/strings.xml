@@ -74,5 +74,6 @@
     <string name="login">登陆</string>
 
     <string name="prompt_no_network">请检查网络连接</string>
+    <string name="prompt_login">请登录</string>
 
 </resources>

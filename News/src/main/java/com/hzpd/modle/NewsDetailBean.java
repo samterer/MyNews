@@ -46,6 +46,29 @@ public class NewsDetailBean implements Serializable {
 		this.update_time = nb.getUpdate_time();
 	}
 
+	@Override
+	public String toString() {
+		return "NewsDetailBean{" +
+				"nid='" + nid + '\'' +
+				", tid='" + tid + '\'' +
+				", title='" + title + '\'' +
+				", copyfrom='" + copyfrom + '\'' +
+				", update_time='" + update_time + '\'' +
+				", comcount='" + comcount + '\'' +
+				", content='" + content + '\'' +
+				", outline='" + outline + '\'' +
+				", realtion=" + realtion +
+				", video=" + video +
+				", pic=" + pic +
+				", link='" + link + '\'' +
+				", authorname='" + authorname + '\'' +
+				", vote=" + vote +
+				", type='" + type + '\'' +
+				", audiourl='" + audiourl + '\'' +
+				", videoid='" + videoid + '\'' +
+				'}';
+	}
+
 	public int getVote() {
 		return vote;
 	}
