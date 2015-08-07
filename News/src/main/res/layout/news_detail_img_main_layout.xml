@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:background="@color/black"
-                xmlns:app="http://schemas.android.com/apk/res/com.hzpd.hflt">
+                android:orientation="vertical">
 
     <com.hzpd.custorm.ImageViewPager
         android:id="@+id/img_detail_test_pager"
@@ -41,8 +41,8 @@
             android:layout_alignParentRight="true"
             android:clickable="true"
             android:gravity="center"
-            android:visibility="invisible"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="invisible">
 
             <ImageView
                 android:layout_width="4dp"
@@ -55,38 +55,38 @@
             android:id="@+id/imgdetails_title_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@id/imgdetails_title_pl"
             android:clickable="true"
             android:gravity="center"
-            android:layout_marginRight="5dp"
-            android:layout_centerVertical="true"
-            android:visibility="invisible"
-            android:layout_toLeftOf="@id/imgdetails_title_pl"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="invisible">
 
             <TextView
                 android:id="@+id/imgdetails_title_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/zqzx_commentsblue"
                 android:textColor="@color/yellow_font"
-                android:textSize="18sp"
-                android:background="@drawable/zqzx_commentsblue"/>
+                android:textSize="18sp"/>
         </LinearLayout>
 
     </RelativeLayout>
 
 
     <com.hzpd.custorm.DonutProgress
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/album_donutProgress"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_centerInParent="true"
-        app:donut_progress="0"
-        app:donut_text_size="22sp"
-        app:donut_text_color="@color/zqzx_txt_darkblue"
-        app:donut_finished_color="@color/zqzx_txt_darkblue"
-        app:donut_background_color="@color/grey_font"
         android:visibility="gone"
+        app:donut_background_color="@color/grey_font"
+        app:donut_finished_color="@color/zqzx_txt_darkblue"
+        app:donut_progress="0"
+        app:donut_text_color="@color/zqzx_txt_darkblue"
+        app:donut_text_size="22sp"
         />
 
 
@@ -96,10 +96,10 @@
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:layout_alignParentBottom="true"
+        android:background="@drawable/picloop_shape"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="60dp"
-        android:background="@drawable/picloop_shape">
+        android:paddingTop="60dp">
 
         <RelativeLayout
             android:id="@+id/img_detail_title"
