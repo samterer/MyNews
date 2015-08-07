@@ -1,12 +1,9 @@
 package com.hzpd.hflt.wxapi;
 
 import android.content.Context;
-import android.os.Handler;
 
 import com.hzpd.hflt.R;
-import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.util.LogUtils;
 
@@ -19,18 +16,6 @@ import cn.sharesdk.onekeyshare.OnekeyShareTheme;
 
 
 public class SharedUtil {
-	private static Handler handler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-			if (112 == msg.what) {
-				TUtils.toast("分享失败");
-			} else if (113 == msg.what) {
-				TUtils.toast("分享成功");
-				EventUtils.sendShareAtival(App.getInstance());
-			} else if (114 == msg.what) {
-				TUtils.toast("分享取消");
-			}
-		}
-	};
 
 	public static void showShares(boolean silent, String platform
 			, String title, String link, String imagePath
@@ -64,17 +49,17 @@ public class SharedUtil {
 		oks.setCallback(new PlatformActionListener() {
 			@Override
 			public void onError(Platform arg0, int arg1, Throwable arg2) {
-				handler.sendEmptyMessage(112);
+				TUtils.toast(context.getString(R.string.share_failed));
 			}
 
 			@Override
 			public void onComplete(Platform arg0, int arg1, HashMap<String, Object> arg2) {
-				handler.sendEmptyMessage(113);
+				TUtils.toast(context.getString(R.string.share_completed));
 			}
 
 			@Override
 			public void onCancel(Platform arg0, int arg1) {
-				handler.sendEmptyMessage(114);
+				TUtils.toast(context.getString(R.string.share_canceled));
 			}
 		});
 		// 在自动授权时可以禁用SSO方式
@@ -83,7 +68,7 @@ public class SharedUtil {
 	}
 
 	public static void showImgShares(boolean silent, String platform
-			, String title, String imagePath, String nid, Context context) {
+			, String title, String imagePath, String nid, final Context context) {
 		OnekeyShare oks = new OnekeyShare();
 		oks.setTheme(OnekeyShareTheme.CLASSIC);
 
@@ -106,17 +91,17 @@ public class SharedUtil {
 		oks.setCallback(new PlatformActionListener() {
 			@Override
 			public void onError(Platform arg0, int arg1, Throwable arg2) {
-				handler.sendEmptyMessage(112);
+				TUtils.toast(context.getString(R.string.share_failed));
 			}
 
 			@Override
 			public void onComplete(Platform arg0, int arg1, HashMap<String, Object> arg2) {
-				handler.sendEmptyMessage(113);
+				TUtils.toast(context.getString(R.string.share_completed));
 			}
 
 			@Override
 			public void onCancel(Platform arg0, int arg1) {
-				handler.sendEmptyMessage(114);
+				TUtils.toast(context.getString(R.string.share_canceled));
 			}
 		});
 		// 在自动授权时可以禁用SSO方式

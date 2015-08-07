@@ -1,6 +1,7 @@
 package me.nereo.multi_image_selector.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -75,9 +76,10 @@ public class FolderAdapter extends ListBaseAdapter<Folder> {
 			indicator.setVisibility(View.INVISIBLE);
 		}
 
+		Context context = convertView.getContext();
 		if (position == 0) {
-			name.setText("所有图片");
-			size.setText(getTotalImageSize() + "张");
+			name.setText(R.string.prompt_all_images);
+			size.setText(context.getString(R.string.prompt_image_plural, getTotalImageSize()));
 			cover.setImageResource(R.drawable.img_default_error);
 
 			ImageLoader.getInstance().displayImage("drawable://" + R.drawable.img_default_error, cover,
@@ -86,7 +88,7 @@ public class FolderAdapter extends ListBaseAdapter<Folder> {
 
 			Folder data = getItem(position);
 			name.setText(data.name);
-			size.setText(data.images.size() + "张");
+			size.setText(context.getString(R.string.prompt_image_plural, data.images.size()));
 
 			ImageLoader.getInstance().displayImage("file://" + data.cover.path, cover,
 					DisplayOptionFactory.getOption(OptionTp.Small));

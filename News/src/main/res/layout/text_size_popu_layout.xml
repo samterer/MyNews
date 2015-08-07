@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="大"
+                android:text="@string/prompt_font_big"
                 android:textColor="@color/white"
                 android:textSize="18sp"/>
         </RelativeLayout>
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="中"
+                android:text="@string/prompt_font_medium"
                 android:textColor="@color/white"
                 android:textSize="18sp"/>
         </RelativeLayout>
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="小"
+                android:text="@string/prompt_font_small"
                 android:textColor="@color/white"
                 android:textSize="18sp"/>
         </RelativeLayout>

@@ -81,11 +81,11 @@ public class ZQ_LoginWelcomeFragment extends BaseFragment {
 				}
 				break;
 				case 889: {
-					TUtils.toast("未安装应用");
+					TUtils.toast(getString(R.string.toast_app_not_installed));
 				}
 				break;
 				case 890: {
-					TUtils.toast("登录取消");
+					TUtils.toast(getString(R.string.toast_login_cancelled));
 				}
 				break;
 			}
@@ -225,7 +225,7 @@ public class ZQ_LoginWelcomeFragment extends BaseFragment {
 							intent.setAction(ZY_RightFragment.ACTION_USER);
 							activity.sendBroadcast(intent);
 							activity.finish();
-							TUtils.toast("登录成功");
+							TUtils.toast(getString(R.string.toast_login_success));
 						} else {
 							TUtils.toast(obj.getString("msg"));
 						}

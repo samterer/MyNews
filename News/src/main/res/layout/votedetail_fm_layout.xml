@@ -28,7 +28,7 @@
                 android:layout_margin="10dp"
                 android:background="@color/vote_txt_darbluebg"
                 android:padding="3dp"
-                android:text="投票规则"
+                android:text="@string/prompt_vote_rule"
                 android:textColor="@color/white"
                 android:textSize="16sp"/>
 
@@ -59,7 +59,7 @@
                 android:layout_margin="30dp"
                 android:padding="4dp"
                 android:background="@drawable/login_bt_login_selector"
-                android:text="投 票"
+                android:text="@string/prompt_vote"
                 android:textColor="@color/white"
                 android:textSize="18sp"/>
         </LinearLayout>

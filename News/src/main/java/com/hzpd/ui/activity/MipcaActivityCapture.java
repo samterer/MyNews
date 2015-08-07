@@ -117,7 +117,7 @@ public class MipcaActivityCapture extends MBaseActivity implements Callback {
 		playBeepSoundAndVibrate();
 		String resultString = result.getText();
 		if (resultString.equals("")) {
-			Toast.makeText(MipcaActivityCapture.this, "Scan failed!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(MipcaActivityCapture.this, R.string.toast_scan_failed, Toast.LENGTH_SHORT).show();
 		} else {
 			Intent resultIntent = new Intent();
 			Bundle bundle = new Bundle();

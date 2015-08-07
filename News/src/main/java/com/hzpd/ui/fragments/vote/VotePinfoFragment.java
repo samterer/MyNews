@@ -158,8 +158,8 @@ public class VotePinfoFragment extends BaseFragment {
 				}
 				if (200 == obj.getIntValue("code")) {
 					bean = JSONObject.parseObject(obj.getString("data"), Vote_detailMultiPicBean.class);
-					vote_detail_tv_right.setText("姓\t名：" + bean.getOption().getName());
-					vote_detail_tv_bottom.setText("简\t介：\n\t\t\t\t" + bean.getOption().getDescription());
+					vote_detail_tv_right.setText(getString(R.string.prompt_name, bean.getOption().getName()));
+					vote_detail_tv_bottom.setText(getString(R.string.prompt_brief_intro, bean.getOption().getDescription()));
 //						mImageLoader.displayImage(object.getJSONObject("option").getString("imgurl"), vote_detail_imge,diOp2);
 //						if("1".equals(object.getJSONObject("option").getString("status"))){
 //							vote_detail_bt_submit.setClickable(false);

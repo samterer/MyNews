@@ -89,7 +89,7 @@ public class ActionDetailFragment extends BaseFragment {
 		switch (view.getId()) {
 			case R.id.actiondetail_tv_register: {
 				if (!"1".equals(adb.getRegable())) {
-					TUtils.toast("活动未开启");
+					TUtils.toast(getString(R.string.toast_activity_not_started));
 					return;
 				}
 				((ActionDetailActivity) activity).toRegister(id);
@@ -97,7 +97,7 @@ public class ActionDetailFragment extends BaseFragment {
 			break;
 			case R.id.actiondetail_tv_vote: {
 				if (!"1".equals(adb.getVoteable())) {
-					TUtils.toast("活动未开启");
+					TUtils.toast(getString(R.string.toast_activity_not_started));
 					return;
 				}
 				((ActionDetailActivity) activity).toVote(adb.getSubjectid());
@@ -105,11 +105,11 @@ public class ActionDetailFragment extends BaseFragment {
 			break;
 			case R.id.actiondetail_tv_leto: {
 				if (!"1".equals(adb.getRollable())) {
-					TUtils.toast("活动未开启");
+					TUtils.toast(getString(R.string.toast_activity_not_started));
 					return;
 				}
 				if (null == spu.getUser()) {
-					TUtils.toast("只有注册用户才能参与抽奖");
+					TUtils.toast(getString(R.string.toast_award_only_for_members));
 					Intent intent = new Intent(activity, LoginActivity.class);
 					startActivity(intent);
 					AAnim.ActivityStartAnimation(activity);
@@ -151,7 +151,7 @@ public class ActionDetailFragment extends BaseFragment {
 
 					adb = JSONObject.parseObject(obj.getString("data"), ActionDetailBean.class);
 					actiondetail_title_tv.setText(adb.getTitle());
-					actiondetail_time_tv.setText("时间：" + adb.getStarttime() + "~" + adb.getDeadline());
+					actiondetail_time_tv.setText(getString(R.string.prompt_activity_period, adb.getStarttime(), adb.getDeadline()));
 
 					String data = adb.getContent();
 

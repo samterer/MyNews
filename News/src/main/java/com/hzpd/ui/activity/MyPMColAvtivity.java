@@ -1,6 +1,7 @@
 package com.hzpd.ui.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -102,15 +103,15 @@ public class MyPMColAvtivity extends MBaseActivity {
 		pushmsg_lv.setMode(Mode.PULL_FROM_START);
 
 		if ("pushmsg".equals(type)) {
-			stitle_tv_content.setText("我的消息");
-			pushmsg_tv_empty.setText("没有消息");
+			stitle_tv_content.setText(R.string.prompt_my_msg);
+			pushmsg_tv_empty.setText(R.string.prompt_no_msg);
 
 			pmgadapter = new PushmsgAdapter(this);
 			pushmsg_lv.setAdapter(pmgadapter);
 		} else {
 
-			stitle_tv_content.setText("我的收藏");
-			pushmsg_tv_empty.setText("没有收藏");
+			stitle_tv_content.setText(R.string.prompt_my_favorite);
+			pushmsg_tv_empty.setText(R.string.prompt_no_favorite);
 
 			colladAdapter = new CollectionAdapter(this);
 			pushmsg_lv.setAdapter(colladAdapter);
@@ -132,7 +133,7 @@ public class MyPMColAvtivity extends MBaseActivity {
 				LogUtils.i("下拉刷新");
 				//下拉刷新
 
-				refreshView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+				refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_pull_label));
 				Page = 1;
 				mFlagRefresh = true;
 				if ("pushmsg".equals(type)) {
@@ -150,7 +151,7 @@ public class MyPMColAvtivity extends MBaseActivity {
 
 //				refreshView.getLoadingLayoutProxy().setLoadingDrawable(
 //						getResources().getDrawable(R.drawable.default_ptr_flip));
-				refreshView.getLoadingLayoutProxy().setPullLabel("上拉加载更多");
+				refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_from_bottom_pull_label));
 //				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel("hh");
 				Page++;
 				mFlagRefresh = false;
@@ -186,7 +187,7 @@ public class MyPMColAvtivity extends MBaseActivity {
 	private void getPushmsgInfoFromServer() {
 		if (null == spu.getUser()) {
 			pushmsg_lv.onRefreshComplete();
-			TUtils.toast("请登录");
+			TUtils.toast(getString(R.string.toast_please_login));
 			return;
 		}
 		RequestParams params = RequestParamsUtils.getParamsWithU();
@@ -446,7 +447,7 @@ public class MyPMColAvtivity extends MBaseActivity {
 					Page--;
 				}
 				mFlagRefresh = false;
-				TUtils.toast("无法连接到服务器");
+				TUtils.toast(getString(R.string.toast_cannot_connect_to_server));
 			}
 		});
 
@@ -469,11 +470,11 @@ public class MyPMColAvtivity extends MBaseActivity {
 						}
 						dbHelper.getCollectionDBUitls().delete(NewsItemBeanForCollection.class, WhereBuilder.b("colldataid", "=", cb.getData().getId
 								()));
-						TUtils.toast("删除成功");
+						TUtils.toast(getString(R.string.toast_delete_success));
 						colladAdapter.deleteItem(position);
 					} catch (DbException e) {
 						e.printStackTrace();
-						TUtils.toast("删除失败");
+						TUtils.toast(getString(R.string.toast_delete_failed));
 					}
 					return;
 				}
@@ -488,7 +489,7 @@ public class MyPMColAvtivity extends MBaseActivity {
 					@Override
 					public void onFailure(HttpException arg0,
 					                      String arg1) {
-						TUtils.toast("无法连接到服务器");
+						TUtils.toast(getString(R.string.toast_cannot_connect_to_server));
 					}
 
 					@Override
@@ -501,7 +502,7 @@ public class MyPMColAvtivity extends MBaseActivity {
 							return;
 						}
 						if (200 == obj.getIntValue("code")) {
-							TUtils.toast("删除成功");
+							TUtils.toast(getString(R.string.toast_delete_success));
 							colladAdapter.deleteItem(position);
 						} else {
 							TUtils.toast(obj.getString("msg"));
@@ -513,7 +514,7 @@ public class MyPMColAvtivity extends MBaseActivity {
 		mPopupWindow.setContentView(pv);
 		mPopupWindow.setWindowLayoutMode(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
-		ColorDrawable dw = new ColorDrawable(-00000);
+		ColorDrawable dw = new ColorDrawable(Color.TRANSPARENT);
 		mPopupWindow.setBackgroundDrawable(dw);
 		mPopupWindow.setOutsideTouchable(true);
 		mPopupWindow.setFocusable(true);

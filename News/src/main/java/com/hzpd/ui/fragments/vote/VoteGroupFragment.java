@@ -238,7 +238,7 @@ public class VoteGroupFragment extends BaseFragment {
 
 //			vote_tv_name1.setText(vi.getOptionid()+"."+vi.getOption().getName());
 			vote_tv_name1.setText(vi.getOption().getName());
-			vote_num_tv1.setText(vi.getVotenum() + "票");
+			vote_num_tv1.setText(getString(R.string.prompt_votes, vi.getVotenum()));
 			if ("0".equals(isRadio)) {
 				vote_img_radio1.setBackgroundResource(R.drawable.vote_radio_unselected);
 
@@ -307,7 +307,7 @@ public class VoteGroupFragment extends BaseFragment {
 			mImageLoader.displayImage(rurl, vote_img_touxiang2, displayImageOptions);
 //			vote_tv_name2.setText(vi.getOptionid()+"."+vi.getOption().getName());
 			vote_tv_name2.setText(vi.getOption().getName());
-			vote_num_tv2.setText(vi.getVotenum() + "票");
+			vote_num_tv2.setText(getString(R.string.prompt_votes, vi.getVotenum()));
 			if ("0".equals(isRadio)) {
 				vote_img_radio2.setBackgroundResource(R.drawable.vote_radio_unselected);
 

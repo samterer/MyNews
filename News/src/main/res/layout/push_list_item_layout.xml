@@ -49,7 +49,7 @@
                     android:layout_centerVertical="true"
                     android:background="@drawable/foot_iconbg_shape"
                     android:gravity="center"
-                    android:text="专\n题"
+                    android:text="@string/prompt_subject_in_vertical"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     android:visibility="invisible"/>

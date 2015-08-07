@@ -33,7 +33,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
                 android:gravity="center_vertical"
-                android:text="绑定其他平台"
+                android:text="@string/prompt_bind_other_platform"
                 android:textColor="@color/black_bg"
                 android:textSize="18sp"/>
 
@@ -62,7 +62,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
                 android:gravity="center_vertical"
-                android:text="正文字号"
+                android:text="@string/prompt_content_font"
                 android:textColor="@color/black_bg"
                 android:textSize="18sp"/>
 
@@ -74,7 +74,7 @@
                 android:layout_marginRight="10dip"
                 android:layout_toLeftOf="@+id/setting_ziti_id"
                 android:gravity="center_vertical"
-                android:text="大"
+                android:text="@string/prompt_font_big"
                 android:textColor="@color/black_bg"
                 android:textSize="18sp"/>
 
@@ -103,7 +103,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
                 android:gravity="center_vertical"
-                android:text="推送开关"
+                android:text="@string/settings_push"
                 android:textColor="@color/black_bg"
                 android:textSize="18sp"/>
 
@@ -135,7 +135,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
                 android:gravity="center_vertical"
-                android:text="省流量模式"
+                android:text="@string/settings_spare_traffic"
                 android:textColor="@color/black_bg"
                 android:textSize="18sp"/>
 
@@ -168,7 +168,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
                 android:gravity="center_vertical"
-                android:text="清理缓存"
+                android:text="@string/settings_clear_cache"
                 android:textColor="@color/black_bg"
                 android:textSize="18sp"/>
 
@@ -200,7 +200,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
                 android:gravity="center_vertical"
-                android:text="意见反馈"
+                android:text="@string/settings_feedback"
                 android:textColor="@color/black_bg"
                 android:textSize="18sp"/>
 
@@ -228,7 +228,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
                 android:gravity="center_vertical"
-                android:text="关于我们"
+                android:text="@string/settings_about_us"
                 android:textColor="@color/black_bg"
                 android:textSize="18sp"/>
 

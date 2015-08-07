@@ -32,8 +32,8 @@ public class ActionListFmAdapter extends ListBaseAdapter<ActionItemBean> {
 		ActionItemBean aib = list.get(position);
 
 		actionlist_item_title_tv.setText(aib.getTitle());
-		actionlist_item_time.setText("开始时间：" + aib.getStarttime()
-				+ "\n结束时间：" + aib.getDeadline());
+		actionlist_item_time.setText(convertView.getContext().getString(
+				R.string.activity_item_start_end_time, aib.getStarttime(), aib.getDeadline()));
 
 		mImageLoader.displayImage(aib.getHeadpic()
 				, actionlist_item_iv

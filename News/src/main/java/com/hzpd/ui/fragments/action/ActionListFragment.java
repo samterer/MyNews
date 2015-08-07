@@ -72,7 +72,7 @@ public class ActionListFragment extends BaseFragment {
 				//下拉刷新
 //				refreshView.getLoadingLayoutProxy().setLoadingDrawable(
 //						getResources().getDrawable(R.drawable.default_ptr_flip));
-				refreshView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+				refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_pull_label));
 //				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel("hh");
 				page = 1;
 				mFlagRefresh = true;
@@ -85,7 +85,7 @@ public class ActionListFragment extends BaseFragment {
 				LogUtils.i("上拉加载");
 //				refreshView.getLoadingLayoutProxy().setLoadingDrawable(
 //						getResources().getDrawable(R.drawable.default_ptr_flip));
-				refreshView.getLoadingLayoutProxy().setPullLabel("上拉加载更多");
+				refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_from_bottom_pull_label));
 //				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel("hh");
 				mFlagRefresh = false;
 				page++;

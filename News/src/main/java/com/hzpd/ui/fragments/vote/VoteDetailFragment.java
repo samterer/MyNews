@@ -201,7 +201,7 @@ public class VoteDetailFragment extends BaseFragment {
 		vote_info_tv.setText(vbi.getDescription());
 		// vote_info_tv.setText(Html.fromHtml(Html.toHtml(Span)));
 		if ("1".equals(voteBaseinfo.getLottery()) && "1".equals(voteBaseinfo.getSubstat())) {
-			vote_btn_vote.setText("去抽奖");
+			vote_btn_vote.setText(R.string.prompt_start_lottery);
 		}
 
 	}
@@ -259,17 +259,17 @@ public class VoteDetailFragment extends BaseFragment {
 		// }
 
 		if ("1".equals(voteBaseinfo.getSubstat())) {
-			TUtils.toast("已投票");
+			TUtils.toast(getString(R.string.toast_has_voted));
 			return;
 		}
 		if ("0".equals(voteBaseinfo.getType())) {
 			if (adapter.getOpt() == null || "".equals(adapter.getOpt())) {
-				TUtils.toast("请选择");
+				TUtils.toast(getString(R.string.toast_please_select));
 				return;
 			}
 		} else {
 			if (adapter.getAllMultiVoted().size() == 0) {
-				TUtils.toast("请选择");
+				TUtils.toast(getString(R.string.toast_please_select));
 				return;
 			}
 		}
@@ -285,7 +285,7 @@ public class VoteDetailFragment extends BaseFragment {
 			LogUtils.i("opt-->" + opt);
 		} else {
 			if (adapter.getOptionList().size() > 31) {
-				TUtils.toast("一次最多可以选择31人");
+				TUtils.toast(getString(R.string.toast_max_selected_person));
 				return;
 			}
 			StringBuilder sb = new StringBuilder();
@@ -325,7 +325,7 @@ public class VoteDetailFragment extends BaseFragment {
 						// vote_btn_vote.setText("去抽奖");
 						isvoted = true;
 						if (null != spu.getUser()) {
-							alertDialog("本次活动参与抽奖", "去抽奖", new IVoteresultClick() {
+							alertDialog(getString(R.string.prompt_join_lottery), getString(R.string.prompt_start_lottery), new IVoteresultClick() {
 								@Override
 								public void onclick() {
 									Bundle args = new Bundle();
@@ -335,7 +335,7 @@ public class VoteDetailFragment extends BaseFragment {
 								}
 							});
 						} else {
-							alertDialog("本次活动只有注册用户才能参与抽奖", "去注册", new IVoteresultClick() {
+							alertDialog(getString(R.string.toast_award_only_for_members), getString(R.string.prompt_start_register), new IVoteresultClick() {
 								@Override
 								public void onclick() {
 									Intent intent = new Intent(activity, LoginActivity.class);

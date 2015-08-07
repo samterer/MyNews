@@ -126,7 +126,7 @@ public class ActionRegisterFragment extends BaseFragment {
 	@ViewInject(R.id.action_reg_item_star9_iv)
 	private ImageView action_reg_item_star9_iv;
 
-	private ArrayList<String> mSelectPath;// 鍥剧墖璺緞
+	private ArrayList<String> mSelectPath;// 图片路径
 	private ZY_Tsbl_blAdapter adapter;
 	private String activityid;
 	private JSONObject conf;
@@ -194,52 +194,52 @@ public class ActionRegisterFragment extends BaseFragment {
 		String s = conf.getString("username");
 		if (null != s && !"".equals(s)) {
 			action_reg_ll1.setVisibility(View.VISIBLE);
-			action_reg_item_lable1_tv.setText(s + "锛�");
+			action_reg_item_lable1_tv.setText(s + "：");
 		}
 		s = conf.getString("tel");
 		if (null != s && !"".equals(s)) {
 			action_reg_ll2.setVisibility(View.VISIBLE);
-			action_reg_item_lable2_tv.setText(s + "锛�");
+			action_reg_item_lable2_tv.setText(s + "：");
 		}
 		s = conf.getString("title");
 		if (null != s && !"".equals(s)) {
 			action_reg_ll3.setVisibility(View.VISIBLE);
-			action_reg_item_lable3_tv.setText(s + "锛�");
+			action_reg_item_lable3_tv.setText(s + "：");
 		}
 		s = conf.getString("extra1");
 		if (null != s && !"".equals(s)) {
 			action_reg_ll4.setVisibility(View.VISIBLE);
-			action_reg_item_lable4_tv.setText(s + "锛�");
+			action_reg_item_lable4_tv.setText(s + "：");
 		}
 		s = conf.getString("extra2");
 		if (null != s && !"".equals(s)) {
 			action_reg_ll5.setVisibility(View.VISIBLE);
-			action_reg_item_lable5_tv.setText(s + "锛�");
+			action_reg_item_lable5_tv.setText(s + "：");
 		}
 		s = conf.getString("extra3");
 		if (null != s && !"".equals(s)) {
 			action_reg_ll6.setVisibility(View.VISIBLE);
-			action_reg_item_lable6_tv.setText(s + "锛�");
+			action_reg_item_lable6_tv.setText(s + "：");
 		}
 		s = conf.getString("extra4");
 		if (null != s && !"".equals(s)) {
 			action_reg_ll7.setVisibility(View.VISIBLE);
-			action_reg_item_lable7_tv.setText(s + "锛�");
+			action_reg_item_lable7_tv.setText(s + "：");
 		}
 		s = conf.getString("extra5");
 		if (null != s && !"".equals(s)) {
 			action_reg_ll8.setVisibility(View.VISIBLE);
-			action_reg_item_lable8_tv.setText(s + "锛�");
+			action_reg_item_lable8_tv.setText(s + "：");
 		}
 		s = conf.getString("content");
 		if (null != s && !"".equals(s)) {
 			action_reg_ll9.setVisibility(View.VISIBLE);
-			action_reg_item_lable9_tv.setText(s + "锛�");
+			action_reg_item_lable9_tv.setText(s + "：");
 		}
 		s = conf.getString("username");
 		if (null != s && !"".equals(s)) {
 			action_reg_ll1.setVisibility(View.VISIBLE);
-			action_reg_item_lable1_tv.setText(s + "锛�");
+			action_reg_item_lable1_tv.setText(s + "：");
 		}
 		int maxP = conf.getIntValue("picmax");
 		if (maxP > 0) {
@@ -250,7 +250,7 @@ public class ActionRegisterFragment extends BaseFragment {
 		action_reg_item_star1_iv.setVisibility(View.VISIBLE);
 		action_reg_item_star2_iv.setVisibility(View.VISIBLE);
 		action_reg_item_star3_iv.setVisibility(View.VISIBLE);
-		action_reg_item_content2_et.setHint("鎵嬫満鎴栧骇鏈�");
+		action_reg_item_content2_et.setHint(R.string.hint_phone_number);
 
 		JSONArray array = conf.getJSONArray("need");
 		for (int i = 0; i < array.size(); i++) {
@@ -272,10 +272,10 @@ public class ActionRegisterFragment extends BaseFragment {
 				action_reg_item_star4_iv.setVisibility(View.VISIBLE);
 				String extype = conf.getString("extra1_type");
 				if ("4".equals(extype)) {
-					action_reg_item_content4_et.setHint("濡傦細2014-12-16");
+					action_reg_item_content4_et.setHint(R.string.hint_date);
 				}
-				if (conf.getString("extra1").contains("鎬у埆")) {
-					action_reg_item_content4_et.setHint("鐢锋垨濂�");
+				if (conf.getString("extra1").contains("性别")) {
+					action_reg_item_content4_et.setHint(R.string.hint_sex);
 				}
 				continue;
 			}
@@ -283,10 +283,10 @@ public class ActionRegisterFragment extends BaseFragment {
 				action_reg_item_star5_iv.setVisibility(View.VISIBLE);
 				String extype = conf.getString("extra2_type");
 				if ("4".equals(extype)) {
-					action_reg_item_content5_et.setHint("濡傦細2014-12-16");
+					action_reg_item_content5_et.setHint(R.string.hint_date);
 				}
-				if (conf.getString("extra2").contains("鎬у埆")) {
-					action_reg_item_content5_et.setHint("鐢锋垨濂�");
+				if (conf.getString("extra2").contains("性别")) {
+					action_reg_item_content5_et.setHint(R.string.hint_sex);
 				}
 				continue;
 			}
@@ -294,10 +294,10 @@ public class ActionRegisterFragment extends BaseFragment {
 				action_reg_item_star6_iv.setVisibility(View.VISIBLE);
 				String extype = conf.getString("extra3_type");
 				if ("4".equals(extype)) {
-					action_reg_item_content6_et.setHint("濡傦細2014-12-16");
+					action_reg_item_content6_et.setHint(R.string.hint_date);
 				}
-				if (conf.getString("extra3").contains("鎬у埆")) {
-					action_reg_item_content6_et.setHint("鐢锋垨濂�");
+				if (conf.getString("extra3").contains("性别")) {
+					action_reg_item_content6_et.setHint(R.string.hint_sex);
 				}
 				continue;
 			}
@@ -305,10 +305,10 @@ public class ActionRegisterFragment extends BaseFragment {
 				action_reg_item_star7_iv.setVisibility(View.VISIBLE);
 				String extype = conf.getString("extra4_type");
 				if ("4".equals(extype)) {
-					action_reg_item_content7_et.setHint("濡傦細2014-12-16");
+					action_reg_item_content7_et.setHint(R.string.hint_date);
 				}
-				if (conf.getString("extra4").contains("鎬у埆")) {
-					action_reg_item_content7_et.setHint("鐢锋垨濂�");
+				if (conf.getString("extra4").contains("性别")) {
+					action_reg_item_content7_et.setHint(R.string.hint_sex);
 				}
 				continue;
 			}
@@ -316,10 +316,10 @@ public class ActionRegisterFragment extends BaseFragment {
 				action_reg_item_star8_iv.setVisibility(View.VISIBLE);
 				String extype = conf.getString("extra5_type");
 				if ("4".equals(extype)) {
-					action_reg_item_content8_et.setHint("濡傦細2014-12-16");
+					action_reg_item_content8_et.setHint(R.string.hint_date);
 				}
-				if (conf.getString("extra5").contains("鎬у埆")) {
-					action_reg_item_content8_et.setHint("鐢锋垨濂�");
+				if (conf.getString("extra5").contains("性别")) {
+					action_reg_item_content8_et.setHint(R.string.hint_sex);
 				}
 				continue;
 			}
@@ -338,22 +338,22 @@ public class ActionRegisterFragment extends BaseFragment {
 
 		String co = action_reg_item_content1_et.getText().toString();
 		if (null == co || "".equals(co)) {
-			TUtils.toast(conf.getString("username") + "涓嶈兘涓虹┖");
+			TUtils.toast(getString(R.string.toast_xx_cannot_be_empty, conf.getString("username")));
 			return;
 		}
 		co = action_reg_item_content2_et.getText().toString();
 		if (null == co || "".equals(co)) {
-			TUtils.toast(conf.getString("tel") + "涓嶈兘涓虹┖");
+			TUtils.toast(getString(R.string.toast_xx_cannot_be_empty, conf.getString("tel")));
 			return;
 		}
 		if (!(isMobile(co) || isPhone(co))) {
 			LogUtils.i("b--->" + co);
-			TUtils.toast("鐢佃瘽鏍煎紡涓嶆纭�");
+			TUtils.toast(getString(R.string.toast_phone_format_is_wrong));
 			return;
 		}
 		co = action_reg_item_content3_et.getText().toString();
 		if (null == co || "".equals(co)) {
-			TUtils.toast(conf.getString("title") + "涓嶈兘涓虹┖");
+			TUtils.toast(getString(R.string.toast_xx_cannot_be_empty, conf.getString("title")));
 			return;
 		}
 
@@ -363,33 +363,33 @@ public class ActionRegisterFragment extends BaseFragment {
 			if ("username".equals(s)) {
 				String content = action_reg_item_content1_et.getText().toString();
 				if (null == content || "".equals(content)) {
-					TUtils.toast(conf.getString(s) + "涓嶈兘涓虹┖");
+					TUtils.toast(getString(R.string.toast_xx_cannot_be_empty, conf.getString(s)));
 					return;
 				}
 			}
 			if ("tel".equals(s)) {
 				String content = action_reg_item_content2_et.getText().toString();
 				if (null == content || "".equals(content)) {
-					TUtils.toast(conf.getString(s) + "涓嶈兘涓虹┖");
+					TUtils.toast(getString(R.string.toast_xx_cannot_be_empty, conf.getString(s)));
 					return;
 				}
 				if (!(isMobile(content) || isPhone(content))) {
 					LogUtils.i("--s->" + co);
-					TUtils.toast("鐢佃瘽鏍煎紡涓嶆纭�");
+					TUtils.toast(getString(R.string.toast_phone_format_is_wrong));
 					return;
 				}
 			}
 			if ("title".equals(s)) {
 				String content = action_reg_item_content3_et.getText().toString();
 				if (null == content || "".equals(content)) {
-					TUtils.toast(conf.getString(s) + "涓嶈兘涓虹┖");
+					TUtils.toast(getString(R.string.toast_xx_cannot_be_empty, conf.getString(s)));
 					return;
 				}
 			}
 			if ("extra1".equals(s)) {
 				String content = action_reg_item_content4_et.getText().toString();
 				if (null == content || "".equals(content)) {
-					TUtils.toast(conf.getString(s) + "涓嶈兘涓虹┖");
+					TUtils.toast(getString(R.string.toast_xx_cannot_be_empty, conf.getString(s)));
 					return;
 				}
 				extype = conf.getString("extra1_type");
@@ -401,7 +401,7 @@ public class ActionRegisterFragment extends BaseFragment {
 			if ("extra2".equals(s)) {
 				String content = action_reg_item_content5_et.getText().toString();
 				if (null == content || "".equals(content)) {
-					TUtils.toast(conf.getString(s) + "涓嶈兘涓虹┖");
+					TUtils.toast(getString(R.string.toast_xx_cannot_be_empty, conf.getString(s)));
 					return;
 				}
 				extype = conf.getString("extra2_type");
@@ -413,7 +413,7 @@ public class ActionRegisterFragment extends BaseFragment {
 			if ("extra3".equals(s)) {
 				String content = action_reg_item_content6_et.getText().toString();
 				if (null == content || "".equals(content)) {
-					TUtils.toast(conf.getString(s) + "涓嶈兘涓虹┖");
+					TUtils.toast(getString(R.string.toast_xx_cannot_be_empty, conf.getString(s)));
 					return;
 				}
 				extype = conf.getString("extra3_type");
@@ -425,7 +425,7 @@ public class ActionRegisterFragment extends BaseFragment {
 			if ("extra4".equals(s)) {
 				String content = action_reg_item_content7_et.getText().toString();
 				if (null == content || "".equals(content)) {
-					TUtils.toast(conf.getString(s) + "涓嶈兘涓虹┖");
+					TUtils.toast(getString(R.string.toast_xx_cannot_be_empty, conf.getString(s)));
 					return;
 				}
 				extype = conf.getString("extra4_type");
@@ -437,7 +437,7 @@ public class ActionRegisterFragment extends BaseFragment {
 			if ("extra5".equals(s)) {
 				String content = action_reg_item_content8_et.getText().toString();
 				if (null == content || "".equals(content)) {
-					TUtils.toast(conf.getString(s) + "涓嶈兘涓虹┖");
+					TUtils.toast(getString(R.string.toast_xx_cannot_be_empty, conf.getString(s)));
 					return;
 				}
 				extype = conf.getString("extra5_type");
@@ -449,7 +449,7 @@ public class ActionRegisterFragment extends BaseFragment {
 			if ("content".equals(s)) {
 				String content = action_reg_item_content9_et.getText().toString();
 				if (null == content || "".equals(content)) {
-					TUtils.toast(conf.getString(s) + "涓嶈兘涓虹┖");
+					TUtils.toast(getString(R.string.toast_xx_cannot_be_empty, conf.getString(s)));
 					return;
 				}
 			}
@@ -460,7 +460,7 @@ public class ActionRegisterFragment extends BaseFragment {
 	}
 
 	private void reset() {
-		TUtils.toast("鎶ュ悕鎴愬姛");
+		TUtils.toast(getString(R.string.toast_apply_success));
 
 		action_reg_item_content1_et.setText("");
 		action_reg_item_content2_et.setText("");
@@ -479,10 +479,23 @@ public class ActionRegisterFragment extends BaseFragment {
 
 	class MyasyncUpload extends AsyncTask<String, String, String> {
 
+		private String[] mParams;
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 			showUploadDialog();
+			mParams = new String[]{
+					action_reg_item_content1_et.getText().toString(),
+					action_reg_item_content2_et.getText().toString(),
+					action_reg_item_content3_et.getText().toString(),
+					action_reg_item_content4_et.getText().toString(),
+					action_reg_item_content5_et.getText().toString(),
+					action_reg_item_content6_et.getText().toString(),
+					action_reg_item_content7_et.getText().toString(),
+					action_reg_item_content8_et.getText().toString(),
+					action_reg_item_content9_et.getText().toString(),
+			};
 		}
 
 		@Override
@@ -505,7 +518,7 @@ public class ActionRegisterFragment extends BaseFragment {
 						pics.append(id);
 						pics.append(",");
 					} else {
-						return "涓婁紶鍥剧墖" + i + "澶辫触";
+						return getString(R.string.toast_failed_to_upload_image);
 					}
 				} catch (HttpException e) {
 					e.printStackTrace();
@@ -523,41 +536,32 @@ public class ActionRegisterFragment extends BaseFragment {
 			para1.addBodyParameter("pic", pic);
 			LogUtils.i("pics-->" + pic);
 
-			String content = action_reg_item_content1_et.getText().toString();
-			para1.addBodyParameter("username", content);
-			LogUtils.i("username-->" + content);
+			para1.addBodyParameter("username", mParams[0]);
+			LogUtils.i("username-->" + mParams[0]);
 
-			content = action_reg_item_content2_et.getText().toString();
-			para1.addBodyParameter("tel", content);
-			LogUtils.i("tel-->" + content);
+			para1.addBodyParameter("tel", mParams[1]);
+			LogUtils.i("tel-->" + mParams[1]);
 
-			content = action_reg_item_content3_et.getText().toString();
-			para1.addBodyParameter("title", content);
-			LogUtils.i("title-->" + content);
+			para1.addBodyParameter("title", mParams[2]);
+			LogUtils.i("title-->" + mParams[2]);
 
-			content = action_reg_item_content4_et.getText().toString();
-			para1.addBodyParameter("extra1", content);
-			LogUtils.i("extra1-->" + content);
+			para1.addBodyParameter("extra1", mParams[3]);
+			LogUtils.i("extra1-->" + mParams[3]);
 
-			content = action_reg_item_content5_et.getText().toString();
-			para1.addBodyParameter("extra2", content);
-			LogUtils.i("extra2-->" + content);
+			para1.addBodyParameter("extra2", mParams[4]);
+			LogUtils.i("extra2-->" + mParams[4]);
 
-			content = action_reg_item_content6_et.getText().toString();
-			para1.addBodyParameter("extra3", content);
-			LogUtils.i("extra3-->" + content);
+			para1.addBodyParameter("extra3", mParams[5]);
+			LogUtils.i("extra3-->" + mParams[5]);
 
-			content = action_reg_item_content7_et.getText().toString();
-			para1.addBodyParameter("extra4", content);
-			LogUtils.i("extra4-->" + content);
+			para1.addBodyParameter("extra4", mParams[6]);
+			LogUtils.i("extra4-->" + mParams[6]);
 
-			content = action_reg_item_content8_et.getText().toString();
-			para1.addBodyParameter("extra5", content);
-			LogUtils.i("extra5-->" + content);
+			para1.addBodyParameter("extra5", mParams[7]);
+			LogUtils.i("extra5-->" + mParams[7]);
 
-			content = action_reg_item_content9_et.getText().toString();
-			para1.addBodyParameter("content", content);
-			LogUtils.i("content-->" + content);
+			para1.addBodyParameter("content", mParams[8]);
+			LogUtils.i("content-->" + mParams[8]);
 
 			String result = null;
 			try {
@@ -580,7 +584,7 @@ public class ActionRegisterFragment extends BaseFragment {
 			}
 			JSONObject obj = FjsonUtil.parseObject(result);
 			if (null != obj) {
-				if (200 == obj.getIntValue("code")) {// 鎻愪氦鎴愬姛
+				if (200 == obj.getIntValue("code")) {// 提交成功
 					reset();
 				}
 				TUtils.toast(obj.getString("msg"));
@@ -592,7 +596,7 @@ public class ActionRegisterFragment extends BaseFragment {
 	}
 
 	private boolean validateS(String type, String con) {
-		// 1:閭,2:瀛楃,3:鏁板瓧,4:鏃ユ湡,5:qq,6:瀵嗙爜,7:鍗曢��,8:澶氶��
+		// 1:邮箱,2:字符,3:数字,4:日期,5:qq,6:密码,7:单选,8:多选
 		boolean flag = true;
 		if ("1".equals(type)) {
 			flag = isEmail(con);
@@ -611,22 +615,22 @@ public class ActionRegisterFragment extends BaseFragment {
 	}
 
 	private void popStr(String type, String s) {
-		// 1:閭,2:瀛楃,3:鏁板瓧,4:鏃ユ湡,5:qq,6:瀵嗙爜,7:鍗曢��,8:澶氶��
+		// 1:邮箱,2:字符,3:数字,4:日期,5:qq,6:密码,7:单选,8:多选
 		LogUtils.i("type-->" + type + "--s-->" + s);
 		if ("1".equals(type)) {
-			TUtils.toast("閭鏍煎紡涓嶆纭�");
+			TUtils.toast(getString(R.string.toast_email_format_is_wrong));
 		} else if ("2".equals(type)) {
-			TUtils.toast(s + "涓嶈兘涓虹┖");
+			TUtils.toast(getString(R.string.toast_xx_cannot_be_empty, s));
 		} else if ("3".equals(type)) {
-			TUtils.toast("璇峰～鍐欐暟瀛�");
+			TUtils.toast(getString(R.string.toast_input_number));
 		} else if ("4".equals(type)) {
-			TUtils.toast("鏃ユ湡鏍煎紡涓嶆纭甛n姝ｇ‘鏍煎紡涓簓yyy-MM-dd");
+			TUtils.toast(getString(R.string.toast_date_format_is_wrong));
 		} else if ("5".equals(type)) {
-			TUtils.toast("qq鏍煎紡涓嶆纭�");
+			TUtils.toast(getString(R.string.toast_qq_format_is_wrong));
 		}
 	}
 
-	// 杩涘害瀵硅瘽妗�
+	// 进度对话框
 	private void showUploadDialog() {
 		if (null == dialog) {
 			dialog = CustomProgressDialog.createDialog(activity, false);
@@ -639,13 +643,13 @@ public class ActionRegisterFragment extends BaseFragment {
 			return;
 		}
 		Intent intent = new Intent(activity, MultiImageSelectorActivity.class);
-		// 鏄惁鏄剧ず鎷嶆憚鍥剧墖
+		// 是否显示拍摄图片
 		intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
-		// 鏈�澶у彲閫夋嫨鍥剧墖鏁伴噺
+		// 最大可选择图片数量
 		intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, adapter.getMaxSize());
-		// 閫夋嫨妯″紡
+		// 选择模式
 		intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
-		// 榛樿閫夋嫨
+		// 默认选择
 		if (mSelectPath != null && mSelectPath.size() > 0) {
 			intent.putExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, mSelectPath);
 		}
@@ -675,7 +679,7 @@ public class ActionRegisterFragment extends BaseFragment {
 		Matcher m = null;
 		boolean flag = false;
 		try {
-			p = Pattern.compile("^[1][3,4,5,8][0-9]{9}$"); // 楠岃瘉鎵嬫満鍙�
+			p = Pattern.compile("^[1][3,4,5,8][0-9]{9}$"); // 验证手机号
 			m = p.matcher(str);
 			flag = m.matches();
 		} catch (Exception e) {
@@ -685,13 +689,13 @@ public class ActionRegisterFragment extends BaseFragment {
 	}
 
 	/**
-	 * 鐢佃瘽鍙风爜楠岃瘉
+	 * 电话号码验证
 	 */
 	public static boolean isPhone(String str) {
 		Pattern p1 = null;
 		Matcher m = null;
 		boolean flag = false;
-		p1 = Pattern.compile("^(0\\d{2}-\\d{5,10}(-\\d{1,4})?)|(0\\d{3}-\\d{7,8}(-\\d{1,4})?)$"); // 楠岃瘉甯﹀尯鍙风殑
+		p1 = Pattern.compile("^(0\\d{2}-\\d{5,10}(-\\d{1,4})?)|(0\\d{3}-\\d{7,8}(-\\d{1,4})?)$"); // 验证带区号的
 		try {
 			m = p1.matcher(str);
 			flag = m.matches();
@@ -702,7 +706,7 @@ public class ActionRegisterFragment extends BaseFragment {
 	}
 
 	/**
-	 * 楠岃瘉Email鍦板潃鐨勬纭��
+	 * 验证Email地址的正确性
 	 */
 	public static boolean isEmail(String email) {
 		try {
@@ -716,11 +720,11 @@ public class ActionRegisterFragment extends BaseFragment {
 	}
 
 	/**
-	 * 鍒ゆ柇鏃ユ湡鏍煎紡鍜岃寖鍥�
+	 * 判断日期格式和范围
 	 */
 	public static boolean isDate(String date) {
 		boolean flag = false;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // yyyy骞�
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // yyyy年
 		try {
 			sdf.parse(date);
 			flag = true;

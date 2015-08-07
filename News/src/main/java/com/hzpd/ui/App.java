@@ -318,7 +318,6 @@ public class App extends Application {
 				long millionSeconds = sdf.parse(str).getTime();
 				oldTime = new Date(millionSeconds);
 			} catch (ParseException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}// 毫秒
 		}
@@ -335,10 +334,10 @@ public class App extends Application {
 			if ((today.getTime() - oldTime.getTime()) > 0
 					&& (today.getTime() - oldTime.getTime()) <= 86400000) {
 				// String time = "昨天" + formatTime.format(oldTime);
-				String time = "昨天";
+				String time = mInstance.getString(R.string.prompt_yesterday);
 				return time;
 			} else if ((today.getTime() - oldTime.getTime()) <= 0) { // 至少是今天
-				String time = "今天";
+				String time = mInstance.getString(R.string.prompt_today);
 				return time;
 			} else { // 至少是前天
 				String time = format.format(oldTime);

@@ -1,6 +1,7 @@
 package com.hzpd.custorm;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -42,7 +43,7 @@ import de.greenrobot.event.EventBus;
  * @author Aige
  * @since 2014/11/14
  */
-public class UserCommPostView extends LinearLayout {
+public class  UserCommPostView extends LinearLayout {
 	private TextView tvType; // 显示类型标签
 	private TextView tvUserName; // 用户名
 	private TextView tvLocation; // 地理位置
@@ -125,7 +126,7 @@ public class UserCommPostView extends LinearLayout {
 	/**
 	 * 设置与用户相关的控件数据显示
 	 *
-	 * @param comment 评论对象
+	 * @param Usercomment 评论对象
 	 */
 	private void initUserDate(XF_UserCommentsBean Usercomment) {
 
@@ -139,7 +140,7 @@ public class UserCommPostView extends LinearLayout {
 		tvPraise.setText(myComm.getPraise());
 		tvLocation.setText(myComm.getUlevel());
 
-		xf_post_tv.setText("原文:" + bean.getTitle());
+		xf_post_tv.setText(getContext().getString(R.string.prompt_comment_belong_post, bean.getTitle()));
 
 
 		imgLoader.displayImage(myComm.getAvatar_path(), civNick,
@@ -184,7 +185,7 @@ public class UserCommPostView extends LinearLayout {
 		mPopupWindow.setContentView(pv);
 		mPopupWindow.setWindowLayoutMode(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
-		ColorDrawable dw = new ColorDrawable(-00000);
+		ColorDrawable dw = new ColorDrawable(Color.TRANSPARENT);
 		mPopupWindow.setBackgroundDrawable(dw);
 
 		// mPopupWindow.showAsDropDown(v,

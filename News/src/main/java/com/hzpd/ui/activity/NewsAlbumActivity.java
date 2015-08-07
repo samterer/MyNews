@@ -2,6 +2,7 @@ package com.hzpd.ui.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -402,7 +403,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
 					return;
 				}
 				if (!MyCommonUtil.isNetworkConnected(this)) {
-					TUtils.toast("请检查网络");
+					TUtils.toast(getString(R.string.toast_check_network));
 					return;
 				}
 				Intent intent = new Intent(this, CheckCommenthotActivity.class);
@@ -429,7 +430,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
 		pinlunpop.setWindowLayoutMode(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
 		pinlunpop.setContentView(popRoot);
-		ColorDrawable dw = new ColorDrawable(-00000);
+		ColorDrawable dw = new ColorDrawable(Color.TRANSPARENT);
 		pinlunpop.setBackgroundDrawable(dw);
 		pinlunpop.setOutsideTouchable(true);
 		ImageView pop_fenxiang_img = (ImageView) popRoot.findViewById(R.id.pop_fenxiang_img);
@@ -503,7 +504,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
 				ImageListSubBean bean = simpleAdapter.getCurrentBean(currentPosition);
 				String sdPath = getSDPath();
 				if (null == sdPath) {
-					TUtils.toast("sd卡不存在");
+					TUtils.toast(getString(R.string.toast_no_sdcard));
 					return;
 				}
 
@@ -514,7 +515,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
 						&& !imgUrl.endsWith(".jpg") && !imgUrl.endsWith(".JPG")
 						&& !imgUrl.endsWith(".png") && !imgUrl.endsWith(".PNG")
 						&& !imgUrl.endsWith(".gif") && !imgUrl.endsWith(".GIF")) {
-					TUtils.toast("图片格式不正确");
+					TUtils.toast(getString(R.string.toast_image_format_is_wrong));
 					return;
 				}
 
@@ -540,13 +541,13 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
 
 							@Override
 							public void onSuccess(ResponseInfo<File> responseInfo) {
-								TUtils.toast("已下载到" + responseInfo.result.getAbsoluteFile(), 2500);
+								TUtils.toast(getString(R.string.toast_downloaded_at, responseInfo.result.getAbsolutePath()));
 //						alpha();
 							}
 
 							@Override
 							public void onFailure(HttpException error, String msg) {
-								TUtils.toast("下载失败");
+								TUtils.toast(getString(R.string.toast_download_failed));
 //						alpha();
 							}
 						});
@@ -573,18 +574,18 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
 					dbHelper.getCollectionDBUitls().save(nibfc);
 					dbHelper.getCollectionDBUitls().save(tcb);
 
-					TUtils.toast("收藏成功");
+					TUtils.toast(getString(R.string.toast_collect_success));
 				} else {
 					dbHelper.getCollectionDBUitls().delete(NewsItemBeanForCollection.class
 							, WhereBuilder.b("colldataid", "=", imgListBean.getPid()));
 					dbHelper.getCollectionDBUitls().delete(Jsonbean.class, WhereBuilder.b("fid", "=", imgListBean.getPid()));
 
-					TUtils.toast("收藏已取消");
+					TUtils.toast(getString(R.string.toast_collect_cancelled));
 				}
 
 			} catch (DbException e1) {
 				e1.printStackTrace();
-				TUtils.toast("收藏失败");
+				TUtils.toast(getString(R.string.toast_collect_failed));
 			}
 			return;
 		}
@@ -621,7 +622,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
 
 			@Override
 			public void onFailure(HttpException error, String msg) {
-				TUtils.toast("无法连接到服务器");
+				TUtils.toast(getString(R.string.toast_cannot_connect_to_server));
 			}
 		});
 
@@ -693,7 +694,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
 
 					@Override
 					public void onFailure(HttpException error, String msg) {
-						TUtils.toast("服务器未响应");
+						TUtils.toast(getString(R.string.toast_server_no_response));
 					}
 				});
 
@@ -823,7 +824,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
 
 					@Override
 					public void onFailure(HttpException error, String msg) {
-						TUtils.toast("服务器未响应");
+						TUtils.toast(getString(R.string.toast_server_no_response));
 					}
 				});
 
@@ -938,6 +939,5 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
 			}
 		});
 	}
-
 
 }

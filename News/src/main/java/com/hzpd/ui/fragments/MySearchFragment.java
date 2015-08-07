@@ -98,7 +98,7 @@ public class MySearchFragment extends BaseFragment {
 					PullToRefreshBase<ListView> refreshView) {
 				String con = search_edittext_id.getText().toString();
 				if (null == con || "".equals(con)) {
-					TUtils.toast("请输入内容");
+					TUtils.toast(getString(R.string.toast_input_content));
 					search_listview_id.setMode(Mode.DISABLED);
 					return;
 				}
@@ -112,7 +112,7 @@ public class MySearchFragment extends BaseFragment {
 					PullToRefreshBase<ListView> refreshView) {
 				String con = search_edittext_id.getText().toString();
 				if (null == con || "".equals(con)) {
-					TUtils.toast("请输入内容");
+					TUtils.toast(getString(R.string.toast_input_content));
 					return;
 				}
 				isRefresh = false;
@@ -135,11 +135,11 @@ public class MySearchFragment extends BaseFragment {
 			public void afterTextChanged(Editable s) {
 				String ss = s.toString();
 				if (TextUtils.isEmpty(ss)) {
-					search_tv_search.setText("取消");
+					search_tv_search.setText(android.R.string.cancel);
 					zq_search_iv_clean.setVisibility(View.GONE);
 					isSearch = true;
 				} else {
-					search_tv_search.setText("搜索");
+					search_tv_search.setText(R.string.prompt_search);
 					zq_search_iv_clean.setVisibility(View.VISIBLE);
 					isSearch = false;
 				}
@@ -213,7 +213,7 @@ public class MySearchFragment extends BaseFragment {
 
 		String con = search_edittext_id.getText().toString();
 		if (null == con || "".equals(con)) {
-			TUtils.toast("请输入内容");
+			TUtils.toast(getString(R.string.toast_input_content));
 			search_listview_id.setMode(Mode.DISABLED);
 			return;
 		}
@@ -231,7 +231,7 @@ public class MySearchFragment extends BaseFragment {
 				search_listview_id.setRefreshing(true);
 			}
 		}, 500);
-		search_tv_search.setText("取消");
+		search_tv_search.setText(android.R.string.cancel);
 		isSearch = true;
 	}
 
@@ -253,7 +253,7 @@ public class MySearchFragment extends BaseFragment {
 
 				JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
 				if (null == obj) {
-					TUtils.toast("暂无数据");
+					TUtils.toast(getString(R.string.toast_no_data_now));
 					return;
 				}
 
@@ -262,7 +262,7 @@ public class MySearchFragment extends BaseFragment {
 					List<NewsBean> l = FjsonUtil.parseArray(
 							obj.getString("data"), NewsBean.class);
 					if (null == l) {
-						TUtils.toast("暂无数据");
+						TUtils.toast(getString(R.string.toast_no_data_now));
 						return;
 					}
 					LogUtils.i("l size-->" + l.size());
@@ -288,7 +288,7 @@ public class MySearchFragment extends BaseFragment {
 
 			@Override
 			public void onFailure(HttpException error, String msg) {
-				TUtils.toast("服务器未响应");
+				TUtils.toast(getString(R.string.toast_server_no_response));
 				search_listview_id.onRefreshComplete();
 				if (!isRefresh) {
 					page--;
@@ -297,6 +297,5 @@ public class MySearchFragment extends BaseFragment {
 			}
 		});
 	}
-
 
 }

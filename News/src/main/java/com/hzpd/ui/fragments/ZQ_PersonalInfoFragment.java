@@ -87,7 +87,7 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 	private static final int IMAGE_REQUEST_CODE = 450;
 	private static final int CAMERA_REQUEST_CODE = 451;
 	private static final int RESULT_REQUEST_CODE = 452;
-	private String[] items = new String[]{"选择本地图片", "拍照"};
+	private String[] items = new String[]{getString(R.string.prompt_choose_local_photo), getString(R.string.prompt_take_photo)};
 	private final String IMAGE_FILE_NAME = "faceImage.jpg";
 	private boolean isThirdpart = false;//是否是第三方登陆
 	private File imgFile;
@@ -149,19 +149,19 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 
 		String username = spu.getUser().getUsername();
 		if (QQ.NAME.equals(username)) {
-			username = "QQ用户";
+			username = getString(R.string.prompt_qq_user);
 //			pi_modifypwd_tr.setVisibility(View.GONE);
 			isThirdpart = true;
 		} else if (Wechat.NAME.equals(username)) {
-			username = "微信用户";
+			username = getString(R.string.prompt_weixin_user);
 //			pi_modifypwd_tr.setVisibility(View.GONE);
 			isThirdpart = true;
 		} else if (SinaWeibo.NAME.equals(username)) {
-			username = "微博用户";
+			username = getString(R.string.prompt_weibo_user);
 //			pi_modifypwd_tr.setVisibility(View.GONE);
 			isThirdpart = true;
 		} else {
-			username = "注册用户";
+			username = getString(R.string.prompt_register_user);
 		}
 
 //		String ph=spu.getMobile();
@@ -169,13 +169,12 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 		lg_pi_nick.setText(spu.getUser().getNickname());
 
 		if ("1".equals(spu.getUser().getSex())) {
-			lg_pi_tv_sex.setText("男");
+			lg_pi_tv_sex.setText(R.string.prompt_male);
 		} else if ("2".equals(spu.getUser().getSex())) {
-			lg_pi_tv_sex.setText("女");
+			lg_pi_tv_sex.setText(R.string.prompt_female);
 		} else if ("3".equals(spu.getUser().getSex())) {
-			lg_pi_tv_sex.setText("保密");
+			lg_pi_tv_sex.setText(R.string.prompt_keep_secret);
 		}
-
 
 		imgFile = getImgPath();
 
@@ -214,7 +213,7 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 	@OnClick(R.id.pi_modifypwd_tr)
 	private void modifyPwd(View view) {
 		if (isThirdpart) {
-			TUtils.toast("来自第三方登录，不可修改密码");
+			TUtils.toast(getString(R.string.toast_cannot_modify_password));
 			return;
 		}
 		((PersonalInfoActivity) activity).toFindbackpwdFm();
@@ -223,7 +222,7 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 	@OnClick(R.id.pi_nick_name_tr)
 	private void modifyNickName(View v) {
 		if (isThirdpart) {
-			TUtils.toast("来自第三方登录，不可修改昵称");
+			TUtils.toast(getString(R.string.toast_cannot_modify_nickname));
 			return;
 		}
 		((PersonalInfoActivity) activity).toModifyPinfoFm(InterfaceJsonfile.NICKNAME);
@@ -232,7 +231,7 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 	@OnClick(R.id.pi_gender_tr)
 	private void modifyGender(View v) {
 		if (isThirdpart) {
-			TUtils.toast("来自第三方登录，不可修改性别");
+			TUtils.toast(getString(R.string.toast_cannot_modify_sex));
 			return;
 		}
 		((PersonalInfoActivity) activity).toModifyPinfoFm(InterfaceJsonfile.GENDER);
@@ -244,7 +243,7 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 	@OnClick(R.id.lg_pi_iv_touxiang)
 	private void showDialog(View v) {
 		new AlertDialog.Builder(activity)
-				.setTitle("设置头像")
+				.setTitle(R.string.prompt_set_avatar)
 				.setItems(items, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -272,7 +271,7 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 						}
 					}
 				})
-				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+				.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
@@ -285,11 +284,11 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 		lg_pi_nick.setText(spu.getUser().getNickname());
 
 		if ("1".equals(spu.getUser().getSex())) {
-			lg_pi_tv_sex.setText("男");
+			lg_pi_tv_sex.setText(R.string.prompt_male);
 		} else if ("2".equals(spu.getUser().getSex())) {
-			lg_pi_tv_sex.setText("女");
+			lg_pi_tv_sex.setText(R.string.prompt_female);
 		} else if ("3".equals(spu.getUser().getSex())) {
-			lg_pi_tv_sex.setText("保密");
+			lg_pi_tv_sex.setText(R.string.prompt_keep_secret);
 		}
 	}
 
@@ -339,7 +338,7 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 				, new RequestCallBack<String>() {
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {
-				TUtils.toast("服务器未响应");
+				TUtils.toast(getString(R.string.toast_server_no_response));
 			}
 
 			@Override
@@ -351,7 +350,7 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 				}
 
 				if (200 == obj.getIntValue("code")) {
-					TUtils.toast("修改成功");
+					TUtils.toast(getString(R.string.toast_modify_success));
 					UserBean user = FjsonUtil.parseObject(obj.getString("data"), UserBean.class);
 					spu.setUser(user);
 

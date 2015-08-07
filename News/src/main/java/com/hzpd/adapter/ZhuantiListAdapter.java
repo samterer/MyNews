@@ -1,6 +1,7 @@
 package com.hzpd.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +72,7 @@ public class ZhuantiListAdapter extends ListBaseAdapter<NewsBean> {
 			convertView = inflater.inflate(R.layout.special_lv_item, parent, false);
 		}
 
+		Context context = convertView.getContext();
 		LogUtils.i("position" + position);
 
 		TextView special_lvitem_tv_title = ViewHolder.get(convertView, R.id.special_lvitem_tv_title);
@@ -86,7 +88,7 @@ public class ZhuantiListAdapter extends ListBaseAdapter<NewsBean> {
 		String number = couts.get(klb.getNid());
 		if (!TextUtils.isEmpty(number)) {
 			special_lvitem_tv_con.setVisibility(View.VISIBLE);
-			special_lvitem_tv_con.setText(number + "篇报道");
+			special_lvitem_tv_con.setText(context.getString(R.string.prompt_reports, number));
 		} else {
 			special_lvitem_tv_con.setVisibility(View.GONE);
 		}
@@ -137,6 +139,5 @@ public class ZhuantiListAdapter extends ListBaseAdapter<NewsBean> {
 			}
 		});
 	}
-
 
 }

@@ -405,7 +405,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/login_bt_login_selector"
-                android:text="报\t\t名"
+                android:text="@string/prompt_apply"
                 android:textColor="@color/white"
                 android:textSize="20sp"/>
         </LinearLayout>

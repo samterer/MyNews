@@ -165,7 +165,7 @@ public class CommentFragment extends BaseFragment {
 	private void comment(View view) {
 
 		if (null == spu.getUser()) {
-			TUtils.toast(getString(R.string.prompt_login));
+			TUtils.toast(getString(R.string.toast_please_login));
 			Intent intent = new Intent(activity, LoginActivity.class);
 			startActivity(intent);
 			AAnim.ActivityStartAnimation(activity);

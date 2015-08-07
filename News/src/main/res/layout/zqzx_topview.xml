@@ -50,7 +50,7 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             android:ems="1"
-            android:text="相关"
+            android:text="@string/prompt_relevant"
             android:paddingLeft="1dp"
             android:paddingTop="1dp"
             android:background="@color/zqzx_txt_relation_bg"/>

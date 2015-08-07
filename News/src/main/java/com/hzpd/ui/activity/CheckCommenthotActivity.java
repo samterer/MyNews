@@ -53,7 +53,7 @@ public class CheckCommenthotActivity extends MBaseActivity {
 		setContentView(R.layout.commentlist_layout);
 		ViewUtils.inject(this);
 
-		stitle_tv_content.setText("查看评论");
+		stitle_tv_content.setText(R.string.comment_check);
 
 		Intent intent = getIntent();
 		nid = intent.getStringExtra("id");
@@ -140,7 +140,7 @@ public class CheckCommenthotActivity extends MBaseActivity {
 			@Override
 			public void onFailure(HttpException error, String msg) {
 				checkcomment_lv.setMode(Mode.PULL_FROM_START);
-				TUtils.toast("服务器未响应");
+				TUtils.toast(getString(R.string.toast_server_no_response));
 				currentPage--;
 				checkcomment_lv.onRefreshComplete();
 				isRefresh = false;
@@ -184,7 +184,7 @@ public class CheckCommenthotActivity extends MBaseActivity {
 			@Override
 			public void onFailure(HttpException error, String msg) {
 				checkcomment_lv.onRefreshComplete();
-				TUtils.toast("服务器未响应");
+				TUtils.toast(getString(R.string.toast_server_no_response));
 			}
 		});
 	}

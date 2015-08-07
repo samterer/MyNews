@@ -87,7 +87,7 @@ public class SPUtil {
 	}
 
 	public int getTextSize() {
-		int textSize = 19;
+		int textSize = CODE.textSize_small;
 		String ts = msp.getAsString("textsize");
 		if (!TextUtils.isEmpty(ts)) {
 			try {

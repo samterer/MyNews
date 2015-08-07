@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Looper;
 
+import com.hzpd.hflt.R;
+
 import java.lang.Thread.UncaughtExceptionHandler;
 
 public class CrashHandler implements UncaughtExceptionHandler {
@@ -33,9 +35,9 @@ public class CrashHandler implements UncaughtExceptionHandler {
 			@Override
 			public void run() {
 				Looper.prepare();
-				new AlertDialog.Builder(mContext).setTitle("提 示").setCancelable(false)
-						.setMessage("请确认您的网络是否连通，\n重新打开程序再试一次！")
-						.setNeutralButton("我知道了", new OnClickListener() {
+				new AlertDialog.Builder(mContext).setTitle(R.string.title_prompt).setCancelable(false)
+						.setMessage(R.string.prompt_reopen_app)
+						.setNeutralButton(android.R.string.ok, new OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								System.exit(0);

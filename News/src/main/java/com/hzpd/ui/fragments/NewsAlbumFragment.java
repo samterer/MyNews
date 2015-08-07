@@ -93,7 +93,7 @@ public class NewsAlbumFragment extends BaseFragment implements I_Control {
 			                                public void onPullDownToRefresh(
 					                                PullToRefreshBase<ListView> refreshView) {
 				                                LogUtils.i("下拉刷新");
-				                                refreshView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+				                                refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_pull_label));
 				                                page = 1;
 				                                mFlagRefresh = true;
 				                                getDbList();
@@ -103,7 +103,7 @@ public class NewsAlbumFragment extends BaseFragment implements I_Control {
 			                                @Override
 			                                public void onPullUpToRefresh(
 					                                PullToRefreshBase<ListView> refreshView) {
-				                                refreshView.getLoadingLayoutProxy().setPullLabel("上拉加载更多");
+				                                refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_from_bottom_pull_label));
 				                                page++;
 				                                mFlagRefresh = false;
 				                                getDbList();
@@ -123,7 +123,7 @@ public class NewsAlbumFragment extends BaseFragment implements I_Control {
 				}
 				ImgListBean imgbean = (ImgListBean) adapter.getItem(position - 1);
 				if (null == imgbean.getSubphoto() || imgbean.getSubphoto().size() < 1) {
-					TUtils.toast("没有图片");
+					TUtils.toast(getString(R.string.toast_no_image));
 					return;
 				}
 				Intent in = new Intent(getActivity(), NewsAlbumActivity.class);
@@ -215,7 +215,7 @@ public class NewsAlbumFragment extends BaseFragment implements I_Control {
 
 
 				} else {
-					TUtils.toast("服务器错误");
+					TUtils.toast(getString(R.string.toast_server_error));
 				}
 			}
 
@@ -229,7 +229,6 @@ public class NewsAlbumFragment extends BaseFragment implements I_Control {
 	//服务端返回数据处理
 	@Override
 	public void setData(JSONObject obj) {
-		// TODO Auto-generated method stub
 		if (200 == obj.getIntValue("code")) {
 			List<ImgListBean> list = FjsonUtil.parseArray(obj.getString("data"), ImgListBean.class);
 
@@ -266,7 +265,7 @@ public class NewsAlbumFragment extends BaseFragment implements I_Control {
 			mXListView.setMode(Mode.BOTH);
 		} else if (202 == obj.getIntValue("code")) {
 			mXListView.setMode(Mode.PULL_FROM_START);
-			TUtils.toast("已到最后");
+			TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
 		} else {
 			TUtils.toast(obj.getString("msg"));
 		}
@@ -282,6 +281,5 @@ public class NewsAlbumFragment extends BaseFragment implements I_Control {
 		EventBus.getDefault().unregister(this);
 		super.onDestroy();
 	}
-
 
 }

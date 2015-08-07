@@ -56,8 +56,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="#AFAFAF"
-            android:textSize="12sp"
-            tools:text="1张"/>
+            android:textSize="12sp"/>
     </LinearLayout>
 
 </RelativeLayout>

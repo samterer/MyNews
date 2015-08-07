@@ -19,7 +19,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:text="我要上封面"
+                android:text="@string/prompt_apply_on_cover"
                 android:textColor="@color/black"
                 android:textSize="24sp"/>
 
@@ -64,7 +64,7 @@
             android:background="@color/grey_divider"
             android:clickable="false"
             android:gravity="center"
-            android:text="报名"
+            android:text="@string/prompt_apply"
             android:textColor="@color/white"
             android:textSize="18sp"/>
 
@@ -81,7 +81,7 @@
             android:background="@color/grey_divider"
             android:clickable="false"
             android:gravity="center"
-            android:text="投票"
+            android:text="@string/prompt_vote"
             android:textColor="@color/white"
             android:textSize="18sp"/>
 
@@ -98,7 +98,7 @@
             android:background="@color/grey_divider"
             android:clickable="false"
             android:gravity="center"
-            android:text="抽奖"
+            android:text="@string/prompt_lottery"
             android:textColor="@color/white"
             android:textSize="18sp"/>
 
@@ -115,7 +115,7 @@
             android:background="@color/grey_divider"
             android:clickable="false"
             android:gravity="center"
-            android:text="分享"
+            android:text="@string/prompt_share"
             android:textColor="@color/white"
             android:textSize="18sp"/>
     </LinearLayout>

@@ -19,7 +19,7 @@
             android:textColor="@color/zqzx_font_light"
             android:drawableLeft="@drawable/zq_icon_comment"
             android:drawablePadding="4dp"
-            android:text="我评论了"/>
+            android:text="@string/prompt_i_has_comment"/>
 
         <TextView
             android:id="@+id/cm_item_tv_comstate"
@@ -29,7 +29,7 @@
             android:textColor="@color/white"
             android:layout_marginRight="4dp"
             android:layout_marginLeft="4dp"
-            android:text="审核中"
+            android:text="@string/prompt_auditing"
             android:background="@drawable/comment_item_shape"/>
 
         <TextView

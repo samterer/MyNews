@@ -39,7 +39,7 @@ import java.util.HashSet;
  * rectangle and partial transparency outside it, as well as the laser scanner
  * animation and result points.
  */
-public final class ViewfinderView extends View {
+public final class  ViewfinderView extends View {
 	private static final String TAG = "log";
 
 	private static final long ANIMATION_DELAY = 10L;
@@ -120,7 +120,7 @@ public final class ViewfinderView extends View {
 			canvas.drawBitmap(resultBitmap, frame.left, frame.top, paint);
 		} else {
 
-			paint.setColor(R.color.blue_title_bg);
+			paint.setColor(getResources().getColor(R.color.blue_title_bg));
 
 			canvas.drawRect(frame.left, frame.top, frame.left + ScreenRate,
 					frame.top + CORNER_WIDTH, paint);

@@ -52,7 +52,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:maxLines="2"
-                android:text="1.阿布阿布·阿布阿布"
                 android:textColor="@color/black"
                 android:textSize="16sp"/>
         </LinearLayout>
@@ -118,7 +117,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:maxLines="2"
-                android:text="1.阿布阿布·阿布阿布"
                 android:textColor="@color/black"
                 android:textSize="16sp"/>
         </LinearLayout>

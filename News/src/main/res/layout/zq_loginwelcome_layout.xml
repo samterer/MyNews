@@ -69,7 +69,7 @@
         android:layout_above="@id/zq_loginwel_iv_sina"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
-        android:text="无需注册，用常用社交账户一键登录"
+        android:text="@string/prompt_sso_login"
         android:textColor="@color/white"
         android:textSize="14sp"
         />

@@ -82,7 +82,7 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 				case 333: {
-					fpb_bt_get.setText(t + "秒");
+					fpb_bt_get.setText(getString(R.string.prompt_seconds, t));
 					t--;
 					if (t < 0) {
 						resetTimer();
@@ -94,18 +94,18 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 				}
 				break;
 				case 555: {
-					TUtils.toast("验证码错误");
+					TUtils.toast(getString(R.string.toast_captcha_is_wrong));
 					fpb_et_sms_id.setText("");
 					resetTimer();
 				}
 				break;
 				case 445: {
-					TUtils.toast("验证码获取成功");
+					TUtils.toast(getString(R.string.toast_captcha_get_success));
 					startTime();// 开启定时器
 				}
 				break;
 				case 446: {
-					TUtils.toast("验证码获取失败");
+					TUtils.toast(getString(R.string.toast_captcha_get_failed));
 					resetTimer();
 				}
 				break;
@@ -122,7 +122,7 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 		if (null != timer) {
 			timer.cancel();
 		}
-		fpb_bt_get.setText("重新获取");
+		fpb_bt_get.setText(getString(R.string.prompt_get_again));
 		fpb_bt_get.setBackgroundResource(R.drawable.zq_special_greyborder_selector);
 		fpb_bt_get.setClickable(true);
 		fpb_et_phone_id.setEnabled(true);
@@ -141,11 +141,11 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		stitle_tv_content.setText("密码找回");
+		stitle_tv_content.setText(R.string.prompt_find_password);
 		Bundle bundle = getArguments();
 		type = bundle.getInt(InterfaceJsonfile.PWDTYPE, 1);
 		if (2 == type) {
-			stitle_tv_content.setText("修改密码");
+			stitle_tv_content.setText(getString(R.string.prompt_change_password));
 			if (!TextUtils.isEmpty(spu.getUser().getMobile())) {
 				fpb_et_phone_id.setText(spu.getUser().getMobile());
 				fpb_et_phone_id.setEnabled(false);
@@ -180,11 +180,11 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 		phoneNumber = fpb_et_phone_id.getText().toString();
 
 		if (phoneNumber == null || "".equals(phoneNumber)) {
-			TUtils.toast("请输入手机号！");
+			TUtils.toast(getString(R.string.toast_input_phone));
 			return;
 		}
 		if (phoneNumber.length() != 11) {
-			TUtils.toast("手机号位数不对!");
+			TUtils.toast(getString(R.string.toast_phone_number_count_error));
 			return;
 		}
 		fpb_bt_get.setClickable(false);
@@ -235,7 +235,7 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 
 		LogUtils.i("sms-->" + verify);
 		if (verify == null || "".equals(verify)) {
-			TUtils.toast("验证码不能为空!");
+			TUtils.toast(getString(R.string.toast_captcha_cannot_be_empty));
 			return;
 		}
 
@@ -265,7 +265,7 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 						handler.sendEmptyMessage(555);
 					}
 				} else {
-					TUtils.toast("服务器错误");
+					TUtils.toast(getString(R.string.toast_server_error));
 				}
 			}
 
@@ -280,7 +280,7 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 	private void verifyCorrect() {
 		fpb_ll_vertify.setVisibility(View.GONE);
 		fpb_ll_reset.setVisibility(View.VISIBLE);
-		TUtils.toast("验证成功");
+		TUtils.toast(getString(R.string.toast_verify_success));
 	}
 
 	@OnClick(R.id.fpb_bt_submmit)
@@ -289,24 +289,24 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 		String s2 = fpb_et_pwd_id2.getText().toString();
 
 		if (s == null || "".equals(s)) {
-			TUtils.toast("请输入密码");
+			TUtils.toast(getString(R.string.toast_input_password));
 			return;
 		}
 		if (s.length() < 6) {
-			TUtils.toast("密码不能太短");
+			TUtils.toast(getString(R.string.toast_password_too_short));
 			return;
 		}
 		if (s.length() > 12) {
-			TUtils.toast("密码不能太长");
+			TUtils.toast(getString(R.string.toast_password_too_long));
 			return;
 		}
 
 		if (s2 == null || "".equals(s2)) {
-			TUtils.toast("请输入确认密码");
+			TUtils.toast(getString(R.string.toast_input_confirm_password));
 			return;
 		}
 		if (!s.equals(s2)) {
-			TUtils.toast("俩次密码不一致！");
+			TUtils.toast(getString(R.string.toast_two_password_is_diff));
 			fpb_et_pwd_id.setText("");
 			fpb_et_pwd_id2.setText("");
 			return;
@@ -329,7 +329,7 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 				, params, new RequestCallBack<String>() {
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {
-				TUtils.toast("网络连接失败");
+				TUtils.toast(getString(R.string.toast_cannot_connect_network));
 			}
 
 			@Override
@@ -337,19 +337,19 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 				LogUtils.i("findpwdback-getcode->" + arg0.result);
 				JSONObject obj = FjsonUtil.parseObject(arg0.result);
 				if (null == obj) {
-					TUtils.toast("服务器错误");
+					TUtils.toast(getString(R.string.toast_server_error));
 					return;
 				}
 				if (200 == obj.getIntValue("code")) {
 					spu.setUser(null);
 
-					TUtils.toast("修改密码成功，请重新登录", Toast.LENGTH_LONG);
+					TUtils.toast(getString(R.string.toast_password_change_success), Toast.LENGTH_LONG);
 					Intent intent = new Intent();
 					intent.setAction(ZY_RightFragment.ACTION_QUIT);
 					activity.sendBroadcast(intent);
 					activity.finish();
 				} else {
-					TUtils.toast("修改密码失败");
+					TUtils.toast(getString(R.string.toast_password_change_failed));
 				}
 			}
 		});
@@ -385,6 +385,5 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 		}
 		super.onDestroy();
 	}
-
 
 }

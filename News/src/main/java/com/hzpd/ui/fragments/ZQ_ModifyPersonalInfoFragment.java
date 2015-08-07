@@ -79,13 +79,13 @@ public class ZQ_ModifyPersonalInfoFragment extends BaseFragment {
 		if (InterfaceJsonfile.NICKNAME == type) {
 			mi_ll_nick.setVisibility(View.VISIBLE);
 			mi_ll_gender.setVisibility(View.GONE);
-			stitle_tv_content.setText("修改昵称");
+			stitle_tv_content.setText(R.string.prompt_change_nickname);
 			mi_et_context.setText(spu.getUser().getNickname());
 		} else if (InterfaceJsonfile.GENDER == type) {
 
 			mi_ll_nick.setVisibility(View.GONE);
 			mi_ll_gender.setVisibility(View.VISIBLE);
-			stitle_tv_content.setText("修改性别");
+			stitle_tv_content.setText(R.string.prompt_change_sex);
 			String gender = spu.getUser().getSex();
 
 			if ("1".equals(gender)) {
@@ -117,7 +117,7 @@ public class ZQ_ModifyPersonalInfoFragment extends BaseFragment {
 		if (1 == type) {
 			nickname = mi_et_context.getText().toString();
 			if (TextUtils.isEmpty(nickname)) {
-				TUtils.toast("昵称不能为空");
+				TUtils.toast(getString(R.string.toast_nickname_cannot_be_empty));
 			} else {
 				params.addBodyParameter("nickname", nickname);
 			}
@@ -145,7 +145,7 @@ public class ZQ_ModifyPersonalInfoFragment extends BaseFragment {
 				, new RequestCallBack<String>() {
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {
-				TUtils.toast("服务器未响应");
+				TUtils.toast(getString(R.string.toast_server_no_response));
 			}
 
 			@Override
@@ -157,7 +157,7 @@ public class ZQ_ModifyPersonalInfoFragment extends BaseFragment {
 				}
 
 				if (200 == obj.getIntValue("code")) {
-					TUtils.toast("修改成功");
+					TUtils.toast(getString(R.string.toast_modify_success));
 					UserBean user = FjsonUtil.parseObject(obj.getString("data"), UserBean.class);
 					spu.setUser(user);
 

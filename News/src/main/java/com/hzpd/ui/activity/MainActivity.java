@@ -156,7 +156,7 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
 				Bundle bundle = data.getExtras();
 				String result = bundle.getString("result");
 				LogUtils.i("result--->" + result);
-				TUtils.toast("扫描到的内容：" + result);
+				TUtils.toast(getString(R.string.toast_scan_content, result));
 			}
 		}
 	}

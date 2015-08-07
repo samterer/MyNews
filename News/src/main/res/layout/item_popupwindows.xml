@@ -30,7 +30,7 @@
                 android:background="@drawable/bt_nobgd"
                 android:textColor="@color/grey_font"
                 android:textSize="18sp"
-                android:text="拍照"/>
+                android:text="@string/prompt_take_photo"/>
         </LinearLayout>
 
         <View
@@ -50,7 +50,7 @@
                 android:background="@drawable/bt_nobgd"
                 android:textColor="@color/grey_font"
                 android:textSize="18sp"
-                android:text="从相册中选取"/>
+                android:text="@string/prompt_select_from_gallery"/>
         </LinearLayout>
 
         <View
@@ -65,7 +65,7 @@
             android:background="@drawable/bt_nobgd"
             android:textColor="@color/grey_font"
             android:textSize="18sp"
-            android:text="取消"/>
+            android:text="@android:string/cancel"/>
     </LinearLayout>
 
 </RelativeLayout>

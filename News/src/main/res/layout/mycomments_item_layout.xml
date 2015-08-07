@@ -40,7 +40,6 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="习近平出席亚太经合组织第二十一次领导人非正式会议并发表重要讲话"
             android:textColor="@color/zqzx_font_normal"
             android:textSize="18sp"/>
 

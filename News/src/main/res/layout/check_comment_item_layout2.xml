@@ -28,7 +28,7 @@
             android:paddingLeft="5dp"
             android:textSize="15sp"
             android:textColor="@color/blue_title_bg"
-            android:text="匿名网友"/>
+            android:text="@string/prompt_anonym"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -37,7 +37,7 @@
             android:layout_marginLeft="3dp"
             android:layout_marginRight="3dp"
             android:textColor="@color/black"
-            android:text="回复"/>
+            android:text="@string/prompt_reply"/>
 
         <TextView
             android:id="@+id/check_comment2_name2"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:textColor="@color/blue_title_bg"
-            android:text="匿名网友"/>
+            android:text="@string/prompt_anonym"/>
 
         <TextView
             android:id="@+id/check_comment2_time"
@@ -65,7 +65,7 @@
         android:layout_marginLeft="30dp"
         android:textSize="18sp"
         android:textColor="@color/black"
-        android:text="为什么不能评论！"/>
+        android:text="@string/prompt_why_cannot_comment"/>
 
 
 </LinearLayout>

@@ -20,7 +20,7 @@
         android:gravity="left|top"
         android:textSize="16sp"
         android:textColor="@color/zqzx_font_normal"
-        android:hint="请留下您的意见或建议，我们将为您不断改进"
+        android:hint="@string/hint_feedback_at_content"
         android:background="@drawable/zq_feedetbg_shape"
         />
 
@@ -34,7 +34,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginBottom="30dp"
         android:textColor="@color/zqzx_font_normal"
-        android:hint="请留下您的邮箱以便我们给您回复"
+        android:hint="@string/hint_feedback_at_email"
         android:background="@drawable/zq_feedetbg_shape"
         />
 
@@ -47,6 +47,6 @@
         android:textSize="20sp"
         android:textColor="@color/white"
         android:background="@drawable/zq_feedback_btn_selector"
-        android:text="提交"/>
+        android:text="@string/prompt_submit"/>
 
 </LinearLayout>

@@ -55,8 +55,8 @@ public class MyCommentsActivity extends MBaseActivity {
 		setContentView(R.layout.mypushmsg_layout);
 		ViewUtils.inject(this);
 
-		stitle_tv_content.setText("我的评论");
-		pushmsg_tv_empty.setText("没有评论");
+		stitle_tv_content.setText(R.string.comment_mine);
+		pushmsg_tv_empty.setText(R.string.comment_none);
 		pushmsg_lv.setEmptyView(pushmsg_tv_empty);
 		adapter = new MycommentsAdapter(this);
 		pushmsg_lv.setAdapter(adapter);
@@ -65,7 +65,7 @@ public class MyCommentsActivity extends MBaseActivity {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 				LogUtils.i("下拉刷新");
-				refreshView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+				refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_pull_label));
 				Page = 1;
 				mFlagRefresh = true;
 				getInfoFromServer();
@@ -75,7 +75,7 @@ public class MyCommentsActivity extends MBaseActivity {
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 				//上拉加载
 				LogUtils.i("上拉加载");
-				refreshView.getLoadingLayoutProxy().setPullLabel("上拉加载更多");
+				refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_from_bottom_pull_label));
 				Page++;
 				mFlagRefresh = false;
 				getInfoFromServer();
@@ -145,7 +145,6 @@ public class MyCommentsActivity extends MBaseActivity {
 			vib.setVid(bean.getNid());
 			vib.setTitle(bean.getTitle());
 			vib.setTime(bean.getUpdate_time());
-			;
 			vib.setMainpic(bean.getSmallimgurl());
 			vib.setJson_url(bean.getUrl());
 			intent.putExtra("from", "collection");
@@ -163,7 +162,7 @@ public class MyCommentsActivity extends MBaseActivity {
 	private void getInfoFromServer() {
 		if (null == spu.getUser()) {
 			pushmsg_lv.onRefreshComplete();
-			TUtils.toast("请登录");
+			TUtils.toast(getString(R.string.toast_please_login));
 			return;
 		}
 		RequestParams params = RequestParamsUtils.getParamsWithU();

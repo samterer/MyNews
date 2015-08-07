@@ -51,7 +51,7 @@
                     android:layout_height="50dip"
                     android:layout_marginLeft="8dip"
                     android:background="@color/transparent"
-                    android:hint="请填写手机号"
+                    android:hint="@string/hint_input_phone"
                     android:inputType="phone"
                     android:maxLines="1"
                     android:textColor="@color/black"
@@ -91,7 +91,7 @@
                     android:layout_weight="1"
                     android:background="@color/transparent"
                     android:ellipsize="end"
-                    android:hint="短信验证码"
+                    android:hint="@string/hint_msm_captcha"
                     android:maxLines="1"
                     android:textColor="@color/zqzx_font_normal"
                     android:textCursorDrawable="@null"
@@ -105,7 +105,7 @@
                     android:background="@drawable/zq_special_greyborder_selector"
                     android:drawablePadding="4dp"
                     android:drawableRight="@drawable/zq_little_right"
-                    android:text="获取验证码"
+                    android:text="@string/prompt_get_captcha"
                     android:textColor="@drawable/zq_boderbtn_text_selector"
                     android:textSize="16sp"/>
             </LinearLayout>
@@ -125,7 +125,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="20dip"
             android:background="@drawable/login_bt_login_selector"
-            android:text="验    证"
+            android:text="@string/prompt_verify_captcha"
             android:textColor="@color/white"
             android:textSize="20sp"/>
     </LinearLayout>
@@ -166,7 +166,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@color/transparent"
-                android:hint="输入新密码"
+                android:hint="@string/hint_input_new_password"
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:textColor="@color/zqzx_font_normal"
@@ -208,7 +208,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:background="@color/transparent"
-                android:hint="确认新密码"
+                android:hint="@string/hint_confirm_password"
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:textColor="@color/zqzx_font_normal"
@@ -237,7 +237,7 @@
                 android:layout_height="50dip"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/login_bt_login_selector"
-                android:text="提    交"
+                android:text="@string/prompt_submit"
                 android:textColor="@color/white"
                 android:textSize="20sp"/>
         </LinearLayout>

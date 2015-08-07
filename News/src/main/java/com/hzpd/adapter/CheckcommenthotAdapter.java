@@ -113,10 +113,10 @@ public class CheckcommenthotAdapter extends MyBaseAdater {
 
 		if (0 == position && hotlist.size() > 0) {
 			holder.cm_item_rl.setVisibility(View.VISIBLE);
-			holder.cm_item_tv_t.setText("热门评论");
+			holder.cm_item_tv_t.setText(R.string.comment_item_hot);
 		} else if (hotlist.size() == position) {
 			holder.cm_item_rl.setVisibility(View.VISIBLE);
-			holder.cm_item_tv_t.setText("最新评论");
+			holder.cm_item_tv_t.setText(R.string.comment_item_new);
 		} else {
 			holder.cm_item_rl.setVisibility(View.GONE);
 		}

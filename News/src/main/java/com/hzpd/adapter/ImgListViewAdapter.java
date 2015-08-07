@@ -1,6 +1,7 @@
 package com.hzpd.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -229,6 +230,7 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
 		}
 
 		List<ImageListSubBean> allImg = ilb.getSubphoto();
+		Context context = convertView.getContext();
 		switch (type) {
 			case TYPE_2: {
 				holder2.title.setTextSize(fontSize);
@@ -236,13 +238,13 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
 				holder2.title.setText(ilb.getTitle() + "");
 
 				if (allImg != null && allImg.size() > 1) {
-					holder2.pl.setText(allImg.size() + "图");
+					holder2.pl.setText(context.getString(R.string.prompt_images, allImg.size()));
 					mImageLoader.displayImage(allImg.get(0).getSubphoto(), holder2.img1,
 							DisplayOptionFactory.getOption(OptionTp.Small));
 					mImageLoader.displayImage(allImg.get(1).getSubphoto(), holder2.img2,
 							DisplayOptionFactory.getOption(OptionTp.Small));
 				} else {
-					holder2.pl.setText("0 图");
+					holder2.pl.setText(context.getString(R.string.prompt_images, 0));
 				}
 			}
 			break;
@@ -252,7 +254,7 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
 				holder3.title.setText(ilb.getTitle() + "");
 
 				if (allImg != null && allImg.size() > 2) {
-					holder3.pl.setText(allImg.size() + "图");
+					holder3.pl.setText(context.getString(R.string.prompt_images, allImg.size()));
 					mImageLoader.displayImage(allImg.get(0).getSubphoto(), holder3.img1,
 							DisplayOptionFactory.getOption(OptionTp.Small));
 					mImageLoader.displayImage(allImg.get(1).getSubphoto(), holder3.img2,
@@ -260,7 +262,7 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
 					mImageLoader.displayImage(allImg.get(2).getSubphoto(), holder3.img3,
 							DisplayOptionFactory.getOption(OptionTp.Small));
 				} else {
-					holder3.pl.setText("0 图");
+					holder3.pl.setText(context.getString(R.string.prompt_images, 0));
 				}
 			}
 			break;
@@ -270,7 +272,7 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
 				holder4.title.setText(ilb.getTitle() + "");
 
 				if (allImg != null && allImg.size() > 3) {
-					holder4.pl.setText(allImg.size() + "图");
+					holder4.pl.setText(context.getString(R.string.prompt_images, allImg.size()));
 					mImageLoader.displayImage(allImg.get(0).getSubphoto(), holder4.img1,
 							DisplayOptionFactory.getOption(OptionTp.Small));
 					mImageLoader.displayImage(allImg.get(1).getSubphoto(), holder4.img2,
@@ -280,7 +282,7 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
 					mImageLoader.displayImage(allImg.get(3).getSubphoto(), holder4.img4,
 							DisplayOptionFactory.getOption(OptionTp.Small));
 				} else {
-					holder4.pl.setText("0 图");
+					holder4.pl.setText(context.getString(R.string.prompt_images, 0));
 				}
 			}
 			break;
@@ -290,7 +292,7 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
 				holder5.title.setText(ilb.getTitle() + "");
 
 				if (allImg != null && allImg.size() > 4) {
-					holder5.pl.setText(allImg.size() + "图");
+					holder5.pl.setText(context.getString(R.string.prompt_images, allImg.size()));
 					mImageLoader.displayImage(allImg.get(0).getSubphoto(), holder5.img1,
 							DisplayOptionFactory.getOption(OptionTp.Small));
 					mImageLoader.displayImage(allImg.get(1).getSubphoto(), holder5.img2,
@@ -302,7 +304,7 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
 					mImageLoader.displayImage(allImg.get(4).getSubphoto(), holder5.img5,
 							DisplayOptionFactory.getOption(OptionTp.Small));
 				} else {
-					holder5.pl.setText("0 图");
+					holder5.pl.setText(context.getString(R.string.prompt_images, 0));
 				}
 			}
 			break;
@@ -312,11 +314,11 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
 				holder1.title.setText(ilb.getTitle() + "");
 
 				if (allImg != null && allImg.size() > 0) {
-					holder1.pl.setText(allImg.size() + "图");
+					holder1.pl.setText(context.getString(R.string.prompt_images, allImg.size()));
 					mImageLoader.displayImage(allImg.get(0).getSubphoto(), holder1.img,
 							DisplayOptionFactory.getOption(OptionTp.Small));
 				} else {
-					holder1.pl.setText("0 图");
+					holder1.pl.setText(context.getString(R.string.prompt_images, 0));
 				}
 			}
 		}

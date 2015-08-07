@@ -14,6 +14,7 @@ import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 
+import com.hzpd.hflt.R;
 import com.lidroid.xutils.util.LogUtils;
 
 import java.net.InetAddress;
@@ -243,7 +244,7 @@ public class MyCommonUtil {
 	public static void startApp(Activity activity, String packageName) {
 		if (!isAvilible(activity, packageName)) {
 			LogUtils.i("start download");
-			TUtils.toast("未安装应用");
+			TUtils.toast(activity.getString(R.string.toast_app_not_installed));
 		} else {
 			LogUtils.i("start bookcat");
 			ComponentName componetName = new ComponentName(packageName, packageName);
@@ -265,6 +266,5 @@ public class MyCommonUtil {
 		}
 		return false;
 	}
-
 
 }

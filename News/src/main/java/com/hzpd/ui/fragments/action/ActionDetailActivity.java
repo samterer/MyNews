@@ -39,7 +39,7 @@ public class ActionDetailActivity extends SBaseActivity {
 		setContentView(R.layout.activity_multi_fm_std_layout);
 		ViewUtils.inject(this);
 		EventBus.getDefault().register(this);
-		title.setText("活动详情");
+		title.setText(R.string.title_activity_detail);
 		Intent intent = getIntent();
 		if (null == intent) {
 			return;
@@ -69,23 +69,23 @@ public class ActionDetailActivity extends SBaseActivity {
 			super.onBackPressed();
 		} else if (currentFm instanceof VoteDetailFragment) {
 			fm.popBackStack();
-			title.setText("活动详情");
+			title.setText(R.string.title_activity_detail);
 			currentFm = detailFm;
 		} else if (currentFm instanceof ActionRegisterFragment) {
 			fm.popBackStack();
-			title.setText("活动详情");
+			title.setText(R.string.title_activity_detail);
 			currentFm = detailFm;
 		} else if (currentFm instanceof ActionLotteryFragment) {
 			fm.popBackStack();
-			title.setText("活动详情");
+			title.setText(R.string.title_activity_detail);
 			currentFm = detailFm;
 		} else if (currentFm instanceof ActionLotteryPInfoFragment) {
 			fm.popBackStack();
-			title.setText("活动抽奖");
+			title.setText(R.string.title_activity_award);
 			currentFm = lotteryFm;
 		} else if (currentFm instanceof VotePinfoFragment) {
 			fm.popBackStack();
-			title.setText("活动投票");
+			title.setText(R.string.title_activity_vote);
 			currentFm = voteFm;
 		}
 	}
@@ -111,7 +111,7 @@ public class ActionDetailActivity extends SBaseActivity {
 		ft.addToBackStack(null);
 		ft.commit();
 		currentFm = registerFm;
-		title.setText("活动报名");
+		title.setText(R.string.title_activity_register);
 	}
 
 	//投票
@@ -129,7 +129,7 @@ public class ActionDetailActivity extends SBaseActivity {
 		ft.addToBackStack(null);
 		ft.commit();
 		currentFm = voteFm;
-		title.setText("活动投票");
+		title.setText(R.string.title_activity_vote);
 	}
 
 	//
@@ -144,7 +144,7 @@ public class ActionDetailActivity extends SBaseActivity {
 		ft.addToBackStack(null);
 		ft.commit();
 		currentFm = voteDetailFm;
-		title.setText("投票选项详情");
+		title.setText(R.string.title_activity_vote_detail);
 	}
 
 	//抽奖
@@ -178,7 +178,7 @@ public class ActionDetailActivity extends SBaseActivity {
 		ft.addToBackStack(null);
 		ft.commit();
 		currentFm = lotteryPinfoFm;
-		title.setText("中奖个人信息");
+		title.setText(R.string.title_activity_personal_award);
 	}
 
 	// 获取,传回的数据;

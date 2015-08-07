@@ -7,6 +7,7 @@ package com.hzpd.utils;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.hzpd.hflt.R;
 import com.hzpd.services.InitService;
 import com.umeng.analytics.MobclickAgent;
 
@@ -27,9 +28,7 @@ public class ExitApplication {
 			activity.finish();
 		} else {
 			beforeTime = currentTime;
-			TUtils.toast("再按一次退出程序");
+			TUtils.toast(activity.getString(R.string.toast_press_again_to_exit));
 		}
 	}
-
-
 }

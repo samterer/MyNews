@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textColor="@color/blue_title_bg"
-            android:text="昵称："/>
+            android:text="@string/prompt_nickname"/>
 
         <EditText
             android:id="@+id/mi_et_context"
@@ -33,7 +33,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:hint="请输入新的昵称..."
+            android:hint="@string/hint_input_new_nickname"
             android:textColor="@color/blue_title_bg"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="8dp"
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textColor="@color/blue_title_bg"
-            android:text="性别："/>
+            android:text="@string/prompt_sex"/>
 
         <RadioGroup
             android:id="@+id/mi_rg"
@@ -77,7 +77,7 @@
                 android:id="@+id/mi_rb1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" 男"
+                android:text="@string/prompt_male"
                 android:textColor="@color/blue_title_bg"
                 android:button="@drawable/radiobutton_selector"
                 android:textSize="20sp"/>
@@ -86,7 +86,7 @@
                 android:id="@+id/mi_rb2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" 女"
+                android:text="@string/prompt_female"
                 android:layout_marginLeft="4dp"
                 android:textColor="@color/blue_title_bg"
                 android:button="@drawable/radiobutton_selector"
@@ -96,7 +96,7 @@
                 android:id="@+id/mi_rb3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" 保密"
+                android:text="@string/prompt_keep_secret"
                 android:layout_marginLeft="4dp"
                 android:checked="true"
                 android:textColor="@color/blue_title_bg"
@@ -110,7 +110,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dip"
         android:layout_gravity="center_horizontal"
-        android:text="提   交"
+        android:text="@string/prompt_submit"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:layout_marginLeft="10dp"

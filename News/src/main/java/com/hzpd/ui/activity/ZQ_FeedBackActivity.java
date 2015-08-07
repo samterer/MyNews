@@ -39,7 +39,7 @@ public class ZQ_FeedBackActivity extends MBaseActivity {
 		setContentView(R.layout.zq_feedback_layout);
 		ViewUtils.inject(this);
 
-		stitle_tv_content.setText("意见反馈");
+		stitle_tv_content.setText(getString(R.string.prompt_feedback));
 
 	}
 
@@ -61,11 +61,11 @@ public class ZQ_FeedBackActivity extends MBaseActivity {
 
 	private void submit(String content, String email) {
 		if (TextUtils.isEmpty(content)) {
-			TUtils.toast("反馈内容不能为空");
+			TUtils.toast(getString(R.string.toast_feedback_cannot_be_empty));
 			return;
 		}
 		if (TextUtils.isEmpty(email)) {
-			TUtils.toast("Email不能为空");
+			TUtils.toast(getString(R.string.toast_email_cannot_be_empty));
 			return;
 		}
 
@@ -94,7 +94,7 @@ public class ZQ_FeedBackActivity extends MBaseActivity {
 						TUtils.toast(obj.getString("msg"));
 					}
 				} else {
-					TUtils.toast("服务器错误");
+					TUtils.toast(getString(R.string.toast_server_error));
 				}
 			}
 

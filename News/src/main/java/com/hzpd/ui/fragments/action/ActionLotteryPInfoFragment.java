@@ -64,19 +64,19 @@ public class ActionLotteryPInfoFragment extends BaseFragment {
 		price = args.getString("price");
 		from = args.getString("from");
 
-		lotterypi_tv_price.setText("奖品：" + price);
+		lotterypi_tv_price.setText(getString(R.string.toast_award, price));
 	}
 
 	@OnClick(R.id.lotterypi_submit)
 	private void submit(View view) {
 		String uname = lotterypi_uname.getText().toString();
 		if (TextUtils.isEmpty(uname)) {
-			TUtils.toast("姓名不能为空");
+			TUtils.toast(getString(R.string.toast_name_cannot_be_empty));
 			return;
 		}
 		String phone = lotterypi_phone.getText().toString();
 		if (TextUtils.isEmpty(phone)) {
-			TUtils.toast("手机号不能为空");
+			TUtils.toast(getString(R.string.toast_phone_cannot_be_empty));
 			return;
 		}
 

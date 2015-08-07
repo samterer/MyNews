@@ -52,8 +52,7 @@ public class ActionLotteryFragment extends BaseFragment {
 		public void handleMessage(android.os.Message msg) {
 			if (100 == msg.what) {
 				if ("1".equals(lotterydraw.getStatus())) {
-					TUtils.toast("恭喜获得" + lotterydraw.getPrize()
-							+ "\n请前去兑奖");
+					TUtils.toast(getString(R.string.toast_take_award, lotterydraw.getPrize()));
 					lotteryv_tv_price.setVisibility(View.VISIBLE);
 					lotteryv.postDelayed(new Runnable() {
 						@Override
@@ -63,7 +62,7 @@ public class ActionLotteryFragment extends BaseFragment {
 						}
 					}, 1000);
 				} else {
-					TUtils.toast("未中奖");
+					TUtils.toast(getString(R.string.toast_no_award));
 				}
 			}
 		}
@@ -115,9 +114,9 @@ public class ActionLotteryFragment extends BaseFragment {
 							, LotteryDrawBean.class);
 					lotteryv_tv.setText(lotterydraw.getInfo() + "");
 
-					lotteryv_tv_number.setText("今日剩余投票数:" + lotterydraw.getTod_lastvotes()
-							+ "\n今日剩余抽奖数:" + lotterydraw.getLastdraw());
-					lotteryv_tv_price.setText("奖品:" + lotterydraw.getPrize());
+					lotteryv_tv_number.setText(getString(R.string.toast_left_vote_award_today,
+							lotterydraw.getTod_lastvotes(), lotterydraw.getLastdraw()));
+					lotteryv_tv_price.setText(getString(R.string.toast_award, lotterydraw.getPrize()));
 
 
 					if ("2".equals(lotterydraw.getStatus())) {
@@ -130,7 +129,7 @@ public class ActionLotteryFragment extends BaseFragment {
 								lotteryv.setVisibility(View.VISIBLE);
 								lotteryv.setText(lotterydraw.getLevel());
 							} else {
-								TUtils.toast("抽奖次数已用完");
+								TUtils.toast(getString(R.string.toast_lottery_running_out));
 							}
 						} catch (Exception e) {
 
@@ -143,7 +142,7 @@ public class ActionLotteryFragment extends BaseFragment {
 
 			@Override
 			public void onFailure(HttpException error, String msg) {
-				TUtils.toast("服务器未响应");
+				TUtils.toast(getString(R.string.toast_server_no_response));
 			}
 		});
 	}

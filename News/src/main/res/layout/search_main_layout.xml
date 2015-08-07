@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="搜索"
+                android:text="@string/prompt_search"
                 android:textColor="@color/zqzx_font_light"
                 android:textSize="16sp"/>
         </LinearLayout>
@@ -81,7 +81,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:hint="搜索"
+                android:hint="@string/prompt_search"
                 android:textColorHint="@color/zqzx_font_light"
                 android:imeOptions="actionSearch"
                 android:padding="5dp"
@@ -110,7 +110,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:paddingTop="3dp"
-            android:text="取消"
+            android:text="@android:string/cancel"
             android:textColor="@color/toolbar_bg"
             android:textSize="16sp"/>
 

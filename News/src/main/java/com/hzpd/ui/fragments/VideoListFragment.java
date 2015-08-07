@@ -92,7 +92,7 @@ public class VideoListFragment extends BaseFragment implements I_Control {
 		mXListView.setOnRefreshListener(new OnRefreshListener2<ListView>() {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				refreshView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+				refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_pull_label));
 				mFlagRefresh = true;
 				page = 1;
 				adapter.clear();
@@ -102,7 +102,7 @@ public class VideoListFragment extends BaseFragment implements I_Control {
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 				LogUtils.i("上拉加载");
-				refreshView.getLoadingLayoutProxy().setPullLabel("上拉加载更多");
+				refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_from_bottom_pull_label));
 				mFlagRefresh = false;
 				page++;
 				getDbList();
@@ -188,7 +188,7 @@ public class VideoListFragment extends BaseFragment implements I_Control {
 					}
 
 				} else {
-					TUtils.toast("服务器错误");
+					TUtils.toast(getString(R.string.toast_server_error));
 				}
 			}
 
@@ -252,7 +252,7 @@ public class VideoListFragment extends BaseFragment implements I_Control {
 			mXListView.setMode(Mode.BOTH);
 		} else if (202 == obj.getIntValue("code")) {
 			mXListView.setMode(Mode.PULL_FROM_START);
-			TUtils.toast("已到最后");
+			TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
 		} else {
 			TUtils.toast(obj.getString("msg"));
 		}

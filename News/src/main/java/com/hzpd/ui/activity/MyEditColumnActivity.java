@@ -71,7 +71,7 @@ public class MyEditColumnActivity extends SBaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.editcolumn_my_layout);
 		ViewUtils.inject(this);
-		stitle_tv_content.setText("栏目订阅");
+		stitle_tv_content.setText(R.string.prompt_column_subscribe);
 		init();
 		getChannelJson();
 	}

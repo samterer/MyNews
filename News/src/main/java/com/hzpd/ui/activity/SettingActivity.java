@@ -83,7 +83,7 @@ public class SettingActivity extends MBaseActivity {
 		setContentView(R.layout.zqzx_setting_layout);
 		ViewUtils.inject(this);
 
-		stitle_tv_content.setText("设置");
+		stitle_tv_content.setText(R.string.title_settings);
 
 		switch (spu.getTextSize()) {
 			case CODE.textSize_big: {
@@ -215,13 +215,13 @@ public class SettingActivity extends MBaseActivity {
 								updateInfo);
 						break;
 					case UpdateStatus.No: // has no update
-						TUtils.toast("没有更新");
+						TUtils.toast(getString(R.string.toast_no_update));
 						break;
 					case UpdateStatus.NoneWifi: // none wifi
-						TUtils.toast("没有wifi连接， 只在wifi下更新");
+						TUtils.toast(getString(R.string.toast_update_only_in_wifi));
 						break;
 					case UpdateStatus.Timeout: // time out
-						TUtils.toast("超时");
+						TUtils.toast(getString(R.string.toast_timeout));
 						break;
 				}
 			}
@@ -278,8 +278,8 @@ public class SettingActivity extends MBaseActivity {
 
 	private void deleteSuccess() {
 		AlertDialog.Builder dilaog = new Builder(this);
-		dilaog.setMessage("删除成功");
-		dilaog.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+		dilaog.setMessage(R.string.toast_delete_success);
+		dilaog.setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
@@ -302,9 +302,9 @@ public class SettingActivity extends MBaseActivity {
 				deleteSuccess();
 			} else if (112 == msg.what) {
 				zqzx_setting_weibo.setState(false);
-				TUtils.toast("绑定失败");
+				TUtils.toast(getString(R.string.toast_bind_failed));
 			} else if (113 == msg.what) {
-				TUtils.toast("绑定成功");
+				TUtils.toast(getString(R.string.toast_bind_success));
 			}
 		}
 	};
@@ -312,9 +312,9 @@ public class SettingActivity extends MBaseActivity {
 	@OnClick(R.id.zqzx_setting_deletecache)
 	private void deleteCache(View v) {
 		mDeleteDialog = new Builder(this);
-		mDeleteDialog.setTitle("确定清理缓存信息");
-		mDeleteDialog.setMessage("删除后图片信息可能需要重新请求");
-		mDeleteDialog.setNegativeButton("确定",
+		mDeleteDialog.setTitle(R.string.prompt_clear_cache_dialog_title);
+		mDeleteDialog.setMessage(R.string.prompt_clear_cache_dialog_msg);
+		mDeleteDialog.setNegativeButton(android.R.string.ok,
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -325,7 +325,7 @@ public class SettingActivity extends MBaseActivity {
 						handler.sendEmptyMessageDelayed(111, 2000);
 					}
 				});
-		mDeleteDialog.setPositiveButton("取消",
+		mDeleteDialog.setPositiveButton(android.R.string.cancel,
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {

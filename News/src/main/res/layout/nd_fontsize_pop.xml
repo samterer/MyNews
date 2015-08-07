@@ -16,7 +16,7 @@
         android:layout_marginRight="10dp"
         android:textColor="@color/black"
         android:gravity="center_horizontal"
-        android:text="大"/>
+        android:text="@string/prompt_font_big"/>
 
     <TextView
         android:id="@+id/nd_tv_mid"
@@ -30,7 +30,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:gravity="center_horizontal"
-        android:text="中"/>
+        android:text="@string/prompt_font_medium"/>
 
     <TextView
         android:id="@+id/nd_tv_small"
@@ -44,6 +44,6 @@
         android:textColor="@color/black"
         android:background="@color/grey_divider"
         android:gravity="center_horizontal"
-        android:text="小"/>
+        android:text="@string/prompt_font_small"/>
 
 </LinearLayout>

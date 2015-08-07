@@ -96,7 +96,7 @@ public class ZhuantiFragment extends BaseFragment implements I_Control {
 			public void onPullDownToRefresh(
 					PullToRefreshBase<ListView> refreshView) {
 				LogUtils.i("下拉刷新");
-				refreshView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+				refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_pull_label));
 				page = 1;
 				mFlagRefresh = true;
 				getDbList();
@@ -105,7 +105,7 @@ public class ZhuantiFragment extends BaseFragment implements I_Control {
 			@Override
 			public void onPullUpToRefresh(
 					PullToRefreshBase<ListView> refreshView) {
-				refreshView.getLoadingLayoutProxy().setPullLabel("上拉加载更多");
+				refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_from_bottom_pull_label));
 				page++;
 				mFlagRefresh = false;
 				getDbList();
@@ -207,7 +207,7 @@ public class ZhuantiFragment extends BaseFragment implements I_Control {
 								setData(obj);
 							}
 						} else {
-							TUtils.toast("服务器错误");
+							TUtils.toast(getString(R.string.toast_server_error));
 						}
 					}
 
@@ -265,7 +265,7 @@ public class ZhuantiFragment extends BaseFragment implements I_Control {
 			break;
 			case 202: {
 				mXListView.setMode(Mode.PULL_FROM_START);
-				TUtils.toast("已到最后");
+				TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
 			}
 			break;
 			case 209: {

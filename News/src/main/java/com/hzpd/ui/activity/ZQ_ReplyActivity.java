@@ -70,7 +70,7 @@ public class ZQ_ReplyActivity extends MBaseActivity {
 			case R.id.zq_reply_tv_send: {
 
 				if (null == spu.getUser()) {
-					TUtils.toast("请登录");
+					TUtils.toast(getString(R.string.toast_please_login));
 					Intent intent = new Intent(this, LoginActivity.class);
 					startActivity(intent);
 					AAnim.ActivityStartAnimation(this);
@@ -79,7 +79,7 @@ public class ZQ_ReplyActivity extends MBaseActivity {
 
 				String comment = zq_reply_et_content.getText().toString();
 				if (null == comment || "".equals(comment)) {
-					TUtils.toast("输入的内容不能为空");
+					TUtils.toast(getString(R.string.toast_input_cannot_be_empty));
 					return;
 				}
 				sendComment(comment);
@@ -110,7 +110,7 @@ public class ZQ_ReplyActivity extends MBaseActivity {
 			public void onFailure(HttpException arg0, String arg1) {
 				LogUtils.i("arg1-->" + arg1);
 				Log.i("msg", arg1);
-				TUtils.toast("服务器未响应！");
+				TUtils.toast(getString(R.string.toast_server_no_response));
 			}
 
 			@Override
@@ -128,7 +128,7 @@ public class ZQ_ReplyActivity extends MBaseActivity {
 					EventUtils.sendComment(activity);
 					finish();
 				} else {
-					TUtils.toast("评论失败！");
+					TUtils.toast(getString(R.string.toast_fail_to_comment));
 				}
 			}
 		});

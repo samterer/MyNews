@@ -25,7 +25,6 @@
                 android:layout_weight="0.5"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="134434"
                 android:textColor="@color/black"
                 android:textSize="18sp"/>
 
@@ -35,7 +34,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="134434"
                 android:textColor="@color/gray_bg"
                 android:textSize="16sp"/>
         </LinearLayout>

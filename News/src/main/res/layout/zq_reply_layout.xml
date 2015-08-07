@@ -22,7 +22,7 @@
                 android:id="@+id/zq_reply_tv_cancle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="取消"
+                android:text="@android:string/cancel"
                 android:textColor="@color/zqzx_font_normal"
                 android:textSize="14sp"/>
 
@@ -30,7 +30,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="写评论"
+                android:text="@string/prompt_write_comment"
                 android:gravity="center_horizontal"
                 android:textColor="@color/zqzx_font_dark"
                 android:textSize="20sp"/>
@@ -39,7 +39,7 @@
                 android:id="@+id/zq_reply_tv_send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="发送"
+                android:text="@string/prompt_send"
                 android:textColor="@color/zqzx_font_normal"
                 android:textSize="14sp"/>
         </LinearLayout>

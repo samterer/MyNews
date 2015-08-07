@@ -84,14 +84,14 @@ public class ZQ_RegisterFragment extends BaseFragment {
 			} else if (555 == msg.what) {
 				lgr_et_sms_id.setText("");
 			} else if (445 == msg.what) {
-				TUtils.toast("验证码获取成功");
+				TUtils.toast(getString(R.string.toast_captcha_get_success));
 				startTime();// 开启定时器
 			} else if (446 == msg.what) {
-				TUtils.toast("验证码错误");
+				TUtils.toast(getString(R.string.toast_captcha_is_wrong));
 				resetTimer();
 			} else if (447 == msg.what) {
 				lgr_bt_get.setClickable(true);
-				TUtils.toast("验证码获取失败");
+				TUtils.toast(getString(R.string.toast_captcha_get_failed));
 				resetTimer();
 			}
 		}
@@ -102,7 +102,7 @@ public class ZQ_RegisterFragment extends BaseFragment {
 			return;
 		}
 		timer.cancel();
-		lgr_bt_get.setText("重新获取");
+		lgr_bt_get.setText(R.string.prompt_get_again);
 		lgr_bt_get.setBackgroundResource(R.drawable.zq_special_greyborder_selector);
 		lgr_et_phone_id.setEnabled(true);
 		lgr_bt_get.setClickable(true);
@@ -121,7 +121,7 @@ public class ZQ_RegisterFragment extends BaseFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		stitle_tv_content.setText("用户注册");
+		stitle_tv_content.setText(R.string.title_user_register);
 		SMSSDK.initSDK(activity, smsappkey, smsappsecret);
 		SMSSDK.registerEventHandler(new EventHandler() {
 			@Override
@@ -203,7 +203,7 @@ public class ZQ_RegisterFragment extends BaseFragment {
 			 */
 		} else {
 			// 提示
-			TUtils.toast("请填写正确手机号");
+			TUtils.toast(getString(R.string.toast_please_input_correct_phone));
 		}
 	}
 
@@ -211,37 +211,37 @@ public class ZQ_RegisterFragment extends BaseFragment {
 	@OnClick(R.id.lgr_bt_register)
 	private void register(View v) {
 		if (!MyCommonUtil.isNetworkConnected(activity)) {
-			TUtils.toast("网络异常！请检查网络");
+			TUtils.toast(getString(R.string.toast_network_error));
 			return;
 		}
 
 		String sms = lgr_et_sms_id.getText().toString();
 		if (sms == null || "".equals(sms)) {
-			TUtils.toast("验证码不能为空!");
+			TUtils.toast(getString(R.string.toast_captcha_cannot_be_empty));
 			return;
 		}
 
 		final String pwd1 = lgr_et_pwd_id.getText().toString();
 		if (pwd1 == null || "".equals(pwd1)) {
-			TUtils.toast("密码不能为空");
+			TUtils.toast(getString(R.string.toast_password_cannot_be_empty));
 			return;
 		}
 		if (pwd1.length() < 6) {
-			TUtils.toast("密码太短");
+			TUtils.toast(getString(R.string.toast_password_too_short));
 			return;
 		}
 		if (pwd1.length() > 12) {
-			TUtils.toast("密码太长");
+			TUtils.toast(getString(R.string.toast_password_too_long));
 			return;
 		}
 		final String pwd2 = lgr_et_pwd_id1.getText().toString();
 		if (pwd2 == null || "".equals(pwd2)) {
-			TUtils.toast("请再次输入密码");
+			TUtils.toast(getString(R.string.toast_input_password_again));
 			return;
 		}
 
 		if (!pwd1.equals(pwd2)) {
-			TUtils.toast("俩次输入密码不一致!");
+			TUtils.toast(getString(R.string.toast_two_password_is_diff));
 			return;
 		}
 		pwd = pwd1;
@@ -259,7 +259,7 @@ public class ZQ_RegisterFragment extends BaseFragment {
 				, params, new RequestCallBack<String>() {
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {
-				TUtils.toast("服务器未响应");
+				TUtils.toast(getString(R.string.toast_server_no_response));
 			}
 
 			@Override
@@ -279,11 +279,11 @@ public class ZQ_RegisterFragment extends BaseFragment {
 					intent.setAction(ZY_RightFragment.ACTION_USER);
 					activity.sendBroadcast(intent);
 
-					TUtils.toast("注册成功");
+					TUtils.toast(getString(R.string.toast_register_success));
 					// setResult(10);
 					activity.finish();
 				} else {
-					TUtils.toast("注册失败");
+					TUtils.toast(getString(R.string.toast_register_failed));
 				}
 			}
 		});

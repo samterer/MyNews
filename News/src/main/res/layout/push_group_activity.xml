@@ -18,7 +18,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:text="今天"
+            android:text="@string/prompt_today"
             android:textColor="@color/gray_bg"
             android:textSize="20sp"
             android:textStyle="bold"/>

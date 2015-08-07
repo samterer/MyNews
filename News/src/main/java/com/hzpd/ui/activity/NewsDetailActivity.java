@@ -1,6 +1,7 @@
 package com.hzpd.ui.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -262,7 +263,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 	private void initPopu() {
 		View mPopupMenu = LayoutInflater.from(this).inflate(R.layout.text_size_popu_layout, null);
 		mPopupWindow = new PopupWindow(mPopupMenu, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		ColorDrawable dw = new ColorDrawable(-00000);
+		ColorDrawable dw = new ColorDrawable(Color.TRANSPARENT);
 		mPopupWindow.setBackgroundDrawable(dw);
 		mPopupWindow.setOutsideTouchable(true);
 
@@ -331,7 +332,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 			case R.id.newdetail_tv_comm: {
 //			Log.i("comflag", nb.getComflag());
 				if (null == spu.getUser()) {
-					TUtils.toast("请登录");
+					TUtils.toast(getString(R.string.toast_please_login));
 					Intent intent = new Intent(this, LoginActivity.class);
 					startActivity(intent);
 					AAnim.ActivityStartAnimation(this);
@@ -541,7 +542,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 		listTemp = mBean.getRealtion();
 		if (listTemp != null && listTemp.size() > 0) {
 			TextView txt = new TextView(this);
-			txt.setText("   相关新闻");
+			txt.setText(R.string.prompt_relate_news);
 			txt.setTextSize(22);
 			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 			txt.setLayoutParams(lp);
@@ -660,14 +661,14 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 				String data = App.getFileContext(responseInfo.result);
 				Log.d(getLogTag(), "data->" + data);
 				if (TextUtils.isEmpty(data)) {
-					TUtils.toast("请求失败");
+					TUtils.toast(getString(R.string.toast_request_failed));
 					return;
 				}
 				LogUtils.i("http data-->2" + data);
 				JSONObject obj = FjsonUtil.parseObject(data);
 				if (null == obj) {
 					responseInfo.result.delete();
-					TUtils.toast("缓存失效，请重新打开");
+					TUtils.toast(getString(R.string.toast_cache_invalidate));
 					return;
 				}
 				mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
@@ -690,7 +691,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 					dialog.dismiss();
 				}
 				news_detail_nonetwork.setVisibility(View.VISIBLE);
-				TUtils.toast("服务器未响应");
+				TUtils.toast(getString(R.string.toast_server_no_response));
 			}
 		});
 	}
@@ -792,7 +793,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 		View popRoot = inflater.inflate(R.layout.newsdetail_popupwindow_layout, null);
 		pinlunpop.setWindowLayoutMode(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		pinlunpop.setContentView(popRoot);
-		ColorDrawable dw = new ColorDrawable(-00000);
+		ColorDrawable dw = new ColorDrawable(Color.TRANSPARENT);
 		pinlunpop.setBackgroundDrawable(dw);
 		pinlunpop.setOutsideTouchable(true);
 		ImageView pop_fenxiang_img = (ImageView) popRoot.findViewById(R.id.pop_fenxiang_img);
@@ -854,19 +855,19 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
 				if (mnbean == null) {
 					dbUtils.save(nibfc);
-					TUtils.toast("收藏成功");
+					TUtils.toast(getString(R.string.toast_collect_success));
 					long co = dbUtils.count(NewsItemBeanForCollection.class);
 					LogUtils.i("num:" + co);
 					LogUtils.i("type-->" + nibfc.getType());
 					newdetail_collection.setImageResource(R.drawable.zqzx_collection);
 				} else {
 					dbUtils.delete(NewsItemBeanForCollection.class, WhereBuilder.b("colldataid", "=", nb.getNid()));
-					TUtils.toast("收藏取消");
+					TUtils.toast(getString(R.string.toast_collect_cancelled));
 					newdetail_collection.setImageResource(R.drawable.zqzx_nd_collection);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				TUtils.toast("收藏失败");
+				TUtils.toast(getString(R.string.toast_collect_failed));
 			}
 			return;
 		}
@@ -897,16 +898,16 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 						// 1:收藏操作成功 2:取消收藏操作成功
 						if ("1".equals(object.getString("status"))) {
 							newdetail_collection.setImageResource(R.drawable.zqzx_collection);
-							TUtils.toast("收藏成功");
+							TUtils.toast(getString(R.string.toast_collect_success));
 						} else {
 							newdetail_collection.setImageResource(R.drawable.zqzx_nd_collection);
-							TUtils.toast("收藏取消");
+							TUtils.toast(getString(R.string.toast_collect_cancelled));
 						}
 					} else {
-						TUtils.toast("收藏失败");
+						TUtils.toast(getString(R.string.toast_collect_failed));
 					}
 				} catch (Exception e) {
-					TUtils.toast("收藏失败");
+					TUtils.toast(getString(R.string.toast_collect_failed));
 					return;
 				}
 
@@ -914,7 +915,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
 			@Override
 			public void onFailure(HttpException error, String msg) {
-				TUtils.toast("无法连接到服务器");
+				TUtils.toast(getString(R.string.toast_cannot_connect_to_server));
 			}
 		});
 

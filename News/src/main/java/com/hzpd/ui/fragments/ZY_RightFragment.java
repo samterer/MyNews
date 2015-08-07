@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hzpd.custorm.CircleImageView;
 import com.hzpd.hflt.R;
@@ -75,8 +74,8 @@ public class ZY_RightFragment extends BaseFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		zy_rfrag_tv_des.setText(activity.getResources().getString(R.string.app_name) + "客户端\tV"
-				+ App.getInstance().getVersionName() + "\n技术支持\t慧度科技\t99cms.cn");
+		zy_rfrag_tv_des.setText(
+				getString(R.string.prompt_developer_info, getString(R.string.app_name), App.getInstance().getVersionName()));
 
 		br = new LoginQuitBR();
 		IntentFilter filter = new IntentFilter();
@@ -128,7 +127,6 @@ public class ZY_RightFragment extends BaseFragment {
 			}
 			break;
 			case R.id.zy_rfrag_ll_sun:
-				Toast.makeText(activity, "白天", Toast.LENGTH_SHORT).show();
 				break;
 			case R.id.zy_rfrag_ll_setting: {
 				mIntent.setClass(activity, SettingActivity.class);
@@ -197,7 +195,7 @@ public class ZY_RightFragment extends BaseFragment {
 
 	private void setQuit() {
 		zy_rfrag_iv_login.setImageResource(R.drawable.zy_pic_touxiang);
-		zy_rfrag_tv_login.setText("登录");
+		zy_rfrag_tv_login.setText(R.string.login);
 
 		JPushInterface.setAlias(activity, "", new TagAliasCallback() {
 			@Override

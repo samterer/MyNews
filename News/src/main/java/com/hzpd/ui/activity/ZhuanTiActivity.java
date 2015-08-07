@@ -91,7 +91,7 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.special_detail_layout);
 		ViewUtils.inject(this);
-		stitle_tv_content.setText("专题");
+		stitle_tv_content.setText(R.string.prompt_subject);
 		init();
 
 		mXListView.postDelayed(new Runnable() {
@@ -138,7 +138,7 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
 				LogUtils.i("下拉刷新");
-				refreshView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+				refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_pull_label));
 				page = 1;
 				mFlagRefresh = true;
 				adapter.clearData();
@@ -147,7 +147,7 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-				refreshView.getLoadingLayoutProxy().setPullLabel("上拉加载更多");
+				refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_from_bottom_pull_label));
 				page++;
 				mFlagRefresh = false;
 				getColumns();
@@ -234,7 +234,7 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 						TUtils.toast(obj.getString("msg"));
 					}
 				} else {
-					TUtils.toast("服务器错误");
+					TUtils.toast(getString(R.string.toast_server_error));
 				}
 			}
 
@@ -349,7 +349,7 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 						setData(columnid, obj);
 					}
 				} else {
-					TUtils.toast("服务器错误");
+					TUtils.toast(getString(R.string.toast_server_error));
 				}
 			}
 
@@ -408,7 +408,7 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 			break;
 			case 202: {
 				zhuanti_item_sv.setMode(Mode.PULL_FROM_START);
-				TUtils.toast("已到最后");
+				TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
 			}
 			break;
 			case 209: {
@@ -449,7 +449,7 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 					for (SubjectNumber num : list) {
 						if (nb.getNid().equals(num.getNid())) {
 							zhuanti_tv_con.setVisibility(View.VISIBLE);
-							zhuanti_tv_con.setText(num.getNum() + "篇报道");
+							zhuanti_tv_con.setText(getString(R.string.prompt_reports, num.getNum()));
 						}
 					}
 				}
@@ -475,5 +475,3 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 	}
 
 }
-
-

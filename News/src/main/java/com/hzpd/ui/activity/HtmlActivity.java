@@ -241,7 +241,7 @@ public class HtmlActivity extends MBaseActivity {
 			case R.id.newsdetails_title_comment: {
 				// 跳转到评论页
 				if (!MyCommonUtil.isNetworkConnected(this)) {
-					TUtils.toast("请检查网络");
+					TUtils.toast(getString(R.string.toast_check_network));
 					return;
 				}
 				if (null == nb) {
@@ -260,7 +260,7 @@ public class HtmlActivity extends MBaseActivity {
 			break;
 			case R.id.newdetail_tv_comm: {
 				if (null == spu.getUser()) {
-					TUtils.toast("请登录");
+					TUtils.toast(getString(R.string.toast_please_login));
 					Intent intent = new Intent(this, LoginActivity.class);
 					startActivity(intent);
 					AAnim.ActivityStartAnimation(this);
@@ -355,17 +355,17 @@ public class HtmlActivity extends MBaseActivity {
 						Selector.from(NewsItemBeanForCollection.class).where("colldataid", "=", nb.getNid()));
 				if (mnbean == null) {
 					dbHelper.getCollectionDBUitls().save(nibfc);
-					TUtils.toast("收藏成功");
+					TUtils.toast(getString(R.string.toast_collect_success));
 					newdetail_collection.setImageResource(R.drawable.zqzx_collection);
 				} else {
 					dbHelper.getCollectionDBUitls().delete(NewsItemBeanForCollection.class,
 							WhereBuilder.b("colldataid", "=", nb.getNid()));
-					TUtils.toast("收藏取消");
+					TUtils.toast(getString(R.string.toast_collect_cancelled));
 					newdetail_collection.setImageResource(R.drawable.zqzx_nd_collection);
 				}
 			} catch (DbException e) {
 				e.printStackTrace();
-				TUtils.toast("收藏失败");
+				TUtils.toast(getString(R.string.toast_collect_failed));
 			}
 			return;
 		}
@@ -396,7 +396,7 @@ public class HtmlActivity extends MBaseActivity {
 						}
 					}
 				} catch (Exception e) {
-					TUtils.toast("收藏失败");
+					TUtils.toast(getString(R.string.toast_collect_failed));
 					return;
 				}
 
@@ -405,7 +405,7 @@ public class HtmlActivity extends MBaseActivity {
 
 			@Override
 			public void onFailure(HttpException error, String msg) {
-				TUtils.toast("无法连接到服务器");
+				TUtils.toast(getString(R.string.toast_cannot_connect_to_server));
 			}
 		});
 	}

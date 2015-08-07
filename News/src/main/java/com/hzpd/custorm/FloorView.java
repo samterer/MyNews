@@ -2,6 +2,7 @@ package com.hzpd.custorm;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -166,7 +167,7 @@ public class FloorView extends LinearLayout {
 			//设置显示数据
 			tvUserName.setText(comment.getNickname());
 			tvContent.setText(comment.getContent());
-			tvNum.setText((index + 1) + "楼");
+			tvNum.setText(getContext().getString(R.string.prompt_floors, (index + 1)));
 		}
 
 		//设置布局参数
@@ -214,7 +215,7 @@ public class FloorView extends LinearLayout {
 		mPopupWindow.setContentView(pv);
 		mPopupWindow.setWindowLayoutMode(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
-		ColorDrawable dw = new ColorDrawable(-00000);
+		ColorDrawable dw = new ColorDrawable(Color.TRANSPARENT);
 		mPopupWindow.setBackgroundDrawable(dw);
 		int[] location = new int[2];
 

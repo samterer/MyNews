@@ -31,7 +31,7 @@
         android:id="@+id/pushmsg_tv_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="没有消息"
+        android:text="@string/prompt_no_msg"
         android:textSize="20sp"
         android:gravity="center"
         android:textColor="@color/grey_font"/>

@@ -25,6 +25,6 @@
         android:visibility="gone"
         android:textSize="18sp"
         android:textColor="@color/blue_title_bg"
-        android:text="立即进入"
+        android:text="@string/prompt_enter_now"
         android:background="@drawable/welcome_fragment_entrybtn_selector"/>
 </RelativeLayout>

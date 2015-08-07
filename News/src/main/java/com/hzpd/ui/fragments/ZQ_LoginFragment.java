@@ -60,9 +60,7 @@ public class ZQ_LoginFragment extends BaseFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		stitle_tv_content.setText("登录");
-
-
+		stitle_tv_content.setText(R.string.title_login);
 	}
 
 	private void showDialog() {
@@ -73,18 +71,18 @@ public class ZQ_LoginFragment extends BaseFragment {
 	@OnClick(R.id.login_login_comfirm_id)
 	private void login(View v) {
 		if (!MyCommonUtil.isNetworkConnected(activity)) {
-			TUtils.toast("网络异常,请检查网络");
+			TUtils.toast(getString(R.string.toast_network_error));
 			return;
 		}
 
 		final String uname = login_uname_id.getText().toString();
 		final String pwd = login_passwd_id.getText().toString();
 		if (uname == null || "".equals(uname)) {
-			TUtils.toast("请填写用户名");
+			TUtils.toast(getString(R.string.toast_input_username));
 			return;
 		}
 		if (pwd == null || "".equals(pwd)) {
-			TUtils.toast("请填写密码");
+			TUtils.toast(getString(R.string.toast_input_password));
 			return;
 		}
 
@@ -102,7 +100,7 @@ public class ZQ_LoginFragment extends BaseFragment {
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {
 				LogUtils.i("login-failed");
-				TUtils.toast("服务器未响应");
+				TUtils.toast(getString(R.string.toast_server_no_response));
 				if (dialog.isShowing()) {
 					dialog.dismiss();
 				}
@@ -127,7 +125,7 @@ public class ZQ_LoginFragment extends BaseFragment {
 					intent.setAction(ZY_RightFragment.ACTION_USER);
 					activity.sendBroadcast(intent);
 					activity.finish();
-					TUtils.toast("登录成功");
+					TUtils.toast(getString(R.string.toast_login_success));
 				} else {
 					TUtils.toast(object.getString("msg"));
 				}
@@ -150,6 +148,5 @@ public class ZQ_LoginFragment extends BaseFragment {
 	private void back(View v) {
 		activity.onBackPressed();
 	}
-
 
 }

@@ -52,7 +52,7 @@
             android:singleLine="true"
             android:textColor="@color/img_folder_text_color"
             android:textSize="16sp"
-            tools:text="所有图片"/>
+            tools:text="@string/prompt_all_images"/>
 
         <View
             android:layout_width="1dp"
@@ -75,7 +75,7 @@
             android:textColor="@color/img_default_text_color"
             android:textSize="14sp"
             android:visibility="gone"
-            tools:text="预览(1)"/>
+            tools:text="@string/prompt_preview"/>
     </RelativeLayout>
 
 </RelativeLayout>

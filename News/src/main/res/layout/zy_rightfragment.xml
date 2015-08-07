@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:text="立即登录"
+            android:text="@string/prompt_login_now"
             android:textColor="#ffffff"
             android:textSize="16sp"/>
     </LinearLayout>
@@ -71,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="评论"
+                    android:text="@string/prompt_comment"
                     android:textColor="@drawable/zy_rftext_selector"
                     android:textSize="16sp"/>
             </LinearLayout>
@@ -95,7 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="收藏"
+                    android:text="@string/prompt_collect"
                     android:textColor="@drawable/zy_rftext_selector"
                     android:textSize="16sp"/>
             </LinearLayout>
@@ -119,7 +119,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="推送"
+                    android:text="@string/prompt_push"
                     android:textColor="@drawable/zy_rftext_selector"
                     android:textSize="16sp"/>
             </LinearLayout>
@@ -152,7 +152,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="白天"
+                    android:text="@string/prompt_daytime"
                     android:textColor="@drawable/zy_rftext_selector"
                     android:textSize="16sp"/>
             </LinearLayout>
@@ -176,7 +176,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="二维码"
+                    android:text="@string/prompt_qrcode"
                     android:textColor="@drawable/zy_rftext_selector"
                     android:textSize="16sp"/>
             </LinearLayout>
@@ -200,7 +200,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="设置"
+                    android:text="@string/title_settings"
                     android:textColor="@drawable/zy_rftext_selector"
                     android:textSize="16sp"/>
             </LinearLayout>

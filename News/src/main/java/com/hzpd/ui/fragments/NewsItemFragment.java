@@ -163,7 +163,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control {
 				//下拉刷新
 //				refreshView.getLoadingLayoutProxy().setLoadingDrawable(
 //						getResources().getDrawable(R.drawable.default_ptr_flip));
-				refreshView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+				refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_pull_label));
 //				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel("hh");
 				page = 1;
 				mFlagRefresh = true;
@@ -177,7 +177,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control {
 				LogUtils.i("上拉加载");
 //				refreshView.getLoadingLayoutProxy().setLoadingDrawable(
 //						getResources().getDrawable(R.drawable.default_ptr_flip));
-				refreshView.getLoadingLayoutProxy().setPullLabel("上拉加载更多");
+				refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_from_bottom_pull_label));
 //				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel("hh");
 				mFlagRefresh = false;
 				page++;
@@ -330,7 +330,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control {
 						setData(obj);
 					}
 				} else {
-					TUtils.toast("服务器错误");
+					TUtils.toast(getString(R.string.toast_server_error));
 				}
 			}
 
@@ -385,7 +385,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control {
 			break;
 			case 202: {
 				news_item_sv.setMode(Mode.PULL_FROM_START);
-				TUtils.toast("已到最后");
+				TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
 			}
 			break;
 			case 209: {

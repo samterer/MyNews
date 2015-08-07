@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -263,13 +264,13 @@ public class VideoPlayerActivity extends MBaseActivity
 						TUtils.toast(obj.getString("msg"));
 					}
 				} else {
-					TUtils.toast("服务器错误");
+					TUtils.toast(getString(R.string.toast_server_error));
 				}
 			}
 
 			@Override
 			public void onFailure(HttpException error, String msg) {
-				TUtils.toast("服务器未响应");
+				TUtils.toast(getString(R.string.toast_server_no_response));
 			}
 		});
 
@@ -285,7 +286,7 @@ public class VideoPlayerActivity extends MBaseActivity
 
 		// 跳转到评论页
 		if (!MyCommonUtil.isNetworkConnected(this)) {
-			TUtils.toast("请检查网络");
+			TUtils.toast(getString(R.string.toast_check_network));
 			return;
 		}
 		if (null == vib) {
@@ -313,18 +314,18 @@ public class VideoPlayerActivity extends MBaseActivity
 						Selector.from(NewsItemBeanForCollection.class).where("colldataid", "=", vib.getVid()));
 				if (mnbean == null) {
 					dbHelper.getCollectionDBUitls().save(nibfc);
-					TUtils.toast("收藏成功");
+					TUtils.toast(getString(R.string.toast_collect_success));
 					isCollected = true;
 
 				} else {
 					dbHelper.getCollectionDBUitls().delete(NewsItemBeanForCollection.class,
 							WhereBuilder.b("colldataid", "=", vib.getVid()));
-					TUtils.toast("收藏取消");
+					TUtils.toast(getString(R.string.toast_collect_cancelled));
 					isCollected = false;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				TUtils.toast("收藏失败");
+				TUtils.toast(getString(R.string.toast_collect_failed));
 			}
 			return;
 		}
@@ -346,7 +347,7 @@ public class VideoPlayerActivity extends MBaseActivity
 					obj = JSONObject.parseObject(responseInfo.result);
 
 				} catch (Exception e) {
-					TUtils.toast("收藏失败");
+					TUtils.toast(getString(R.string.toast_collect_failed));
 					return;
 				}
 
@@ -354,10 +355,10 @@ public class VideoPlayerActivity extends MBaseActivity
 					JSONObject object = obj.getJSONObject("data");
 					// 1:收藏操作成功 2:取消收藏操作成功
 					if ("1".equals(object.getString("status"))) {
-						TUtils.toast("收藏成功");
+						TUtils.toast(getString(R.string.toast_collect_success));
 						isCollected = true;
 					} else {
-						TUtils.toast("收藏取消");
+						TUtils.toast(getString(R.string.toast_collect_cancelled));
 						isCollected = false;
 					}
 				} else {
@@ -367,7 +368,7 @@ public class VideoPlayerActivity extends MBaseActivity
 
 			@Override
 			public void onFailure(HttpException error, String msg) {
-				TUtils.toast("无法连接到服务器");
+				TUtils.toast(getString(R.string.toast_cannot_connect_to_server));
 			}
 		});
 	}
@@ -435,7 +436,7 @@ public class VideoPlayerActivity extends MBaseActivity
 		View popRoot = inflater.inflate(R.layout.newsdetail_popupwindow_layout, null);
 		pinlunpop.setWindowLayoutMode(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		pinlunpop.setContentView(popRoot);
-		ColorDrawable dw = new ColorDrawable(-00000);
+		ColorDrawable dw = new ColorDrawable(Color.TRANSPARENT);
 		pinlunpop.setBackgroundDrawable(dw);
 		pinlunpop.setOutsideTouchable(true);
 		ImageView pop_fenxiang_img = (ImageView) popRoot.findViewById(R.id.pop_fenxiang_img);
@@ -736,7 +737,7 @@ public class VideoPlayerActivity extends MBaseActivity
 			} catch (Exception e) {
 				pageFile.delete();
 				e.printStackTrace();
-				TUtils.toast("缓存失效，请重新打开");
+				TUtils.toast(getString(R.string.toast_cache_failed));
 				return;
 			}
 			vdib = FjsonUtil.parseObject(obj.getString("data"), VideoDetailBean.class);
@@ -770,7 +771,7 @@ public class VideoPlayerActivity extends MBaseActivity
 				} catch (Exception e) {
 					responseInfo.result.delete();
 					e.printStackTrace();
-					TUtils.toast("缓存失效，请重新打开");
+					TUtils.toast(getString(R.string.toast_cache_failed));
 					return;
 				}
 
@@ -829,7 +830,7 @@ public class VideoPlayerActivity extends MBaseActivity
 							} catch (Exception e) {
 								responseInfo.result.delete();
 								e.printStackTrace();
-								TUtils.toast("缓存失效，请重新打开");
+								TUtils.toast(getString(R.string.toast_cache_failed));
 								return;
 							}
 							vdib = JSONObject.parseObject(obj.getString("data"), VideoDetailBean.class);

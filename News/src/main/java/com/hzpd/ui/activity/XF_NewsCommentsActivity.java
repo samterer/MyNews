@@ -24,7 +24,7 @@ public class XF_NewsCommentsActivity extends MBaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xf_newscomment_layout);
 		ViewUtils.inject(this);
-		stitle_tv_content.setText("评论");
+		stitle_tv_content.setText(R.string.prompt_comment);
 		Bundle bundle = getIntent().getExtras();
 		ReplayBean bean = (ReplayBean) bundle.getSerializable("reply");
 		Bundle args = new Bundle();

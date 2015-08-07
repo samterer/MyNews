@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@color/transparent"
-                android:hint=" 用户名/手机号"
+                android:hint="@string/hint_username_or_phone"
                 android:maxLines="1"
                 android:textColor="@color/zqzx_font_normal"
                 android:textCursorDrawable="@null"
@@ -81,7 +81,7 @@
                 android:layout_weight="1"
                 android:background="@color/transparent"
                 android:ellipsize="end"
-                android:hint="密码"
+                android:hint="@string/hint_password"
                 android:maxLines="1"
                 android:inputType="textPassword"
                 android:textColor="@color/zqzx_font_normal"
@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:background="@drawable/zq_special_greyborder_selector"
-                android:text="忘记密码"
+                android:text="@string/prompt_forget_password"
                 android:drawableRight="@drawable/zq_little_right"
                 android:drawablePadding="4dp"
                 android:textColor="@drawable/zq_boderbtn_text_selector"
@@ -116,7 +116,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/login_bt_login_selector"
-        android:text="完成"
+        android:text="@string/prompt_complete"
         android:textColor="@color/white"
         android:textSize="20sp"/>
 
@@ -132,7 +132,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="没有账号？"
+            android:text="@string/prompt_has_no_account"
             android:textColor="@color/zqzx_font_light"
             android:textSize="18sp"/>
 
@@ -140,7 +140,7 @@
             android:id="@+id/login_register_tv_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="注册"
+            android:text="@string/prompt_register"
             android:textColor="@color/zqzx_logintxt_blue"
             android:layout_marginLeft="4dp"
             android:textSize="20sp"/>
