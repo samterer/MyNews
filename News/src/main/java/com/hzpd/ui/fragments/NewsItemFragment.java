@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.modle.NewsPageListBean;
 import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.event.DayNightEvent;
 import com.hzpd.modle.event.FontSizeEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.HtmlActivity;
@@ -65,6 +67,8 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 public class NewsItemFragment extends BaseFragment implements I_Control {
+	@ViewInject(R.id.nil_root)
+	private RelativeLayout nil_root;
 	@ViewInject(R.id.news_item_sv)
 	private PullToRefreshScrollView news_item_sv;
 	@ViewInject(R.id.news_item_listview)
@@ -565,6 +569,10 @@ public class NewsItemFragment extends BaseFragment implements I_Control {
 
 	public void onEventMainThread(FontSizeEvent event) {
 		adapter.setFontSize(event.getFontSize());
+	}
+
+	public void onEventMainThread(DayNightEvent event) {
+		nil_root.setBackgroundColor(event.getDaynightColor());
 	}
 
 	private class MyRun implements Runnable {

@@ -48,7 +48,11 @@ public class ZhuantiListAdapter extends ListBaseAdapter<NewsBean> {
 		for (NewsBean bean : data) {
 			sb.append(bean.getNid() + ",");
 		}
-		getCounts(sb.substring(0, sb.length() - 1));
+		if (sb.length() > 0) {
+			getCounts(sb.substring(0, sb.length() - 1));
+		} else {
+			getCounts(sb.substring(0, sb.length()));
+		}
 	}
 
 	@Override
@@ -139,5 +143,6 @@ public class ZhuantiListAdapter extends ListBaseAdapter<NewsBean> {
 			}
 		});
 	}
+
 
 }

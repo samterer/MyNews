@@ -12,9 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hzpd.custorm.CircleImageView;
 import com.hzpd.hflt.R;
+import com.hzpd.modle.event.DayNightEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.LoginActivity;
 import com.hzpd.ui.activity.MipcaActivityCapture;
@@ -34,6 +36,7 @@ import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+import de.greenrobot.event.EventBus;
 
 public class ZY_RightFragment extends BaseFragment {
 
@@ -61,6 +64,7 @@ public class ZY_RightFragment extends BaseFragment {
 	private TextView zy_rfrag_tv_des;
 
 	private LoginQuitBR br;
+	private boolean isDay = true;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -127,6 +131,18 @@ public class ZY_RightFragment extends BaseFragment {
 			}
 			break;
 			case R.id.zy_rfrag_ll_sun:
+				DayNightEvent event = new DayNightEvent();
+				if (isDay) {
+					isDay = false;
+					event.setDaynightColor(activity.getResources().getColor(R.color.grey21));
+
+				} else {
+					isDay = true;
+					event.setDaynightColor(activity.getResources().getColor(R.color.white));
+
+				}
+				EventBus.getDefault().post(event);
+				Toast.makeText(activity, R.string.prompt_daytime, Toast.LENGTH_SHORT).show();
 				break;
 			case R.id.zy_rfrag_ll_setting: {
 				mIntent.setClass(activity, SettingActivity.class);
