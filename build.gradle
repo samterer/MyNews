@@ -14,4 +14,9 @@ allprojects {
         mavenCentral()
         jcenter()
     }
+
+    beforeEvaluate {
+        ext.COMPILE_SDK_VERSION = System.properties["COMPILE_SDK_VERSION"]
+        ext.BUILD_TOOLS_VERSION = System.properties["BUILD_TOOLS_VERSION"]
+    }
 }
