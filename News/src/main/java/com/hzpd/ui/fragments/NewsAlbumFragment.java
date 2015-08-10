@@ -22,6 +22,7 @@ import com.hzpd.modle.CacheBean;
 import com.hzpd.modle.ImgListBean;
 import com.hzpd.modle.db.AlbumBeanDB;
 import com.hzpd.modle.event.FontSizeEvent;
+import com.hzpd.ui.App;
 import com.hzpd.ui.activity.NewsAlbumActivity;
 import com.hzpd.ui.interfaces.I_Control;
 import com.hzpd.ui.interfaces.I_Result;
@@ -61,6 +62,9 @@ public class NewsAlbumFragment extends BaseFragment implements I_Control {
 
 	private boolean mFlagRefresh;
 
+	public NewsAlbumFragment() {
+		setTitle(App.getInstance().getString(R.string.menu_album));
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

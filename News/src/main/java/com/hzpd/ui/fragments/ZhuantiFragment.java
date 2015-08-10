@@ -20,6 +20,7 @@ import com.hzpd.modle.CacheBean;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.event.FontSizeEvent;
+import com.hzpd.ui.App;
 import com.hzpd.ui.activity.ZhuanTiActivity;
 import com.hzpd.ui.interfaces.I_Control;
 import com.hzpd.ui.interfaces.I_Result;
@@ -60,6 +61,10 @@ public class ZhuantiFragment extends BaseFragment implements I_Control {
 	private int page = 1;
 	private static final int pageSize = 15;//
 	private ZhuantiListDbTask zhuantiListDbTask;
+
+	public ZhuantiFragment() {
+		setTitle(App.getInstance().getString(R.string.menu_subject));
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

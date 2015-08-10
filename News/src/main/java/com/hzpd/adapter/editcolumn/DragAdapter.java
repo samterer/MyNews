@@ -16,7 +16,7 @@ import java.util.List;
 public class DragAdapter extends BaseAdapter {
 	private List<NewsChannelBean> titleData;
 	private LayoutInflater mInflater;
-	public static final int hiddenNum = 1;
+	public static final int hiddenNum = 0;
 	private int mHidePosition = -1;
 
 	public DragAdapter(Context context, List<NewsChannelBean> titleData) {

@@ -81,11 +81,30 @@ public class NewsFragment extends BaseFragment {
 		}
 		LogUtils.i("mList-->" + mList.size());
 
-		List<NewsItemFragment> mFragmentsList = new ArrayList<NewsItemFragment>();
+		List<BaseFragment> mFragmentsList = new ArrayList<>();
 		for (int i = 0; i < mList.size(); i++) {
 			NewsChannelBean ncb = mList.get(i);
-			NewsItemFragment f1 = new NewsItemFragment(ncb, i);
-			mFragmentsList.add(f1);
+			BaseFragment fragment;
+			switch (ncb.getType()) {
+				case NewsChannelBean.TYPE_NORMAL:
+					fragment = new NewsItemFragment(ncb, i);
+					break;
+				case NewsChannelBean.TYPE_IMAGE_ALBUM:
+					fragment = new NewsAlbumFragment();
+					break;
+				case NewsChannelBean.TYPE_VIDEO:
+					fragment = new VideoListFragment();
+					break;
+				case NewsChannelBean.TYPE_SUBJECT:
+					fragment = new ZhuantiFragment();
+					break;
+				default:
+					fragment = null;
+					break;
+			}
+			if (fragment != null) {
+				mFragmentsList.add(fragment);
+			}
 		}
 
 		adapter = new NewsFragmentPagerAdapter(fm);
@@ -97,8 +116,11 @@ public class NewsFragment extends BaseFragment {
 		indicator.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
-				NewsItemFragment frag = (NewsItemFragment) adapter.getItem(position);
-				frag.init();
+				BaseFragment fragment = (BaseFragment) adapter.getItem(position);
+				if (fragment instanceof NewsItemFragment) {
+					NewsItemFragment frag = (NewsItemFragment) fragment;
+					frag.init();
+				}
 				adapter.setSelectedPosition(position);
 			}
 

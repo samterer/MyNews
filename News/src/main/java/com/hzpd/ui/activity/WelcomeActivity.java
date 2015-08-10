@@ -16,6 +16,7 @@ import com.hzpd.ui.fragments.welcome.AdFlashFragment;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.GetFileSizeUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.SerializeUtil;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -62,6 +63,7 @@ public class WelcomeActivity extends MBaseActivity {
 		service.setAction(InitService.InitAction);
 		this.startService(service);
 
+		Log.d(getLogTag(), "");
 	}
 
 	public void loadMainUI() {
@@ -90,6 +92,7 @@ public class WelcomeActivity extends MBaseActivity {
 		final File channelCacheFile = new File(channelCachePath);
 		final File target = App.getFile(App.getInstance().getJsonFileCacheRootDir() + File.separator + "News");
 
+		Log.d(getLogTag(), "channelCacheFile.exists():" + channelCacheFile.exists());
 		if (channelCacheFile.exists()) {
 			loadMainUI();
 		} else {
@@ -126,6 +129,7 @@ public class WelcomeActivity extends MBaseActivity {
 									if (newestChannels != null && newestChannels.size() > 0) {
 										LogUtils.i("list != null && list.size() > 0");
 
+										addLocalChannels(newestChannels);
 										// 缓存频道信息到SD卡上
 										serializeUtil.writeDataToFile(newestChannels, channelCachePath);
 										LogUtils.i("write title data to disk!");
@@ -151,6 +155,7 @@ public class WelcomeActivity extends MBaseActivity {
 											cacheChannels.remove(i);
 										}
 									}
+									addLocalChannels(cacheChannels);
 
 									// 更新后信息再次保存到SD卡中
 									serializeUtil.writeDataToFile(cacheChannels, channelCachePath);
@@ -184,6 +189,35 @@ public class WelcomeActivity extends MBaseActivity {
 			loadMainUI();
 		} else {
 			isJump = false;
+		}
+	}
+
+	private void addLocalChannels(List<NewsChannelBean> list) {
+		NewsChannelBean channelSubject = new NewsChannelBean();
+		channelSubject.setTid("" + NewsChannelBean.TYPE_SUBJECT);
+		channelSubject.setType(NewsChannelBean.TYPE_SUBJECT);
+		channelSubject.setCnname(getString(R.string.menu_subject));
+		if (!list.contains(channelSubject)) {
+			list.add(0, channelSubject);
+			Log.d(getLogTag(), "add channelSubject");
+		}
+
+		NewsChannelBean channelVideo = new NewsChannelBean();
+		channelVideo.setTid("" + NewsChannelBean.TYPE_VIDEO);
+		channelVideo.setType(NewsChannelBean.TYPE_VIDEO);
+		channelVideo.setCnname(getString(R.string.menu_video));
+		if (!list.contains(channelVideo)) {
+			list.add(0, channelVideo);
+			Log.d(getLogTag(), "add channelVideo");
+		}
+
+		NewsChannelBean channelImageAlbum = new NewsChannelBean();
+		channelImageAlbum.setTid("" + NewsChannelBean.TYPE_IMAGE_ALBUM);
+		channelImageAlbum.setType(NewsChannelBean.TYPE_IMAGE_ALBUM);
+		channelImageAlbum.setCnname(getString(R.string.menu_album));
+		if (!list.contains(channelImageAlbum)) {
+			list.add(0, channelImageAlbum);
+			Log.d(getLogTag(), "add channelImageAlbum");
 		}
 	}
 

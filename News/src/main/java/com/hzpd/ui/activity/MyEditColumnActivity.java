@@ -18,6 +18,7 @@ import com.hzpd.modle.event.ChannelSortedList;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.SerializeUtil;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -53,10 +54,10 @@ public class MyEditColumnActivity extends SBaseActivity {
 	private SerializeUtil<List<NewsChannelBean>> mSaveTitleData;
 
 	private LastEditColumnAdapter myAllAdapter;//所有title适配器
-	private DragAdapter adapter;    //显示条目适配器
+	private DragAdapter dragAdapter;    //显示条目适配器
 
 	//适配器内容
-	private List<NewsChannelBean> titleData;
+	private List<NewsChannelBean> channelData;
 	private List<NewsChannelBean> myAllList;
 	private HashMap<String, NewsChannelBean> saveTitleMap;
 
@@ -80,66 +81,50 @@ public class MyEditColumnActivity extends SBaseActivity {
 		channelJsonPath = App.getInstance().getJsonFileCacheRootDir();
 		saveTitleMap = new HashMap<String, NewsChannelBean>();
 		mSaveTitleData = new SerializeUtil<List<NewsChannelBean>>();
-		titleData = mSaveTitleData.readyDataToFile(App.getInstance()
-				.getJsonFileCacheRootDir()
-				+ File.separator
-				+ App.mTitle);
+		// 读取缓存的频道信息，频道信息在WelcomeActivity中就已经请求过了
+		channelData = mSaveTitleData.readyDataToFile(getChannelInfoCacheSavePath());
 
-		for (int i = 0; i < titleData.size(); i++) {
-			NewsChannelBean nb = titleData.get(i);
+		// 将tid为84的频道（也就是“头条”）移动到第一位
+		for (int i = 0; i < channelData.size(); i++) {
+			NewsChannelBean nb = channelData.get(i);
 			if ("84".equals(nb.getTid())) {
+				Log.d(getLogTag(), nb.getCnname() + "移动到第一个位置");
 				if (0 != i) {
-					titleData.remove(i);
-					titleData.add(0, nb);
+					channelData.remove(i);
+					channelData.add(0, nb);
 				}
 				break;
 			}
 		}
 
-
-		myAllList = new ArrayList<NewsChannelBean>();
+		// 不显示在新闻tab栏的频道列表
+		myAllList = new ArrayList<>();
 		myAllAdapter = new LastEditColumnAdapter(this);
 		editcolumn_gridview.setAdapter(myAllAdapter);
+
 		csl = new ChannelSortedList();
 	}
 
-	private void reReadTitle() {
-		titleData = mSaveTitleData.readyDataToFile(App.getInstance()
-				.getJsonFileCacheRootDir()
+	private String getChannelInfoCacheSavePath() {
+		return App.getInstance().getJsonFileCacheRootDir()
 				+ File.separator
-				+ App.mTitle);
-		adapter = new DragAdapter(this, titleData);
-		editcolumn_dragGridView.setAdapter(adapter);
+				+ App.mTitle;
+	}
+
+	private void reReadVisibleChannel() {
+		channelData = mSaveTitleData.readyDataToFile(getChannelInfoCacheSavePath());
+		dragAdapter = new DragAdapter(this, channelData);
+		editcolumn_dragGridView.setAdapter(dragAdapter);
 
 		editcolumn_dragGridView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, final View view,
 			                        final int position, long id) {
 				LogUtils.i("position-->" + position);
-				final NewsChannelBean ncb = titleData.get(position + DragAdapter.hiddenNum);
-				titleData.remove(position + DragAdapter.hiddenNum);
-				adapter.setList(titleData);
+				final NewsChannelBean ncb = channelData.get(position + DragAdapter.hiddenNum);
+				channelData.remove(position + DragAdapter.hiddenNum);
+				dragAdapter.setList(channelData);
 				myAllAdapter.addData(ncb);
-
-//				LogUtils.i("startx:"+(view.getX()+editcolumn_dragGridView.getX())
-//						+" starty:"+(view.getY()+editcolumn_dragGridView.getY()));
-//				editcolumn_gridview.postDelayed(new Runnable() {
-//					@Override
-//					public void run() {
-//						View endView=editcolumn_dragGridView.getChildAt(editcolumn_gridview.getChildCount()-1);
-//						LogUtils.i("endx:"+(endView.getX()+editcolumn_gridview.getX())
-//								+" endy:"+(endView.getY()+editcolumn_dragGridView.getY()));
-//					
-//						addAnim(ncb
-//								,true
-//								,(view.getX()+editcolumn_dragGridView.getX())
-//								,(view.getY()+editcolumn_dragGridView.getY())
-//								,(endView.getX()+editcolumn_gridview.getX())
-//								,(endView.getY()+editcolumn_gridview.getY())
-//								,position);
-//					}
-//				}, 150);
-//				
 			}
 		});
 	}
@@ -182,17 +167,17 @@ public class MyEditColumnActivity extends SBaseActivity {
 				LogUtils.i("animend");
 				editcolumn_item_tv.setVisibility(View.GONE);
 				if (from) {
-					LogUtils.i("titleData-->" + titleData.size() + "  " + (position + DragAdapter.hiddenNum));
+					LogUtils.i("channelData-->" + channelData.size() + "  " + (position + DragAdapter.hiddenNum));
 					myAllAdapter.setAnim(false);
-					titleData.remove(position + DragAdapter.hiddenNum);
-					adapter.setList(titleData);
+					channelData.remove(position + DragAdapter.hiddenNum);
+					dragAdapter.setList(channelData);
 					myAllAdapter.notifyDataSetChanged();
 				} else {
 					LogUtils.i("myAllList-->" + myAllList.size() + " " + position);
-					adapter.setAnim(false);
+					dragAdapter.setAnim(false);
 					myAllList.remove(position);
 					myAllAdapter.setList(myAllList);
-					adapter.notifyDataSetChanged();
+					dragAdapter.notifyDataSetChanged();
 				}
 			}
 		});
@@ -202,95 +187,10 @@ public class MyEditColumnActivity extends SBaseActivity {
 	}
 
 	private void getChannelJson() {
-		File target = App.getFile(channelJsonPath + File.separator + "News");
-
+		String remoteChannelJson = channelJsonPath + File.separator + "News";
+		File target = App.getFile(remoteChannelJson);
 		if (target.exists()) {
-			String data = App.getFileContext(target);
-			JSONObject obj = FjsonUtil.parseObject(data);
-
-			if (null == obj) {
-				target.delete();
-				return;
-			}
-
-			JSONArray array = obj.getJSONArray("data");
-			myAllList = JSONArray.parseArray(array.toJSONString(), NewsChannelBean.class);
-			Collections.sort(myAllList);
-			LogUtils.i("mAllbean-->" + titleData.size());
-
-			for (NewsChannelBean stb : myAllList) {
-				saveTitleMap.put(stb.getTid(), stb);
-			}
-
-			LogUtils.i("titleData-->" + titleData.size());
-
-			Iterator<NewsChannelBean> iterator = titleData.iterator();
-			while (iterator.hasNext()) {
-				NewsChannelBean stbq = iterator.next();
-				NewsChannelBean nb = saveTitleMap.get(stbq.getTid());
-				if (null == nb) {
-					iterator.remove();
-				}
-			}
-
-			mSaveTitleData.writeDataToFile(titleData,
-					App.getInstance().getJsonFileCacheRootDir() + File.separator
-							+ App.mTitle);
-
-			reReadTitle();
-			LogUtils.i("mAllbean-->" + myAllList.size());
-
-			Iterator<NewsChannelBean> itera = myAllList.iterator();
-			while (itera.hasNext()) {
-				NewsChannelBean ncb = itera.next();
-				for (int i = 0; i < titleData.size(); i++) {
-					NewsChannelBean stb = titleData.get(i);
-					if (stb.getTid().equals(ncb.getTid())) {
-						itera.remove();
-						break;
-					}
-				}
-			}
-
-			if (myAllList != null) {
-				myAllAdapter.setList(myAllList);
-				LogUtils.i("myAllList-->" + myAllList.size());
-				LogUtils.i("myAllAdapter-->" + myAllAdapter.getCount());
-
-				editcolumn_gridview.setOnItemClickListener(new OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> parent,
-					                        final View view, final int position, long id) {
-
-						final NewsChannelBean ncb = (NewsChannelBean) myAllAdapter.getItem(position);
-
-//						adapter.setAnim(true);
-						titleData.add(ncb);
-						adapter.setList(titleData);
-						myAllList.remove(position);
-						myAllAdapter.setList(myAllList);
-
-//						editcolumn_dragGridView.postDelayed(new Runnable() {
-//							@Override
-//							public void run() {
-//								LogUtils.i("startx:"+(view.getX()+editcolumn_gridview.getX())
-//										+" starty:"+(view.getY()+editcolumn_gridview.getY()));
-//								View endView=editcolumn_dragGridView.getChildAt(editcolumn_dragGridView.getChildCount()-1);
-//								LogUtils.i("endx:"+(endView.getX()+editcolumn_dragGridView.getX())
-//										+" endy:"+(endView.getY()+editcolumn_dragGridView.getY()));
-//							
-//								addAnim(ncb
-//										,false
-//										,(view.getX()+editcolumn_gridview.getX())
-//										,(view.getY()+editcolumn_gridview.getY())
-//										,(endView.getX()+editcolumn_dragGridView.getX())
-//										,(endView.getY()+editcolumn_dragGridView.getY())
-//										,position);
-//							}
-//						}, 150);
-					}
-				});
-			}
+			parseChannelJson(target);
 		} else {
 			httpUtils.download(
 					InterfaceJsonfile.CHANNELLIST + "News"
@@ -298,115 +198,101 @@ public class MyEditColumnActivity extends SBaseActivity {
 					, new RequestCallBack<File>() {
 						@Override
 						public void onSuccess(ResponseInfo<File> responseInfo) {
-							LogUtils.i("write  channel to file success");
-
-							String data = App.getFileContext(responseInfo.result);
-							JSONObject obj = FjsonUtil.parseObject(data);
-
-							if (null == obj) {
-								responseInfo.result.delete();
-								return;
-							}
-
-
-							JSONArray array = obj.getJSONArray("data");
-							myAllList = JSONArray.parseArray(array.toJSONString(), NewsChannelBean.class);
-							Collections.sort(myAllList);
-							LogUtils.i("mAllbean-->" + myAllList.size());
-							for (NewsChannelBean stb : myAllList) {
-								saveTitleMap.put(stb.getTid(), stb);
-							}
-							Iterator<NewsChannelBean> iterator = titleData.iterator();
-							while (iterator.hasNext()) {
-								NewsChannelBean stbq = iterator.next();
-								NewsChannelBean nb = saveTitleMap.get(stbq.getTid());
-								if (null == nb) {
-									iterator.remove();
-								}
-							}
-
-							mSaveTitleData.writeDataToFile(titleData,
-									App.getInstance().getJsonFileCacheRootDir() + File.separator
-											+ App.mTitle);
-
-							reReadTitle();
-
-							Iterator<NewsChannelBean> itera = myAllList.iterator();
-							while (itera.hasNext()) {
-								NewsChannelBean ncb = itera.next();
-								for (NewsChannelBean stb : titleData) {
-									if (!stb.getTid().equals(ncb.getTid())) {
-										itera.remove();
-										break;
-									}
-								}
-							}
-
-							if (myAllList != null) {
-								myAllAdapter.setList(myAllList);
-								LogUtils.i("myAllList-->" + myAllList.size());
-								LogUtils.i("myAllAdapter-->" + myAllAdapter.getCount());
-
-								editcolumn_gridview.setOnItemClickListener(new OnItemClickListener() {
-									@Override
-									public void onItemClick(AdapterView<?> parent,
-									                        final View view, final int position, long id) {
-
-
-										final NewsChannelBean ncb = (NewsChannelBean) myAllAdapter.getItem(position);
-
-//									adapter.setAnim(true);
-										titleData.add(ncb);
-										adapter.setList(titleData);
-										myAllList.remove(position);
-										myAllAdapter.setList(myAllList);
-
-
-//									editcolumn_dragGridView.postDelayed(new Runnable() {
-//										@Override
-//										public void run() {
-//											LogUtils.i("startx:"+(view.getX()+editcolumn_gridview.getX())
-//													+" starty:"+(view.getY()+editcolumn_gridview.getY()));
-//											View endView=editcolumn_dragGridView.getChildAt(editcolumn_dragGridView.getChildCount()-1);
-//											LogUtils.i("endx:"+(endView.getX()+editcolumn_dragGridView.getX())
-//													+" endy:"+(endView.getY()+editcolumn_dragGridView.getY()));
-//										
-//											addAnim(ncb
-//													,false
-//													,(view.getX()+editcolumn_gridview.getX())
-//													,(view.getY()+editcolumn_gridview.getY())
-//													,(endView.getX()+editcolumn_dragGridView.getX())
-//													,(endView.getY()+editcolumn_dragGridView.getY())
-//													,position);
-//										}
-//									}, 150);
-									}
-								});
-							}
-
+							Log.i(getLogTag(), "write channel to file success");
+							parseChannelJson(responseInfo.result);
 						}
 
 						@Override
 						public void onFailure(HttpException error, String msg) {
-							LogUtils.i("write  channel to file Failed");
-
+							Log.i(getLogTag(), "write channel to file Failed");
 						}
 					});
 		}
 	}
 
+	private void parseChannelJson(File target) {
+		Log.d(getLogTag(), target.getAbsolutePath());
+
+		// 获取json
+		String data = App.getFileContext(target);
+		JSONObject obj = FjsonUtil.parseObject(data);
+
+		if (null == obj) {
+			target.delete();
+			return;
+		}
+
+		// 读取json解析出所有的频道
+		JSONArray array = obj.getJSONArray("data");
+		myAllList = JSONArray.parseArray(array.toJSONString(), NewsChannelBean.class);
+		Collections.sort(myAllList);
+		addLocalChannels(myAllList);
+		Log.i(getLogTag(), "Channel count : " + myAllList.size());
+
+		// 将新获取的频道临时保存到map中
+		for (NewsChannelBean stb : myAllList) {
+			saveTitleMap.put(stb.getTid(), stb);
+		}
+
+		// 遍历用户可见的频道列表，如果用户可见的频道在新获取的频道列表中不存在，就删除该频道
+		Iterator<NewsChannelBean> iterator = channelData.iterator();
+		while (iterator.hasNext()) {
+			NewsChannelBean stbq = iterator.next();
+			NewsChannelBean nb = saveTitleMap.get(stbq.getTid());
+			if (null == nb) {
+				Log.d(getLogTag(), "removed " + stbq.getCnname());
+				iterator.remove();
+			}
+		}
+
+		// 更新用户可见的频道列表缓存
+		mSaveTitleData.writeDataToFile(channelData, getChannelInfoCacheSavePath());
+
+		reReadVisibleChannel();
+
+		// 筛选出用户不可见的频道
+		Log.d(getLogTag(), "尝试筛选出用户不可见的频道");
+		Iterator<NewsChannelBean> itera = myAllList.iterator();
+		while (itera.hasNext()) {
+			NewsChannelBean ncb = itera.next();
+			for (NewsChannelBean stb : channelData) {
+				if (stb.getTid().equals(ncb.getTid())) {
+					Log.d(getLogTag(), "移除可见频道：" + ncb.getCnname());
+					itera.remove();
+					break;
+				}
+			}
+		}
+
+		if (myAllList != null) {
+			myAllAdapter.setList(myAllList);
+			Log.i(getLogTag(), "Hidden channel count : " + myAllList.size());
+
+			editcolumn_gridview.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent,
+				                        final View view, final int position, long id) {
+					final NewsChannelBean ncb = (NewsChannelBean) myAllAdapter.getItem(position);
+					channelData.add(ncb);
+					dragAdapter.setList(channelData);
+					myAllList.remove(position);
+					myAllAdapter.setList(myAllList);
+				}
+			});
+		}
+	}
+
 	private void writeData() {
 		List<NewsChannelBean> saveTitleList = new ArrayList<NewsChannelBean>();
-		for (int i = 0; i < titleData.size(); i++) {
+		for (int i = 0; i < channelData.size(); i++) {
 			NewsChannelBean sb = new NewsChannelBean();
-			sb.setCnname(titleData.get(i).getCnname());
-			sb.setStyle(titleData.get(i).getStyle());
-			sb.setTid(titleData.get(i).getTid());
+			sb.setCnname(channelData.get(i).getCnname());
+			sb.setStyle(channelData.get(i).getStyle());
+			sb.setTid(channelData.get(i).getTid());
+			sb.setType(channelData.get(i).getType());
 			saveTitleList.add(sb);
 		}
-		mSaveTitleData.writeDataToFile(saveTitleList,
-				App.getInstance().getJsonFileCacheRootDir() + File.separator
-						+ App.mTitle);
+		mSaveTitleData.writeDataToFile(saveTitleList, getChannelInfoCacheSavePath());
 		csl.setSaveTitleList(saveTitleList);
 	}
 
@@ -422,4 +308,32 @@ public class MyEditColumnActivity extends SBaseActivity {
 		super.onDestroy();
 	}
 
+	private void addLocalChannels(List<NewsChannelBean> list) {
+		NewsChannelBean channelSubject = new NewsChannelBean();
+		channelSubject.setTid("" + NewsChannelBean.TYPE_SUBJECT);
+		channelSubject.setType(NewsChannelBean.TYPE_SUBJECT);
+		channelSubject.setCnname(getString(R.string.menu_subject));
+		if (!list.contains(channelSubject)) {
+			list.add(0, channelSubject);
+			Log.d(getLogTag(), "add channelSubject");
+		}
+
+		NewsChannelBean channelVideo = new NewsChannelBean();
+		channelVideo.setTid("" + NewsChannelBean.TYPE_VIDEO);
+		channelVideo.setType(NewsChannelBean.TYPE_VIDEO);
+		channelVideo.setCnname(getString(R.string.menu_video));
+		if (!list.contains(channelVideo)) {
+			list.add(0, channelVideo);
+			Log.d(getLogTag(), "add channelVideo");
+		}
+
+		NewsChannelBean channelImageAlbum = new NewsChannelBean();
+		channelImageAlbum.setTid("" + NewsChannelBean.TYPE_IMAGE_ALBUM);
+		channelImageAlbum.setType(NewsChannelBean.TYPE_IMAGE_ALBUM);
+		channelImageAlbum.setCnname(getString(R.string.menu_album));
+		if (!list.contains(channelImageAlbum)) {
+			list.add(0, channelImageAlbum);
+			Log.d(getLogTag(), "add channelImageAlbum");
+		}
+	}
 }

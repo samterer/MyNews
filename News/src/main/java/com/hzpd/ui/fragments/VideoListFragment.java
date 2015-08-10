@@ -20,6 +20,7 @@ import com.hzpd.modle.CacheBean;
 import com.hzpd.modle.VideoItemBean;
 import com.hzpd.modle.db.VideoItemBeanDb;
 import com.hzpd.modle.event.FontSizeEvent;
+import com.hzpd.ui.App;
 import com.hzpd.ui.activity.VideoPlayerActivity;
 import com.hzpd.ui.interfaces.I_Control;
 import com.hzpd.ui.interfaces.I_Result;
@@ -60,6 +61,9 @@ public class VideoListFragment extends BaseFragment implements I_Control {
 	private static final int pageSize = 15;
 	private VideoListDbTask videoListdbTask;
 
+	public VideoListFragment() {
+		setTitle(App.getInstance().getString(R.string.menu_video));
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

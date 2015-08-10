@@ -1,8 +1,16 @@
 package com.hzpd.modle;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
 
 public class NewsChannelBean implements Comparable<NewsChannelBean>, Serializable {
+
+	public static final int TYPE_NORMAL = 0;
+	public static final int TYPE_IMAGE_ALBUM = 0x11111;
+	public static final int TYPE_VIDEO = 0x22222;
+	public static final int TYPE_SUBJECT = 0x33333;
+
 	private static final long serialVersionUID = 1L;
 
 	private String tid;//": "16",
@@ -14,7 +22,15 @@ public class NewsChannelBean implements Comparable<NewsChannelBean>, Serializabl
 	private String style;//": "2",
 	private String status;//": "1",
 	private String siteid;//": "1"
+	private int type = TYPE_NORMAL;
 
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
 
 	public String getTid() {
 		return tid;
@@ -98,5 +114,14 @@ public class NewsChannelBean implements Comparable<NewsChannelBean>, Serializabl
 			return -1;
 		}
 		return 0;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof NewsChannelBean) {
+			NewsChannelBean another = (NewsChannelBean) o;
+			return !TextUtils.isEmpty(getTid()) && getTid().equals(another.getTid());
+		}
+		return super.equals(o);
 	}
 }

@@ -48,8 +48,8 @@
     <!-- 菜单 -->
     <string name="menu_news">新聞資訊</string>
     <string name="menu_album">影像</string>
-    <string name="menu_video">影音點播</string>
-    <string name="menu_subject">專題報導</string>
+    <string name="menu_video">影音</string>
+    <string name="menu_subject">專題</string>
     <string name="menu_activity">活動</string>
     <string name="menu_search">搜尋</string>
 

@@ -46,4 +46,8 @@ public class FragmentVPAdapter<T extends Fragment> extends FragmentPagerAdapter 
 	public int getCount() {
 		return fragments.size();
 	}
+
+	public String getLogTag() {
+		return getClass().getSimpleName();
+	}
 }

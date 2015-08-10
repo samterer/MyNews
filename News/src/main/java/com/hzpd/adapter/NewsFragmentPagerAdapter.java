@@ -5,12 +5,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.hzpd.modle.NewsChannelBean;
+import com.hzpd.ui.fragments.BaseFragment;
+import com.hzpd.ui.fragments.NewsAlbumFragment;
 import com.hzpd.ui.fragments.NewsItemFragment;
+import com.hzpd.ui.fragments.VideoListFragment;
+import com.hzpd.ui.fragments.ZhuantiFragment;
+import com.hzpd.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewsFragmentPagerAdapter extends FragmentVPAdapter<NewsItemFragment> {
+public class NewsFragmentPagerAdapter extends FragmentVPAdapter<BaseFragment> {
 	private int selectedPosition = 0;
 
 	public NewsFragmentPagerAdapter(FragmentManager fm) {
@@ -30,16 +35,39 @@ public class NewsFragmentPagerAdapter extends FragmentVPAdapter<NewsItemFragment
 		ft.commit();
 		ft = null;
 		fm.executePendingTransactions();
-		List<NewsItemFragment> list = new ArrayList<NewsItemFragment>();
+		List<BaseFragment> list = new ArrayList<>();
 
 		for (int i = 0; i < saveTitleList.size(); i++) {
 			NewsChannelBean ncb = saveTitleList.get(i);
-			NewsItemFragment nif = new NewsItemFragment(ncb, i);
 
-			if (i == selectedPosition) {
-				nif.setIsNeedRefresh();
+			BaseFragment fragment;
+			switch (ncb.getType()) {
+				case NewsChannelBean.TYPE_NORMAL:
+					fragment = new NewsItemFragment(ncb, i);
+					if (i == selectedPosition) {
+						((NewsItemFragment) fragment).setIsNeedRefresh();
+					}
+					Log.d(getLogTag(), "NewsItemFragment()->" + ncb.getCnname());
+					break;
+				case NewsChannelBean.TYPE_IMAGE_ALBUM:
+					fragment = new NewsAlbumFragment();
+					Log.d(getLogTag(), "NewsAlbumFragment");
+					break;
+				case NewsChannelBean.TYPE_VIDEO:
+					fragment = new VideoListFragment();
+					Log.d(getLogTag(), "VideoListFragment");
+					break;
+				case NewsChannelBean.TYPE_SUBJECT:
+					fragment = new ZhuantiFragment();
+					Log.d(getLogTag(), "ZhuantiFragment");
+					break;
+				default:
+					fragment = null;
+					break;
 			}
-			list.add(nif);
+			if (fragment != null) {
+				list.add(fragment);
+			}
 		}
 
 		setFragments(list);
@@ -54,7 +82,7 @@ public class NewsFragmentPagerAdapter extends FragmentVPAdapter<NewsItemFragment
 	@Override
 	public CharSequence getPageTitle(int position) {
 
-		NewsItemFragment frag = fragments.get(position);
+		BaseFragment frag = fragments.get(position);
 
 		String ti = frag.getTitle();
 		return ti;

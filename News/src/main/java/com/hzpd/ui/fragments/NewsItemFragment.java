@@ -117,6 +117,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control {
 	public NewsItemFragment(NewsChannelBean channelbean, int position) {
 		this.channelbean = channelbean;
 		this.position = position;
+		setTitle(channelbean.getCnname());
 	}
 
 	public void setPosition(int position) {

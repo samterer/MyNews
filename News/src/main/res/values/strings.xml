@@ -48,8 +48,8 @@
     <!-- 菜单 -->
     <string name="menu_news">新闻资讯</string>
     <string name="menu_album">图集</string>
-    <string name="menu_video">视频点播</string>
-    <string name="menu_subject">专题报道</string>
+    <string name="menu_video">视频</string>
+    <string name="menu_subject">专题</string>
     <string name="menu_activity">活动</string>
     <string name="menu_search">搜索</string>
 

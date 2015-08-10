@@ -23,6 +23,7 @@ public class BaseFragment extends Fragment {
 	protected FragmentManager fm;
 	protected DBHelper dbHelper;
 	protected Activity activity;
+	protected String title;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -34,8 +35,6 @@ public class BaseFragment extends Fragment {
 		spu = SPUtil.getInstance();
 		mImageLoader = ImageLoader.getInstance();
 		dbHelper = DBHelper.getInstance(activity);
-
-
 	}
 
 	public void onResume() {
@@ -64,4 +63,11 @@ public class BaseFragment extends Fragment {
 		return getClass().getSimpleName();
 	}
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 }

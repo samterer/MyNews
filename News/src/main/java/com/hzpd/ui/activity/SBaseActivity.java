@@ -74,4 +74,7 @@ public class SBaseActivity extends SwipeBackActivity {
 		AAnim.ActivityFinish(this);
 	}
 
+	public String getLogTag() {
+		return getClass().getSimpleName();
+	}
 }
