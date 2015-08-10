@@ -146,11 +146,12 @@ public class CustomViewBehind extends ViewGroup {
 				- mWidthOffset);
 		int contentHeight = getChildMeasureSpec(heightMeasureSpec, 0, height);
 		mContent.measure(contentWidth, contentHeight);
-		if (mSecondaryContent != null)
+		if (mSecondaryContent != null) {
 			contentWidth = getChildMeasureSpec(widthMeasureSpec, 0, width
 					- mRightWidthOffset);
-		contentHeight = getChildMeasureSpec(heightMeasureSpec, 0, height);
-		mSecondaryContent.measure(contentWidth, contentHeight);
+			contentHeight = getChildMeasureSpec(heightMeasureSpec, 0, height);
+			mSecondaryContent.measure(contentWidth, contentHeight);
+		}
 	}
 
 	private int mMode;

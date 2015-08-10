@@ -33,13 +33,13 @@ public class BaseActivity extends SlidingFragmentActivity {
 		fm = getSupportFragmentManager();
 
 		setBehindContentView(R.layout.menu_left_frame);// 左边布局
-		mLeftFragment = new ZY_LeftFragment();
+		mRightFragment = new ZY_RightFragment();
 		fm.beginTransaction()
-				.replace(R.id.menu_left_frame, mLeftFragment)
+				.replace(R.id.menu_left_frame, mRightFragment)
 				.commit();
 
 		// customize the SlidingMenu
-		slidingMenu.setMode(SlidingMenu.LEFT_RIGHT);
+		slidingMenu.setMode(SlidingMenu.LEFT);
 		slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 		slidingMenu.setFadeEnabled(false);//是否有渐变  
 		slidingMenu.setBehindScrollScale(0.0f);
@@ -48,32 +48,6 @@ public class BaseActivity extends SlidingFragmentActivity {
 		slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
 		slidingMenu.setShadowDrawable(R.drawable.shadow);
 		slidingMenu.setBehindWidthRes(R.dimen.left_menu_width);
-
-		slidingMenu.setSecondaryMenu(R.layout.menu_frame_two);// 右边布局
-		slidingMenu.setSecondaryShadowDrawable(R.drawable.shadowright);
-		slidingMenu.setRightBehindWidthRes(R.dimen.right_menu_width);
-
-
-		mRightFragment = new ZY_RightFragment();
-		fm.beginTransaction()
-				.replace(R.id.menu_frame_two, mRightFragment).commit();
-
-//		GlobalUtils.mSlidingMenu
-//				.setBehindCanvasTransformer(new CanvasTransformer(){
-//					@Override
-//					public void transformCanvas(Canvas canvas, float percentOpen){
-////						canvas.scale(percentOpen, 1, 0, 0);
-//						 float scale = (float) (percentOpen * 0.25 + 0.75);
-//						 canvas.scale(scale, scale, canvas.getWidth() / 2,
-//						 canvas.getHeight() / 2);
-//						 canvas.translate(
-//						 0,
-//						 canvas.getHeight()
-//						 * (1 - interp.getInterpolation(percentOpen)));
-//					}
-//				});
-		// getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
 	}
 
 	private Interpolator interp = new Interpolator() {

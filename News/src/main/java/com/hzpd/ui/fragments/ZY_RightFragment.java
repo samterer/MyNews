@@ -12,17 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hzpd.custorm.CircleImageView;
 import com.hzpd.hflt.R;
-import com.hzpd.modle.event.DayNightEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.LoginActivity;
 import com.hzpd.ui.activity.MipcaActivityCapture;
 import com.hzpd.ui.activity.MyCommentsActivity;
 import com.hzpd.ui.activity.MyPMColAvtivity;
 import com.hzpd.ui.activity.PersonalInfoActivity;
+import com.hzpd.ui.activity.SearchActivity;
 import com.hzpd.ui.activity.SettingActivity;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.DisplayOptionFactory;
@@ -36,7 +35,6 @@ import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
-import de.greenrobot.event.EventBus;
 
 public class ZY_RightFragment extends BaseFragment {
 
@@ -56,7 +54,7 @@ public class ZY_RightFragment extends BaseFragment {
 	private LinearLayout zy_rfrag_ll_collect;
 	@ViewInject(R.id.zy_rfrag_ll_push)
 	private LinearLayout zy_rfrag_ll_push;
-	@ViewInject(R.id.zy_rfrag_ll_sun)
+	@ViewInject(R.id.zy_rfrag_ll_search)
 	private LinearLayout zy_rfrag_ll_sun;
 	@ViewInject(R.id.zy_rfrag_ll_setting)
 	private LinearLayout zy_rfrag_ll_setting;
@@ -98,7 +96,7 @@ public class ZY_RightFragment extends BaseFragment {
 	}
 
 	@OnClick({R.id.zy_rfrag_ll_login, R.id.zy_rfrag_ll_comm, R.id.zy_rfrag_ll_collect, R.id.zy_rfrag_ll_push,
-			R.id.zy_rfrag_ll_sun, R.id.zy_rfrag_ll_setting, R.id.zy_rfrag_ll_ewm})
+			R.id.zy_rfrag_ll_search, R.id.zy_rfrag_ll_setting, R.id.zy_rfrag_ll_ewm})
 	private void rightClick(View v) {
 		boolean flag = false;
 		Intent mIntent = new Intent();
@@ -130,19 +128,9 @@ public class ZY_RightFragment extends BaseFragment {
 				flag = true;
 			}
 			break;
-			case R.id.zy_rfrag_ll_sun:
-				DayNightEvent event = new DayNightEvent();
-				if (isDay) {
-					isDay = false;
-					event.setDaynightColor(activity.getResources().getColor(R.color.grey21));
-
-				} else {
-					isDay = true;
-					event.setDaynightColor(activity.getResources().getColor(R.color.white));
-
-				}
-				EventBus.getDefault().post(event);
-				Toast.makeText(activity, R.string.prompt_daytime, Toast.LENGTH_SHORT).show();
+			case R.id.zy_rfrag_ll_search:
+				mIntent.setClass(activity, SearchActivity.class);
+				flag = true;
 				break;
 			case R.id.zy_rfrag_ll_setting: {
 				mIntent.setClass(activity, SettingActivity.class);

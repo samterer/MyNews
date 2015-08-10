@@ -50,6 +50,7 @@
                 android:id="@+id/main_title_right_img"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:visibility="invisible"
                 android:layout_marginRight="20dip"
                 android:background="@drawable/rightfrag_sett_selector"
                 android:contentDescription="@null"/>

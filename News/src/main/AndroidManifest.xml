@@ -109,6 +109,9 @@
                     />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.hzpd.ui.activity.SearchActivity"
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name="com.mob.tools.MobUIShell"

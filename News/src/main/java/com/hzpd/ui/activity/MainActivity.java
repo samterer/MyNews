@@ -66,7 +66,6 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
 			}
 			break;
 			case R.id.main_title_right: {
-				slidingMenu.showSecondaryMenu();
 			}
 			break;
 
