@@ -105,7 +105,7 @@ public class SettingActivity extends MBaseActivity {
 		} else {
 			zqzx_setting_push.setState(false);
 		}
-
+		ShareSDK.initSDK(this);
 		sinaPlatform = ShareSDK.getPlatform(SinaWeibo.NAME);
 
 		sinaPlatform.setPlatformActionListener(new PlatformActionListener() {
