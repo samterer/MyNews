@@ -60,8 +60,6 @@ public class VoteDetailFragment extends BaseFragment {
 	@ViewInject(R.id.vote_body_scroll)
 	private ScrollView vote_body_scroll;//
 
-	@ViewInject(R.id.title_content)
-	private TextView title_content;//
 	@ViewInject(R.id.vote_pager)
 	private ViewPager pager; //
 

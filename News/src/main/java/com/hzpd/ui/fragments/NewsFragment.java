@@ -13,6 +13,7 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.modle.event.ChannelSortedList;
 import com.hzpd.ui.App;
+import com.hzpd.ui.activity.MainActivity;
 import com.hzpd.ui.activity.MyEditColumnActivity;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.SerializeUtil;
@@ -65,6 +66,13 @@ public class NewsFragment extends BaseFragment {
 		in.setClass(getActivity(), MyEditColumnActivity.class);
 		startActivity(in);
 		AAnim.ActivityStartAnimation(getActivity());
+	}
+
+	@OnClick(R.id.main_title_left_img)
+	private void showMenu(View view) {
+		if (getActivity() instanceof MainActivity) {
+			((MainActivity) getActivity()).showMenu();
+		}
 	}
 
 	/**

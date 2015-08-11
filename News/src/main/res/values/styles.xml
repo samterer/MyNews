@@ -78,10 +78,9 @@
     <style name="TabPageIndicator">
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/tab_indicator</item>
-        <item name="android:maxWidth">200dp</item>
-        <item name="android:minWidth">80dp</item>
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingRight">10dp</item>
+        <item name="android:minWidth">50dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
         <item name="android:paddingTop">3dp</item>
         <item name="android:paddingBottom">3dp</item>
         <item name="android:textSize">16sp</item>
