@@ -12,3 +12,6 @@
 # gradle
 !/build.gradle
 !/gradle.properties
+
+# configs
+!/configs
