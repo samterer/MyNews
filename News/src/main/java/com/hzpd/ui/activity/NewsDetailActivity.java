@@ -34,7 +34,6 @@ import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsDetailBean;
 import com.hzpd.modle.NewsItemBeanForCollection;
 import com.hzpd.modle.ReplayBean;
-import com.hzpd.modle.event.FontSizeEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.dialog.FontsizePop;
 import com.hzpd.ui.dialog.SharePop;
@@ -50,7 +49,6 @@ import com.hzpd.utils.GetFileSizeUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.showwebview.JsToJava;
 import com.hzpd.utils.showwebview.MyJavascriptInterface;
@@ -68,8 +66,6 @@ import com.lidroid.xutils.util.LogUtils;
 
 import java.io.File;
 import java.util.List;
-
-import de.greenrobot.event.EventBus;
 
 public class NewsDetailActivity extends MBaseActivity implements OnClickListener {
 
@@ -111,24 +107,24 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 				case CODE.font_big: {
-					SPUtil.getInstance().setTextSize(CODE.textSize_big);
+//					SPUtil.getInstance().setTextSize(CODE.textSize_big);
 					setWebViewTextSize(CODE.textSize_big);
-					FontSizeEvent event = new FontSizeEvent(CODE.textSize_big);
-					EventBus.getDefault().post(event);
+//					FontSizeEvent event = new FontSizeEvent(CODE.textSize_big);
+//					EventBus.getDefault().post(event);
 				}
 				break;
 				case CODE.font_mid: {
-					SPUtil.getInstance().setTextSize(CODE.textSize_normal);
+//					SPUtil.getInstance().setTextSize(CODE.textSize_normal);
 					setWebViewTextSize(CODE.textSize_normal);
-					FontSizeEvent event = new FontSizeEvent(CODE.textSize_normal);
-					EventBus.getDefault().post(event);
+//					FontSizeEvent event = new FontSizeEvent(CODE.textSize_normal);
+//					EventBus.getDefault().post(event);
 				}
 				break;
 				case CODE.font_small: {
-					SPUtil.getInstance().setTextSize(CODE.textSize_small);
+//					SPUtil.getInstance().setTextSize(CODE.textSize_small);
 					setWebViewTextSize(CODE.textSize_small);
-					FontSizeEvent event = new FontSizeEvent(CODE.textSize_small);
-					EventBus.getDefault().post(event);
+//					FontSizeEvent event = new FontSizeEvent(CODE.textSize_small);
+//					EventBus.getDefault().post(event);
 				}
 				break;
 			}
@@ -287,17 +283,17 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.news_textsize_big_id:
-				spu.setTextSize(CODE.textSize_big);
+//				spu.setTextSize(CODE.textSize_big);
 				setWebViewTextSize(CODE.textSize_big);
 				dissmissPopupWindows();
 				break;
 			case R.id.text_size_popu_center_root_id:
-				spu.setTextSize(CODE.textSize_normal);
+//				spu.setTextSize(CODE.textSize_normal);
 				setWebViewTextSize(CODE.textSize_normal);
 				dissmissPopupWindows();
 				break;
 			case R.id.text_size_popu_smail_root_id:
-				spu.setTextSize(CODE.textSize_small);
+//				spu.setTextSize(CODE.textSize_small);
 				setWebViewTextSize(CODE.textSize_small);
 				dissmissPopupWindows();
 				break;
