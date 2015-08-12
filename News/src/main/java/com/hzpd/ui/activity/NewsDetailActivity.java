@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,6 +50,7 @@ import com.hzpd.utils.GetFileSizeUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.showwebview.JsToJava;
 import com.hzpd.utils.showwebview.MyJavascriptInterface;
@@ -107,21 +109,21 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 				case CODE.font_big: {
-//					SPUtil.getInstance().setTextSize(CODE.textSize_big);
+					SPUtil.getInstance().setTextSizeNews(CODE.textSize_big);
 					setWebViewTextSize(CODE.textSize_big);
 //					FontSizeEvent event = new FontSizeEvent(CODE.textSize_big);
 //					EventBus.getDefault().post(event);
 				}
 				break;
 				case CODE.font_mid: {
-//					SPUtil.getInstance().setTextSize(CODE.textSize_normal);
+					SPUtil.getInstance().setTextSizeNews(CODE.textSize_normal);
 					setWebViewTextSize(CODE.textSize_normal);
 //					FontSizeEvent event = new FontSizeEvent(CODE.textSize_normal);
 //					EventBus.getDefault().post(event);
 				}
 				break;
 				case CODE.font_small: {
-//					SPUtil.getInstance().setTextSize(CODE.textSize_small);
+					SPUtil.getInstance().setTextSizeNews(CODE.textSize_small);
 					setWebViewTextSize(CODE.textSize_small);
 //					FontSizeEvent event = new FontSizeEvent(CODE.textSize_small);
 //					EventBus.getDefault().post(event);
@@ -283,17 +285,16 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.news_textsize_big_id:
-//				spu.setTextSize(CODE.textSize_big);
+				spu.setTextSizeNews(CODE.textSize_big);
 				setWebViewTextSize(CODE.textSize_big);
 				dissmissPopupWindows();
 				break;
 			case R.id.text_size_popu_center_root_id:
-//				spu.setTextSize(CODE.textSize_normal);
+				spu.setTextSizeNews(CODE.textSize_normal);
 				setWebViewTextSize(CODE.textSize_normal);
 				dissmissPopupWindows();
 				break;
 			case R.id.text_size_popu_smail_root_id:
-//				spu.setTextSize(CODE.textSize_small);
 				setWebViewTextSize(CODE.textSize_small);
 				dissmissPopupWindows();
 				break;
@@ -596,20 +597,27 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 		String data = "";
 		if (mBean != null) {
 			if (null != content && !"".equals(content)) {
+				int px;
 				switch (textSize) {
 					case CODE.textSize_small:
+						px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, getResources().getDisplayMetrics());
 						data = content.replaceAll("<p>",
-								"<p style=\"color:#231815;font-size:14px;text-indent: 0em;line-height: 1.55em;margin-bottom: 0.5em;letter-spacing:0" +
+								"<p style=\"color:#231815;font-size:" + px + "px;text-indent: 0em;line-height: 1.55em;margin-bottom: 0.5em;" +
+										"letter-spacing:0" +
 										".05em\">");
 						break;
 					case CODE.textSize_normal:
+						px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18, getResources().getDisplayMetrics());
 						data = content.replaceAll("<p>",
-								"<p style=\"color:#231815;font-size:18px;text-indent: 0em;line-height: 1.55em;margin-bottom: 0.5em;letter-spacing:0" +
+								"<p style=\"color:#231815;font-size:" + px + "px;text-indent: 0em;line-height: 1.55em;margin-bottom: 0.5em;" +
+										"letter-spacing:0" +
 										".05em\">");
 						break;
 					case CODE.textSize_big:
+						px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 20, getResources().getDisplayMetrics());
 						data = content.replaceAll("<p>",
-								"<p style=\"color:#231815;font-size:26px;text-indent: 0em;line-height: 1.55em;margin-bottom: 0.5em;letter-spacing:0" +
+								"<p style=\"color:#231815;font-size:" + px + "px;text-indent: 0em;line-height: 1.55em;margin-bottom: 0.5em;" +
+										"letter-spacing:0" +
 										".05em;\">");
 						break;
 				}
@@ -630,7 +638,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 			mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
 			Log.d(getLogTag(), "" + mBean);
 
-			int textSize = spu.getTextSize();
+			int textSize = spu.getTextSizeNews();
 
 			setWebViewTextSize(textSize);
 			mRoot.setVisibility(View.VISIBLE);
@@ -670,7 +678,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 				mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
 				Log.d(getLogTag(), "" + mBean);
 
-				int textSize = spu.getTextSize();
+				int textSize = spu.getTextSizeNews();
 
 				setWebViewTextSize(textSize);
 				mRoot.setVisibility(View.VISIBLE);
@@ -737,7 +745,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 			if (null != mWebView) {
 				if (mWebView.canGoBack()) {
 					mWebView.goBack();
-					int textSize = spu.getTextSize();
+					int textSize = spu.getTextSizeNews();
 					setWebViewTextSize(textSize);
 				}
 			}

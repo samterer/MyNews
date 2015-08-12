@@ -112,10 +112,10 @@
     <color name="zqzx_left_html">#368ac4</color>
 
 
-    <color name="nav_title_unselected">#b5b5b7</color>
+    <color name="nav_title_unselected">#333333</color>
 
     <!-- color -->
-    <color name="toolbar_bg">#4B3359</color>
+    <color name="toolbar_bg">#ee3359</color>
     <color name="content_bg">#5A6FD8</color>
     <color name="text_color">#5A6FD8</color>
     <color name="text_grey_color">#5A6FD8</color>
