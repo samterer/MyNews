@@ -558,24 +558,16 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 			if (null != content && !"".equals(content)) {
 				switch (textSize) {
 					case CODE.textSize_small:
-						data = content.replaceAll("<p>",
-								"<p style=\"color:#231815;font-size:14px;text-indent: 0em;line-height: 1.55em;margin-bottom: 0.5em;" +
-										"letter-spacing:0" +
-										".05em\">");
+						webSettings.setTextSize(WebSettings.TextSize.NORMAL);
 						break;
 					case CODE.textSize_normal:
-						data = content.replaceAll("<p>",
-								"<p style=\"color:#231815;font-size:18px;text-indent: 0em;line-height: 1.55em;margin-bottom: 0.5em;" +
-										"letter-spacing:0" +
-										".05em\">");
+						webSettings.setTextSize(WebSettings.TextSize.LARGER);
 						break;
 					case CODE.textSize_big:
-						data = content.replaceAll("<p>",
-								"<p style=\"color:#231815;font-size:26px;text-indent: 0em;line-height: 1.55em;margin-bottom: 0.5em;" +
-										"letter-spacing:0" +
-										".05em;\">");
+						webSettings.setTextSize(WebSettings.TextSize.LARGEST);
 						break;
 				}
+				data = content;
 			}
 		}
 		return data;
