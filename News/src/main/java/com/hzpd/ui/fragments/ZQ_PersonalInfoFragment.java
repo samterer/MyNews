@@ -87,7 +87,8 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 	private static final int IMAGE_REQUEST_CODE = 450;
 	private static final int CAMERA_REQUEST_CODE = 451;
 	private static final int RESULT_REQUEST_CODE = 452;
-	private String[] items = new String[]{getString(R.string.prompt_choose_local_photo), getString(R.string.prompt_take_photo)};
+	private String[] items = new String[]{App.getInstance().getString(R.string.prompt_choose_local_photo),
+			App.getInstance().getString(R.string.prompt_take_photo)};
 	private final String IMAGE_FILE_NAME = "faceImage.jpg";
 	private boolean isThirdpart = false;//是否是第三方登陆
 	private File imgFile;

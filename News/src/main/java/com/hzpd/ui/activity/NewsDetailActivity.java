@@ -15,19 +15,27 @@ import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.avatarqing.loadmore.lib.LoadMoreContainer;
+import com.avatarqing.loadmore.lib.LoadMoreHandler;
+import com.avatarqing.loadmore.lib.LoadMoreListViewContainer;
+import com.hzpd.adapter.CommentListAdapter;
 import com.hzpd.custorm.CustomProgressDialog;
-import com.hzpd.custorm.VerticalSlideScrollView;
+import com.hzpd.custorm.CustomScrollView;
 import com.hzpd.hflt.R;
 import com.hzpd.hflt.wxapi.SharedUtil;
 import com.hzpd.modle.CommentsCountBean;
+import com.hzpd.modle.CommentzqzxBean;
 import com.hzpd.modle.NewDetailOtherBean;
 import com.hzpd.modle.NewDetailVedioBean;
 import com.hzpd.modle.NewsBean;
@@ -65,6 +73,7 @@ import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class NewsDetailActivity extends MBaseActivity implements OnClickListener {
@@ -79,13 +88,16 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 	private RelativeLayout mRelativeLayoutPopuSmaill;
 	private RelativeLayout mRelativeLayoutTitleRoot;
 	private boolean mFlagPopuShow;
-	private VerticalSlideScrollView mLayoutRoot;
+	private CustomScrollView mLayoutRoot;
 	private WebSettings webSettings;
 	private LinearLayout mBack;
 	private LinearLayout mRoot;
 	private LinearLayout mButtomLayout1;// 底部1
 	private NewsDetailBean mBean;
-	private ImageView mImageViewBack;
+	private ListView mCommentListView;
+	private LoadMoreListViewContainer mLoadMoreContainer;
+
+	private CommentListAdapter mCommentListAdapter;
 
 	private ImageView news_detail_nonetwork;
 
@@ -108,21 +120,21 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 			switch (msg.what) {
 				case CODE.font_big: {
 //					SPUtil.getInstance().setTextSize(CODE.textSize_big);
-					setWebViewTextSize(CODE.textSize_big);
+					setupWebView(CODE.textSize_big);
 //					FontSizeEvent event = new FontSizeEvent(CODE.textSize_big);
 //					EventBus.getDefault().post(event);
 				}
 				break;
 				case CODE.font_mid: {
 //					SPUtil.getInstance().setTextSize(CODE.textSize_normal);
-					setWebViewTextSize(CODE.textSize_normal);
+					setupWebView(CODE.textSize_normal);
 //					FontSizeEvent event = new FontSizeEvent(CODE.textSize_normal);
 //					EventBus.getDefault().post(event);
 				}
 				break;
 				case CODE.font_small: {
 //					SPUtil.getInstance().setTextSize(CODE.textSize_small);
-					setWebViewTextSize(CODE.textSize_small);
+					setupWebView(CODE.textSize_small);
 //					FontSizeEvent event = new FontSizeEvent(CODE.textSize_small);
 //					EventBus.getDefault().post(event);
 				}
@@ -195,68 +207,73 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 	}
 
 	private void initNew() {
-		init();
-
-		newdetail_tv_comm = (TextView) findViewById(R.id.newdetail_tv_comm);
-		newdetail_fontsize = (ImageView) findViewById(R.id.newdetail_fontsize);
-		newdetail_share = (ImageView) findViewById(R.id.newdetail_share);
-		newdetail_collection = (ImageView) findViewById(R.id.newdetail_collection);
-		news_detail_nonetwork = (ImageView) findViewById(R.id.news_detail_nonetwork);
-
-		if ("yes".equals(isVideo)) {
-			newdetail_collection.setVisibility(View.GONE);
-			newdetail_share.setVisibility(View.GONE);
-		}
-		newdetail_tv_comm.setOnClickListener(this);
-		newdetail_fontsize.setOnClickListener(this);
-		newdetail_share.setOnClickListener(this);
-		newdetail_collection.setOnClickListener(this);
-
-		newsdetails_title_comment = (LinearLayout) findViewById(R.id.newsdetails_title_comment);
-		newsdetails_title_comment.setOnClickListener(this);
-		initPopu();
-		mButtomLayout1 = (LinearLayout) findViewById(R.id.news_detail_ll_bottom1);
-
+		dbUtils = DbUtils.create(this, App.getInstance().getJsonFileCacheRootDir(), App.collectiondbname);
+		initViews();
+		initPopupWindows();
 		if ("browser".equals(from)) {
 			getNewsDetails(nb.getTid());
 		} else {
 			getNewsDetails();
 		}
-
 		isCollection();
 	}
 
-	private void init() {
-		newInstance();
-		initRootParams();
-		initRootTitle();
-		initTextViewContent();
-		dbUtils = DbUtils.create(this, App.getInstance().getJsonFileCacheRootDir(), App.collectiondbname);
+	private void initViews() {
+		mLayoutInflater = LayoutInflater.from(this);
 
+		mLoadMoreContainer = (LoadMoreListViewContainer) findViewById(R.id.load_more_list_view_container);
+		mCommentListView = (ListView) findViewById(R.id.comment_listview);
+		mWebView = (WebView) findViewById(R.id.webview);
 		mRelativeLayoutTitleRoot = (RelativeLayout) findViewById(R.id.news_detail_layout);
 		mBack = (LinearLayout) findViewById(R.id.news_detail_bak);
 		mRoot = (LinearLayout) findViewById(R.id.news_detail_main_root_id);
 		newsdetails_title_num = (TextView) findViewById(R.id.newsdetails_title_num);
+		mLayoutRoot = (CustomScrollView) findViewById(R.id.news_detail_root_id);
+		newdetail_tv_comm = (TextView) findViewById(R.id.newdetail_tv_comm);
+		newdetail_fontsize = (ImageView) findViewById(R.id.newdetail_fontsize);
+		newdetail_share = (ImageView) findViewById(R.id.newdetail_share);
+		newdetail_collection = (ImageView) findViewById(R.id.newdetail_collection);
+		news_detail_nonetwork = (ImageView) findViewById(R.id.news_detail_nonetwork);
+		newsdetails_title_comment = (LinearLayout) findViewById(R.id.newsdetails_title_comment);
+		mButtomLayout1 = (LinearLayout) findViewById(R.id.news_detail_ll_bottom1);
 
-		mLayoutRoot = (VerticalSlideScrollView) findViewById(R.id.news_detail_root_id);
-		mImageViewBack = (ImageView) findViewById(R.id.news_detail_bak_img);
 		mBack.setOnClickListener(this);
+		newdetail_tv_comm.setOnClickListener(this);
+		newdetail_fontsize.setOnClickListener(this);
+		newdetail_share.setOnClickListener(this);
+		newdetail_collection.setOnClickListener(this);
+		newsdetails_title_comment.setOnClickListener(this);
 
-		mLayoutRoot.setVerticalScrollBarEnabled(true);
-		mLayoutRoot.setHorizontalScrollBarEnabled(false);
+		if ("yes".equals(isVideo)) {
+			newdetail_collection.setVisibility(View.GONE);
+			newdetail_share.setVisibility(View.GONE);
+		}
 
-		initPopu();
-
+		initCommentListView();
 	}
 
-	private void newInstance() {
-		mWebView = new WebView(this);
-		root = new LinearLayout(this);
-		rootTitle = new LinearLayout(this);
-		mLayoutInflater = LayoutInflater.from(this);
+	private void initCommentListView() {
+		// 添加一个占位的HeaderView，避免ListView无任何子View
+		TextView headerView = new TextView(this);
+		ListView.LayoutParams lp = new AbsListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, 1);
+		headerView.setLayoutParams(lp);
+		mCommentListView.addHeaderView(headerView);
+
+		// 加载更多容器的设置
+		mLoadMoreContainer.useDefaultHeader();
+		mLoadMoreContainer.setLoadMoreHandler(new LoadMoreHandler() {
+			@Override
+			public void onLoadMore(LoadMoreContainer loadMoreContainer) {
+				getLatestComm();
+			}
+		});
+
+		// 适配器设置
+		mCommentListAdapter = new CommentListAdapter();
+		mCommentListView.setAdapter(mCommentListAdapter);
 	}
 
-	private void initPopu() {
+	private void initPopupWindows() {
 		View mPopupMenu = LayoutInflater.from(this).inflate(R.layout.text_size_popu_layout, null);
 		mPopupWindow = new PopupWindow(mPopupMenu, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		ColorDrawable dw = new ColorDrawable(Color.TRANSPARENT);
@@ -269,10 +286,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 		mRelativeLayoutPopuBig.setOnClickListener(this);
 		mRelativeLayoutPopuCenter.setOnClickListener(this);
 		mRelativeLayoutPopuSmaill.setOnClickListener(this);
-
 	}
 
-	private void dissmissPopupWindows() {
+	private void dismissPopupWindows() {
 		if (mPopupWindow != null && mPopupWindow.isShowing()) {
 			mPopupWindow.dismiss();
 			mFlagPopuShow = false;
@@ -284,18 +300,18 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 		switch (v.getId()) {
 			case R.id.news_textsize_big_id:
 //				spu.setTextSize(CODE.textSize_big);
-				setWebViewTextSize(CODE.textSize_big);
-				dissmissPopupWindows();
+				setupWebView(CODE.textSize_big);
+				dismissPopupWindows();
 				break;
 			case R.id.text_size_popu_center_root_id:
 //				spu.setTextSize(CODE.textSize_normal);
-				setWebViewTextSize(CODE.textSize_normal);
-				dissmissPopupWindows();
+				setupWebView(CODE.textSize_normal);
+				dismissPopupWindows();
 				break;
 			case R.id.text_size_popu_smail_root_id:
 //				spu.setTextSize(CODE.textSize_small);
-				setWebViewTextSize(CODE.textSize_small);
-				dissmissPopupWindows();
+				setupWebView(CODE.textSize_small);
+				dismissPopupWindows();
 				break;
 			case R.id.news_detail_bak:
 				this.finish();
@@ -361,7 +377,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 			}
 			break;
 			case R.id.newdetail_fontsize: {
-
 				if (null == fontpop) {
 					View view = this.getLayoutInflater().inflate(R.layout.nd_fontsize_pop, null);
 					fontpop = new FontsizePop(view, handler);
@@ -390,7 +405,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 	}
 
 	private void webViewChangeProgress(final WebView webview) {
-
 		webSettings = webview.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
@@ -431,14 +445,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 			}
 		});
 
-		webview.setVerticalScrollBarEnabled(false);
 		webview.setHorizontalScrollBarEnabled(false);
-
 	}
 
-	// 总的布局
-	private LinearLayout root;
-	private LinearLayout rootTitle;
+	/** 容纳标题栏、视频、WebView */
 	private TextView title;
 	private TextView time;
 
@@ -449,80 +459,29 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 	 *
 	 * @param textSize
 	 */
-	private void setWebViewTextSize(int textSize) {
-
-		mWebView = null;
-		mWebView = new WebView(this);
-		mWebView.setBackgroundColor(getResources().getColor(R.color.zqzx_bg_light));
-
+	private void setupWebView(int textSize) {
 		webViewChangeProgress(mWebView);
 		if (mBean != null) {
-			initScroolParams();
 			setContentData(textSize);
 		}
-
-	}
-
-	private void initScroolParams() {
-		LayoutParams rootPa = new LayoutParams(LayoutParams.MATCH_PARENT,
-				LayoutParams.WRAP_CONTENT);
-		mLayoutRoot.setLayoutParams(rootPa);
-	}
-
-	private void initRootParams() {
-		LayoutParams rootPa = new LayoutParams(LayoutParams.MATCH_PARENT,
-				LayoutParams.WRAP_CONTENT);
-		root.setOrientation(LinearLayout.VERTICAL);
-		root.setLayoutParams(rootPa);
-		root.setPadding(20, 20, 19, 10);
-	}
-
-	private void initRootTitle() {
-		LayoutParams rootTitlePa = new LayoutParams(LayoutParams.MATCH_PARENT,
-				LayoutParams.WRAP_CONTENT);
-		rootTitle.setOrientation(LinearLayout.VERTICAL);
-		rootTitle.setLayoutParams(rootTitlePa);
-		rootTitle.setPadding(10, 0, 10, 0);
-	}
-
-	private void initTextViewContent() {
-		title = new TextView(this);
-		time = new TextView(this);
-		title.setTextSize(20);
-		title.setTextColor(getResources().getColor(R.color.zqzx_font_dark));
-		time.setTextSize(13);
-		time.setTextColor(getResources().getColor(R.color.zqzx_font_normal));
-		// time.setGravity(Gravity.CENTER);
-		// title.setGravity(Gravity.CENTER);
-		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		params.bottomMargin = (int) MyCommonUtil.dp2px(getResources(), 10f);
-		title.setLayoutParams(params);
-		time.setLayoutParams(params);
-
 	}
 
 	private void setContentData(int textSize) {
-		mLayoutRoot.removeAllViews();
-		root.removeAllViews();
-		rootTitle.removeAllViews();
-		mWebView.removeAllViews();
 		String content = mBean.getContent();
 
 		mWebView.loadDataWithBaseURL(null, formatStringToHtml(content, textSize), "text/html", "utf-8", null);
 
+		// 标题栏
+		title = (TextView) findViewById(R.id.news_title);
 		title.setText(mBean.getTitle());
 		String au = "";
 		if (null != mBean.getAuthorname() && !"".equals(mBean.getAuthorname())) {
 			au = mBean.getAuthorname() + "\t";
 		}
+		time = (TextView) findViewById(R.id.news_time);
 		time.setText(au + mBean.getCopyfrom() + "（" + mBean.getUpdate_time() + "）");
-
-		rootTitle.addView(title);
-		rootTitle.addView(time);
-		root.addView(rootTitle);
-		addVedioView();
-		root.addView(mWebView);
-		mLayoutRoot.addView(root);
+		// TODO 添加视频
+//		addVedioView();
 
 		jsInterface.setNewsDetailBean(mBean);
 
@@ -535,6 +494,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 	private String isVideo;
 
 	private void setDetailOther() {
+		// TODO 相关新闻
 		listTemp = mBean.getRealtion();
 		if (listTemp != null && listTemp.size() > 0) {
 			TextView txt = new TextView(this);
@@ -542,7 +502,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 			txt.setTextSize(22);
 			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 			txt.setLayoutParams(lp);
-			root.addView(txt);
+//			root.addView(txt);
 			for (int i = 0; i < listTemp.size(); i++) {
 				View view = mLayoutInflater.inflate(R.layout.news_detail_other_layout, null);
 				TextView title = (TextView) view.findViewById(R.id.news_detail_other_title_id);
@@ -551,7 +511,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
 				title.setText(listTemp.get(i).getTitle());
 				otherRoot.setOnClickListener(new MyOtherClickListener(i));
-				root.addView(view);
+//				root.addView(view);
 			}
 		}
 		int h = MyCommonUtil.getDensityRatio(this) * 50;
@@ -559,14 +519,14 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 		View view = new View(App.getInstance());
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, h);
 		view.setLayoutParams(lp);
-		root.addView(view);
+//		root.addView(view);
 	}
 
 	private void addVedioView() {
 		LogUtils.i("add video");
 		final NewDetailVedioBean bean = mBean.getVideo();
 		if (bean != null) {
-			View view = mLayoutInflater.inflate(R.layout.news_detail_vedio_layout, root, false);
+			View view = mLayoutInflater.inflate(R.layout.news_detail_vedio_layout, mWebView, false);
 			ImageView img = (ImageView) view.findViewById(R.id.news_detail_vedio_img_id);
 			int videoheight = MyCommonUtil.getDisplayMetric(getResources()).widthPixels / 16 * 9;
 			img.setLayoutParams(new RelativeLayout.LayoutParams(
@@ -588,7 +548,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
 				}
 			});
-			root.addView(view);
+//			root.addView(view);
 		}
 	}
 
@@ -599,17 +559,20 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 				switch (textSize) {
 					case CODE.textSize_small:
 						data = content.replaceAll("<p>",
-								"<p style=\"color:#231815;font-size:14px;text-indent: 0em;line-height: 1.55em;margin-bottom: 0.5em;letter-spacing:0" +
+								"<p style=\"color:#231815;font-size:14px;text-indent: 0em;line-height: 1.55em;margin-bottom: 0.5em;" +
+										"letter-spacing:0" +
 										".05em\">");
 						break;
 					case CODE.textSize_normal:
 						data = content.replaceAll("<p>",
-								"<p style=\"color:#231815;font-size:18px;text-indent: 0em;line-height: 1.55em;margin-bottom: 0.5em;letter-spacing:0" +
+								"<p style=\"color:#231815;font-size:18px;text-indent: 0em;line-height: 1.55em;margin-bottom: 0.5em;" +
+										"letter-spacing:0" +
 										".05em\">");
 						break;
 					case CODE.textSize_big:
 						data = content.replaceAll("<p>",
-								"<p style=\"color:#231815;font-size:26px;text-indent: 0em;line-height: 1.55em;margin-bottom: 0.5em;letter-spacing:0" +
+								"<p style=\"color:#231815;font-size:26px;text-indent: 0em;line-height: 1.55em;margin-bottom: 0.5em;" +
+										"letter-spacing:0" +
 										".05em;\">");
 						break;
 				}
@@ -618,8 +581,72 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 		return data;
 	}
 
-	private void getNewsDetails() {
+	private int mCurPage = 0;
+	private int mPageSize = 20;
 
+	private void getLatestComm() {
+		if (mBean == null) {
+			Log.d(getLogTag(), "mBean is null");
+			return;
+		}
+
+		RequestParams params = RequestParamsUtils.getParamsWithU();
+		params.addBodyParameter("Page", "" + mCurPage);
+		params.addBodyParameter("PageSize", "" + mPageSize);
+		params.addBodyParameter("nid", mBean.getNid());
+		params.addBodyParameter("type", "News");
+		params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+
+		String url = InterfaceJsonfile.mLatestComm;
+		// TODO 测试地址
+		boolean test = true;
+		if (test) {
+			url = "http://api.locktheworld.com/custom/comments.php";
+		}
+		httpUtils.send(HttpMethod.POST
+				, url
+				, params
+				, new RequestCallBack<String>() {
+			@Override
+			public void onSuccess(ResponseInfo<String> responseInfo) {
+				parseCommentJson(responseInfo.result);
+			}
+
+			@Override
+			public void onFailure(HttpException error, String msg) {
+				TUtils.toast(getString(R.string.toast_server_no_response));
+				mLoadMoreContainer.loadMoreFinish(true, false);
+			}
+		});
+	}
+
+	private void parseCommentJson(String json) {
+		mCurPage++;
+		Log.d(getLogTag(), "Latest Comment Json->" + json);
+		JSONObject obj = null;
+		try {
+			obj = JSONObject.parseObject(json);
+		} catch (Exception e) {
+			return;
+		}
+		boolean hasMore = true;
+		if (obj != null && 200 == obj.getIntValue("code")) {
+			ArrayList<CommentzqzxBean> latestList = (ArrayList<CommentzqzxBean>) JSONArray.parseArray(
+					obj.getString("data"), CommentzqzxBean.class);
+			Log.d(getLogTag(), "latest comment count:" + latestList.size());
+			Log.d(getLogTag(), "latest comment list:" + latestList);
+			// 添加数据到Adpater
+			mCommentListAdapter.appendData(latestList);
+			hasMore = true;
+		} else {
+			hasMore = false;
+			TUtils.toast(obj.getString("msg"));
+		}
+		boolean emptyResult = mCommentListAdapter.isEmpty();
+		mLoadMoreContainer.loadMoreFinish(emptyResult, hasMore);
+	}
+
+	private void getNewsDetails() {
 		File pageFile = App.getFile(detailPathRoot + "detail_" + nb.getNid());
 
 		if (GetFileSizeUtil.getInstance().getFileSizes(pageFile) > 30) {
@@ -632,13 +659,15 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
 			int textSize = spu.getTextSize();
 
-			setWebViewTextSize(textSize);
+			setupWebView(textSize);
 			mRoot.setVisibility(View.VISIBLE);
 			mLayoutRoot.setVisibility(View.VISIBLE);
 			mButtomLayout1.setVisibility(View.VISIBLE);
 			news_detail_nonetwork.setVisibility(View.GONE);
 
 			getCommentsCounts();
+
+			getLatestComm();
 			return;
 		}
 
@@ -672,13 +701,14 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
 				int textSize = spu.getTextSize();
 
-				setWebViewTextSize(textSize);
+				setupWebView(textSize);
 				mRoot.setVisibility(View.VISIBLE);
 				mLayoutRoot.setVisibility(View.VISIBLE);
 				mButtomLayout1.setVisibility(View.VISIBLE);
 				news_detail_nonetwork.setVisibility(View.GONE);
 
 				getCommentsCounts();
+				getLatestComm();
 			}
 
 			@Override
@@ -738,7 +768,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 				if (mWebView.canGoBack()) {
 					mWebView.goBack();
 					int textSize = spu.getTextSize();
-					setWebViewTextSize(textSize);
+					setupWebView(textSize);
 				}
 			}
 			return;
@@ -829,7 +859,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 			public void onClick(View v) {
 				pinlunpop.dismiss();
 				if (mFlagPopuShow) {
-					dissmissPopupWindows();
+					dismissPopupWindows();
 				} else {
 					// mPopupWindow.showAsDropDown(mPinLun,-30,-15);
 				}

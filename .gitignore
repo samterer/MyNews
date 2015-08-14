@@ -8,6 +8,7 @@
 !/PullToRefreshLib
 !/ShareSDK
 !/SMSSDK
+!/LoadMoreLib
 
 # git
 !/.gitignore

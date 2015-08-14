@@ -76,4 +76,17 @@ public class CommentzqzxBean {
 		this.content = content;
 	}
 
+	@Override
+	public String toString() {
+		return "CommentzqzxBean{" +
+				"nickname='" + nickname + '\'' +
+				", cid='" + cid + '\'' +
+				", avatar_path='" + avatar_path + '\'' +
+				", dateline='" + dateline + '\'' +
+				", uid='" + uid + '\'' +
+				", praise='" + praise + '\'' +
+				", content='" + content + '\'' +
+				", status='" + status + '\'' +
+				'}';
+	}
 }

@@ -16,6 +16,7 @@ import com.hzpd.adapter.CheckcommenthotAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.CommentzqzxBean;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
@@ -110,7 +111,7 @@ public class CheckCommenthotActivity extends MBaseActivity {
 			@Override
 			public void onSuccess(ResponseInfo<String> responseInfo) {
 				checkcomment_lv.onRefreshComplete();
-				LogUtils.i("getLatestComm-result-->" + responseInfo.result);
+				Log.i(getLogTag(), "getLatestComm-result-->" + responseInfo.result);
 				JSONObject obj = null;
 				try {
 					obj = JSONObject.parseObject(responseInfo.result);
@@ -164,7 +165,7 @@ public class CheckCommenthotActivity extends MBaseActivity {
 			@Override
 			public void onSuccess(ResponseInfo<String> responseInfo) {
 				checkcomment_lv.onRefreshComplete();
-				LogUtils.i("getHotComm-result-->" + responseInfo.result);
+				Log.i(getLogTag(), "getHotComm-result-->" + responseInfo.result);
 				JSONObject obj = null;
 				try {
 					obj = JSONObject.parseObject(responseInfo.result);

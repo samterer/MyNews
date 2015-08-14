@@ -15,6 +15,11 @@
  */
 package com.hzpd.utils;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -113,5 +118,31 @@ public class StringUtils {
 		return d;
 	}
 
+	public static String readTextFromInputstream(InputStream is) {
+		String result = "";
+		if (is != null) {
+			BufferedReader br = null;
+			try {
+				br = new BufferedReader(new InputStreamReader(is));
+				String line = null;
+				while ((line = br.readLine()) != null) {
+					result += line;
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				if (br != null) {
+					try {
+						br.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		return result;
+	}
 
 }

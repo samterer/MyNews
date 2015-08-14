@@ -49,17 +49,17 @@
                     android:layout_centerVertical="true"
                     android:clickable="true"
                     android:gravity="center"
-                    android:visibility="invisible"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="invisible">
 
                     <TextView
                         android:id="@+id/newsdetails_title_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
+                        android:layout_marginRight="8dp"
                         android:background="@drawable/zq_commetnum_selector"
-                        android:textSize="16sp"
-                        android:layout_marginRight="8dp"/>
+                        android:textColor="@color/white"
+                        android:textSize="16sp"/>
                 </LinearLayout>
             </RelativeLayout>
 
@@ -68,14 +68,62 @@
                 android:layout_height="1px"
                 android:background="@color/zqzx_bg_dark"/>
 
-            <com.hzpd.custorm.VerticalSlideScrollView
+            <com.hzpd.custorm.CustomScrollView
                 android:id="@+id/news_detail_root_id"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:scrollbarStyle="insideOverlay"
-                android:scrollbars="vertical">
-            </com.hzpd.custorm.VerticalSlideScrollView>
+                android:layout_height="wrap_content">
+
+                <com.hzpd.custorm.CustomWebView
+                    android:id="@+id/webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/zqzx_bg_light"
+                    android:layerType="software"
+                    android:overScrollMode="never">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:background="@color/zqzx_bg_light"
+                        android:orientation="vertical"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp">
+
+                        <TextView
+                            android:id="@+id/news_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/zqzx_bg_light"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="@color/zqzx_font_dark"
+                            android:textSize="20sp"/>
+
+                        <TextView
+                            android:id="@+id/news_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:background="@color/zqzx_bg_light"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/zqzx_font_normal"
+                            android:textSize="13sp"/>
+
+                    </LinearLayout>
+                </com.hzpd.custorm.CustomWebView>
+
+                <com.avatarqing.loadmore.lib.LoadMoreListViewContainer
+                    android:id="@+id/load_more_list_view_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ListView
+                        android:id="@+id/comment_listview"
+                        android:divider="#40444444"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+                </com.avatarqing.loadmore.lib.LoadMoreListViewContainer>
+            </com.hzpd.custorm.CustomScrollView>
 
         </LinearLayout>
 
@@ -93,13 +141,13 @@
         android:id="@+id/news_detail_ll_bottom1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
         android:background="@color/zqzx_bg_normal"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:paddingBottom="10dp"
         android:paddingLeft="10dp"
-        android:paddingRight="20dp">
+        android:paddingRight="20dp"
+        android:paddingTop="10dp">
 
         <TextView
             android:id="@+id/newdetail_tv_comm"
@@ -107,10 +155,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/zq_newsdetail_greyboder_shape"
-            android:text="写评论"
-            android:visibility="invisible"
+            android:text="@string/prompt_write_comment"
             android:textColor="@color/zqzx_font_light"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:visibility="invisible"/>
 
         <ImageView
             android:id="@+id/newdetail_fontsize"

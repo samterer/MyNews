@@ -1,1 +1,1 @@
-include ':News', 'MySilding', 'OneKeyShare', 'PullToRefreshlib', 'ShareSDK', 'SMSSDK', 'PullToRefreshLib'
+include ':News', 'MySilding', 'OneKeyShare', 'PullToRefreshlib', 'ShareSDK', 'SMSSDK', 'PullToRefreshLib','LoadMoreLib'

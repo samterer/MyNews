@@ -81,6 +81,7 @@ dependencies {
     compile project(':PullToRefreshLib')
     compile project(':MySilding')
     compile project(':ShareSDK')
+    compile project(':LoadMoreLib')
     compile files('libs/BaiduLBS_Android.jar')
     compile files('libs/jpush-sdk-release1.7.4.jar')
     compile files('libs/umeng-analytics-v5.5.2.jar')

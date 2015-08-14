@@ -55,7 +55,7 @@ public class App extends Application {
 
 	private String versionName;
 
-	public static final boolean debug = false;
+	public static final boolean debug = true;
 
 	@Override
 	public void onCreate() {

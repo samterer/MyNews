@@ -96,7 +96,7 @@ public class NewsAlbumFragment extends BaseFragment implements I_Control {
 			                                @Override
 			                                public void onPullDownToRefresh(
 					                                PullToRefreshBase<ListView> refreshView) {
-				                                LogUtils.i("下拉刷新");
+				                                LogUtils.i("onPullDownToRefresh");
 				                                refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_pull_label));
 				                                page = 1;
 				                                mFlagRefresh = true;
@@ -107,6 +107,7 @@ public class NewsAlbumFragment extends BaseFragment implements I_Control {
 			                                @Override
 			                                public void onPullUpToRefresh(
 					                                PullToRefreshBase<ListView> refreshView) {
+				                                LogUtils.i("onPullUpToRefresh");
 				                                refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_from_bottom_pull_label));
 				                                page++;
 				                                mFlagRefresh = false;
