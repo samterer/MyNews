@@ -299,17 +299,17 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.news_textsize_big_id:
-//				spu.setTextSize(CODE.textSize_big);
+				spu.setTextSizeNews(CODE.textSize_big);
 				setupWebView(CODE.textSize_big);
 				dismissPopupWindows();
 				break;
 			case R.id.text_size_popu_center_root_id:
-//				spu.setTextSize(CODE.textSize_normal);
+				spu.setTextSizeNews(CODE.textSize_normal);
 				setupWebView(CODE.textSize_normal);
 				dismissPopupWindows();
 				break;
 			case R.id.text_size_popu_smail_root_id:
-//				spu.setTextSize(CODE.textSize_small);
+				spu.setTextSizeNews(CODE.textSize_small);
 				setupWebView(CODE.textSize_small);
 				dismissPopupWindows();
 				break;
@@ -649,7 +649,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 			mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
 			Log.d(getLogTag(), "" + mBean);
 
-			int textSize = spu.getTextSize();
+			int textSize = spu.getTextSizeNews();
 
 			setupWebView(textSize);
 			mRoot.setVisibility(View.VISIBLE);
@@ -691,7 +691,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 				mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
 				Log.d(getLogTag(), "" + mBean);
 
-				int textSize = spu.getTextSize();
+				int textSize = spu.getTextSizeNews();
 
 				setupWebView(textSize);
 				mRoot.setVisibility(View.VISIBLE);
@@ -759,7 +759,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 			if (null != mWebView) {
 				if (mWebView.canGoBack()) {
 					mWebView.goBack();
-					int textSize = spu.getTextSize();
+					int textSize = spu.getTextSizeNews();
 					setupWebView(textSize);
 				}
 			}

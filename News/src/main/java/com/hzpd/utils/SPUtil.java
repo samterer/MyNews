@@ -100,6 +100,25 @@ public class SPUtil {
 		return textSize;
 	}
 
+	public void setTextSizeNews(int size) {
+		msp.put("textsizenews", size + "");
+	}
+
+	public int getTextSizeNews() {
+		int textSize = CODE.textSize_small;
+		String ts = msp.getAsString("textsizenews");
+		if (!TextUtils.isEmpty(ts)) {
+			try {
+				if (TextUtils.isDigitsOnly(ts)) {
+					textSize = Integer.parseInt(ts);
+				}
+			} catch (Exception e) {
+			}
+		}
+		return textSize;
+	}
+
+
 	public void setUser(UserBean user) {
 		this.user = user;
 		String dsuser = FjsonUtil.toJsonString(user);
