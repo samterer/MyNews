@@ -1,6 +1,7 @@
 package com.hzpd.modle;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -9,200 +10,231 @@ import java.util.List;
 
 /**
  * @author Administrator
- *
  */
 public class NewsDetailBean implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String nid;
-	private String tid;
-	private String title;
-	private String copyfrom;
-	private String update_time;
-	private String comcount;
-	private String content;
-	private String outline;
-	private List<NewDetailOtherBean> realtion;
-	private NewDetailVedioBean video;
-	private List<NewsDetailImgList> pic;
-	private String link;
-	private String authorname;
-	private int vote;// 判断新闻是否有投票选项 0没有 1有
+    private String nid;
+    private String tid;
+    private String title;
+    private String copyfrom;
+    private String update_time;
+    private String comcount;
+    private String content;
+    private String outline;
+    private String realtion;
+    private NewDetailVedioBean video;
+    private List<NewsDetailImgList> pic;
+    private String link;
+    private String authorname;
+    private int vote;// 判断新闻是否有投票选项 0没有 1有
+    private String type;//": "2",
+    private String audiourl;//": "",
+    private String videoid;//": "",
+    private String[] tag;
+    private List<NewsBean> ref;
 
-	private String type;//": "2",
-	private String audiourl;//": "",
-	private String videoid;//": "",
+    public NewsDetailBean() {
+    }
 
+    public NewsDetailBean(NewsBean nb) {
+        this.nid = nb.getNid();
+        this.tid = nb.getTid();
+        this.title = nb.getTitle();
+        this.type = nb.getType();
+        this.outline = nb.getOutline();
+        this.update_time = nb.getUpdate_time();
+        this.copyfrom=nb.getCopyfrom();
+        this.fav=nb.getFav();
+        this.comcount=nb.getComcount();
+    }
 
-	public NewsDetailBean() {
-	}
+    private String fav;
 
-	public NewsDetailBean(NewsBean nb) {
-		this.nid = nb.getNid();
-		this.tid = nb.getTid();
-		this.title = nb.getTitle();
-		this.type = nb.getType();
-		this.outline = nb.getOutline();
-		this.update_time = nb.getUpdate_time();
-	}
+    public String getFav() {
+        return fav;
+    }
 
-	@Override
-	public String toString() {
-		return "NewsDetailBean{" +
-				"nid='" + nid + '\'' +
-				", tid='" + tid + '\'' +
-				", title='" + title + '\'' +
-				", copyfrom='" + copyfrom + '\'' +
-				", update_time='" + update_time + '\'' +
-				", comcount='" + comcount + '\'' +
-				", content='" + content + '\'' +
-				", outline='" + outline + '\'' +
-				", realtion=" + realtion +
-				", video=" + video +
-				", pic=" + pic +
-				", link='" + link + '\'' +
-				", authorname='" + authorname + '\'' +
-				", vote=" + vote +
-				", type='" + type + '\'' +
-				", audiourl='" + audiourl + '\'' +
-				", videoid='" + videoid + '\'' +
-				'}';
-	}
+    public void setFav(String fav) {
+        this.fav = fav;
+    }
 
-	public int getVote() {
-		return vote;
-	}
+    public List<NewsBean> getRef() {
+        return ref;
+    }
 
-	public void setVote(int vote) {
-		this.vote = vote;
-	}
+    public void setRef(List<NewsBean> ref) {
+        this.ref = ref;
+    }
 
-	public List<NewsDetailImgList> getPic() {
-		return pic;
-	}
+    public String[] getTag() {
+        return tag;
+    }
 
-	public void setPic(List<NewsDetailImgList> pic) {
-		this.pic = pic;
-	}
+    public void setTag(String[] tag) {
+        this.tag = tag;
+    }
 
-	public String getLink() {
-		return link;
-	}
+    @Override
+    public String toString() {
+        return "NewsDetailBean{" +
+                "nid='" + nid + '\'' +
+                ", tid='" + tid + '\'' +
+                ", title='" + title + '\'' +
+                ", copyfrom='" + copyfrom + '\'' +
+                ", update_time='" + update_time + '\'' +
+                ", comcount='" + comcount + '\'' +
+                ", content='" + content + '\'' +
+                ", outline='" + outline + '\'' +
+                ", realtion='" + realtion + '\'' +
+                ", video=" + video +
+                ", pic=" + pic +
+                ", link='" + link + '\'' +
+                ", authorname='" + authorname + '\'' +
+                ", vote=" + vote +
+                ", type='" + type + '\'' +
+                ", audiourl='" + audiourl + '\'' +
+                ", videoid='" + videoid + '\'' +
+                ", tag=" + Arrays.toString(tag) +
+                ", ref=" + ref +
+                ", fav='" + fav + '\'' +
+                '}';
+    }
 
-	public void setLink(String link) {
-		this.link = link;
-	}
+    public int getVote() {
+        return vote;
+    }
 
-	public NewDetailVedioBean getVideo() {
-		return video;
-	}
+    public void setVote(int vote) {
+        this.vote = vote;
+    }
 
-	public void setVideo(NewDetailVedioBean video) {
-		this.video = video;
-	}
+    public List<NewsDetailImgList> getPic() {
+        return pic;
+    }
 
-	public List<NewDetailOtherBean> getRealtion() {
-		return realtion;
-	}
+    public void setPic(List<NewsDetailImgList> pic) {
+        this.pic = pic;
+    }
 
-	public void setRealtion(List<NewDetailOtherBean> realtion) {
-		this.realtion = realtion;
-	}
+    public String getLink() {
+        return link;
+    }
 
-	public String getUpdate_time() {
-		return update_time;
-	}
+    public void setLink(String link) {
+        this.link = link;
+    }
 
-	public void setUpdate_time(String update_time) {
-		this.update_time = update_time;
-	}
+    public NewDetailVedioBean getVideo() {
+        return video;
+    }
 
-	public String getOutline() {
-		return outline;
-	}
+    public void setVideo(NewDetailVedioBean video) {
+        this.video = video;
+    }
 
-	public void setOutline(String outline) {
-		this.outline = outline;
-	}
+    public String getRealtion() {
+        return realtion;
+    }
 
-	public String getNid() {
-		return nid;
-	}
+    public void setRealtion(String realtion) {
+        this.realtion = realtion;
+    }
 
-	public void setNid(String nid) {
-		this.nid = nid;
-	}
+    public String getUpdate_time() {
+        return update_time;
+    }
 
-	public String getTid() {
-		return tid;
-	}
+    public void setUpdate_time(String update_time) {
+        this.update_time = update_time;
+    }
 
-	public void setTid(String tid) {
-		this.tid = tid;
-	}
+    public String getOutline() {
+        return outline;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setOutline(String outline) {
+        this.outline = outline;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getNid() {
+        return nid;
+    }
 
-	public String getCopyfrom() {
-		return copyfrom;
-	}
+    public void setNid(String nid) {
+        this.nid = nid;
+    }
 
-	public void setCopyfrom(String copyfrom) {
-		this.copyfrom = copyfrom;
-	}
+    public String getTid() {
+        return tid;
+    }
 
-	public String getComcount() {
-		return comcount;
-	}
+    public void setTid(String tid) {
+        this.tid = tid;
+    }
 
-	public void setComcount(String comcount) {
-		this.comcount = comcount;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public String getCopyfrom() {
+        return copyfrom;
+    }
 
-	public String getAuthorname() {
-		return authorname;
-	}
+    public void setCopyfrom(String copyfrom) {
+        this.copyfrom = copyfrom;
+    }
 
-	public void setAuthorname(String authorname) {
-		this.authorname = authorname;
-	}
+    public String getComcount() {
+        return comcount;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public void setComcount(String comcount) {
+        this.comcount = comcount;
+    }
 
-	public String getAudiourl() {
-		return audiourl;
-	}
+    public String getContent() {
+        return content;
+    }
 
-	public String getVideoid() {
-		return videoid;
-	}
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public String getAuthorname() {
+        return authorname;
+    }
 
-	public void setAudiourl(String audiourl) {
-		this.audiourl = audiourl;
-	}
+    public void setAuthorname(String authorname) {
+        this.authorname = authorname;
+    }
 
-	public void setVideoid(String videoid) {
-		this.videoid = videoid;
-	}
+    public String getType() {
+        return type;
+    }
+
+    public String getAudiourl() {
+        return audiourl;
+    }
+
+    public String getVideoid() {
+        return videoid;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setAudiourl(String audiourl) {
+        this.audiourl = audiourl;
+    }
+
+    public void setVideoid(String videoid) {
+        this.videoid = videoid;
+    }
 
 }

@@ -18,11 +18,15 @@ import com.hzpd.modle.XF_CommentBean;
 import com.hzpd.modle.XF_UserCommNewsBean;
 import com.hzpd.modle.XF_UserCommentsBean;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.SPUtil;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -213,13 +217,27 @@ public class  UserCommPostView extends LinearLayout {
 			return;
 		}
 		TUtils.toast("👍");
+
+		String station= SharePreferecesUtils.getParam(getContext(), StationConfig.STATION, "def").toString();
+		String siteid=null;
+		String XF_PRAISECOM_url =null;
+		if (station.equals(StationConfig.DEF)){
+			siteid=InterfaceJsonfile.SITEID;
+			XF_PRAISECOM_url =InterfaceJsonfile.XF_PRAISECOM;
+		}else if (station.equals(StationConfig.YN)){
+			siteid= InterfaceJsonfile_YN.SITEID;
+			XF_PRAISECOM_url =InterfaceJsonfile_YN.XF_PRAISECOM;
+		}else if (station.equals(StationConfig.TW)){
+			siteid= InterfaceJsonfile_TW.SITEID;
+			XF_PRAISECOM_url =InterfaceJsonfile_TW.XF_PRAISECOM;
+		}
 		RequestParams params = new RequestParams();
 		params.addBodyParameter("uid", SPUtil.getInstance().getUser().getUid());
 		params.addBodyParameter("type", "News");
-		params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+		params.addBodyParameter("siteid", siteid);
 		params.addBodyParameter("cid", comment.getCid());
 		HttpUtils httpUtils = new HttpUtils();
-		httpUtils.send(HttpMethod.POST, InterfaceJsonfile.XF_PRAISECOM, params,
+		httpUtils.send(HttpMethod.POST, XF_PRAISECOM_url, params,
 				new RequestCallBack<String>() {
 					@Override
 					public void onSuccess(ResponseInfo<String> responseInfo) {

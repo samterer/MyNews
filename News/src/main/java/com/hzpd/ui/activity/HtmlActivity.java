@@ -20,7 +20,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshWebView;
 import com.hzpd.hflt.R;
-import com.hzpd.hflt.wxapi.SharedUtil;
+import com.hzpd.hflt.wxapi.FacebookSharedUtil;
 import com.hzpd.modle.CommentsCountBean;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsDetailBean;
@@ -28,12 +28,16 @@ import com.hzpd.modle.NewsItemBeanForCollection;
 import com.hzpd.modle.ReplayBean;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.Constant;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
@@ -76,7 +80,7 @@ public class HtmlActivity extends MBaseActivity {
 	private NewsDetailBean ndb;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.htmlactivity_layout);
 		ViewUtils.inject(this);
@@ -197,10 +201,23 @@ public class HtmlActivity extends MBaseActivity {
 		}
 
 		LogUtils.i("getNewsBean");
+		String station= SharePreferecesUtils.getParam(HtmlActivity.this, StationConfig.STATION, "def").toString();
+		String siteid=null;
+		String bnewsItem_url =null;
+		if (station.equals(StationConfig.DEF)){
+			siteid=InterfaceJsonfile.SITEID;
+			bnewsItem_url =InterfaceJsonfile.bnewsItem;
+		}else if (station.equals(StationConfig.YN)){
+			siteid=InterfaceJsonfile_YN.SITEID;
+			bnewsItem_url = InterfaceJsonfile_YN.bnewsItem;
+		}else if (station.equals(StationConfig.TW)){
+			siteid=InterfaceJsonfile_TW.SITEID;
+			bnewsItem_url = InterfaceJsonfile_TW.bnewsItem;
+		}
 		RequestParams params = RequestParamsUtils.getParams();
-		params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+		params.addBodyParameter("siteid", siteid);
 		params.addBodyParameter("nid", nid);
-		httpUtils.send(HttpMethod.POST, InterfaceJsonfile.bnewsItem, params, new RequestCallBack<String>() {
+		httpUtils.send(HttpMethod.POST, bnewsItem_url, params, new RequestCallBack<String>() {
 			@Override
 			public void onSuccess(ResponseInfo<String> responseInfo) {
 				LogUtils.i("result-->" + responseInfo.result);
@@ -248,22 +265,12 @@ public class HtmlActivity extends MBaseActivity {
 					return;
 				}
 
-				Intent intent = new Intent(this, CheckCommenthotActivity.class);
-				intent.putExtra("id", nb.getNid());
-				intent.putExtra("mNewtype", "Html");
-
-				LogUtils.i("nit-->" + nb.getNid() + "  mBean.getLink()-->" + nb.getJson_url());
-				startActivity(intent);
-				AAnim.ActivityStartAnimation(this);
 
 			}
 			break;
 			case R.id.newdetail_tv_comm: {
 				if (null == spu.getUser()) {
-					TUtils.toast(getString(R.string.toast_please_login));
-					Intent intent = new Intent(this, LoginActivity.class);
-					startActivity(intent);
-					AAnim.ActivityStartAnimation(this);
+
 					return;
 				}
 				if (null == nb) {
@@ -274,7 +281,7 @@ public class HtmlActivity extends MBaseActivity {
 					if (null != nb.getImgs() && nb.getImgs().length > 0) {
 						smallimg = nb.getImgs()[0];
 					}
-					ReplayBean bean = new ReplayBean(nb.getNid(), nb.getTitle(), "Html", nb.getJson_url(), smallimg);
+					ReplayBean bean = new ReplayBean(nb.getNid(), nb.getTitle(), "Html", nb.getJson_url(), smallimg,nb.getComcount());
 					Intent intent = new Intent(this, ZQ_ReplyActivity.class);
 					intent.putExtra("replay", bean);
 					startActivity(intent);
@@ -289,7 +296,7 @@ public class HtmlActivity extends MBaseActivity {
 					imgurl = nb.getImgs()[0];
 				}
 
-				SharedUtil.showShares(true, null, nb.getTitle(), nb.getJson_url(), imgurl, this);
+				FacebookSharedUtil.showShares(nb.getTitle(), nb.getJson_url(), imgurl, this);
 
 			}
 			break;
@@ -304,11 +311,20 @@ public class HtmlActivity extends MBaseActivity {
 	// 是否收藏
 	private void isCollection() {
 		if (null == spu.getUser()) {
+			String station= SharePreferecesUtils.getParam(HtmlActivity.this, StationConfig.STATION, "def").toString();
+			String ISCELLECTION_url =null;
+			if (station.equals(StationConfig.DEF)){
+				ISCELLECTION_url =InterfaceJsonfile.ISCELLECTION;
+			}else if (station.equals(StationConfig.YN)){
+				ISCELLECTION_url = InterfaceJsonfile_YN.ISCELLECTION;
+			}else if (station.equals(StationConfig.TW)){
+				ISCELLECTION_url = InterfaceJsonfile_TW.ISCELLECTION;
+			}
 			RequestParams params = RequestParamsUtils.getParamsWithU();
 			params.addBodyParameter("typeid", nb.getNid());
 			params.addBodyParameter("type", "4");
 
-			httpUtils.send(HttpMethod.POST, InterfaceJsonfile.ISCELLECTION, params, new RequestCallBack<String>() {
+			httpUtils.send(HttpMethod.POST, ISCELLECTION_url, params, new RequestCallBack<String>() {
 				@Override
 				public void onSuccess(ResponseInfo<String> responseInfo) {
 					LogUtils.i("isCollection result-->" + responseInfo.result);
@@ -322,7 +338,7 @@ public class HtmlActivity extends MBaseActivity {
 					if (200 == obj.getIntValue("code")) {
 						JSONObject object = obj.getJSONObject("data");
 						if ("1".equals(object.getString("status"))) {
-							newdetail_collection.setImageResource(R.drawable.zqzx_collection);
+							newdetail_collection.setImageResource(R.drawable.details_collect_unselect);
 						}
 					}
 				}
@@ -338,7 +354,7 @@ public class HtmlActivity extends MBaseActivity {
 						.findFirst(Selector.from(NewsItemBeanForCollection.class).where("colldataid", "=", nb.getNid())
 								.and("type", "=", "4"));
 				if (null != nbfc) {
-					newdetail_collection.setImageResource(R.drawable.zqzx_collection);
+					newdetail_collection.setImageResource(R.drawable.details_collect_unselect);
 				}
 			} catch (DbException e) {
 				e.printStackTrace();
@@ -356,12 +372,12 @@ public class HtmlActivity extends MBaseActivity {
 				if (mnbean == null) {
 					dbHelper.getCollectionDBUitls().save(nibfc);
 					TUtils.toast(getString(R.string.toast_collect_success));
-					newdetail_collection.setImageResource(R.drawable.zqzx_collection);
+					newdetail_collection.setImageResource(R.drawable.details_collect_unselect);
 				} else {
 					dbHelper.getCollectionDBUitls().delete(NewsItemBeanForCollection.class,
 							WhereBuilder.b("colldataid", "=", nb.getNid()));
 					TUtils.toast(getString(R.string.toast_collect_cancelled));
-					newdetail_collection.setImageResource(R.drawable.zqzx_nd_collection);
+					newdetail_collection.setImageResource(R.drawable.details_collect_select);
 				}
 			} catch (DbException e) {
 				e.printStackTrace();
@@ -370,14 +386,27 @@ public class HtmlActivity extends MBaseActivity {
 			return;
 		}
 		LogUtils.i("Type-->" + nb.getType() + "  Fid-->" + nb.getNid());
+		String station= SharePreferecesUtils.getParam(HtmlActivity.this, StationConfig.STATION, "def").toString();
+		String siteid=null;
+		String ADDCOLLECTION_url =null;
+		if (station.equals(StationConfig.DEF)){
+			siteid=InterfaceJsonfile.SITEID;
+			ADDCOLLECTION_url =InterfaceJsonfile.ADDCOLLECTION;
+		}else if (station.equals(StationConfig.YN)){
+			siteid=InterfaceJsonfile_YN.SITEID;
+			ADDCOLLECTION_url = InterfaceJsonfile_YN.ADDCOLLECTION;
+		}else if (station.equals(StationConfig.TW)){
+			siteid=InterfaceJsonfile_TW.SITEID;
+			ADDCOLLECTION_url = InterfaceJsonfile_TW.ADDCOLLECTION;
+		}
 		RequestParams params = RequestParamsUtils.getParamsWithU();
 		///
 		params.addBodyParameter("type", "4");
 		params.addBodyParameter("typeid", nb.getNid());
-		params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+		params.addBodyParameter("siteid", siteid);
 		params.addBodyParameter("data", nb.getJson_url());
 
-		httpUtils.send(HttpMethod.POST, InterfaceJsonfile.ADDCOLLECTION// InterfaceApi.addcollection
+		httpUtils.send(HttpMethod.POST, ADDCOLLECTION_url// InterfaceApi.addcollection
 				, params, new RequestCallBack<String>() {
 			@Override
 			public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -390,9 +419,9 @@ public class HtmlActivity extends MBaseActivity {
 						JSONObject object = obj.getJSONObject("data");
 						// 1:收藏操作成功 2:取消收藏操作成功
 						if ("1".equals(object.getString("status"))) {
-							newdetail_collection.setImageResource(R.drawable.zqzx_collection);
+							newdetail_collection.setImageResource(R.drawable.details_collect_unselect);
 						} else {
-							newdetail_collection.setImageResource(R.drawable.zqzx_nd_collection);
+							newdetail_collection.setImageResource(R.drawable.details_collect_select);
 						}
 					}
 				} catch (Exception e) {
@@ -412,12 +441,21 @@ public class HtmlActivity extends MBaseActivity {
 
 	private void getCommentsCounts() {
 		EventUtils.sendReadAtical(activity);
+		String station= SharePreferecesUtils.getParam(HtmlActivity.this, StationConfig.STATION, "def").toString();
+		String commentsConts_url =null;
+		if (station.equals(StationConfig.DEF)){
+			commentsConts_url =InterfaceJsonfile.commentsConts;
+		}else if (station.equals(StationConfig.YN)){
+			commentsConts_url = InterfaceJsonfile_YN.commentsConts;
+		}else if (station.equals(StationConfig.TW)){
+			commentsConts_url = InterfaceJsonfile_TW.commentsConts;
+		}
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("type", Constant.TYPE.NewsA.toString());
 		params.addBodyParameter("nids", nb.getNid());
 
 		HttpUtils httpUtils = new HttpUtils();
-		httpUtils.send(HttpMethod.POST, InterfaceJsonfile.commentsConts, params, new RequestCallBack<String>() {
+		httpUtils.send(HttpMethod.POST,commentsConts_url, params, new RequestCallBack<String>() {
 			@Override
 			public void onSuccess(ResponseInfo<String> responseInfo) {
 				LogUtils.i("loginSubmit-->" + responseInfo.result);

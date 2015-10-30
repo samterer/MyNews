@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/secondary_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="7.0dip"
+        android:layout_marginRight="7.0dip"
+        android:clipToPadding="false"
+        android:paddingLeft="10.0dip"
+        android:paddingRight="10.0dip">
+
+        <com.hzpd.custorm.CircleImageView
+            android:id="@+id/comment_user_icon"
+            android:layout_width="35.0dip"
+            android:layout_height="35.0dip"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="15.0dip"
+            android:contentDescription="@null" />
+
+        <ImageView
+            android:id="@+id/comment_user_express_tag_icon"
+            android:layout_width="16.0dip"
+            android:layout_height="16.0dip"
+            android:layout_alignBottom="@+id/comment_user_icon"
+            android:layout_marginLeft="-12.0dip"
+            android:layout_toRightOf="@+id/comment_user_icon"
+            android:contentDescription="@null"
+            android:visibility="gone" />
+
+
+        <!-- 名称-->
+        <LinearLayout
+            android:id="@+id/tags_info_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12.0dip"
+            android:layout_marginTop="12.0dip"
+            android:layout_toRightOf="@+id/comment_user_icon"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <com.hzpd.ui.widget.FontTextView
+                android:id="@+id/comment_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="comment_user_name"
+                android:textColor="#ff2b61c0"
+                android:textSize="16.0sp" />
+
+            <ImageView
+                android:id="@+id/comment_replyed"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="10.0dip"
+                android:scaleType="centerInside"
+                android:src="@drawable/details_icon_yihuifu"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <!-- 点赞图-->
+        <ImageView
+            android:id="@+id/up_icon"
+            android:layout_width="28.0dip"
+            android:layout_height="28.0dip"
+            android:layout_alignBottom="@+id/tags_info_layout"
+            android:layout_alignParentRight="true"
+            android:contentDescription="@null"
+            android:paddingBottom="3.0dip"
+            android:paddingLeft="3.0dip"
+            android:paddingRight="3.0dip"
+            android:paddingTop="8.0dip"
+            android:src="@drawable/details_icon_likeit_nor" />
+
+        <!--点赞数-->
+        <TextView
+            android:id="@+id/comment_up_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tags_info_layout"
+            android:layout_toLeftOf="@+id/up_icon"
+            android:gravity="center_vertical"
+            android:text="122"
+            android:textColor="#ff898989"
+            android:textSize="15.0sp" />
+
+        <!-- 地址-->
+        <com.hzpd.ui.widget.FontTextView
+            android:id="@+id/comment_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tags_info_layout"
+            android:layout_below="@+id/tags_info_layout"
+            android:layout_marginRight="12.0dip"
+            android:layout_toRightOf="@+id/comment_user_icon"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="FaceBook"
+            android:textColor="#ff777777"
+            android:textSize="14.0sp" />
+
+        <!-- 时间-->
+        <com.hzpd.ui.widget.FontTextView
+            android:id="@+id/comment_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/comment_address"
+            android:layout_marginRight="12.0dip"
+            android:layout_toRightOf="@+id/comment_address"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="comment_time"
+            android:textColor="#ff898989"
+            android:textSize="14.0sp" />
+
+        <!--详细介绍-->
+        <TextView
+            android:id="@+id/comment_distince"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/comment_time"
+            android:layout_toRightOf="@+id/comment_time"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="comment_distince"
+            android:textColor="#ff777777"
+            android:textSize="14.0sp"
+            android:visibility="gone"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_comment_text"
+            android:layout_width="match_parent"
+            android:layout_toRightOf="@+id/comment_user_icon"
+            android:layout_below="@+id/comment_user_icon"
+            android:layout_marginLeft="12.0dip"
+            android:layout_marginTop="8.0dip"
+            android:layout_height="wrap_content">
+
+            <com.hzpd.ui.widget.FontTextView
+                android:id="@+id/comment_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#dd000000"
+                android:textSize="18.0sp"
+                android:text="comment_text" />
+
+
+        </RelativeLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rl_comment_text"
+            android:orientation="vertical">
+
+            <!--地点-->
+            <LinearLayout
+                android:id="@+id/location_info_linearlayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5.0dip"
+                android:layout_marginLeft="48.0dip"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/location_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@null"
+                    android:src="@drawable/message_location_icon" />
+
+                <com.hzpd.ui.widget.FontTextView
+                    android:id="@+id/location_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5.0dip"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="location_text"
+                    android:textColor="#ff898989"
+                    android:textSize="14.0sp" />
+            </LinearLayout>
+
+
+
+            <TextView
+                android:id="@+id/article_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3.0dip"
+                android:layout_marginLeft="43.0dip"
+                android:layout_marginTop="3.0dip"
+                android:ellipsize="end"
+                android:paddingBottom="3.0dip"
+                android:paddingLeft="5.0dip"
+                android:paddingRight="5.0dip"
+                android:paddingTop="3.0dip"
+                android:singleLine="true"
+                android:text="article_title"
+                android:textColor="#ff999999"
+                android:textSize="14.0sp"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/message_line"
+                android:layout_width="fill_parent"
+                android:layout_height="0.5dip"
+                android:layout_marginBottom="0.0dip"
+                android:layout_marginTop="7.0dip"
+                android:contentDescription="@null"
+                android:scaleType="fitXY"
+                android:src="#ffc8cbcc" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/black_space"
+        android:layout_width="fill_parent"
+        android:layout_height="20.0dip"
+        android:background="@drawable/black_space_bg"
+        android:visibility="gone" />
+</LinearLayout>

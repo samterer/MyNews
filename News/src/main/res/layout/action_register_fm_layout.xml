@@ -41,7 +41,7 @@
                     android:src="@drawable/littlestar"
                     android:visibility="invisible"/>
 
-                <TextView
+                <com.hzpd.ui.widget.FontTextView
                     android:id="@+id/action_reg_item_lable1_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
                     android:src="@drawable/littlestar"
                     android:visibility="invisible"/>
 
-                <TextView
+                <com.hzpd.ui.widget.FontTextView
                     android:id="@+id/action_reg_item_lable2_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -124,7 +124,7 @@
                     android:src="@drawable/littlestar"
                     android:visibility="invisible"/>
 
-                <TextView
+                <com.hzpd.ui.widget.FontTextView
                     android:id="@+id/action_reg_item_lable3_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -164,7 +164,7 @@
                     android:src="@drawable/littlestar"
                     android:visibility="invisible"/>
 
-                <TextView
+                <com.hzpd.ui.widget.FontTextView
                     android:id="@+id/action_reg_item_lable4_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -204,7 +204,7 @@
                     android:src="@drawable/littlestar"
                     android:visibility="invisible"/>
 
-                <TextView
+                <com.hzpd.ui.widget.FontTextView
                     android:id="@+id/action_reg_item_lable5_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -244,7 +244,7 @@
                     android:src="@drawable/littlestar"
                     android:visibility="invisible"/>
 
-                <TextView
+                <com.hzpd.ui.widget.FontTextView
                     android:id="@+id/action_reg_item_lable6_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -284,7 +284,7 @@
                     android:src="@drawable/littlestar"
                     android:visibility="invisible"/>
 
-                <TextView
+                <com.hzpd.ui.widget.FontTextView
                     android:id="@+id/action_reg_item_lable7_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -324,7 +324,7 @@
                     android:src="@drawable/littlestar"
                     android:visibility="invisible"/>
 
-                <TextView
+                <com.hzpd.ui.widget.FontTextView
                     android:id="@+id/action_reg_item_lable8_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -364,7 +364,7 @@
                     android:src="@drawable/littlestar"
                     android:visibility="invisible"/>
 
-                <TextView
+                <com.hzpd.ui.widget.FontTextView
                     android:id="@+id/action_reg_item_lable9_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

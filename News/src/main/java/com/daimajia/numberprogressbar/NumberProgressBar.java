@@ -18,7 +18,6 @@ import com.hzpd.hflt.R;
  * Created by daimajia on 14-4-30.
  */
 public class NumberProgressBar extends View {
-
 	private int mMaxProgress = 100;
 
 	/**

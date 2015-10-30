@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!--顶部循环和标题-->
+    <FrameLayout
+        android:id="@+id/news_viewpage_myroot"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#f5f5f5">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="#ffffff"
+            app:cardCornerRadius="1dp"
+            app:cardElevation="1dp"
+            app:cardMaxElevation="1dp"
+            app:cardPreventCornerOverlap="false">
+            <!-- 顶部循环展示栏-->
+            <com.hzpd.custorm.TopPicViewPager
+                android:id="@+id/test_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!--滑动图片标题-->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@drawable/backgroud_flash_text"
+                android:paddingBottom="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
+
+                <com.hzpd.ui.widget.FontBoldTextView
+                    android:id="@+id/viewpage_txt_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:paddingLeft="3dp"
+                    android:textColor="@color/white"
+                    android:paddingBottom="2dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </FrameLayout>
+
+            <com.hzpd.ui.widget.CircleIndicator
+                android:id="@+id/indicator_default"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_gravity="right|bottom"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="3dp"
+              />
+        </android.support.v7.widget.CardView>
+    </FrameLayout>
+</LinearLayout>

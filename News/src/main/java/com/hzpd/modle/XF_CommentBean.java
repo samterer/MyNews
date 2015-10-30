@@ -2,31 +2,45 @@ package com.hzpd.modle;
 
 public class XF_CommentBean {
 
-	private String uid;//": "1",
-	private String nickname;//": "188****4188",评论人昵称
-	private String avatar_path;//评论人头像
-	private String ulevel;//评论人等级
-	private String cid;//": "1",评论的id c-- comment
-	private String dateline;//": "37分钟前",
-	private String praise;//": "0",点赞量
-	private String content;//": "哈哈，我的评论",评论内容
-	private String floor;//": 1 楼层号
+
+	private String status;//1审核通过 -2审核中
 
 
-	public String getUid() {
-		return uid;
+	private String alias;
+	private String avatar_path;//": "http://58.68.134.165:8081/cms_json/zqzx/News/Content/197001/01/133",
+	private String cid;
+	private String content;//新闻来源
+	private String dateline;
+
+	private String floor;//": "555555555555555",
+	private String nickname;//": "2014-12-17 18:25:15"
+	private String praise;//":"1",
+
+	private String uid;
+
+	@Override
+	public String toString() {
+		return "MycommentsitemBean{" +
+				"status='" + status + '\'' +
+				", alias='" + alias + '\'' +
+				", avatar_path='" + avatar_path + '\'' +
+				", cid='" + cid + '\'' +
+				", content='" + content + '\'' +
+				", dateline='" + dateline + '\'' +
+				", floor='" + floor + '\'' +
+				", nickname='" + nickname + '\'' +
+				", praise='" + praise + '\'' +
+				", uid='" + uid + '\'' +
+				", ulevel='" + ulevel + '\'' +
+				'}';
 	}
 
-	public void setUid(String uid) {
-		this.uid = uid;
+	public String getAlias() {
+		return alias;
 	}
 
-	public String getNickname() {
-		return nickname;
-	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 
 	public String getAvatar_path() {
@@ -45,12 +59,46 @@ public class XF_CommentBean {
 		this.cid = cid;
 	}
 
-	public String getDateline() {
-		return dateline;
+	public String getFloor() {
+		return floor;
 	}
 
-	public void setDateline(String dateline) {
-		this.dateline = dateline;
+	public void setFloor(String floor) {
+		this.floor = floor;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public String getUlevel() {
+		return ulevel;
+	}
+
+	public void setUlevel(String ulevel) {
+		this.ulevel = ulevel;
+	}
+
+	private String ulevel;
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getPraise() {
@@ -69,20 +117,12 @@ public class XF_CommentBean {
 		this.content = content;
 	}
 
-	public String getFloor() {
-		return floor;
+	public String getDateline() {
+		return dateline;
 	}
 
-	public void setFloor(String floor) {
-		this.floor = floor;
-	}
-
-	public String getUlevel() {
-		return ulevel;
-	}
-
-	public void setUlevel(String ulevel) {
-		this.ulevel = ulevel;
+	public void setDateline(String dateline) {
+		this.dateline = dateline;
 	}
 
 }

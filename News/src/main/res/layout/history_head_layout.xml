@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@color/search_content_background"
+	android:gravity="left|center_vertical"
+	android:orientation="horizontal">
+
+	<com.hzpd.ui.widget.FontTextView
+		android:id="@+id/history_head_title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:gravity="left|center_vertical"
+		android:padding="@dimen/search_padding_middle"
+		android:text="@string/search_history_head"
+		android:textColor="@color/search_key_head_text"
+		android:textSize="@dimen/search_title_size"/>
+
+	<com.hzpd.ui.widget.FontTextView
+        android:layout_marginRight="5dp"
+		android:id="@+id/history_head_clear"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@drawable/search_history_clear_selector"
+		android:gravity="center"
+		android:padding="@dimen/search_padding_low"
+		android:text="@string/search_history_clear"
+		android:textColor="@color/search_key_head_text"
+		android:textSize="@dimen/search_clear_size"/>
+
+</LinearLayout>

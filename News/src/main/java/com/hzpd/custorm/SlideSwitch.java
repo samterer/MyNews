@@ -44,7 +44,7 @@ public class SlideSwitch extends View {
 	private boolean slideable = true;
 	private SlideListener listener;
 
-	public interface SlideListener {
+	public interface SlideListener { 
 		public void open();
 
 		public void close();

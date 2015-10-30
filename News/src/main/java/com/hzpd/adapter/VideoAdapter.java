@@ -72,14 +72,14 @@ public class VideoAdapter extends ListBaseAdapter<VideoItemBean> {
 		holderBig.vib_tv_title.setText(bean1.getTitle());
 
 
-		holderBig.zq_video_tv_updatetime.setText(CalendarUtil.friendlyTime(bean1.getTime()));
+		holderBig.zq_video_tv_updatetime.setText(CalendarUtil.friendlyTime(bean1.getTime(), context));
 
 //		holderBig.zq_video_tv_comments.setVisibility(View.VISIBLE);
 
 		holderBig.vib_iv_icon.setImageResource(icon_img[position % icon_img.length]);
 
-		mImageLoader.displayImage(bean1.getMainpic(), holderBig.vib_iv_img,
-				DisplayOptionFactory.getOption(OptionTp.Big));
+		SPUtil.displayImage(bean1.getMainpic(), holderBig.vib_iv_img,
+				DisplayOptionFactory.getOption(OptionTp.Small));
 
 		return convertView;
 	}

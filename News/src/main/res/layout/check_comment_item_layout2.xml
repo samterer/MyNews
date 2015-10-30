@@ -21,7 +21,7 @@
             android:layout_height="24dp"
             android:src="@drawable/icon_comment_touxiang"/>
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/check_comment2_name1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             android:textColor="@color/blue_title_bg"
             android:text="@string/prompt_anonym"/>
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
@@ -39,7 +39,7 @@
             android:textColor="@color/black"
             android:text="@string/prompt_reply"/>
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/check_comment2_name2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             android:textColor="@color/blue_title_bg"
             android:text="@string/prompt_anonym"/>
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/check_comment2_time"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -58,7 +58,7 @@
             android:gravity="right"/>
     </LinearLayout>
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/check_comment2_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

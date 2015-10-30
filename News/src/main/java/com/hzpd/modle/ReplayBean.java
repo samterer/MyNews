@@ -11,17 +11,31 @@ public class ReplayBean implements Serializable {
 	private String jsonUrl;
 	private String imgUrl;
 
+
+
+	private String comcount;
+
 	public ReplayBean() {
 	}
 
 	public ReplayBean(String id, String title, String type, String jsonUrl,
-	                  String imgUrl) {
+	                  String imgUrl,String comcount) {
 		super();
 		this.id = id;
 		this.title = title;
 		this.type = type;
 		this.jsonUrl = jsonUrl;
 		this.imgUrl = imgUrl;
+		this.comcount=comcount;
+	}
+
+
+	public String getComcount() {
+		return comcount;
+	}
+
+	public void setComcount(String comcount) {
+		this.comcount = comcount;
 	}
 
 	public String getId() {

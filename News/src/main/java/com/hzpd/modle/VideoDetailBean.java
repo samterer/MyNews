@@ -10,6 +10,16 @@ public class VideoDetailBean {
 	private String desn;//": "3333"
 	private String mainpic;
 
+	private String fav;
+
+	public String getFav() {
+		return fav;
+	}
+
+	public void setFav(String fav) {
+		this.fav = fav;
+	}
+
 
 	public String getVid() {
 		return vid;

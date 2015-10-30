@@ -16,9 +16,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.UserBean;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -34,9 +38,6 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-import cn.smssdk.EventHandler;
-import cn.smssdk.SMSSDK;
 
 public class ZQ_RegisterFragment extends BaseFragment {
 
@@ -122,26 +123,6 @@ public class ZQ_RegisterFragment extends BaseFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		stitle_tv_content.setText(R.string.title_user_register);
-		SMSSDK.initSDK(activity, smsappkey, smsappsecret);
-		SMSSDK.registerEventHandler(new EventHandler() {
-			@Override
-			public void afterEvent(int event, int result, Object data) {
-				if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
-					if (result == SMSSDK.RESULT_COMPLETE) {
-						//验证码获取成功
-						handler.sendEmptyMessage(445);
-					} else if (result == SMSSDK.RESULT_ERROR) {
-						handler.sendEmptyMessage(446);
-					}
-				} else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
-					if (result == SMSSDK.RESULT_COMPLETE) {
-						handler.sendEmptyMessage(444);
-					} else if (result == SMSSDK.RESULT_ERROR) {
-						handler.sendEmptyMessage(555);
-					}
-				}
-			}
-		});
 
 	}
 
@@ -153,7 +134,6 @@ public class ZQ_RegisterFragment extends BaseFragment {
 			// 获取sms
 
 			lgr_bt_get.setClickable(false);
-			SMSSDK.getVerificationCode("86", ph);
 
 
 			/**
@@ -248,6 +228,15 @@ public class ZQ_RegisterFragment extends BaseFragment {
 
 		this.ph = lgr_et_phone_id.getText().toString();
 
+		String station = SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+		String REGISTER_url = null;
+		if (station.equals(StationConfig.DEF)) {
+			REGISTER_url = InterfaceJsonfile.REGISTER;
+		} else if (station.equals(StationConfig.YN)) {
+			REGISTER_url = InterfaceJsonfile_YN.REGISTER;
+		} else if (station.equals(StationConfig.TW)) {
+			REGISTER_url = InterfaceJsonfile_TW.REGISTER;
+		}
 		// 注册
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("username", ph);
@@ -255,7 +244,7 @@ public class ZQ_RegisterFragment extends BaseFragment {
 		params.addBodyParameter("verify", sms);
 //		params.addBodyParameter("email", "");
 
-		httpUtils.send(HttpMethod.POST, InterfaceJsonfile.REGISTER// InterfaceApi.mRegister
+		httpUtils.send(HttpMethod.POST, REGISTER_url// InterfaceApi.mRegister
 				, params, new RequestCallBack<String>() {
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {

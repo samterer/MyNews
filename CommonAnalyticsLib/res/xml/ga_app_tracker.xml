@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="TypographyDashes">
+
+    <!-- Doc link-> https://developers.google.com/analytics/devguides/collection/android/v4/ -->
+
+
+    <!-- 谷歌分析：您的应用在会话结束前可在后台停留的时间（以秒为单位） -->
+    <integer name="ga_sessionTimeout">60</integer>
+    <!-- 谷歌分析：是否启用异常自动跟踪 -->
+    <bool name="ga_autoActivityTracking">true</bool>
+    <!-- 谷歌分析：是否启用异常自动跟踪 -->
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+    <!-- 谷歌分析：跟踪ID -->
+    <string name="ga_trackingId">UA-53576942-7</string>
+    <!-- 谷歌分析：是否开启测试模式 -->
+    <string name="ga_dryRun">false</string>
+    <!-- 谷歌分析：SDK日志记录器的详细程度 -->
+    <string name="ga_logLevel">verbose</string>
+
+</resources>

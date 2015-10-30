@@ -1,13 +1,56 @@
 package com.hzpd.modle;
 
+import java.util.Arrays;
+
 public class XF_UserCommNewsBean {
 
-	private String nid;//: "3679",
-	private String tid;//: "121",
-	private String type;//: "1",
-	private String title;//: "为啥牛奶越来越没味，奶香味去哪儿了？",
-	private String url;//: "http://demo.99cms.cn/./cms_json/xf/News/Content/201504/22/3679",
-	private String update_time;//: "2015-04-22 11:58:59"
+
+
+	private String[] imgs;
+	private String nid;//": "133",
+	private String tid;
+	private String title;//": "石家庄一大学生保安揪出偷包贼 派出所送来表扬信",
+	private String type;//": 新闻1  图片2  直播3    （视频4 暂无 ）  引用7
+	private String update_time;
+	private String url;//": "http://58.68.134.165:8081/cms_json/zqzx/News/Content/197001/01/133",
+
+	private String smallimgurl;
+	private String copyfrom;//新闻来源
+	private String fav;
+	private String comcount;//": "0 ",评论数
+
+
+	public String getComcount() {
+		return comcount;
+	}
+
+	public void setComcount(String comcount) {
+		this.comcount = comcount;
+	}
+
+	public String[] getImgs() {
+		return imgs;
+	}
+
+	public void setImgs(String[] imgs) {
+		this.imgs = imgs;
+	}
+
+	@Override
+	public String toString() {
+		return "MyCommentBean{" +
+				"imgs=" + Arrays.toString(imgs) +
+				", nid='" + nid + '\'' +
+				", tid='" + tid + '\'' +
+				", title='" + title + '\'' +
+				", type='" + type + '\'' +
+				", update_time='" + update_time + '\'' +
+				", url='" + url + '\'' +
+				", smallimgurl='" + smallimgurl + '\'' +
+				", copyfrom='" + copyfrom + '\'' +
+				", fav='" + fav + '\'' +
+				'}';
+	}
 
 	public String getNid() {
 		return nid;
@@ -25,14 +68,6 @@ public class XF_UserCommNewsBean {
 		this.tid = tid;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
 	public String getTitle() {
 		return title;
 	}
@@ -41,12 +76,12 @@ public class XF_UserCommNewsBean {
 		this.title = title;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getType() {
+		return type;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public String getUpdate_time() {
@@ -57,5 +92,35 @@ public class XF_UserCommNewsBean {
 		this.update_time = update_time;
 	}
 
+	public String getUrl() {
+		return url;
+	}
 
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getSmallimgurl() {
+		return smallimgurl;
+	}
+
+	public void setSmallimgurl(String smallimgurl) {
+		this.smallimgurl = smallimgurl;
+	}
+
+	public String getCopyfrom() {
+		return copyfrom;
+	}
+
+	public void setCopyfrom(String copyfrom) {
+		this.copyfrom = copyfrom;
+	}
+
+	public String getFav() {
+		return fav;
+	}
+
+	public void setFav(String fav) {
+		this.fav = fav;
+	}
 }

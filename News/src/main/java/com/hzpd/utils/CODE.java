@@ -14,9 +14,9 @@ public class CODE {
 	public static final int complete = 4002;
 	public static final int cancle = 4003;
 
-	public static final int textSize_normal = 19;
+	public static final int textSize_normal = 20;
 	public static final int textSize_big = 22;
-	public static final int textSize_small = 16;
+	public static final int textSize_small = 15;
 
 
 	public static final int szb_xinwen_item = 1990;

@@ -9,6 +9,15 @@ public class NewDetailVedioBean implements Serializable {
 	private String mainpic;
 	private String videourl;
 	private String copyfrom;
+	private String fav;
+
+	public String getFav() {
+		return fav;
+	}
+
+	public void setFav(String fav) {
+		this.fav = fav;
+	}
 
 	@Override
 	public String toString() {

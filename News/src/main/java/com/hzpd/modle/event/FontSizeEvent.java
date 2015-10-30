@@ -11,6 +11,16 @@ public class FontSizeEvent {
 		this.fontSize = fontSize;
 	}
 
+	private String mMsg;
+
+	public FontSizeEvent(String mMsg) {
+		this.mMsg=mMsg;
+	}
+
+	public String getMsg(){
+		return mMsg;
+	}
+
 	public int getFontSize() {
 		return fontSize;
 	}

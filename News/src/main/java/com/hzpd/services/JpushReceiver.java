@@ -28,8 +28,8 @@ public class JpushReceiver extends BroadcastReceiver {
 			return;
 		}
 
-//		LogUtils.i("onReceive - " + intent.getAction() + ", extras: "
-//				+ printBundle(bundle));
+		LogUtils.i("JpushReceiver：onReceive - " + intent.getAction() + ", extras: "
+				+ printBundle(bundle));
 
 		if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(action)) {
 
@@ -49,7 +49,7 @@ public class JpushReceiver extends BroadcastReceiver {
 			String type = null;
 			String id = null;
 
-			LogUtils.i("extra-->" + extra);
+			LogUtils.i("JpushReceiver：extra-->" + extra);
 			object = FjsonUtil.parseObject(extra);
 
 			if (null == object) {
@@ -79,6 +79,7 @@ public class JpushReceiver extends BroadcastReceiver {
 
 			if (myintent != null) {
 				myintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				LogUtils.e("通知跳转");
 				context.startActivity(myintent);
 			}
 		} else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(action)) {

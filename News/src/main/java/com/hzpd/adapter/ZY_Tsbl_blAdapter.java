@@ -11,6 +11,7 @@ import com.hzpd.custorm.smoothimg.SpaceImageDetailActivity;
 import com.hzpd.hflt.R;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.ViewHolder;
 import com.lidroid.xutils.util.LogUtils;
 
@@ -51,7 +52,7 @@ public class ZY_Tsbl_blAdapter extends ListBaseAdapter<String> {
 		if (position < list.size() || maxSize == list.size()) {
 			final String imgUri = "file://" + list.get(position);
 
-			mImageLoader.displayImage(imgUri, iv, DisplayOptionFactory.getOption(OptionTp.Small));
+			SPUtil.displayImage(imgUri, iv, DisplayOptionFactory.getOption(OptionTp.Small));
 
 			iv.setOnClickListener(new OnClickListener() {
 				@Override
@@ -71,7 +72,7 @@ public class ZY_Tsbl_blAdapter extends ListBaseAdapter<String> {
 			});
 		} else {
 
-			mImageLoader.displayImage("drawable://" + R.drawable.img_icon_addpic_unfocused, iv, DisplayOptionFactory.getOption(OptionTp.Small));
+			SPUtil.displayImage("drawable://" + R.drawable.img_icon_addpic_unfocused, iv, DisplayOptionFactory.getOption(OptionTp.Small));
 			iv.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {

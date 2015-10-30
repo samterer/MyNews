@@ -64,7 +64,7 @@ public class TUtils {
 		result.setView(v);
 		TextView tv = (TextView) v.findViewById(R.id.message);
 		tv.setText(text);
-		result.setGravity(17, 0, 0);
+//		result.setGravity(17, 0, 0);
 		result.setDuration(duration);
 
 		return result;

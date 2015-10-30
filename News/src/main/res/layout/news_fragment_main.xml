@@ -1,55 +1,65 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/zqzx_bg_normal"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/zqzx_bg_normal"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/news_indicator_root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="6dp"
-        android:paddingTop="6dp">
+        android:layout_height="33dp"
+        android:background="@color/white">
 
-        <ImageView
-            android:id="@+id/main_title_left_img"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
-            android:background="@drawable/leftfrag_sett_selector"/>
-
-        <ImageView
+        <Button
             android:id="@+id/news_button"
-            android:layout_width="34dp"
-            android:layout_height="25dp"
+            android:layout_width="45dp"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/zq_channelsetting_selector"
-            android:contentDescription="@null"/>
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/main_channel_selector"
+            android:contentDescription="@null" />
 
-        <com.viewpagerindicator.TabPageIndicator
-            android:id="@+id/news_indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+        <!--顶部频道展示-->
+        <com.hzpd.ui.widget.PagerSlidingTabStrip
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/psts_tabs_app"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
             android:layout_toLeftOf="@id/news_button"
             android:layout_toRightOf="@id/main_title_left_img"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"/>
+            android:background="@color/white"
+            app:pstsDividerColor="#00ffffff"
+            app:pstsIndicatorColor="#fdb800"
+            app:pstsIndicatorHeight="2dp"
+            app:pstsTabPaddingLeftRight="10dp"
+            app:pstsTabTextColor="#bebebe"
+            app:pstsTabTextSelectedColor="#fdb800"
+            app:pstsTabTextSize="16sp"
+            app:pstsUnderlineColor="#33444444"
+            app:pstsTextAllCaps="false"
+            app:pstsUnderlineHeight="0dp" />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="#33444444" />
     </RelativeLayout>
 
+    <!--分割线-->
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#80444444"/>
+        android:background="#33444444"
+        android:visibility="gone" />
 
+    <!--频道跟换ViewPager-->
     <android.support.v4.view.ViewPager
         android:id="@+id/news_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
 </LinearLayout>

@@ -11,7 +11,7 @@ public class AboutUsActivity extends MBaseActivity {
 
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.aboutus_layout);
 		stitle_tv_content = (TextView) findViewById(R.id.stitle_tv_content);

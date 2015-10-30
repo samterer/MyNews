@@ -41,7 +41,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@color/transparent"
-                android:hint="@string/hint_username_or_phone"
                 android:maxLines="1"
                 android:textColor="@color/zqzx_font_normal"
                 android:textCursorDrawable="@null"
@@ -88,7 +87,7 @@
                 android:textCursorDrawable="@null"
                 android:textSize="18sp"/>
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/login_not_passwd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -98,7 +97,8 @@
                 android:drawableRight="@drawable/zq_little_right"
                 android:drawablePadding="4dp"
                 android:textColor="@drawable/zq_boderbtn_text_selector"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                android:visibility="gone"/>
         </LinearLayout>
 
         <View
@@ -129,14 +129,14 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp">
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/prompt_has_no_account"
             android:textColor="@color/zqzx_font_light"
             android:textSize="18sp"/>
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/login_register_tv_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

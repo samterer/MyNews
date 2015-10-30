@@ -9,6 +9,8 @@
 !/ShareSDK
 !/SMSSDK
 !/LoadMoreLib
+!/CommonAnalyticsLib
+!/facebook
 
 # git
 !/.gitignore

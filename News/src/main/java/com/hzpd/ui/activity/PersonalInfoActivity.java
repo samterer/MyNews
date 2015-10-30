@@ -12,7 +12,11 @@ import com.hzpd.ui.fragments.ZQ_FindbackpwdFragment;
 import com.hzpd.ui.fragments.ZQ_ModifyPersonalInfoFragment;
 import com.hzpd.ui.fragments.ZQ_PersonalInfoFragment;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.CODE;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
 import com.lidroid.xutils.util.LogUtils;
 
 public class PersonalInfoActivity extends MBaseActivity {
@@ -25,7 +29,7 @@ public class PersonalInfoActivity extends MBaseActivity {
 	private FragmentManager fm;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.zq_personalinfo_layout);
 
@@ -33,20 +37,35 @@ public class PersonalInfoActivity extends MBaseActivity {
 
 		personalInfoFm = new ZQ_PersonalInfoFragment();
 
-		FragmentTransaction ft = fm.beginTransaction();
-		ft.replace(R.id.zq_pinfo_fm, personalInfoFm);
-		ft.commit();
+//		FragmentTransaction ft = fm.beginTransaction();
+//		ft.replace(R.id.zq_pinfo_fm, personalInfoFm);
+//		ft.commit();
+
+
+		fm.beginTransaction()
+				.replace(R.id.zq_pinfo_fm, personalInfoFm)
+				.commit();
+
 		currentFm = personalInfoFm;
 	}
 
 	public void toModifyPinfoFm(int type) {
+		String station= SharePreferecesUtils.getParam(PersonalInfoActivity.this, StationConfig.STATION, "def").toString();
+		String PWDTYPE=null;
+		if (station.equals(StationConfig.DEF)){
+			PWDTYPE=InterfaceJsonfile.PWDTYPE;
+		}else if (station.equals(StationConfig.YN)){
+			PWDTYPE= InterfaceJsonfile_YN.PWDTYPE;
+		}else if (station.equals(StationConfig.TW)){
+			PWDTYPE= InterfaceJsonfile_TW.PWDTYPE;
+		}
 		FragmentTransaction ft = fm.beginTransaction();
 		ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right
 				, android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
 		modifyPersonalFm = new ZQ_ModifyPersonalInfoFragment();
 		Bundle args = new Bundle();
-		args.putInt(InterfaceJsonfile.PWDTYPE, type);
+		args.putInt(PWDTYPE, type);
 		modifyPersonalFm.setArguments(args);
 		ft.add(R.id.zq_pinfo_fm, modifyPersonalFm);
 		ft.addToBackStack(null);
@@ -56,13 +75,22 @@ public class PersonalInfoActivity extends MBaseActivity {
 	}
 
 	public void toFindbackpwdFm() {
+		String station= SharePreferecesUtils.getParam(PersonalInfoActivity.this, StationConfig.STATION, "def").toString();
+		String PWDTYPE=null;
+		if (station.equals(StationConfig.DEF)){
+			PWDTYPE=InterfaceJsonfile.PWDTYPE;
+		}else if (station.equals(StationConfig.YN)){
+			PWDTYPE= InterfaceJsonfile_YN.PWDTYPE;
+		}else if (station.equals(StationConfig.TW)){
+			PWDTYPE= InterfaceJsonfile_TW.PWDTYPE;
+		}
 		FragmentTransaction ft = fm.beginTransaction();
 		ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right
 				, android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
 		findbackpwdFm = new ZQ_FindbackpwdFragment();
 		Bundle args = new Bundle();
-		args.putInt(InterfaceJsonfile.PWDTYPE, 2);
+		args.putInt(PWDTYPE, 2);
 		findbackpwdFm.setArguments(args);
 		ft.add(R.id.zq_pinfo_fm, findbackpwdFm);
 		ft.addToBackStack(null);

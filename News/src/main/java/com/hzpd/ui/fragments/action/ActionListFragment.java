@@ -19,9 +19,13 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.ActionItemBean;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -118,12 +122,26 @@ public class ActionListFragment extends BaseFragment {
 	}
 
 	private void getDbList() {
+
+		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+		String siteid=null;
+		String actionList_url =null;
+		if (station.equals(StationConfig.DEF)){
+			siteid=InterfaceJsonfile.SITEID;
+			actionList_url =InterfaceJsonfile.actionList;
+		}else if (station.equals(StationConfig.YN)){
+			siteid=InterfaceJsonfile_YN.SITEID;
+			actionList_url = InterfaceJsonfile_YN.actionList;
+		}else if (station.equals(StationConfig.TW)){
+			siteid=InterfaceJsonfile_TW.SITEID;
+			actionList_url = InterfaceJsonfile_TW.actionList;
+		}
 		RequestParams params = RequestParamsUtils.getParams();
-		params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+		params.addBodyParameter("siteid", siteid);
 		params.addBodyParameter("page", "" + page);
 		params.addBodyParameter("pagesize", "" + pageSize);
 		httpUtils.send(HttpMethod.POST
-				, InterfaceJsonfile.actionList
+				, actionList_url
 				, params
 				, new RequestCallBack<String>() {
 			@Override

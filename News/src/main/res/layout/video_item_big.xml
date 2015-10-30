@@ -19,7 +19,7 @@
         android:orientation="horizontal"
         android:background="@drawable/zq_video_bg_shape">
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/vib_tv_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
         android:visibility="gone"
         android:orientation="horizontal">
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/zq_video_tv_comments"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
             android:drawableLeft="@drawable/zq_icon_comment"
             android:text="23"/>
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/zq_video_tv_updatetime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -76,6 +76,6 @@
         android:layout_marginTop="6dp"
         android:layout_marginBottom="8dp"
         android:contentDescription="@null"
-        android:scaleType="fitXY"/>
+        android:scaleType="centerCrop"/>
 
 </LinearLayout>

@@ -64,7 +64,7 @@
                         android:layout_marginRight="15dp"
                         android:background="@color/zqzx_bg_dark"/>
 
-                    <TextView
+                    <com.hzpd.ui.widget.FontTextView
                         android:id="@+id/lg_pi_tv_name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
                         android:layout_marginRight="15dp"
                         android:background="@color/zqzx_bg_dark"/>
 
-                    <TextView
+                    <com.hzpd.ui.widget.FontTextView
                         android:id="@+id/lg_pi_nick"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -149,7 +149,7 @@
                         android:layout_marginRight="15dp"
                         android:background="@color/zqzx_bg_dark"/>
 
-                    <TextView
+                    <com.hzpd.ui.widget.FontTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -190,7 +190,7 @@
                         android:layout_marginRight="15dp"
                         android:background="@color/zqzx_bg_dark"/>
 
-                    <TextView
+                    <com.hzpd.ui.widget.FontTextView
                         android:id="@+id/lg_pi_tv_sex"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -234,7 +234,7 @@
         android:layout_marginTop="15dp"
         android:src="@drawable/zq_back_selector"/>
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

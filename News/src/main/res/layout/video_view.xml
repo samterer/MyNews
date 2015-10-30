@@ -24,14 +24,14 @@
             android:layout_marginRight="4dp"
             />
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/video_loading_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="18sp"/>
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/video_loading_tv2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -127,7 +127,7 @@
             android:layout_toLeftOf="@id/videodetails_title_pl"
             android:orientation="horizontal">
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/videodetails_title_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

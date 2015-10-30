@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="@dimen/search_padding_low"
+              android:layout_marginRight="@dimen/search_padding_low"
+              android:layout_marginTop="@dimen/search_padding_middle"
+              android:orientation="vertical">
+
+
+    <com.hzpd.ui.widget.FontTextView
+        android:id="@+id/search_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/search_key_bg_selector"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:paddingBottom="2dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:paddingTop="2dp"
+        android:lines="1"
+        android:text="123123"
+        android:textColor="@color/search_key_color"
+        android:textSize="@dimen/search_key_size"/>
+
+
+</LinearLayout>

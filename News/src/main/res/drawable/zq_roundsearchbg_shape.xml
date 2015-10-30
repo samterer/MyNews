@@ -5,5 +5,5 @@
         />
 
     <solid
-        android:color="@color/white"/>
+        android:color="@color/toolbar_bg"/>
 </shape>

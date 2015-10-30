@@ -171,7 +171,7 @@ public class ZhuantiDetailListAdapter extends BaseAdapter {
 				simg = s[0];
 			}
 			mImageLoader.displayImage(simg, img,
-					DisplayOptionFactory.getOption(OptionTp.Big));
+					DisplayOptionFactory.getOption(OptionTp.Small));
 
 			title.setTextSize(fontSize);
 			title.setText(nb.getTitle());

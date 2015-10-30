@@ -23,15 +23,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.vote.VoteBaseInfo;
 import com.hzpd.modle.vote.VoteTitleBean;
-import com.hzpd.ui.activity.LoginActivity;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.ui.fragments.action.ActionDetailActivity;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -206,11 +209,22 @@ public class VoteDetailFragment extends BaseFragment {
 
 	// 获取投票基本信息
 	private void getVoteBaseInfo() {
+
+		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+		String mVoteinfo_url =null;
+		if (station.equals(StationConfig.DEF)){
+			mVoteinfo_url =InterfaceJsonfile.mVoteinfo;
+		}else if (station.equals(StationConfig.YN)){
+			mVoteinfo_url =InterfaceJsonfile_YN.mVoteinfo;
+		}else if (station.equals(StationConfig.TW)){
+			mVoteinfo_url =InterfaceJsonfile_TW.mVoteinfo;
+		}
+
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("subjectid", subjectid);
 		params.addBodyParameter("device", androidId);
 
-		httpUtils.send(HttpMethod.POST, InterfaceJsonfile.mVoteinfo, params, new RequestCallBack<String>() {
+		httpUtils.send(HttpMethod.POST, mVoteinfo_url, params, new RequestCallBack<String>() {
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {
 				LogUtils.i("获取投票基本信息 failed!");
@@ -271,7 +285,15 @@ public class VoteDetailFragment extends BaseFragment {
 				return;
 			}
 		}
-
+		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+		String mSetvote_url =null;
+		if (station.equals(StationConfig.DEF)){
+			mSetvote_url =InterfaceJsonfile.mSetvote;
+		}else if (station.equals(StationConfig.YN)){
+			mSetvote_url =InterfaceJsonfile_YN.mSetvote;
+		}else if (station.equals(StationConfig.TW)){
+			mSetvote_url =InterfaceJsonfile_TW.mSetvote;
+		}
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("device", androidId);
 		params.addBodyParameter("subjectid", voteBaseinfo.getSubjectid());
@@ -295,7 +317,7 @@ public class VoteDetailFragment extends BaseFragment {
 		}
 
 		vote_btn_vote.setClickable(false);
-		httpUtils.send(HttpMethod.POST, InterfaceJsonfile.mSetvote, params, new RequestCallBack<String>() {
+		httpUtils.send(HttpMethod.POST, mSetvote_url, params, new RequestCallBack<String>() {
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {
 				vote_btn_vote.setClickable(true);
@@ -333,13 +355,6 @@ public class VoteDetailFragment extends BaseFragment {
 								}
 							});
 						} else {
-							alertDialog(getString(R.string.toast_award_only_for_members), getString(R.string.prompt_start_register), new IVoteresultClick() {
-								@Override
-								public void onclick() {
-									Intent intent = new Intent(activity, LoginActivity.class);
-									activity.startActivity(intent);
-								}
-							});
 						}
 					}
 				} else {
@@ -444,10 +459,20 @@ public class VoteDetailFragment extends BaseFragment {
 
 		// 获取投票选项的所有可用类型
 		private void getVoteMassage(String subjectid) {
+
+			String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+			String mVotetys_url =null;
+			if (station.equals(StationConfig.DEF)){
+				mVotetys_url =InterfaceJsonfile.mVotetys;
+			}else if (station.equals(StationConfig.YN)){
+				mVotetys_url =InterfaceJsonfile_YN.mVotetys;
+			}else if (station.equals(StationConfig.TW)){
+				mVotetys_url =InterfaceJsonfile_TW.mVotetys;
+			}
 			RequestParams params = new RequestParams();
 			params.addBodyParameter("subjectid", subjectid);
 
-			httpUtils.send(HttpMethod.POST, InterfaceJsonfile.mVotetys, params, new RequestCallBack<String>() {
+			httpUtils.send(HttpMethod.POST,mVotetys_url, params, new RequestCallBack<String>() {
 				@Override
 				public void onFailure(HttpException arg0, String arg1) {
 					LogUtils.i("获取投票选项的所有可用类型  failed!");

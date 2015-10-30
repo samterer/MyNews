@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/video_channel"
+<LinearLayout android:id="@+id/video_channel"
+              xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical">
@@ -33,22 +33,20 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/channel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
-                android:textSize="17sp">
-            </TextView>
+                android:textSize="17sp"/>
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/playnow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textColor="#000000"
-                android:textSize="15sp">
-            </TextView>
+                android:textSize="15sp"/>
         </LinearLayout>
     </LinearLayout>
 

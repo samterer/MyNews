@@ -1,0 +1,21 @@
+@charset "utf-8";
+/*此css适用于APP4.9+版本*/
+/*reset*/
+html, body {margin: 0;padding: 0;border: 0;}
+
+body {font-family: 'kievit';line-height:150%;overflow-x: hidden; padding: 10px; }
+
+img {margin:2px 0px;background:#efefef; width:98%;}
+
+/*基本链接样式*/
+a{color:#3f51b5;text-decoration:none;border:none;outline:none;}
+
+/*正文中图片-android使用png格式图标*/
+.image{display:block; margin:8px auto; background:#efefef; position: relative; overflow: hidden;-webkit-tap-highlight-color: rgba(0,0,0,0);max-width:100%;}
+.image.offline{background:url(image_bg_click.png) #efefef no-repeat center center; background-size:118px;}
+.image.loading{background:url(image_bg_loading.png) #efefef no-repeat center center; background-size:118px;}
+.image.thumb{ background-size:54px;}
+.image > img{ display:block; width:100%; height:100%;}
+.image .spinner{ display: block;width: 22px;height: 22px;background: url(spinner.png) no-repeat center center;background-size: 22px;position: absolute;top: 50%;left: 50%;z-index: 10;margin: -11px 0 0 -11px;}
+.image .gif_play{ display: block;width: 27px;height: 27px;background: url(gificon_textpage@2x.png) no-repeat center center;background-size: 27px;position: absolute;top: 50%;left: 50%;z-index: 10;margin: -13px 0 0 -13px;}
+

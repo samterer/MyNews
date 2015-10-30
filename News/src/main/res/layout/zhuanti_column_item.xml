@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:background="@color/toolbar_bg"/>
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/zhuanti_tv_column"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

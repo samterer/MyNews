@@ -26,12 +26,16 @@ import com.hzpd.modle.UserBean;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.PersonalInfoActivity;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.CipherUtils;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -51,11 +55,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.sina.weibo.SinaWeibo;
-import cn.sharesdk.tencent.qq.QQ;
-import cn.sharesdk.wechat.friends.Wechat;
+
 
 public class ZQ_PersonalInfoFragment extends BaseFragment {
 
@@ -96,7 +96,7 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	                         Bundle savedInstanceState) {
+							 Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.personal_info, container, false);
 		ViewUtils.inject(this, view);
 		return view;
@@ -119,7 +119,7 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 			pinfobg = obj.getString("userinfobg");
 		}
 		if (TextUtils.isEmpty(pinfobg)) {
-			zq_pinfo_rl_bg.setBackgroundResource(R.drawable.welcome);
+			zq_pinfo_rl_bg.setBackgroundResource(R.drawable.welcome_1);
 		} else {
 			mImageLoader.loadImage(pinfobg, new ImageLoadingListener() {
 				@Override
@@ -128,19 +128,18 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 
 				@Override
 				public void onLoadingFailed(String imageUri, View view,
-				                            FailReason failReason) {
-					zq_pinfo_rl_bg.setBackgroundResource(R.drawable.welcome);
+											FailReason failReason) {
+					zq_pinfo_rl_bg.setBackgroundResource(R.drawable.welcome_1);
 				}
 
 				@Override
 				public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
 					BitmapDrawable bg = new BitmapDrawable(getResources(), loadedImage);
-					zq_pinfo_rl_bg.setBackground(bg);
 				}
 
 				@Override
 				public void onLoadingCancelled(String imageUri, View view) {
-					zq_pinfo_rl_bg.setBackgroundResource(R.drawable.welcome);
+					zq_pinfo_rl_bg.setBackgroundResource(R.drawable.welcome_1);
 				}
 			});
 		}
@@ -148,60 +147,6 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 
 		mImageLoader.displayImage(spu.getUser().getAvatar_path(), lg_pi_iv_touxiang, DisplayOptionFactory.getOption(OptionTp.Logo));
 
-		String username = spu.getUser().getUsername();
-		if (QQ.NAME.equals(username)) {
-			username = getString(R.string.prompt_qq_user);
-//			pi_modifypwd_tr.setVisibility(View.GONE);
-			isThirdpart = true;
-		} else if (Wechat.NAME.equals(username)) {
-			username = getString(R.string.prompt_weixin_user);
-//			pi_modifypwd_tr.setVisibility(View.GONE);
-			isThirdpart = true;
-		} else if (SinaWeibo.NAME.equals(username)) {
-			username = getString(R.string.prompt_weibo_user);
-//			pi_modifypwd_tr.setVisibility(View.GONE);
-			isThirdpart = true;
-		} else {
-			username = getString(R.string.prompt_register_user);
-		}
-
-//		String ph=spu.getMobile();
-		lg_pi_tv_name.setText(username);
-		lg_pi_nick.setText(spu.getUser().getNickname());
-
-		if ("1".equals(spu.getUser().getSex())) {
-			lg_pi_tv_sex.setText(R.string.prompt_male);
-		} else if ("2".equals(spu.getUser().getSex())) {
-			lg_pi_tv_sex.setText(R.string.prompt_female);
-		} else if ("3".equals(spu.getUser().getSex())) {
-			lg_pi_tv_sex.setText(R.string.prompt_keep_secret);
-		}
-
-		imgFile = getImgPath();
-
-		play();
-	}
-
-	@OnClick(R.id.lg_pi_bt_quite)
-	private void exit(View v) {
-		spu.setUser(null);
-
-		if (isThirdpart = true) {
-			for (Platform pl : ShareSDK.getPlatformList()) {
-				if (pl.isValid()) {
-					pl.SSOSetting(true);
-					pl.removeAccount();
-				}
-			}
-		}
-
-		Intent intent = new Intent();
-		if (v != null) {
-			intent.setAction(ZY_RightFragment.ACTION_QUIT);
-		} else {
-			intent.setAction(ZY_RightFragment.ACTION_QUIT_LOGIN);
-		}
-		activity.sendBroadcast(intent);
 		activity.finish();
 	}
 
@@ -226,7 +171,17 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 			TUtils.toast(getString(R.string.toast_cannot_modify_nickname));
 			return;
 		}
-		((PersonalInfoActivity) activity).toModifyPinfoFm(InterfaceJsonfile.NICKNAME);
+		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+		int NICKNAME_url =1;
+		if (station.equals(StationConfig.DEF)){
+			NICKNAME_url =InterfaceJsonfile.NICKNAME;
+		}else if (station.equals(StationConfig.YN)){
+			NICKNAME_url = InterfaceJsonfile_YN.NICKNAME;
+		}else if (station.equals(StationConfig.TW)){
+			NICKNAME_url = InterfaceJsonfile_TW.NICKNAME;
+		}
+
+		((PersonalInfoActivity) activity).toModifyPinfoFm(NICKNAME_url);
 	}
 
 	@OnClick(R.id.pi_gender_tr)
@@ -235,7 +190,18 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 			TUtils.toast(getString(R.string.toast_cannot_modify_sex));
 			return;
 		}
-		((PersonalInfoActivity) activity).toModifyPinfoFm(InterfaceJsonfile.GENDER);
+
+		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+		int GENDER_url =2;
+		if (station.equals(StationConfig.DEF)){
+			GENDER_url =InterfaceJsonfile.NICKNAME;
+		}else if (station.equals(StationConfig.YN)){
+			GENDER_url = InterfaceJsonfile_YN.NICKNAME;
+		}else if (station.equals(StationConfig.TW)){
+			GENDER_url = InterfaceJsonfile_TW.NICKNAME;
+		}
+
+		((PersonalInfoActivity) activity).toModifyPinfoFm(GENDER_url);
 	}
 
 	/**
@@ -328,23 +294,36 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 			e.printStackTrace();
 		}
 		lg_pi_iv_touxiang.setImageBitmap(photo);
-
+		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+		String CHANGEPINFO_url =null;
+		if (station.equals(StationConfig.DEF)){
+			CHANGEPINFO_url =InterfaceJsonfile.CHANGEPINFO;
+		}else if (station.equals(StationConfig.YN)){
+			CHANGEPINFO_url = InterfaceJsonfile_YN.CHANGEPINFO;
+		}else if (station.equals(StationConfig.TW)){
+			CHANGEPINFO_url = InterfaceJsonfile_TW.CHANGEPINFO;
+		}
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("token", spu.getUser().getToken());
 		params.addBodyParameter("avatar", CipherUtils.base64Encode(photo));
 
 		httpUtils.send(HttpMethod.POST
-				, InterfaceJsonfile.CHANGEPINFO//InterfaceApi.modify_gender
+				, CHANGEPINFO_url//InterfaceApi.modify_gender
 				, params
 				, new RequestCallBack<String>() {
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {
+				if(!isAdded()){
+					return;
+				}
 				TUtils.toast(getString(R.string.toast_server_no_response));
 			}
 
 			@Override
 			public void onSuccess(ResponseInfo<String> arg0) {
-				LogUtils.i("-->" + arg0.result);
+				if(!isAdded()){
+					return;
+				}
 				JSONObject obj = FjsonUtil.parseObject(arg0.result);
 				if (null == obj) {
 					return;

@@ -40,7 +40,7 @@
         android:layout_toRightOf="@id/photo_selector_folder_cover"
         android:orientation="vertical">
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/photo_selector_folder_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
             android:textSize="14sp"
             tools:text="img"/>
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/photo_selector_folder_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import com.hzpd.custorm.AutoScaleTextView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsChannelBean;
+import com.hzpd.ui.widget.FontTextView;
 
 import java.util.Collections;
 import java.util.List;
@@ -56,8 +57,8 @@ public class DragAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		int p = position + hiddenNum;
-		convertView = mInflater.inflate(R.layout.editcolumn_item_layout, parent, false);
-		AutoScaleTextView txtAge = (AutoScaleTextView) convertView.findViewById(R.id.edco_item_tv);
+		convertView = mInflater.inflate(R.layout.channel_item, parent, false);
+		FontTextView txtAge = (FontTextView) convertView.findViewById(R.id.text_item);
 
 		NewsChannelBean stb = titleData.get(p);
 		txtAge.setText(stb.getCnname());

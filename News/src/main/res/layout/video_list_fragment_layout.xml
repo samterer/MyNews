@@ -22,7 +22,7 @@
         android:scrollbarTrackVertical="@color/transparent"
         android:scrollbars="vertical"
         ptr:ptrAnimationStyle="flip"
-        ptr:ptrHeaderTextColor="@color/zqzx_font_dark"
+        ptr:ptrHeaderTextColor="@color/pulltorefresh_font"
         ptr:ptrHeaderSubTextColor="@color/zqzx_font_light"/>
 
     <ImageView

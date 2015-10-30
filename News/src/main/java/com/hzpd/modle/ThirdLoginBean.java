@@ -64,5 +64,18 @@ public class ThirdLoginBean {
 		this.third = third;
 	}
 
+	public ThirdLoginBean(){
 
+	}
+
+	@Override
+	public String toString() {
+		return "ThirdLoginBean{" +
+				"userid='" + userid + '\'' +
+				", gender='" + gender + '\'' +
+				", nickname='" + nickname + '\'' +
+				", photo='" + photo + '\'' +
+				", third='" + third + '\'' +
+				'}';
+	}
 }

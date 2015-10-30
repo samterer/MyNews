@@ -5,220 +5,308 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
+import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsChannelBean;
+import com.hzpd.modle.db.AlbumBeanDB;
+import com.hzpd.modle.db.AlbumItemBeanDB;
+import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.db.VideoItemBeanDb;
+import com.hzpd.modle.db.ZhuantiBeanDB;
 import com.hzpd.services.InitService;
 import com.hzpd.ui.App;
 import com.hzpd.ui.fragments.welcome.AdFlashFragment;
+import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
+import com.hzpd.utils.AAnim;
+import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.FjsonUtil;
-import com.hzpd.utils.GetFileSizeUtil;
 import com.hzpd.utils.Log;
+import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SerializeUtil;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
+import com.hzpd.utils.db.NewsListDbTask;
+import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.LogUtils;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.sharesdk.framework.ShareSDK;
-
 /**
  * @author color
  */
-public class WelcomeActivity extends MBaseActivity {
+public class WelcomeActivity extends MWBaseActivity {
 
-	private volatile int done;
-	private FragmentManager fm;
-	private boolean isFirstStartApp;
-	private boolean isJump = false;
+    @Override
+    public String getAnalyticPageName() {
+        return "欢迎页";
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.frame_welcome);
+    private volatile int done;
+    private volatile boolean exists;
+    private FragmentManager fm;
+    private boolean isFirstStartApp;
+    private View welcome_top_view;
 
-		ShareSDK.initSDK(this);
-		ShareSDK.removeCookieOnAuthorize(true);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(null);
+        exists = false;
+        setContentView(R.layout.frame_welcome);
+        welcome_top_view = findViewById(R.id.welcome_top_view);
+        fm = getSupportFragmentManager();
+        FragmentTransaction tran = fm.beginTransaction();
+        isFirstStartApp = spu.getIsTodayFistStartApp();
+        tran.replace(R.id.welcome_frame, new AdFlashFragment());
+        tran.commit();
+        getChooseNewsJson();
+        getChannelJson();
+        // 初始化服务
+        Intent service = new Intent(this, InitService.class);
+        service.setAction(InitService.InitAction);
+        this.startService(service);
+        Log.d(getLogTag(), "");
+        createDb();
+    }
 
-		fm = getSupportFragmentManager();
-		FragmentTransaction tran = fm.beginTransaction();
-		isFirstStartApp = spu.getIsTodayFistStartApp();
-		LogUtils.i("isFirstStartApp->" + isFirstStartApp);
+    // 创建数据库
+    private void createDb() {
+        try {
+            DbUtils newsListDb = DBHelper.getInstance(getApplicationContext()).getNewsListDbUtils();
+            newsListDb.count(AlbumBeanDB.class);
+            newsListDb.count(AlbumItemBeanDB.class);
+            newsListDb.count(NewsBeanDB.class);
+            newsListDb.count(VideoItemBeanDb.class);
+            newsListDb.count(ZhuantiBeanDB.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-		tran.replace(R.id.welcome_frame, new AdFlashFragment());
+    public void loadMainUI() {
+        done++;
+        if (done > 2) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+            AAnim.ActivityFinish(this);
+        }
 
-		tran.commit();
+    }
 
-		getChannelJson();
+    public void getChannelJson() {
+        final String channelCachePath = App.getInstance().getAllDiskCacheDir()
+                + File.separator
+                + App.mTitle;
+//		LogUtils.e("WelcomeActivity存储--->" + channelCachePath);
+        final File channelCacheFile = new File(channelCachePath);
+        final File target = App.getFile(App.getInstance().getAllDiskCacheDir() + File.separator + "News");
 
-		// 初始化服务
-		Intent service = new Intent(this, InitService.class);
-		service.setAction(InitService.InitAction);
-		this.startService(service);
+        if (channelCacheFile.exists() && channelCacheFile.length() > 30) {
+            exists = true;
+            loadMainUI();
+        }
+        String station = SharePreferecesUtils.getParam(WelcomeActivity.this, StationConfig.STATION, "def").toString();
+        String CHANNELLIST_url = null;
+        if (station.equals(StationConfig.DEF)) {
+            CHANNELLIST_url = InterfaceJsonfile.CHANNELLIST;
+        } else if (station.equals(StationConfig.YN)) {
+            CHANNELLIST_url = InterfaceJsonfile_YN.CHANNELLIST;
+        } else if (station.equals(StationConfig.TW)) {
+            CHANNELLIST_url = InterfaceJsonfile_TW.CHANNELLIST;
+        }
+        String urlChannelList = CHANNELLIST_url + "News";
+//			下载信息并保存
+        httpUtils.download(urlChannelList,
+                target.getAbsolutePath(),
+                new RequestCallBack<File>() {
+                    @Override
+                    public void onSuccess(ResponseInfo<File> responseInfo) {
+                        String json = App.getFileContext(responseInfo.result);
+//							LogUtils.e("WelcomeActivity数据源问题--->"+json);
+                        if (json != null) {
+                            LogUtils.i("channel-->" + json);
+                            JSONObject obj = FjsonUtil.parseObject(json);
+                            if (null == obj) {
+                                return;
+                            }
 
-		Log.d(getLogTag(), "");
-	}
+                            // 读取json，获取频道信息
+                            JSONArray array = obj.getJSONArray("data");
+                            List<NewsChannelBean> newestChannels = JSONArray
+                                    .parseArray(array.toJSONString(),
+                                            NewsChannelBean.class);
+                            for (int i = 0; i < newestChannels.size(); i++) {
+                                NewsChannelBean newsChannelBean = newestChannels.get(i);
+                                newsChannelBean.getCnname();
+//									LogUtils.e("WelcomeActivity数据源问题--->"+newsChannelBean.getCnname());
+                            }
 
-	public void loadMainUI() {
-		done++;
-		if (done > 1) {
-			if (isFirstStartApp) {
-				Intent intent = new Intent(this, MainActivity.class);
-				startActivity(intent);
-				finish();
-			} else {
-				if (!isJump) {
-					Intent intent = new Intent(this, MainActivity.class);
-					startActivity(intent);
-					finish();
-				} else {
-					isJump = true;
-				}
-			}
-		}
-	}
+                            // 读取频道信息的本地缓存
+                            SerializeUtil<List<NewsChannelBean>> serializeUtil = new SerializeUtil<List<NewsChannelBean>>();
+                            List<NewsChannelBean> cacheChannels = serializeUtil
+                                    .readyDataToFile(channelCacheFile.getAbsolutePath());
 
-	public void getChannelJson() {
-		final String channelCachePath = App.getInstance().getJsonFileCacheRootDir()
-				+ File.separator
-				+ App.mTitle;
-		final File channelCacheFile = new File(channelCachePath);
-		final File target = App.getFile(App.getInstance().getJsonFileCacheRootDir() + File.separator + "News");
+                            // 如果没有缓存
+                            if (null == cacheChannels || cacheChannels.size() < 1) {
 
-		Log.d(getLogTag(), "channelCacheFile.exists():" + channelCacheFile.exists());
-		if (channelCacheFile.exists()) {
-			loadMainUI();
-		} else {
-			String urlChannelList = InterfaceJsonfile.CHANNELLIST + "News";
-			httpUtils.download(urlChannelList,
-					target.getAbsolutePath(),
-					new RequestCallBack<File>() {
-						@Override
-						public void onSuccess(ResponseInfo<File> responseInfo) {
-							LogUtils.i("write  channel to file success");
-							String json = App.getFileContext(responseInfo.result);
-							if (json != null) {
-								LogUtils.i("channel-->" + json);
-								JSONObject obj = FjsonUtil.parseObject(json);
-								if (null == obj) {
-									return;
-								}
+                                if (newestChannels != null && newestChannels.size() > 0) {
 
-								// 读取json，获取频道信息
-								JSONArray array = obj.getJSONArray("data");
-								List<NewsChannelBean> newestChannels = JSONArray
-										.parseArray(array.toJSONString(),
-												NewsChannelBean.class);
+                                    addLocalChannels(newestChannels);
+                                    // 缓存频道信息到SD卡上
+                                    serializeUtil.writeDataToFile(newestChannels, channelCachePath);
+                                }
+                            } else { // 如果有缓存
+                                HashMap<String, NewsChannelBean> channelMap = new HashMap<String, NewsChannelBean>();
+                                for (NewsChannelBean stb : newestChannels) {
+                                    channelMap.put(stb.getTid(), stb);
+                                }
 
-								// 读取频道信息的本地缓存
-								SerializeUtil<List<NewsChannelBean>> serializeUtil = new SerializeUtil<List<NewsChannelBean>>();
-								List<NewsChannelBean> cacheChannels = serializeUtil
-										.readyDataToFile(channelCacheFile.getAbsolutePath());
+                                for (int i = 0; i < cacheChannels.size(); i++) {
+                                    // 缓存的频道信息
+                                    NewsChannelBean cacheChannel = cacheChannels.get(i);
+                                    // 最新获取的频道信息
+                                    NewsChannelBean newestChannel = channelMap.get(cacheChannel.getTid());
 
-								// 如果没有缓存
-								if (null == cacheChannels || cacheChannels.size() < 1) {
-									LogUtils.i("setTitleData");
+                                    if (null != newestChannel) {
+                                        // 最新的数据中有和缓存中对应的频道，则更新频道信息
+                                        cacheChannel.setStyle(newestChannel.getStyle());
+                                        cacheChannel.setCnname(newestChannel.getCnname());
+                                    } else {
+                                        // 最新的数据中没有和缓存中对应的频道，删除该频道信息
+                                        cacheChannels.remove(i);
+                                    }
+                                }
+                                addLocalChannels(cacheChannels);
 
-									if (newestChannels != null && newestChannels.size() > 0) {
-										LogUtils.i("list != null && list.size() > 0");
+                                // 更新后信息再次保存到SD卡中
+                                serializeUtil.writeDataToFile(cacheChannels, channelCachePath);
 
-										addLocalChannels(newestChannels);
-										// 缓存频道信息到SD卡上
-										serializeUtil.writeDataToFile(newestChannels, channelCachePath);
-										LogUtils.i("write title data to disk!");
-									}
-								} else { // 如果有缓存
-									HashMap<String, NewsChannelBean> channelMap = new HashMap<String, NewsChannelBean>();
-									for (NewsChannelBean stb : newestChannels) {
-										channelMap.put(stb.getTid(), stb);
-									}
+                            }
+                        }
+                        if (!exists) {
+                            loadMainUI();
+                        }
+                    }
 
-									for (int i = 0; i < cacheChannels.size(); i++) {
-										// 缓存的频道信息
-										NewsChannelBean cacheChannel = cacheChannels.get(i);
-										// 最新获取的频道信息
-										NewsChannelBean newestChannel = channelMap.get(cacheChannel.getTid());
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        if (!exists) {
+                            loadMainUI();
+                        }
+                    }
+                });
+    }
 
-										if (null != newestChannel) {
-											// 最新的数据中有和缓存中对应的频道，则更新频道信息
-											cacheChannel.setStyle(newestChannel.getStyle());
-											cacheChannel.setCnname(newestChannel.getCnname());
-										} else {
-											// 最新的数据中没有和缓存中对应的频道，删除该频道信息
-											cacheChannels.remove(i);
-										}
-									}
-									addLocalChannels(cacheChannels);
+    public void jump(String url) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+    }
 
-									// 更新后信息再次保存到SD卡中
-									serializeUtil.writeDataToFile(cacheChannels, channelCachePath);
+    //TODO 提前获取推荐频道第一页
+    public void getChooseNewsJson() {
+        RequestParams params = RequestParamsUtils.getParams();
+        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+        params.addBodyParameter("tid", "" + NewsChannelBean.TYPE_RECOMMEND);
+        params.addBodyParameter("nids", "0");
+        params.addBodyParameter("Page", "1");
+        params.addBodyParameter("PageSize", "15");
 
-									LogUtils.i("uptate title data to disk!");
-								}
-							}
-							loadMainUI();
-						}
+        httpUtils.send(HttpRequest.HttpMethod.POST
+                , InterfaceJsonfile.CHANNEL_RECOMMEND
+                , params
+                , new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                final JSONObject obj = FjsonUtil
+                        .parseObject(responseInfo.result);
+                if (null != obj) {
+                    List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
+                    if (list != null) {
+                        for (NewsBean bean : list) {
+                            bean.setTid("" + NewsChannelBean.TYPE_RECOMMEND);
+                        }
+                    }
+                    if (null != list) {
+                        LogUtils.i(" getChooseNewsJson --> " + list.size());
+                        new NewsListDbTask(getApplicationContext()).saveList(list, new I_Result() {
+                            @Override
+                            public void setResult(Boolean flag) {
+                                loadMainUI();
+                            }
+                        });
+                    } else {
+                        loadMainUI();
+                    }
+                } else {
+                    loadMainUI();
+                }
+            }
 
-						@Override
-						public void onFailure(HttpException error, String msg) {
-							LogUtils.i("write  channel to file Failed");
-							if (GetFileSizeUtil.getInstance().getFileSizes(target) > 10) {
-								loadMainUI();
-								return;
-							}
-						}
-					});
-		}
-	}
+            @Override
+            public void onFailure(HttpException error, String msg) {
+                loadMainUI();
+            }
+        });
+    }
 
-	public void jump(String url) {
-		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-	}
+    //	直接添加本地频道
+    private void addLocalChannels(List<NewsChannelBean> list) {
 
-	@Override
-	protected void onRestart() {
-		super.onRestart();
-		if (!isJump) {
-			loadMainUI();
-		} else {
-			isJump = false;
-		}
-	}
+//        NewsChannelBean channelSubject = new NewsChannelBean();
+//        channelSubject.setTid("" + NewsChannelBean.TYPE_SUBJECT);
+//        channelSubject.setType(NewsChannelBean.TYPE_SUBJECT);
+//        channelSubject.setCnname(getString(R.string.menu_subject));
+//        if (!list.contains(channelSubject)) {
+//            list.add(0, channelSubject);
+//            Log.d(getLogTag(), "add channelSubject");
+//        }
+//        NewsChannelBean channelVideo = new NewsChannelBean();
+//        channelVideo.setTid("" + NewsChannelBean.TYPE_VIDEO);
+//        channelVideo.setType(NewsChannelBean.TYPE_VIDEO);
+//        channelVideo.setCnname(getString(R.string.menu_video));
+//        if (!list.contains(channelVideo)) {
+//            list.add(0, channelVideo);
+//            Log.d(getLogTag(), "add channelVideo");
+//        }
+//        NewsChannelBean channelImageAlbum = new NewsChannelBean();
+//        channelImageAlbum.setTid("" + NewsChannelBean.TYPE_IMAGE_ALBUM);
+//        channelImageAlbum.setType(NewsChannelBean.TYPE_IMAGE_ALBUM);
+//        channelImageAlbum.setCnname(getString(R.string.menu_album));
+//        if (!list.contains(channelImageAlbum)) {
+//            list.add(0, channelImageAlbum);
+//            Log.d(getLogTag(), "add channelImageAlbum");
+//        }
 
-	private void addLocalChannels(List<NewsChannelBean> list) {
-		NewsChannelBean channelSubject = new NewsChannelBean();
-		channelSubject.setTid("" + NewsChannelBean.TYPE_SUBJECT);
-		channelSubject.setType(NewsChannelBean.TYPE_SUBJECT);
-		channelSubject.setCnname(getString(R.string.menu_subject));
-		if (!list.contains(channelSubject)) {
-			list.add(0, channelSubject);
-			Log.d(getLogTag(), "add channelSubject");
-		}
 
-		NewsChannelBean channelVideo = new NewsChannelBean();
-		channelVideo.setTid("" + NewsChannelBean.TYPE_VIDEO);
-		channelVideo.setType(NewsChannelBean.TYPE_VIDEO);
-		channelVideo.setCnname(getString(R.string.menu_video));
-		if (!list.contains(channelVideo)) {
-			list.add(0, channelVideo);
-			Log.d(getLogTag(), "add channelVideo");
-		}
+        // 添加推荐频道
+        NewsChannelBean channelRecommend = new NewsChannelBean();
+        channelRecommend.setTid("" + NewsChannelBean.TYPE_RECOMMEND);
+        channelRecommend.setType(NewsChannelBean.TYPE_RECOMMEND);
+        channelRecommend.setCnname(getString(R.string.recommend));
+        if (!list.contains(channelRecommend)) {
+            list.add(0, channelRecommend);
+        }
 
-		NewsChannelBean channelImageAlbum = new NewsChannelBean();
-		channelImageAlbum.setTid("" + NewsChannelBean.TYPE_IMAGE_ALBUM);
-		channelImageAlbum.setType(NewsChannelBean.TYPE_IMAGE_ALBUM);
-		channelImageAlbum.setCnname(getString(R.string.menu_album));
-		if (!list.contains(channelImageAlbum)) {
-			list.add(0, channelImageAlbum);
-			Log.d(getLogTag(), "add channelImageAlbum");
-		}
-	}
+    }
 
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        Intent intent = new Intent(this, InitService.class);
+//        stopService(intent);
+//        finish();
+//    }
 }

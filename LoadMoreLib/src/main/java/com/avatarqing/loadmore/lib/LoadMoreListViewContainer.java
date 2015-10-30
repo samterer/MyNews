@@ -22,12 +22,12 @@ public class LoadMoreListViewContainer extends LoadMoreContainerBase {
     }
 
     @Override
-    protected void addFooterView(View view) {
+    public void addFooterView(View view) {
         mListView.addFooterView(view);
     }
 
     @Override
-    protected void removeFooterView(View view) {
+    public void removeFooterView(View view) {
         mListView.removeFooterView(view);
     }
 

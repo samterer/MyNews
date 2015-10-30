@@ -28,7 +28,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
+                <com.hzpd.ui.widget.FontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/app_name"
@@ -36,7 +36,7 @@
                     android:textSize="18dip"
                     android:textStyle="bold"/>
 
-                <TextView
+                <com.hzpd.ui.widget.FontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -55,7 +55,7 @@
                 android:max="100"
                 android:progress="0"/>
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/tvProcess"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

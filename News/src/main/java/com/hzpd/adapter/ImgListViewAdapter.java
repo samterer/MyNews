@@ -239,9 +239,9 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
 
 				if (allImg != null && allImg.size() > 1) {
 					holder2.pl.setText(context.getString(R.string.prompt_images, allImg.size()));
-					mImageLoader.displayImage(allImg.get(0).getSubphoto(), holder2.img1,
+					SPUtil.displayImage(allImg.get(0).getSubphoto(), holder2.img1,
 							DisplayOptionFactory.getOption(OptionTp.Small));
-					mImageLoader.displayImage(allImg.get(1).getSubphoto(), holder2.img2,
+					SPUtil.displayImage(allImg.get(1).getSubphoto(), holder2.img2,
 							DisplayOptionFactory.getOption(OptionTp.Small));
 				} else {
 					holder2.pl.setText(context.getString(R.string.prompt_images, 0));
@@ -255,11 +255,11 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
 
 				if (allImg != null && allImg.size() > 2) {
 					holder3.pl.setText(context.getString(R.string.prompt_images, allImg.size()));
-					mImageLoader.displayImage(allImg.get(0).getSubphoto(), holder3.img1,
+					SPUtil.displayImage(allImg.get(0).getSubphoto(), holder3.img1,
 							DisplayOptionFactory.getOption(OptionTp.Small));
-					mImageLoader.displayImage(allImg.get(1).getSubphoto(), holder3.img2,
+					SPUtil.displayImage(allImg.get(1).getSubphoto(), holder3.img2,
 							DisplayOptionFactory.getOption(OptionTp.Small));
-					mImageLoader.displayImage(allImg.get(2).getSubphoto(), holder3.img3,
+					SPUtil.displayImage(allImg.get(2).getSubphoto(), holder3.img3,
 							DisplayOptionFactory.getOption(OptionTp.Small));
 				} else {
 					holder3.pl.setText(context.getString(R.string.prompt_images, 0));
@@ -273,13 +273,13 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
 
 				if (allImg != null && allImg.size() > 3) {
 					holder4.pl.setText(context.getString(R.string.prompt_images, allImg.size()));
-					mImageLoader.displayImage(allImg.get(0).getSubphoto(), holder4.img1,
+					SPUtil.displayImage(allImg.get(0).getSubphoto(), holder4.img1,
 							DisplayOptionFactory.getOption(OptionTp.Small));
-					mImageLoader.displayImage(allImg.get(1).getSubphoto(), holder4.img2,
+					SPUtil.displayImage(allImg.get(1).getSubphoto(), holder4.img2,
 							DisplayOptionFactory.getOption(OptionTp.Small));
-					mImageLoader.displayImage(allImg.get(2).getSubphoto(), holder4.img3,
+					SPUtil.displayImage(allImg.get(2).getSubphoto(), holder4.img3,
 							DisplayOptionFactory.getOption(OptionTp.Small));
-					mImageLoader.displayImage(allImg.get(3).getSubphoto(), holder4.img4,
+					SPUtil.displayImage(allImg.get(3).getSubphoto(), holder4.img4,
 							DisplayOptionFactory.getOption(OptionTp.Small));
 				} else {
 					holder4.pl.setText(context.getString(R.string.prompt_images, 0));
@@ -293,15 +293,15 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
 
 				if (allImg != null && allImg.size() > 4) {
 					holder5.pl.setText(context.getString(R.string.prompt_images, allImg.size()));
-					mImageLoader.displayImage(allImg.get(0).getSubphoto(), holder5.img1,
+					SPUtil.displayImage(allImg.get(0).getSubphoto(), holder5.img1,
 							DisplayOptionFactory.getOption(OptionTp.Small));
-					mImageLoader.displayImage(allImg.get(1).getSubphoto(), holder5.img2,
+					SPUtil.displayImage(allImg.get(1).getSubphoto(), holder5.img2,
 							DisplayOptionFactory.getOption(OptionTp.Small));
-					mImageLoader.displayImage(allImg.get(2).getSubphoto(), holder5.img3,
+					SPUtil.displayImage(allImg.get(2).getSubphoto(), holder5.img3,
 							DisplayOptionFactory.getOption(OptionTp.Small));
-					mImageLoader.displayImage(allImg.get(3).getSubphoto(), holder5.img4,
+					SPUtil.displayImage(allImg.get(3).getSubphoto(), holder5.img4,
 							DisplayOptionFactory.getOption(OptionTp.Small));
-					mImageLoader.displayImage(allImg.get(4).getSubphoto(), holder5.img5,
+					SPUtil.displayImage(allImg.get(4).getSubphoto(), holder5.img5,
 							DisplayOptionFactory.getOption(OptionTp.Small));
 				} else {
 					holder5.pl.setText(context.getString(R.string.prompt_images, 0));
@@ -315,7 +315,7 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
 
 				if (allImg != null && allImg.size() > 0) {
 					holder1.pl.setText(context.getString(R.string.prompt_images, allImg.size()));
-					mImageLoader.displayImage(allImg.get(0).getSubphoto(), holder1.img,
+					SPUtil.displayImage(allImg.get(0).getSubphoto(), holder1.img,
 							DisplayOptionFactory.getOption(OptionTp.Small));
 				} else {
 					holder1.pl.setText(context.getString(R.string.prompt_images, 0));

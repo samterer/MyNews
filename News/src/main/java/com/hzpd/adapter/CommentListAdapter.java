@@ -1,27 +1,48 @@
 package com.hzpd.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hzpd.custorm.CircleImageView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.CommentzqzxBean;
-import com.hzpd.ui.activity.LoginActivity;
+import com.hzpd.modle.MyCommentListBean;
+import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.ui.activity.XF_PInfoActivity;
+import com.hzpd.ui.activity.ZQ_ReplyCommentActivity;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.utils.AAnim;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
+import com.hzpd.utils.CalendarUtil;
+import com.hzpd.utils.DBHelper;
+import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -38,145 +59,355 @@ import java.util.List;
  */
 public class CommentListAdapter extends BaseAdapter {
 
-	private List<CommentzqzxBean> mDataList = new ArrayList<>();
-	private SPUtil spu;
-	private HttpUtils httpUtils;
+    private List<CommentzqzxBean> mDataList = new ArrayList<>();
+    private SPUtil spu;
+    private HttpUtils httpUtils;
+    private String nid;
 
-	public CommentListAdapter() {
-		spu = SPUtil.getInstance();
-		httpUtils = new HttpUtils();
-	}
+    public CommentListAdapter() {
+        spu = SPUtil.getInstance();
+        httpUtils = new HttpUtils();
+    }
 
-	@Override
-	public int getCount() {
-		return mDataList.size();
-	}
+    public CommentListAdapter(String nid) {
+        spu = SPUtil.getInstance();
+        httpUtils = new HttpUtils();
+        this.nid = nid;
+    }
 
-	@Override
-	public CommentzqzxBean getItem(int position) {
-		return mDataList.get(position);
-	}
+    @Override
+    public int getCount() {
+        return mDataList.isEmpty() ? 0 : (mDataList.size() + 1);
+    }
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
 
-	@Override
-	public View getView(int position, View convertView, final ViewGroup parent) {
-		ViewHolder holder;
-		if (convertView == null) {
-			convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.comment_list_item, parent, false);
-			holder = new ViewHolder();
-			holder.avatar = (ImageView) convertView.findViewById(R.id.comment_user_avatar);
-			holder.userName = (TextView) convertView.findViewById(R.id.comment_user_name);
-			holder.content = (TextView) convertView.findViewById(R.id.comment_content);
-			holder.time = (TextView) convertView.findViewById(R.id.comment_time);
-			holder.digNum = (TextView) convertView.findViewById(R.id.comment_dig_num);
-			convertView.setTag(holder);
-		} else {
-			holder = (ViewHolder) convertView.getTag();
-		}
+    @Override
+    public CommentzqzxBean getItem(int position) {
+        if (position == 0) {
+            return null;
+        } else {
+            return mDataList.get(position - 1);
+        }
+    }
 
-		CommentzqzxBean item = getItem(position);
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-		// 显示头像
-		ImageLoader.getInstance().displayImage(item.getAvatar_path(), holder.avatar);
+    @Override
+    public View getView(int position, View convertView, final ViewGroup parent) {
 
-		// 用户名
-		holder.userName.setText(item.getNickname());
+        if (position == 0) {
+            if (convertView == null || convertView.getId() != R.id.details_related_comments) {
+                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.details_related_comments, parent, false);
+                TextView comcount_adapter_tv = (TextView) convertView.findViewById(R.id.comcount_adapter_tv);
+                try {
+                    DBHelper dbHelper;
+                    NewsBeanDB nbfc = DBHelper.getInstance(parent.getContext()).getNewsListDbUtils().findFirst(
+                            Selector.from(NewsBeanDB.class).where("nid", "=", nid));
+                    if (null != nbfc) {
+//                        com.hzpd.utils.Log.e("NewsBeanDB", "NewsBeanDB--->" + nbfc.getFav() + "::::" + nbfc.getComcount());
+                        comcount_adapter_tv.setText("("+nbfc.getComcount()+")");
+//                        if (Integer.parseInt(nbfc.getComcount()) > Integer.parseInt(comcount)) {
+//                            comcount = nbfc.getComcount();
+//                        }
+                    } else {
+                    }
 
-		// 评论内容
-		holder.content.setText(item.getContent());
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
 
-		// 评论时间
-		holder.time.setText(item.getDateline());
+            }
+        } else {
+            final ViewHolder holder;
+            if (convertView == null || convertView.getId() != R.id.detail_comments) {
+                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.details_comment_list_item, parent, false);
+                holder = new ViewHolder();
+                holder.comment_user_icon = (CircleImageView) convertView.findViewById(R.id.comment_user_icon);
+                holder.comment_user_name = (TextView) convertView.findViewById(R.id.comment_user_name);
+                holder.comment_text = (TextView) convertView.findViewById(R.id.comment_text);
+                holder.comment_time = (TextView) convertView.findViewById(R.id.comment_time);
+                holder.up_icon = (ImageView) convertView.findViewById(R.id.up_icon);
+                holder.comment_up_num = (TextView) convertView.findViewById(R.id.comment_up_num);
+                holder.rl_comment_text=convertView.findViewById(R.id.rl_comment_text);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
 
-		// 点赞数
-		holder.digNum.setText(item.getPraise());
-		holder.digNum.setTag(item);
-		holder.digNum.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				try {
-					TextView digNum = (TextView) v;
-					CommentzqzxBean item = (CommentzqzxBean) v.getTag();
-					praise(digNum, item);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+            final CommentzqzxBean item = getItem(position);
 
-		return convertView;
-	}
+//            Log.e("test","test"+item.toString());
+            holder.userId = item.getUid();
+            // 显示头像
 
-	public void appendData(List<CommentzqzxBean> data) {
-		if (data != null && !data.isEmpty()) {
-			mDataList.addAll(data);
-			notifyDataSetChanged();
-		}
-	}
+            SPUtil.displayImage(item.getAvatar_path()
+                    , holder.comment_user_icon
+                    , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.XF_Avatar));
+//            ImageLoader.getInstance().displayImage(item.getAvatar_path(), holder.avatar);
+            holder.comment_user_icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent mIntent = new Intent();
+                    mIntent.putExtra("uid", item.getUid()); //TODO
+                    mIntent.setClass(parent.getContext(), XF_PInfoActivity.class);
+                    parent.getContext().startActivity(mIntent);
+                }
+            });
 
-	private void praise(final TextView tv, final CommentzqzxBean cb) {
-		final Context context = tv.getContext();
-		if (null == spu.getUser()) {
-			TUtils.toast(context.getString(R.string.toast_please_login));
-			Intent intent = new Intent(context, LoginActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			context.startActivity(intent);
-			if (context instanceof Activity) {
-				AAnim.ActivityStartAnimation((Activity) context);
-			}
-			return;
-		}
+            // 用户名
+            holder.comment_user_name.setText(item.getNickname());
+            holder.comment_user_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent mIntent = new Intent();
+                    mIntent.putExtra("uid", item.getUid()); //TODO
+                    mIntent.setClass(parent.getContext(), XF_PInfoActivity.class);
+                    parent.getContext().startActivity(mIntent);
+                }
+            });
 
-		Log.i(getLogTag(), "uid-" + spu.getUser().getUid() + "  mType-News" + " nid-" + cb.getCid());
-		RequestParams params = RequestParamsUtils.getParamsWithU();
-		params.addBodyParameter("type", "News");
-		params.addBodyParameter("cid", cb.getCid());
-		params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+            // 评论内容
+            holder.comment_text.setText(item.getContent());
+            holder.rl_comment_text.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showPopUp(v, parent);
+//                    final PopupWindow mPopupWindow = new PopupWindow(parent.getContext());
+//                    LinearLayout pv = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(
+//                            R.layout.comment_delete_pop, null);
+//                    mPopupWindow.setContentView(pv);
+//                    mPopupWindow.setWindowLayoutMode(LinearLayout.LayoutParams.WRAP_CONTENT,
+//                            LinearLayout.LayoutParams.WRAP_CONTENT);
+//                    ColorDrawable dw = new ColorDrawable(Color.TRANSPARENT);
+//                    mPopupWindow.setBackgroundDrawable(dw);
+//                    mPopupWindow.setOutsideTouchable(true);
+//                    mPopupWindow.setFocusable(true);
+//
+//
+////                    int[] location = new int[2];
+////                    v.getLocationOnScreen(location);
+////
+//                    int[] location = new int[2];
+//                    int popupWidth = pv.getMeasuredWidth();
+//                    int popupHeight = pv.getMeasuredHeight();
+//                    v.getLocationOnScreen(location);
+//                    mPopupWindow.showAsDropDown(v,
+//                            v.getWidth() / 2 - 30,
+//                            -v.getHeight());
+////                    mPopupWindow.showAtLocation(v, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2) - popupWidth / 2, location[1] - popupHeight);
+////                    mPopupWindow.showAsDropDown(v);
+                }
+            });
 
-		httpUtils.send(HttpRequest.HttpMethod.POST
-				, InterfaceJsonfile.PRISE//InterfaceApi.mPraise
-				, params
-				, new RequestCallBack<String>() {
-			@Override
-			public void onFailure(HttpException arg0, String arg1) {
-				Log.e(getLogTag(), "赞failed!");
-				TUtils.toast(context.getString(R.string.toast_server_no_response));
-			}
 
-			@Override
-			public void onSuccess(ResponseInfo<String> arg0) {
-				Log.d(getLogTag(), "赞-->" + arg0.result);
-				JSONObject obj = JSONObject.parseObject(arg0.result);
-				TUtils.toast(obj.getString("msg"));
+            // 评论时间
+            holder.comment_time.setText(CalendarUtil.friendlyTime1(item.getDateline(), parent.getContext()));
 
-				if (200 == obj.getInteger("code")) {
-					LogUtils.i("m---->" + cb.getPraise());
-					if (TextUtils.isDigitsOnly(cb.getPraise())) {
-						int i = Integer.parseInt(cb.getPraise());
-						i++;
-						LogUtils.i("i---->" + i);
-						tv.setText(i + "");
-						cb.setPraise(i + "");
-						notifyDataSetChanged();
-					}
-				}
-			}
-		});
-	}
 
-	public String getLogTag() {
-		return getClass().getSimpleName();
-	}
+            if (SharePreferecesUtils.getParam(parent.getContext(), "" + item.getCid(), "0").toString().equals("1")) {
+                holder.up_icon.setImageResource(R.drawable.details_icon_likeit);
+            }
 
-	private static class ViewHolder {
-		public ImageView avatar;
-		public TextView userName;
-		public TextView content;
-		public TextView time;
-		public TextView digNum;
-	}
+            // 点赞数
+            holder.comment_up_num.setText(item.getPraise());
+            holder.up_icon.setTag(item);
+            holder.up_icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        Log.e("holder.digNum", "holder.digNum");
+                        if (null == spu.getUser()) {
+                            return;
+                        }
+                        Log.i(getLogTag(), "uid-" + spu.getUser().getUid() + "  mType-News" + " nid-" + item.getCid());
+                        String station = SharePreferecesUtils.getParam(parent.getContext(), StationConfig.STATION, "def").toString();
+                        String siteid = null;
+                        String prise_url = null;
+                        if (station.equals(StationConfig.DEF)) {
+                            siteid = InterfaceJsonfile.SITEID;
+                            prise_url = InterfaceJsonfile.PRISE1;
+                        } else if (station.equals(StationConfig.YN)) {
+                            siteid = InterfaceJsonfile_YN.SITEID;
+                            prise_url = InterfaceJsonfile_YN.PRISE1;
+                        } else if (station.equals(StationConfig.TW)) {
+                            siteid = InterfaceJsonfile_TW.SITEID;
+                            prise_url = InterfaceJsonfile_TW.PRISE1;
+                        }
+                        final RequestParams params = RequestParamsUtils.getParamsWithU();
+                        params.addBodyParameter("uid", spu.getUser().getUid());
+                        params.addBodyParameter("type", "News");
+                        params.addBodyParameter("nid", item.getCid());
+                        params.addBodyParameter("siteid", siteid);
+
+                        httpUtils.send(HttpRequest.HttpMethod.POST
+                                , prise_url//InterfaceApi.mPraise
+                                , params
+                                , new RequestCallBack<String>() {
+                            @Override
+                            public void onFailure(HttpException arg0, String arg1) {
+                                Log.e(getLogTag(), "赞failed!");
+                                TUtils.toast(parent.getContext().getString(R.string.toast_server_no_response));
+                            }
+
+                            @Override
+                            public void onSuccess(ResponseInfo<String> arg0) {
+                                Log.d(getLogTag(), "赞-->" + arg0.result);
+                                JSONObject obj = JSONObject.parseObject(arg0.result);
+
+                                if (200 == obj.getInteger("code")) {
+                                    LogUtils.i("m---->" + item.getPraise());
+                                    SharePreferecesUtils.setParam(parent.getContext(), "" + item.getCid(), "1");
+                                    if (TextUtils.isDigitsOnly(item.getPraise())) {
+                                        holder.up_icon.setImageResource(R.drawable.details_icon_likeit);
+                                        int i = Integer.parseInt(item.getPraise());
+                                        i++;
+                                        LogUtils.i("i---->" + i);
+                                        holder.comment_up_num.setText(i + "");
+                                        item.setPraise(i + "");
+                                        notifyDataSetChanged();
+                                    }
+                                } else {
+
+                                }
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+//            if (position == getCount() - 1) {
+//                holder.bottom.setVisibility(View.GONE);
+//            } else {
+//                holder.bottom.setVisibility(View.VISIBLE);
+//            }
+        }
+
+
+        return convertView;
+    }
+
+    private void showPopUp(View v, ViewGroup parent) {
+        LinearLayout layout = new LinearLayout(parent.getContext());
+        layout.setBackgroundColor(Color.GRAY);
+        TextView tv = new TextView(parent.getContext());
+        tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        tv.setText("I'm a popI'm a popI'm a popI'm a pop ");
+        tv.setTextColor(Color.WHITE);
+        layout.addView(tv);
+
+        PopupWindow popupWindow = new PopupWindow(layout, 120, 120);
+
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+
+        int[] location = new int[2];
+        v.getLocationOnScreen(location);
+
+//        popupWindow.showAsDropDown(v);
+        popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, location[0], location[1] - popupWindow.getHeight());
+    }
+
+    public void appendData(List<CommentzqzxBean> data) {
+        if (data != null && !data.isEmpty()) {
+            mDataList.addAll(data);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void appendData(List<CommentzqzxBean> data, boolean isClearOld) {
+        if (isClearOld) {
+            mDataList.clear();
+        }
+        if (data != null && !data.isEmpty()) {
+            mDataList.addAll(data);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void insertData(List<CommentzqzxBean> data, int positon) {
+        if (data != null && !data.isEmpty()) {
+            mDataList.addAll(positon, data);
+            notifyDataSetChanged();
+        }
+    }
+
+    private void praise(final ImageView image, final TextView text, final CommentzqzxBean cb) {
+        final Context context = image.getContext();
+        if (null == spu.getUser()) {
+            return;
+        }
+        Log.i(getLogTag(), "uid-" + spu.getUser().getUid() + "  mType-News" + " nid-" + cb.getCid());
+        String station = SharePreferecesUtils.getParam(context, StationConfig.STATION, "def").toString();
+        String siteid = null;
+        String prise_url = null;
+        if (station.equals(StationConfig.DEF)) {
+            siteid = InterfaceJsonfile.SITEID;
+            prise_url = InterfaceJsonfile.PRISE1;
+        } else if (station.equals(StationConfig.YN)) {
+            siteid = InterfaceJsonfile_YN.SITEID;
+            prise_url = InterfaceJsonfile_YN.PRISE1;
+        } else if (station.equals(StationConfig.TW)) {
+            siteid = InterfaceJsonfile_TW.SITEID;
+            prise_url = InterfaceJsonfile_TW.PRISE1;
+        }
+        RequestParams params = RequestParamsUtils.getParamsWithU();
+        params.addBodyParameter("uid", spu.getUser().getUid());
+        params.addBodyParameter("type", "News");
+        params.addBodyParameter("nid", cb.getCid());
+        params.addBodyParameter("siteid", siteid);
+
+        httpUtils.send(HttpRequest.HttpMethod.POST
+                , prise_url//InterfaceApi.mPraise
+                , params
+                , new RequestCallBack<String>() {
+            @Override
+            public void onFailure(HttpException arg0, String arg1) {
+                Log.e(getLogTag(), "赞failed!");
+                TUtils.toast(context.getString(R.string.toast_server_no_response));
+            }
+
+            @Override
+            public void onSuccess(ResponseInfo<String> arg0) {
+                Log.d(getLogTag(), "赞-->" + arg0.result);
+                JSONObject obj = JSONObject.parseObject(arg0.result);
+//                TUtils.toast(obj.getString("msg"));
+
+                if (200 == obj.getInteger("code")) {
+                    LogUtils.i("m---->" + cb.getPraise());
+                    SharePreferecesUtils.setParam(context, "" + cb.getCid(), "1");
+                    if (TextUtils.isDigitsOnly(cb.getPraise())) {
+                        image.setImageResource(R.drawable.details_icon_likeit);
+                        int i = Integer.parseInt(cb.getPraise());
+                        i++;
+                        LogUtils.i("i---->" + i);
+                        text.setText(i + "");
+                        cb.setPraise(i + "");
+                        notifyDataSetChanged();
+                    }
+                }
+            }
+        });
+    }
+
+    public String getLogTag() {
+        return getClass().getSimpleName();
+    }
+
+    public static class ViewHolder {
+        public String userId = "";
+        public CircleImageView comment_user_icon;
+        public TextView comment_user_name;
+        public TextView comment_text;
+        public TextView comment_time;
+        public ImageView up_icon;
+        private TextView comment_up_num;
+        private View rl_comment_text;
+
+    }
 }

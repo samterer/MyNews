@@ -16,7 +16,7 @@
         android:paddingBottom="?android:attr/actionBarSize"
         android:verticalSpacing="@dimen/space_size"/>
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/timeline_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

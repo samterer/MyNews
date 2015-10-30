@@ -2,8 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_pressed="true"
-        android:drawable="@drawable/zq_icon_press_back"/>
+        android:drawable="@drawable/zq_icon_press_back_new"/>
     <item
-        android:drawable="@drawable/zq_icon_unpress_back"/>
+        android:drawable="@drawable/zq_icon_unpress_back_new"/>
 
 </selector>

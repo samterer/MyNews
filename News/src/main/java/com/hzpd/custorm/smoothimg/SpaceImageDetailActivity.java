@@ -1,6 +1,5 @@
 package com.hzpd.custorm.smoothimg;
 
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -14,9 +13,8 @@ import android.widget.ImageView.ScaleType;
 import com.hzpd.ui.activity.MBaseActivity;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
+import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.util.LogUtils;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.io.File;
 
@@ -66,28 +64,10 @@ public class SpaceImageDetailActivity extends MBaseActivity {
 			displayString = imageUrl;
 		}
 
-		mImageLoader.displayImage(displayString
+		SPUtil.displayImage(displayString
 				, imageView
-				, DisplayOptionFactory.getOption(OptionTp.Big)
-				, new ImageLoadingListener() {
-			@Override
-			public void onLoadingStarted(String imageUri, View view) {
-			}
-
-			@Override
-			public void onLoadingFailed(String imageUri, View view,
-			                            FailReason failReason) {
-			}
-
-			@Override
-			public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-			}
-
-			@Override
-			public void onLoadingCancelled(String imageUri, View view) {
-				imageView.startAnimation(scaleAnimation);
-			}
-		});
+				, DisplayOptionFactory.getOption(OptionTp.Small)
+				);
 
 		imageView.setOnClickListener(new OnClickListener() {
 			@Override

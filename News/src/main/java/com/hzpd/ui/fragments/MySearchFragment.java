@@ -1,28 +1,23 @@
 package com.hzpd.ui.fragments;
 
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.PullToRefreshRecyclerView;
 import com.hzpd.adapter.NewsItemListViewAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
@@ -31,9 +26,14 @@ import com.hzpd.ui.activity.NewsAlbumActivity;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.ZhuanTiActivity;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
+import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -43,259 +43,240 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import java.util.List;
 
-public class MySearchFragment extends BaseFragment {
+public class MySearchFragment extends BaseFragment implements View.OnClickListener {
 
-	@ViewInject(R.id.search_listview_id)
-	private PullToRefreshListView search_listview_id;
-	@ViewInject(R.id.search_edittext_id)
-	private EditText search_edittext_id;
-	@ViewInject(R.id.search_tv_search)
-	private TextView search_tv_search;
+    @ViewInject(R.id.search_listview_id)
+    private PullToRefreshRecyclerView search_listview_id;
+    private RecyclerView recyclerView;
 
-	@ViewInject(R.id.search_ll1_root)
-	private LinearLayout search_ll1_root;
-	@ViewInject(R.id.search_ll2_search)
-	private LinearLayout search_ll2_search;
+    private NewsItemListViewAdapter adapter;
+    @ViewInject(R.id.app_progress_bar)
+    private View loadingView;
 
-	@ViewInject(R.id.search_ll3_root)
-	private LinearLayout search_ll3_root;
-	@ViewInject(R.id.zq_search_iv_clean)
-	private ImageView zq_search_iv_clean;
+    private boolean isSearch = false;//是否已有搜索结果
+    private boolean isRefresh = false;
+    private int page = 1;
+    private static final int pageSize = 15;
 
-	private NewsItemListViewAdapter adapter;
+    public static final String SEARCH_KEY = "search_key";
+    public static final String is_Refresh = "is_Refresh";
+    String con;
 
-	private boolean isSearch = false;//是否已有搜索结果
-	private boolean isRefresh = false;
-	private int page = 1;
-	private static final int pageSize = 15;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View mView = inflater.inflate(R.layout.search_main_layout, container, false);
+        ViewUtils.inject(this, mView);
+        return mView;
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	                         Bundle savedInstanceState) {
-		View mView = inflater.inflate(R.layout.search_main_layout, container, false);
-		ViewUtils.inject(this, mView);
-		return mView;
-	}
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        init();
+    }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		init();
-	}
+    RecyclerView.ItemDecoration itemDecoration = new MyItemDecoration();
 
-	private void init() {
-		adapter = new NewsItemListViewAdapter(activity);
-		search_listview_id.setAdapter(adapter);
-		search_listview_id.setMode(Mode.DISABLED);
+    int padding = 20;
 
-		search_listview_id.setOnRefreshListener(new OnRefreshListener2<ListView>() {
-			@Override
-			public void onPullDownToRefresh(
-					PullToRefreshBase<ListView> refreshView) {
-				String con = search_edittext_id.getText().toString();
-				if (null == con || "".equals(con)) {
-					TUtils.toast(getString(R.string.toast_input_content));
-					search_listview_id.setMode(Mode.DISABLED);
-					return;
-				}
-				isRefresh = true;
-				page = 1;
-				getSearchData(con);
-			}
+    class MyItemDecoration extends RecyclerView.ItemDecoration {
+        Paint mPaint;
 
-			@Override
-			public void onPullUpToRefresh(
-					PullToRefreshBase<ListView> refreshView) {
-				String con = search_edittext_id.getText().toString();
-				if (null == con || "".equals(con)) {
-					TUtils.toast(getString(R.string.toast_input_content));
-					return;
-				}
-				isRefresh = false;
-				page++;
-				getSearchData(con);
-			}
-		});
+        MyItemDecoration() {
+            mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            mPaint.setColor(0xfff5f5f5);
+        }
 
-		search_edittext_id.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-			}
+        @Override
+        public void onDraw(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
+            final int left = parent.getPaddingLeft();
+            final int right = parent.getMeasuredWidth() - parent.getPaddingRight();
+            final int childSize = parent.getChildCount();
+            for (int i = 0; i < childSize; i++) {
+                final View child = parent.getChildAt(i);
+                RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) child.getLayoutParams();
+                final int top = child.getBottom() + layoutParams.bottomMargin;
+                final int bottom = top + padding;
+                canvas.drawRect(left, top, right, bottom, mPaint);
+            }
+        }
 
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-			                              int after) {
-			}
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            outRect.set(0, 0, 0, padding);
+        }
+    }
 
-			@Override
-			public void afterTextChanged(Editable s) {
-				String ss = s.toString();
-				if (TextUtils.isEmpty(ss)) {
-					search_tv_search.setText(android.R.string.cancel);
-					zq_search_iv_clean.setVisibility(View.GONE);
-					isSearch = true;
-				} else {
-					search_tv_search.setText(R.string.prompt_search);
-					zq_search_iv_clean.setVisibility(View.VISIBLE);
-					isSearch = false;
-				}
-			}
-		});
+    private void init() {
+        con = getArguments().getString(SEARCH_KEY);
+        isRefresh = getArguments().getBoolean(is_Refresh);
+        search_listview_id.setMode(Mode.DISABLED);
+        recyclerView = search_listview_id.getRefreshableView();
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new NewsItemListViewAdapter(activity, this);
+        recyclerView = search_listview_id.getRefreshableView();
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(itemDecoration);
+        padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
+        search_listview_id.setOnRefreshListener(new OnRefreshListener2<RecyclerView>() {
+            @Override
+            public void onPullDownToRefresh(
+                    PullToRefreshBase<RecyclerView> refreshView) {
+                if (null == con || "".equals(con)) {
+                    TUtils.toast(getString(R.string.toast_input_content));
+                    search_listview_id.setMode(Mode.DISABLED);
+                    return;
+                }
+                isRefresh = true;
+                page = 1;
+                getSearchData(con);
+            }
 
-		search_listview_id.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-			                        int position, long id) {
+            @Override
+            public void onPullUpToRefresh(
+                    PullToRefreshBase<RecyclerView> refreshView) {
 
-				NewsBean nb = (NewsBean) adapter.getItem(position - 1);
-				Intent mIntent = new Intent();
-				mIntent.putExtra("newbean", nb);
-				mIntent.putExtra("from", "newsitem");
-				TextView title = (TextView) view.findViewById(R.id.newsitem_title);
-				if (null != title) {
-					title.setTextColor(getResources().getColor(R.color.grey_font));
-				}
+                if (null == con || "".equals(con)) {
+                    TUtils.toast(getString(R.string.toast_input_content));
+                    return;
+                }
+                isRefresh = false;
+                page++;
+                getSearchData(con);
+            }
+        });
+        getSearchData(con);
+    }
 
-				////////////////////////////
-				//1新闻  2图集  3直播 4专题  5关联新闻 6视频 
-				if ("1".equals(nb.getRtype())) {
-					mIntent.setClass(getActivity(), NewsDetailActivity.class);
-				} else if ("2".equals(nb.getRtype())) {
-					mIntent.setClass(getActivity(), NewsAlbumActivity.class);
-				} else if ("3".equals(nb.getRtype())) {
-					mIntent.setClass(getActivity(), HtmlActivity.class);//直播界面
-				} else if ("4".equals(nb.getRtype())) {
-					mIntent.setClass(getActivity(), ZhuanTiActivity.class);
-				} else if ("5".equals(nb.getRtype())) {
-					mIntent.setClass(getActivity(), NewsDetailActivity.class);
-				} else if ("6".equals(nb.getRtype())) {
+
+    public void getSearchData(String content) {
+
+        String station = SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+        String siteid = null;
+        String SEARCH_url = null;
+        if (station.equals(StationConfig.DEF)) {
+            siteid = InterfaceJsonfile.SITEID;
+            SEARCH_url = InterfaceJsonfile.SEARCH;
+        } else if (station.equals(StationConfig.YN)) {
+            siteid = InterfaceJsonfile_YN.SITEID;
+            SEARCH_url = InterfaceJsonfile_YN.SEARCH;
+        } else if (station.equals(StationConfig.TW)) {
+            siteid = InterfaceJsonfile_TW.SITEID;
+            SEARCH_url = InterfaceJsonfile_TW.SEARCH;
+        }
+        RequestParams params = RequestParamsUtils.getParams();
+        params.addBodyParameter("siteid", siteid);
+        params.addBodyParameter("content", content);
+        params.addBodyParameter("Page", "" + page);
+        params.addBodyParameter("PageSize", "" + pageSize);
+
+        httpUtils.send(HttpMethod.POST
+                , SEARCH_url
+                , params
+                , new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                if(!isAdded()){
+                    return;
+                }
+                search_listview_id.onRefreshComplete();
+                loadingView.setVisibility(View.GONE);
+                JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
+                if (null == obj) {
+                    TUtils.toast(getString(R.string.toast_no_data_now));
+                    return;
+                }
+
+                if (200 == obj.getIntValue("code")) {
+
+                    List<NewsBean> l = FjsonUtil.parseArray(
+                            obj.getString("data"), NewsBean.class);
+                    if (null == l) {
+                        TUtils.toast(getString(R.string.toast_no_data_now));
+                        return;
+                    }
+                    LogUtils.i("l size-->" + l.size() + ":::" + l.get(0).toString());
+//                    recyclerView.setAdapter(null);
+//                    adapter.clear();
+                    adapter.appendData(l, isRefresh, false);
+
+                    if (l.size() < pageSize) {
+                        LogUtils.i("PULL_FROM_START");
+                        search_listview_id.setMode(Mode.PULL_FROM_START);
+                    } else {
+                        LogUtils.i("both");
+                        search_listview_id.setMode(Mode.BOTH);
+                    }
+                    adapter.notifyDataSetChanged();
+                } else {
+//                    TUtils.toast(obj.getString("msg"));
+                    if (!isRefresh) {
+                        page--;
+                    }
+                    search_listview_id.setMode(Mode.PULL_FROM_START);
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException error, String msg) {
+                if(!isAdded()){
+                    return;
+                }
+                TUtils.toast(getString(R.string.toast_server_no_response));
+                search_listview_id.onRefreshComplete();
+                loadingView.setVisibility(View.GONE);
+                if (!isRefresh) {
+                    page--;
+                }
+                search_listview_id.setMode(Mode.PULL_FROM_START);
+            }
+        });
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+            return;
+        }
+        TextView title = (TextView) view.findViewById(R.id.newsitem_title);
+        if (null != title) {
+            title.setTextColor(getResources().getColor(R.color.grey_font));
+        }
+
+        NewsBean nb = (NewsBean) view.getTag();
+        Intent mIntent = new Intent();
+        mIntent.putExtra("newbean", nb);
+        mIntent.putExtra("from", "newsitem");
+        adapter.setReadedId(nb.getNid());
+        ////////////////////////////
+        //1新闻  2图集  3直播 4专题  5关联新闻 6视频
+        if ("1".equals(nb.getRtype())) {
+            mIntent.setClass(getActivity(), NewsDetailActivity.class);
+        } else if ("2".equals(nb.getRtype())) {
+            mIntent.setClass(getActivity(), NewsAlbumActivity.class);
+        } else if ("3".equals(nb.getRtype())) {
+            mIntent.setClass(getActivity(), HtmlActivity.class);//直播界面
+        } else if ("4".equals(nb.getRtype())) {
+            mIntent.setClass(getActivity(), ZhuanTiActivity.class);
+        } else if ("5".equals(nb.getRtype())) {
+            mIntent.setClass(getActivity(), NewsDetailActivity.class);
+        } else if ("6".equals(nb.getRtype())) {
 //					mIntent.setClass(getActivity(),VideoPlayerActivity.class);
-					mIntent.setClass(getActivity(), NewsDetailActivity.class);
-				} else if ("7".equals(nb.getRtype())) {
-					mIntent.setClass(getActivity(), HtmlActivity.class);
-				} else {
-					return;
-				}
+            mIntent.setClass(getActivity(), NewsDetailActivity.class);
+        } else if ("7".equals(nb.getRtype())) {
+            mIntent.setClass(getActivity(), HtmlActivity.class);
+        } else {
+            return;
+        }
 
-				getActivity().startActivityForResult(mIntent, 0);
-				AAnim.ActivityStartAnimation(getActivity());
-			}
-		});
-
-	}
-
-	@OnClick(R.id.search_ll2_search)
-	private void search(View view) {
-		search_ll1_root.setVisibility(View.GONE);
-		search_ll3_root.setVisibility(View.VISIBLE);
-	}
-
-	@OnClick(R.id.zq_search_iv_clean)
-	private void clean(View view) {
-		search_edittext_id.setText("");
-	}
-
-	@OnClick(R.id.search_tv_search)
-	private void searchDel(View v) {
-		if (isSearch) {
-			search_edittext_id.setText("");
-			adapter.clear();
-			adapter.notifyDataSetChanged();
-			search_listview_id.setMode(Mode.DISABLED);
-			search_ll1_root.setVisibility(View.VISIBLE);
-			search_ll3_root.setVisibility(View.GONE);
-			return;
-		}
-
-		String con = search_edittext_id.getText().toString();
-		if (null == con || "".equals(con)) {
-			TUtils.toast(getString(R.string.toast_input_content));
-			search_listview_id.setMode(Mode.DISABLED);
-			return;
-		}
-
-		InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-		if (inputMethodManager.isActive()) {
-			inputMethodManager.toggleSoftInput(
-					InputMethodManager.SHOW_IMPLICIT
-					, InputMethodManager.HIDE_NOT_ALWAYS);
-		}
-		search_listview_id.setMode(Mode.PULL_FROM_START);
-		search_listview_id.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				search_listview_id.setRefreshing(true);
-			}
-		}, 500);
-		search_tv_search.setText(android.R.string.cancel);
-		isSearch = true;
-	}
-
-	private void getSearchData(String content) {
-		RequestParams params = RequestParamsUtils.getParams();
-		params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-		params.addBodyParameter("content", content);
-		params.addBodyParameter("Page", "" + page);
-		params.addBodyParameter("PageSize", "" + pageSize);
-
-		httpUtils.send(HttpMethod.POST
-				, InterfaceJsonfile.SEARCH
-				, params
-				, new RequestCallBack<String>() {
-			@Override
-			public void onSuccess(ResponseInfo<String> responseInfo) {
-				LogUtils.i("result-->" + responseInfo.result);
-				search_listview_id.onRefreshComplete();
-
-				JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
-				if (null == obj) {
-					TUtils.toast(getString(R.string.toast_no_data_now));
-					return;
-				}
-
-				if (200 == obj.getIntValue("code")) {
-
-					List<NewsBean> l = FjsonUtil.parseArray(
-							obj.getString("data"), NewsBean.class);
-					if (null == l) {
-						TUtils.toast(getString(R.string.toast_no_data_now));
-						return;
-					}
-					LogUtils.i("l size-->" + l.size());
-
-					adapter.appendData(l, isRefresh);
-
-					if (l.size() < pageSize) {
-						LogUtils.i("PULL_FROM_START");
-						search_listview_id.setMode(Mode.PULL_FROM_START);
-					} else {
-						LogUtils.i("both");
-						search_listview_id.setMode(Mode.BOTH);
-					}
-					adapter.notifyDataSetChanged();
-				} else {
-					TUtils.toast(obj.getString("msg"));
-					if (!isRefresh) {
-						page--;
-					}
-					search_listview_id.setMode(Mode.PULL_FROM_START);
-				}
-			}
-
-			@Override
-			public void onFailure(HttpException error, String msg) {
-				TUtils.toast(getString(R.string.toast_server_no_response));
-				search_listview_id.onRefreshComplete();
-				if (!isRefresh) {
-					page--;
-				}
-				search_listview_id.setMode(Mode.PULL_FROM_START);
-			}
-		});
-	}
+        activity.startActivityForResult(mIntent, 0);
+        AAnim.ActivityStartAnimation(getActivity());
+    }
 
 }

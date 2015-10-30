@@ -17,9 +17,13 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.CipherUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -36,8 +40,7 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import cn.smssdk.EventHandler;
-import cn.smssdk.SMSSDK;
+
 
 public class ZQ_FindbackpwdFragment extends BaseFragment {
 
@@ -142,8 +145,18 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		stitle_tv_content.setText(R.string.prompt_find_password);
+		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+		String PWDTYPE=null;
+
+		if (station.equals(StationConfig.DEF)){
+			PWDTYPE =InterfaceJsonfile.PWDTYPE;
+		}else if (station.equals(StationConfig.YN)){
+			PWDTYPE = InterfaceJsonfile_YN.PWDTYPE;
+		}else if (station.equals(StationConfig.TW)){
+			PWDTYPE = InterfaceJsonfile_TW.PWDTYPE;
+		}
 		Bundle bundle = getArguments();
-		type = bundle.getInt(InterfaceJsonfile.PWDTYPE, 1);
+		type = bundle.getInt(PWDTYPE, 1);
 		if (2 == type) {
 			stitle_tv_content.setText(getString(R.string.prompt_change_password));
 			if (!TextUtils.isEmpty(spu.getUser().getMobile())) {
@@ -152,26 +165,6 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 			}
 		}
 
-		SMSSDK.initSDK(activity, smsappkey, smsappsecret);
-		SMSSDK.registerEventHandler(new EventHandler() {
-			@Override
-			public void afterEvent(int event, int result, Object data) {
-				if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
-					if (result == SMSSDK.RESULT_COMPLETE) {
-						//验证码获取成功
-						handler.sendEmptyMessage(445);
-					} else if (result == SMSSDK.RESULT_ERROR) {
-						handler.sendEmptyMessage(446);
-					}
-				} else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
-					if (result == SMSSDK.RESULT_COMPLETE) {
-						handler.sendEmptyMessage(444);
-					} else if (result == SMSSDK.RESULT_ERROR) {
-						handler.sendEmptyMessage(555);
-					}
-				}
-			}
-		});
 
 	}
 
@@ -188,7 +181,6 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 			return;
 		}
 		fpb_bt_get.setClickable(false);
-		SMSSDK.getVerificationCode("86", phoneNumber);
 
 
 		/**
@@ -240,13 +232,21 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 		}
 
 //		SMSSDK.submitVerificationCode("86", phoneNumber, sms);
-
+		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+		String SMS_VERIFY_url =null;
+		if (station.equals(StationConfig.DEF)){
+			SMS_VERIFY_url =InterfaceJsonfile.SMS_VERIFY;
+		}else if (station.equals(StationConfig.YN)){
+			SMS_VERIFY_url = InterfaceJsonfile_YN.SMS_VERIFY;
+		}else if (station.equals(StationConfig.TW)){
+			SMS_VERIFY_url = InterfaceJsonfile_TW.SMS_VERIFY;
+		}
 		RequestParams params = new RequestParams();
 		params.addBodyParameter("mobile", phoneNumber);
 		params.addBodyParameter("verify", verify);
 
 		httpUtils.send(HttpMethod.POST
-				, InterfaceJsonfile.SMS_VERIFY
+				, SMS_VERIFY_url
 				, params
 				, new RequestCallBack<String>() {
 			@Override
@@ -311,7 +311,15 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 			fpb_et_pwd_id2.setText("");
 			return;
 		}
-
+		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+		String CHANGEPWD_url =null;
+		if (station.equals(StationConfig.DEF)){
+			CHANGEPWD_url =InterfaceJsonfile.CHANGEPWD;
+		}else if (station.equals(StationConfig.YN)){
+			CHANGEPWD_url = InterfaceJsonfile_YN.CHANGEPWD;
+		}else if (station.equals(StationConfig.TW)){
+			CHANGEPWD_url = InterfaceJsonfile_TW.CHANGEPWD;
+		}
 		RequestParams params = RequestParamsUtils.getParamsWithU();
 		if (null != spu.getUser()) {
 			params.addBodyParameter("token", spu.getUser().getToken());
@@ -325,7 +333,7 @@ public class ZQ_FindbackpwdFragment extends BaseFragment {
 		params.addBodyParameter("new_pwd", s);
 		params.addBodyParameter("is_ucenter", "1");
 
-		httpUtils.send(HttpMethod.POST, InterfaceJsonfile.CHANGEPWD// InterfaceApi.mSmsReset
+		httpUtils.send(HttpMethod.POST,CHANGEPWD_url// InterfaceApi.mSmsReset
 				, params, new RequestCallBack<String>() {
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {

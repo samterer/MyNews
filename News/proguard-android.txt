@@ -12,11 +12,21 @@
 -keep class com.alibaba.fastjson.**{
     *;
 }
+-keep class com.amazonaws.**{
+    *;
+}
+
+-keep public class com.funnygame.twozero.R$*{
+    public static final int *;
+}
 
 -keep class com.hzpd.**{
      *;
 }
 -keep class me.nereo.**{
+     *;
+}
+-keep class com.facebook.**{
      *;
 }
 
@@ -29,7 +39,13 @@
     public *;
 }
 
-
+-keep class cn.sharesdk.**{*;}
+-keep class com.sina.**{*;}
+-keep class **.R$* {*;}
+-keep class **.R{*;}
+-dontwarn cn.sharesdk.**
+-dontwarn **.R$*
+-keep class m.framework.**{*;}
 
 -keepattributes *Annotation*
 -keep class * extends java.lang.annotation.Annotation { *; }
@@ -47,6 +63,26 @@
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
+}
+# <<<
+
+# >>> 友盟统计分析混淆配置
+-keepclassmembers class * {
+   public <init>(org.json.JSONObject);
+}
+-keep public class com.joy.tl.news.R$*{
+    public static final int *;
+}
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+# <<<
+
+
+# >>> 谷歌分析混淆配置
+-keep public class com.google.android.gms.analytics.** {
+    public *;
 }
 # <<<
 

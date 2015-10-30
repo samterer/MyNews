@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@null"/>
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -32,7 +32,7 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"/>
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/vote_info_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

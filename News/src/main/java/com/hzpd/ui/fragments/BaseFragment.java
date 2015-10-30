@@ -10,64 +10,97 @@ import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.HttpUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.umeng.analytics.MobclickAgent;
+
+import org.common.lib.analytics.AnalyticCallback;
+import org.common.lib.analytics.FragmentLifecycleAction;
 
 import java.lang.reflect.Field;
 
-public class BaseFragment extends Fragment {
+public class BaseFragment extends Fragment implements AnalyticCallback {
+    public boolean isVisible = false;
+    public int mPosition = -2; //ViewPager Position
 
-	protected ImageLoader mImageLoader;
-	protected HttpUtils httpUtils;
-	protected SPUtil spu;//
-	protected ACache aCache;
-	protected FragmentManager fm;
-	protected DBHelper dbHelper;
-	protected Activity activity;
-	protected String title;
+    private FragmentLifecycleAction action = new FragmentLifecycleAction(this);
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    protected ImageLoader mImageLoader;
+    protected HttpUtils httpUtils;
+    protected SPUtil spu;//
+    protected ACache aCache;
+    protected FragmentManager fm;
+    protected DBHelper dbHelper;
+    protected Activity activity;
+    protected String title;
 
-		activity = getActivity();
-		fm = getChildFragmentManager();
-		httpUtils = new HttpUtils();
-		spu = SPUtil.getInstance();
-		mImageLoader = ImageLoader.getInstance();
-		dbHelper = DBHelper.getInstance(activity);
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        action.onCreate(this);
+        fm = getChildFragmentManager();
+        httpUtils = new HttpUtils();
+        httpUtils.configSoTimeout(10000);
+        httpUtils.configTimeout(10000);
+        spu = SPUtil.getInstance();
+        mImageLoader = ImageLoader.getInstance();
+    }
 
-	public void onResume() {
-		super.onResume();
-		MobclickAgent.onPageStart(this.getClass().getName()); //统计页面
-	}
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity = activity;
+        dbHelper = DBHelper.getInstance(activity);
+    }
 
-	public void onPause() {
-		super.onPause();
-		MobclickAgent.onPageEnd(this.getClass().getName());
-	}
+    public void onResume() {
+        super.onResume();
+        action.onResume(this);
+    }
 
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		try {
-			Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-			childFragmentManager.setAccessible(true);
-			childFragmentManager.set(this, null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    public void onPause() {
+        super.onPause();
+        action.onPause(this);
+    }
 
-	public String getLogTag() {
-		return getClass().getSimpleName();
-	}
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getLogTag() {
+        return getClass().getSimpleName();
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        action.onStart(this);
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        action.onStop(this);
+    }
+
+
+    @Override
+    public String getAnalyticPageName() {
+        return getClass().getSimpleName();
+    }
 }

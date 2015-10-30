@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;

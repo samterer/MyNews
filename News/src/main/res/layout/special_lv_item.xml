@@ -15,9 +15,9 @@
         android:layout_height="95dp"
         android:contentDescription="@null"
         android:scaleType="centerCrop"
-        android:src="@drawable/lehuo_bg"/>
+        />
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/special_lvitem_tv_con"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
         android:textSize="12sp"
         android:visibility="invisible"/>
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/special_lvitem_tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

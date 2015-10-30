@@ -10,6 +10,7 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.ActionItemBean;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.ViewHolder;
 
 public class ActionListFmAdapter extends ListBaseAdapter<ActionItemBean> {
@@ -35,7 +36,7 @@ public class ActionListFmAdapter extends ListBaseAdapter<ActionItemBean> {
 		actionlist_item_time.setText(convertView.getContext().getString(
 				R.string.activity_item_start_end_time, aib.getStarttime(), aib.getDeadline()));
 
-		mImageLoader.displayImage(aib.getHeadpic()
+		SPUtil.displayImage(aib.getHeadpic()
 				, actionlist_item_iv
 				, DisplayOptionFactory.getOption(OptionTp.Small));
 

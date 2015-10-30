@@ -10,7 +10,9 @@ public class VideoItemBean implements Serializable {
 	private String time;
 	private String mainpic;
 	private String json_url;
-
+	private String copyfrom;//新闻来源
+	private String fav;//收藏数目
+	private String comcount;//": "0",
 	public VideoItemBean() {
 
 	}
@@ -19,9 +21,37 @@ public class VideoItemBean implements Serializable {
 		this.vid = cb.getData().getId();
 		this.title = cb.getData().getTitle();
 		this.time = cb.getData().getTime();
-		this.mainpic = cb.getData().getThumb();
+		this.mainpic = cb.getData().getImgs()[0];
 		this.json_url = cb.getData().getJson_url();
+		this.copyfrom=cb.getData().getCopyfrom();
+		this.fav=cb.getData().getFav();
+		this.comcount=cb.getData().getComcount();
 	}
+	public String getCopyfrom() {
+		return copyfrom;
+	}
+
+	public void setCopyfrom(String copyfrom) {
+		this.copyfrom = copyfrom;
+	}
+
+	public String getFav() {
+		return fav;
+	}
+
+	public void setFav(String fav) {
+		this.fav = fav;
+	}
+
+	public String getComcount() {
+		return comcount;
+	}
+
+	public void setComcount(String comcount) {
+		this.comcount = comcount;
+	}
+
+
 
 	public String getVid() {
 		return vid;

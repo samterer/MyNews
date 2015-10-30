@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_pressed="true"
-        android:drawable="@drawable/zqzx_rghtfragsett_selected"/>
+        android:drawable="@drawable/main_title_unsearch"/>
     <item
-        android:drawable="@drawable/zqzx_rightfragsett_unselected"/>
+        android:drawable="@drawable/main_title_search"/>
 </selector>

@@ -3,8 +3,9 @@ package com.hzpd.custorm.smoothimg;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ImageView;
+
+import com.hzpd.utils.Log;
 
 /**
  * 正方形的ImageView
@@ -53,5 +54,4 @@ public class SquareCenterImageView extends ImageView {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}
 }
-
 

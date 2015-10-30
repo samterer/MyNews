@@ -19,7 +19,7 @@
         android:orientation="horizontal"
         android:background="@color/zqzx_album_lightgreen">
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/img_content_id1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
             android:textColor="@color/white"
             android:textSize="20sp"/>
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/img_number_id1"
             android:layout_width="26dp"
             android:layout_height="26dp"
@@ -46,6 +46,6 @@
         android:layout_height="180dp"
         android:contentDescription="@null"
         android:scaleType="centerCrop"
-        android:src="@drawable/lehuo_bg"/>
+       />
 
 </LinearLayout>

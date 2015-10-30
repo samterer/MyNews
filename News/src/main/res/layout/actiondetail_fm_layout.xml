@@ -13,7 +13,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/actiondetail_title_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
                 android:textColor="@color/black"
                 android:textSize="24sp"/>
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/actiondetail_time_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
                 android:id="@+id/actiondetail_content_iv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 android:contentDescription="@null"
                 android:layout_marginBottom="60dp"
                 android:layout_marginLeft="10dp"
@@ -56,7 +56,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/actiondetail_tv_register"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -73,7 +73,7 @@
             android:layout_height="match_parent"
             android:background="@color/grey22"/>
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/actiondetail_tv_vote"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -90,7 +90,7 @@
             android:layout_height="match_parent"
             android:background="@color/grey22"/>
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/actiondetail_tv_leto"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -107,7 +107,7 @@
             android:layout_height="match_parent"
             android:background="@color/grey22"/>
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/actiondetail_tv_share"
             android:layout_width="0dp"
             android:layout_height="match_parent"

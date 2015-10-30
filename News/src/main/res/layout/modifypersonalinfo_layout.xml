@@ -20,7 +20,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
@@ -45,7 +45,7 @@
             android:id="@+id/mi_im_clean"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:src="@drawable/mi_close"/>
     </LinearLayout>
 
@@ -59,7 +59,7 @@
         android:background="@color/bottom_tab_bg"
         android:layout_marginTop="50dp">
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"

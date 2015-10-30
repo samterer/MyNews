@@ -2,41 +2,52 @@ package com.hzpd.modle;
 
 
 public class CollectionJsonBean {
-	private String id;
-	private CollectionDataBean data;//
-	private String type;//":"1",
-	private String datetime;//":"2014-12-31 12:12:12"
 
-	public CollectionDataBean getData() {
-		return data;
-	}
+    private CollectionDataBean data;//
+    private String datetime;//":"2014-12-31 12:12:12"
+    private String id;
+    private String type;//":"1",
 
-	public void setData(CollectionDataBean data) {
-		this.data = data;
-	}
+    @Override
+    public String toString() {
+        return "CollectionJsonBean{" +
+                "data=" + data +
+                ", datetime='" + datetime + '\'' +
+                ", id='" + id + '\'' +
+                ", type='" + type + '\'' +
+                '}';
+    }
 
-	public String getType() {
-		return type;
-	}
+    public CollectionDataBean getData() {
+        return data;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setData(CollectionDataBean data) {
+        this.data = data;
+    }
 
-	public String getDatetime() {
-		return datetime;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setDatetime(String datetime) {
-		this.datetime = datetime;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getDatetime() {
+        return datetime;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setDatetime(String datetime) {
+        this.datetime = datetime;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
 }

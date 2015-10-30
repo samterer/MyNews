@@ -12,9 +12,10 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
+
+import com.hzpd.utils.Log;
 
 /**
  * 2d平滑变化的显示图片的ImageView

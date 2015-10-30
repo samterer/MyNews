@@ -5,7 +5,7 @@
 
     <!-- 用户名显示 -->
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/view_post_comment_username_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
         android:textStyle="bold"/>
     <!-- 楼层显示 -->
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/view_post_comment_num_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
         android:textSize="14sp"/>
     <!-- 内容显示 -->
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/view_post_comment_content_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
         android:textSize="16sp"/>
     <!-- 显示隐藏楼层标识 -->
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/view_post_comment_hide_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

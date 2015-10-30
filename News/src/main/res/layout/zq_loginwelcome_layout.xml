@@ -12,7 +12,7 @@
         android:layout_marginTop="15dp"
         android:src="@drawable/zq_back_selector"/>
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -30,7 +30,7 @@
         android:src="@drawable/zq_loginwel_icon"
         android:visibility="invisible"/>
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/zq_loginwel_iv_account"
         android:layout_width="150dp"
         android:layout_height="30dp"
@@ -42,6 +42,7 @@
         android:text="@string/login"/>
 
     <ImageView
+        android:visibility="gone"
         android:id="@+id/zq_loginwel_iv_tenet"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -53,6 +54,7 @@
 
 
     <ImageView
+        android:visibility="gone"
         android:id="@+id/zq_loginwel_iv_sina"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -63,7 +65,8 @@
         android:src="@drawable/zq_login_sina_selector"
         />
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/zq_loginwel_iv_sina"

@@ -19,7 +19,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/special_header_tv_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -28,11 +28,10 @@
             android:textStyle="bold"
             android:gravity="center_vertical"
             android:textColor="@color/zqzx_font_normal"
-            android:drawableLeft="@drawable/zq_subscript_special"
             android:drawablePadding="10dp"
             android:textSize="18sp"/>
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/special_header_tv_con"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

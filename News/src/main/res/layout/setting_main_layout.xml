@@ -27,7 +27,7 @@
             android:layout_marginTop="20dip"
             >
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/setting_txt1"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -56,7 +56,7 @@
 
             android:clickable="true">
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/setting_txt2"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -66,7 +66,7 @@
                 android:textColor="@color/black_bg"
                 android:textSize="18sp"/>
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/setting_font_modle_id"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -97,7 +97,7 @@
             android:layout_marginTop="15dip"
             >
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/setting_txt3"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -129,7 +129,7 @@
             android:layout_marginTop="15dip"
             >
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/setting_txt4"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -162,7 +162,7 @@
 
             android:clickable="true">
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/setting_txt5"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -172,7 +172,7 @@
                 android:textColor="@color/black_bg"
                 android:textSize="18sp"/>
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/setting_delete_id"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -194,7 +194,7 @@
             android:layout_marginTop="15dip"
             >
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/setting_txt6"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -222,7 +222,7 @@
             android:layout_marginTop="15dip"
             >
 
-            <TextView
+            <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/setting_txt7"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

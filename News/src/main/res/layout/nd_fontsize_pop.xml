@@ -1,49 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/nd_tv_big"
-        android:layout_width="0dp"
-        android:layout_weight="1"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:padding="10dp"
-        android:background="@color/grey_divider"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:textColor="@color/black"
-        android:gravity="center_horizontal"
-        android:text="@string/prompt_font_big"/>
+        android:background="#ffffff"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/nd_tv_mid"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:padding="10dp"
-        android:background="@color/grey_divider"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:gravity="center_horizontal"
-        android:text="@string/prompt_font_medium"/>
+        <com.hzpd.ui.widget.FontTextView
+            android:id="@+id/test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_horizontal"
+            android:padding="15dp"
+            android:text="@string/settings_font"
+            android:textColor="#55504b"
+            android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/nd_tv_small"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:padding="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:textColor="@color/black"
-        android:background="@color/grey_divider"
-        android:gravity="center_horizontal"
-        android:text="@string/prompt_font_small"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="20dp">
 
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1">
+
+                <com.hzpd.ui.widget.FontTextView
+                    android:id="@+id/nd_tv_big"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/nb_font_b_selector" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1">
+
+                <com.hzpd.ui.widget.FontTextView
+                    android:id="@+id/nd_tv_mid"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/nb_font_s_selector" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1">
+
+                <com.hzpd.ui.widget.FontTextView
+                    android:id="@+id/nd_tv_small"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/nb_font_k_selector" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/details_bottom_line" />
+    </LinearLayout>
 </LinearLayout>

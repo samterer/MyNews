@@ -5,7 +5,7 @@
               android:background="@color/white"
               android:orientation="vertical">
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/search_other_content_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,7 +19,7 @@
         android:textColor="@color/black"
         android:textSize="18sp"/>
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/search_other_time_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

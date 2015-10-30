@@ -37,7 +37,7 @@
         android:paddingRight="20dp"
         android:paddingTop="10dp">
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/magazine_tv_comm"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

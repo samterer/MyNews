@@ -13,7 +13,7 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/blue_title_bg"/>

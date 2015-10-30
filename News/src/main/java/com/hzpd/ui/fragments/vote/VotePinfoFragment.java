@@ -14,9 +14,13 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.vote.Vote_detailMultiPicBean;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -25,10 +29,6 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
-
-import java.util.List;
-
-import cn.sharesdk.onekeyshare.OnekeyShare;
 
 public class VotePinfoFragment extends BaseFragment {
 
@@ -135,12 +135,23 @@ public class VotePinfoFragment extends BaseFragment {
 
 
 	private void getInfoFromServer() {
+
+		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+		String mOptbyoptid_url =null;
+		if (station.equals(StationConfig.DEF)){
+			mOptbyoptid_url =InterfaceJsonfile.mOptbyoptid;
+		}else if (station.equals(StationConfig.YN)){
+			mOptbyoptid_url = InterfaceJsonfile_YN.mOptbyoptid;
+		}else if (station.equals(StationConfig.TW)){
+			mOptbyoptid_url = InterfaceJsonfile_TW.mOptbyoptid;
+		}
+
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("optid", optid);
 		params.addBodyParameter("device", androidId);
 
 		httpUtils.send(HttpMethod.POST
-				, InterfaceJsonfile.mOptbyoptid
+				, mOptbyoptid_url
 				, params
 				, new RequestCallBack<String>() {
 			@Override
@@ -181,25 +192,6 @@ public class VotePinfoFragment extends BaseFragment {
 			return;
 		}
 
-		String appname = activity.getResources().getString(R.string.app_name);
-		OnekeyShare oks = new OnekeyShare();
-
-		String data = appname + "大家都来为" + bean.getOptionid() + "号" + bean.getOption().getName() + "投一票吧，投票方法：下载在河北客户端—便民—活动—我要上封面—投票。";
-
-		oks.setTitle(appname + "客户端," + actionname + "活动");
-		oks.setTitleUrl(InterfaceJsonfile.host1 + "/signup/index.php?m=Down&a=index");
-		oks.setText(data);
-		List<String> imgList = bean.getOption().getImgurls();
-		if (null != imgList && imgList.size() > 0) {
-			oks.setImageUrl(imgList.get(0));
-			int size = imgList.size();
-			oks.setImageArray(imgList.toArray(new String[size]));
-		}
-		oks.setUrl(InterfaceJsonfile.host1 + "/signup/index.php?m=Down&a=index");
-		oks.setSilent(true);
-		// 在自动授权时可以禁用SSO方式
-		oks.disableSSOWhenAuthorize();
-		oks.show(activity);
 	}
 
 }

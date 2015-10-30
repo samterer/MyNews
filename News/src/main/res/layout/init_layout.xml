@@ -8,10 +8,10 @@
         android:id="@+id/init_fragment_img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:contentDescription="@null"/>
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/init_fragment_start"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"

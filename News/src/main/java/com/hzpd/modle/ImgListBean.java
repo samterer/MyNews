@@ -12,6 +12,37 @@ public class ImgListBean implements Serializable {
 	private String siteid;
 	private String create_time;
 	private String json_url;
+	private String copyfrom;//新闻来源
+	private String fav;//收藏数目
+	private String comcount;//": "0",
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public String getCopyfrom() {
+		return copyfrom;
+	}
+
+	public void setCopyfrom(String copyfrom) {
+		this.copyfrom = copyfrom;
+	}
+
+	public String getFav() {
+		return fav;
+	}
+
+	public void setFav(String fav) {
+		this.fav = fav;
+	}
+
+	public String getComcount() {
+		return comcount;
+	}
+
+	public void setComcount(String comcount) {
+		this.comcount = comcount;
+	}
 
 	private List<ImageListSubBean> subphoto;
 

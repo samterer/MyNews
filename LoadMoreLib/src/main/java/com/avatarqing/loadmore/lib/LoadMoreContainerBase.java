@@ -21,6 +21,10 @@ public abstract class LoadMoreContainerBase extends LinearLayout implements Load
     private boolean mShowLoadingForFirstPage = true;
     private View mFooterView;
 
+    public View getmFooterView() {
+        return mFooterView;
+    }
+
     private AbsListView mAbsListView;
     private boolean mListEmpty = true;
 
@@ -98,7 +102,10 @@ public abstract class LoadMoreContainerBase extends LinearLayout implements Load
         }
     }
 
-    private void onReachBottom() {
+    public void onReachBottom() {
+        if (mAbsListView.getAdapter().getCount() < 2) {
+            return;
+        }
         if (mAutoLoadMore) {
             performLoadMore();
         } else {
@@ -168,7 +175,6 @@ public abstract class LoadMoreContainerBase extends LinearLayout implements Load
         mListEmpty = emptyResult;
         mIsLoading = false;
         mHasMore = hasMore;
-
         if (mLoadMoreUIHandler != null) {
             mLoadMoreUIHandler.onLoadFinish(this, emptyResult, hasMore);
         }

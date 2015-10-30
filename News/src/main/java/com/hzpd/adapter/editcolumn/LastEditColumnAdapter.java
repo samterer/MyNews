@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.hzpd.custorm.AutoScaleTextView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsChannelBean;
+import com.hzpd.ui.widget.FontTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,8 +73,8 @@ public class LastEditColumnAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		convertView = inflater.inflate(R.layout.editcolumn_item_layout, parent, false);
-		AutoScaleTextView tv = (AutoScaleTextView) convertView.findViewById(R.id.edco_item_tv);
+		convertView = inflater.inflate(R.layout.channel_item, parent, false);
+		FontTextView tv = (FontTextView) convertView.findViewById(R.id.text_item);
 		NewsChannelBean ncb = list.get(position);
 
 		String cname = ncb.getCnname();
@@ -99,4 +99,10 @@ public class LastEditColumnAdapter extends BaseAdapter {
 		return convertView;
 	}
 
+	/** 是否可见 */
+	boolean isVisible = true;
+	/** 设置是否可见 */
+	public void setVisible(boolean visible) {
+		isVisible = visible;
+	}
 }

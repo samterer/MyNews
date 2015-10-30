@@ -26,10 +26,15 @@ import com.hzpd.ui.interfaces.I_Control;
 import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
+import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.DataCleanManager;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.db.ZhuantiListDbTask;
 import com.lidroid.xutils.ViewUtils;
@@ -48,6 +53,17 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 public class ZhuantiFragment extends BaseFragment implements I_Control {
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		if (isVisible != isVisibleToUser) {
+			isVisible = isVisibleToUser;
+			if (isVisibleToUser) {
+				AnalyticUtils.sendGaEvent(getActivity(), AnalyticUtils.CATEGORY.newsType, AnalyticUtils.ACTION.viewPage, "专题",
+						0L);
+				AnalyticUtils.sendUmengEvent(getActivity(), AnalyticUtils.CATEGORY.newsType, "专题");
+			}
+		}
+	}
 
 	@ViewInject(R.id.subjectlist_lv)
 	private PullToRefreshListView mXListView;
@@ -86,6 +102,8 @@ public class ZhuantiFragment extends BaseFragment implements I_Control {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		init();
+		AnalyticUtils.sendGaEvent(getActivity(), AnalyticUtils.CATEGORY.newsType, AnalyticUtils.ACTION.viewPage, "专题", 0L);
+		AnalyticUtils.sendUmengEvent(getActivity(), AnalyticUtils.CATEGORY.newsType, "专题");
 	}
 
 	private void init() {
@@ -173,20 +191,34 @@ public class ZhuantiFragment extends BaseFragment implements I_Control {
 	@Override
 	public void getServerList(String nids) {
 		LogUtils.i("nids-->" + nids);
-
+		String station = SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+		String siteid = null;
+		String SUBJECTLIST_url = null;
+		if (station.equals(StationConfig.DEF)) {
+			siteid = InterfaceJsonfile.SITEID;
+			SUBJECTLIST_url = InterfaceJsonfile.SUBJECTLIST;
+		} else if (station.equals(StationConfig.YN)) {
+			siteid = InterfaceJsonfile_YN.SITEID;
+			SUBJECTLIST_url = InterfaceJsonfile_YN.SUBJECTLIST;
+		} else if (station.equals(StationConfig.TW)) {
+			siteid = InterfaceJsonfile_TW.SITEID;
+			SUBJECTLIST_url = InterfaceJsonfile_TW.SUBJECTLIST;
+		}
 		RequestParams params = RequestParamsUtils.getParams();
-		params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+		params.addBodyParameter("siteid", siteid);
 		params.addBodyParameter("rtype", "4");
 		params.addBodyParameter("nids", nids);
 		params.addBodyParameter("Page", "" + page);
 		params.addBodyParameter("PageSize", "" + pageSize);
 		params.addBodyParameter("update_time", spu.getCacheUpdatetime());
 
-		httpUtils.send(HttpMethod.POST, InterfaceJsonfile.SUBJECTLIST, params,
+		httpUtils.send(HttpMethod.POST, SUBJECTLIST_url, params,
 				new RequestCallBack<String>() {
 					@Override
 					public void onSuccess(ResponseInfo<String> responseInfo) {
-						LogUtils.i("getZhuantiList-->" + responseInfo.result);
+						if(!isAdded()){
+							return;
+						}
 						mXListView.onRefreshComplete();
 
 						final JSONObject obj = FjsonUtil
@@ -218,6 +250,9 @@ public class ZhuantiFragment extends BaseFragment implements I_Control {
 
 					@Override
 					public void onFailure(HttpException error, String msg) {
+						if(!isAdded()){
+							return;
+						}
 						mXListView.onRefreshComplete();
 						mXListView.setMode(Mode.PULL_FROM_START);
 						subjectlist_nonetwork.setImageResource(R.drawable.zqzx_nonetwork);

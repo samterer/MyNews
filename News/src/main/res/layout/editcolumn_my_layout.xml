@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -8,84 +7,154 @@
 
     <include
         android:id="@+id/editcolum_include"
-        layout="@layout/stitle_layout"/>
+        layout="@layout/stitle_layout" />
 
-    <com.hzpd.adapter.editcolumn.DragGridView
-        android:id="@+id/editcolumn_dragGridView"
-        android:listSelector="@android:color/transparent"
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:cacheColorHint="@android:color/transparent"
-        android:gravity="center"
-        android:layout_below="@id/editcolum_include"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="8dp"
-        android:stretchMode="columnWidth"
-        android:numColumns="4"
-        >
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/editcolum_include">
 
-    </com.hzpd.adapter.editcolumn.DragGridView>
-
-
-    <LinearLayout
-        android:id="@+id/editcolumn_divider_ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_below="@id/editcolumn_dragGridView">
-
-        <View
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/editColumn_line"
-            />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:text="@string/prompt_click_to_add_or_cancel"
-            android:textSize="18sp"
-            android:background="@color/grey_divider"
-            android:textColor="@color/editColumn_fontgrey"/>
+            <!--提醒-->
+            <LinearLayout
+                android:id="@+id/editcolumn_remind_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/editColumn_line"/>
-    </LinearLayout>
+                <com.hzpd.ui.widget.FontTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="#fffaec"
+                    android:drawableLeft="@drawable/tips"
+                    android:drawablePadding="10dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:text="@string/prompt_click_to_add_or_cancel"
+                    android:textColor="#f1b159"
+                    android:textSize="16sp" />
 
-    <GridView
-        android:id="@+id/editcolumn_gridview"
-        android:layout_below="@id/editcolumn_divider_ll"
-        android:listSelector="@android:color/transparent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:cacheColorHint="@android:color/transparent"
-        android:columnWidth="90dp"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="10dp"
-        android:stretchMode="columnWidth"
-        android:numColumns="4">
-    </GridView>
+            </LinearLayout>
 
-    <TextView
+            <!--我的频道-->
+            <LinearLayout
+                android:id="@+id/editcolumn_my_channel_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/editcolumn_remind_ll"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#f2e4d3" />
+
+                <com.hzpd.ui.widget.FontTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:text="Bacaan Saya"
+                    android:textColor="@color/pulltorefresh_font"
+                    android:textSize="18sp" />
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/editColumn_line"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <com.hzpd.custorm.DragGrid
+                android:id="@+id/editcolumn_dragGridView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/editcolumn_my_channel_ll"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:cacheColorHint="@android:color/transparent"
+                android:gravity="center"
+                android:horizontalSpacing="8dp"
+                android:listSelector="@android:color/transparent"
+                android:numColumns="3"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="10dp"></com.hzpd.custorm.DragGrid>
+
+            <View
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_below="@id/editcolumn_dragGridView"
+                android:layout_marginTop="10dp"
+                android:background="#f6f6f6"
+                android:visibility="gone"/>
+
+            <!--推荐频道-->
+            <LinearLayout
+                android:id="@+id/editcolumn_divider_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/line"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical">
+
+                <com.hzpd.ui.widget.FontTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:text="Tambahkan"
+                    android:textColor="@color/pulltorefresh_font"
+                    android:textSize="18sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/editColumn_line"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <com.hzpd.custorm.OtherGridView
+                android:id="@+id/editcolumn_gridview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/editcolumn_divider_ll"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:cacheColorHint="@android:color/transparent"
+                android:columnWidth="90dp"
+                android:gravity="center"
+                android:horizontalSpacing="10dp"
+                android:listSelector="@android:color/transparent"
+                android:numColumns="3"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="10dp">
+
+            </com.hzpd.custorm.OtherGridView>
+        </RelativeLayout>
+    </ScrollView>
+
+    <include
+        android:id="@+id/category_layout"
+        layout="@layout/channel_item"
+        android:visibility="gone" />
+
+
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/editcolumn_item_tv"
         android:layout_width="70dp"
         android:layout_height="35dp"
-        android:textSize="20dp"
-        android:textColor="@color/black"
+        android:background="@drawable/editcolumn_shape"
         android:gravity="center"
-        android:visibility="gone"
-        android:background="@drawable/editcolumn_shape"/>
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:visibility="gone" />
 
 </RelativeLayout>

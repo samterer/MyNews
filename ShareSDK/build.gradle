@@ -25,4 +25,8 @@ dependencies {
     compile files('libs/ShareSDK-Wechat-2.6.0.jar')
     compile files('libs/ShareSDK-Wechat-Core-2.6.0.jar')
     compile files('libs/ShareSDK-Wechat-Moments-2.6.0.jar')
+    compile files('libs/ShareSDK-Facebook-2.6.2.jar')
+    compile files('libs/ShareSDK-GooglePlus-2.6.2.jar')
+    compile files('libs/ShareSDK-Twitter-2.6.2.jar')
+    compile files('libs/MobLogCollector.jar')
 }

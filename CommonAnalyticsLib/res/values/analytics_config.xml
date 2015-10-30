@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 自动统计Activity -->
+    <bool name="open_activity_duration_track">true</bool>
+    <!-- 友盟统计APP KEY -->
+    <string name="umeng_app_key">55ee39f467e58e247a005b52</string>
+    <!-- 友盟统计渠道 -->
+    <string name="umeng_channel_id">indonesia</string>
+</resources>

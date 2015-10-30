@@ -6,6 +6,14 @@ public class XF_UserCommentsBean {
 	private XF_UserCommNewsBean content;
 	private List<XF_CommentBean> coms;
 
+	@Override
+	public String toString() {
+		return "XF_UserCommentsBean{" +
+				"content=" + content +
+				", coms=" + coms +
+				'}';
+	}
+
 	public XF_UserCommNewsBean getContent() {
 		return content;
 	}

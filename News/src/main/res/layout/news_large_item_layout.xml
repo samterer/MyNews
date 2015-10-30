@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/news_item_selector"
+        >
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/news_3_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/news_item_selector"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/list_item_padding_tb"
+            android:paddingTop="@dimen/list_item_padding_tb"
+            android:paddingLeft="@dimen/list_item_padding"
+            android:paddingRight="@dimen/list_item_padding">
+            <!--标题-->
+            <com.hzpd.ui.widget.FontTextView
+                android:id="@+id/newsitem_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/item_title"
+                android:textSize="15sp" />
+
+            <!--图片-->
+            <com.hzpd.ui.widget.FixedImageView
+                android:id="@+id/newsitem_img"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop" />
+
+
+            <!-- 标签栏-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    android:paddingLeft="5dp">
+
+                    <com.hzpd.ui.widget.FixedImageView
+                        android:id="@+id/nli_foot"
+                        android:layout_width="25dp"
+                        android:layout_height="13dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="5dp"
+                        android:background="@null"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/item_type_iv"
+                        android:layout_width="32dp"
+                        android:layout_height="18dp"
+                        android:layout_alignParentBottom="true"
+                        android:gravity="center_vertical"
+                        android:layout_marginRight="5dp"
+                        android:visibility="gone" />
+                    <!--来源source-->
+                    <com.hzpd.ui.widget.FontRobotoTextView
+                        android:id="@+id/newsitem_source"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center_vertical"
+                        android:text="Okezone"
+                        android:textColor="@color/main_tag"
+                        android:textSize="@dimen/tag" />
+
+                    <!--收藏数collect-->
+                    <com.hzpd.ui.widget.FontRobotoTextView
+                        android:id="@+id/newsitem_collectcount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:drawableLeft="@drawable/main_collect_counts"
+                        android:drawablePadding="2dp"
+                        android:gravity="center_vertical"
+                        android:text="11"
+                        android:textColor="@color/main_tag"
+                        android:textSize="@dimen/tag" />
+
+                    <com.hzpd.ui.widget.FontRobotoTextView
+                        android:id="@+id/newsitem_commentcount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:drawableLeft="@drawable/main_comment_counts"
+                        android:drawablePadding="2dp"
+                        android:gravity="center"
+                        android:text="11"
+                        android:textColor="@color/main_tag"
+                        android:textSize="@dimen/tag" />
+
+                </LinearLayout>
+
+                <com.hzpd.ui.widget.FontRobotoTextView
+                    android:id="@+id/newsitem_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/newsitem_unlike"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="09-27"
+                    android:textColor="@color/time_color"
+                    android:textSize="@dimen/tag" />
+
+                <ImageView
+                    android:id="@+id/newsitem_unlike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/main_unlike"
+                    android:gravity="center"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
+            android:layout_marginLeft="@dimen/list_item_padding"
+            android:layout_marginRight="@dimen/list_item_padding"
+            android:background="#fff5f5f5"
+            />
+    </LinearLayout>
+
+
+</FrameLayout>

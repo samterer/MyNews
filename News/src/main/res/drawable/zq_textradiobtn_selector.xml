@@ -2,8 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_checked="false"
-        android:drawable="@drawable/zq_textbtn_unpress"/>
+        android:drawable="@drawable/zq_textbtn_unpress_new"/>
     <item
         android:state_checked="true"
-        android:drawable="@drawable/zq_textbtn_press"/>
+        android:drawable="@drawable/zq_textbtn_press_new"/>
 </selector>   

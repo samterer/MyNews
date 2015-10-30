@@ -12,7 +12,6 @@ import com.hzpd.utils.DBHelper;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
-import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.util.LogUtils;
 
 import java.util.ArrayList;
@@ -48,7 +47,7 @@ public class NewsListDbTask {
 			try {
 				newsListDb.delete(NewsBeanDB.class
 						, WhereBuilder.b("nid", "=", nid));
-			} catch (DbException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -68,7 +67,7 @@ public class NewsListDbTask {
 	public void asyncDropTable() {
 		try {
 			newsListDb.deleteAll(NewsBeanDB.class);
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -109,7 +108,7 @@ public class NewsListDbTask {
 						.limit(pageSize)
 						.offset(page * pageSize);
 				list = newsListDb.findAll(selector);
-			} catch (DbException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
@@ -152,21 +151,25 @@ public class NewsListDbTask {
 			if (null == nbList) {
 				return flag;
 			}
-			List<NewsBeanDB> list = new ArrayList<NewsBeanDB>();
-			for (NewsBean nb : nbList) {
-				NewsBeanDB nbdb = new NewsBeanDB(nb);
-				list.add(nbdb);
-			}
+			try {
+				List<NewsBeanDB> list = new ArrayList<NewsBeanDB>();
+				for (NewsBean nb : nbList) {
+                    NewsBeanDB nbdb = new NewsBeanDB(nb);
+                    list.add(nbdb);
+                }
 
-			for (NewsBeanDB nbdb : list) {
-				try {
-					newsListDb.delete(NewsBeanDB.class
-							, WhereBuilder.b("nid", "=", nbdb.getNid()));
-					newsListDb.save(nbdb);
-					flag = true;
-				} catch (DbException e) {
-					e.printStackTrace();
-				}
+				for (NewsBeanDB nbdb : list) {
+                    try {
+                        newsListDb.delete(NewsBeanDB.class
+                                , WhereBuilder.b("nid", "=", nbdb.getNid()));
+                        newsListDb.save(nbdb);
+                        flag = true;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
 			return flag;
@@ -201,7 +204,7 @@ public class NewsListDbTask {
 				try {
 					newsListDb.delete(NewsBeanDB.class
 							, WhereBuilder.b("nid", "=", nid));
-				} catch (DbException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -238,7 +241,7 @@ public class NewsListDbTask {
 				if (null != newsdb) {
 					isReaded = true;
 				}
-			} catch (DbException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
@@ -266,7 +269,7 @@ public class NewsListDbTask {
 			try {
 				newsListDb.dropTable(NewsBeanDB.class);
 				return newsListDb.tableIsExist(NewsBeanDB.class);
-			} catch (DbException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			return false;

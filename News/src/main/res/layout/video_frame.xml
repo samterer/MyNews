@@ -18,11 +18,10 @@
         android:layout_weight="0">
     </ListView>
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/video_frame_back"
         android:layout_width="600dp"
         android:layout_height="800dp"
-        android:layout_weight="1">
-    </TextView>
+        android:layout_weight="1"/>
 
 </LinearLayout>

@@ -16,7 +16,7 @@
         android:paddingRight="16dp"
         android:paddingTop="6dp">
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/cm_item_tv_t"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,14 +33,14 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/cm_item_tv_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/grey_font"
             android:textSize="14sp"/>
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/cm_item_tv_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
             android:textColor="@color/grey_font"
             android:textSize="14sp"/>
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/cm_item_tv_comstate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
                 android:layout_width="20dp"
                 android:layout_height="match_parent">
 
-                <TextView
+                <com.hzpd.ui.widget.FontTextView
                     android:id="@+id/cm_item_num_pl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/cm_item_tv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -28,10 +28,15 @@ import com.hzpd.ui.interfaces.I_Control;
 import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.DataCleanManager;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.db.ZhuantiDetailListDbTask;
 import com.lidroid.xutils.HttpUtils;
@@ -125,7 +130,7 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 		if (null != imgs && imgs.length > 0) {
 			img = imgs[0];
 		}
-		mImageLoader.displayImage(img, zhuanti_header_iv);
+		SPUtil.displayImage(img, zhuanti_header_iv);
 		zhuanti_tv_title.setText(nb.getTitle());
 //		R.id.special_header_tv_con//数量
 
@@ -196,13 +201,22 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 
 	//专题栏目列表
 	public void getColumns() {
+		String station= SharePreferecesUtils.getParam(ZhuanTiActivity.this, StationConfig.STATION, "def").toString();
+		String SUBJECTCOLUMNSLIST_url =null;
+		if (station.equals(StationConfig.DEF)){
+			SUBJECTCOLUMNSLIST_url =InterfaceJsonfile.SUBJECTCOLUMNSLIST;
+		}else if (station.equals(StationConfig.YN)){
+			SUBJECTCOLUMNSLIST_url = InterfaceJsonfile_YN.SUBJECTCOLUMNSLIST;
+		}else if (station.equals(StationConfig.TW)){
+			SUBJECTCOLUMNSLIST_url = InterfaceJsonfile_TW.SUBJECTCOLUMNSLIST;
+		}
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("sid", nb.getNid());
 		params.addBodyParameter("page", "" + page);
 		params.addBodyParameter("pagesize", "" + pageSize);
 
 		httpUtils.send(HttpMethod.POST
-				, InterfaceJsonfile.SUBJECTCOLUMNSLIST
+				, SUBJECTCOLUMNSLIST_url
 				, params
 				, new RequestCallBack<String>() {
 			@Override
@@ -312,9 +326,21 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 	//获取专题子分类list
 	public void getServerList(final SubjectItemColumnsBean columnid, String nids) {
 		LogUtils.i("nids-->" + nids);
-
+		String station= SharePreferecesUtils.getParam(ZhuanTiActivity.this, StationConfig.STATION, "def").toString();
+		String siteid=null;
+		String NEWSLIST_url =null;
+		if (station.equals(StationConfig.DEF)){
+			siteid=InterfaceJsonfile.SITEID;
+			NEWSLIST_url =InterfaceJsonfile.NEWSLIST;
+		}else if (station.equals(StationConfig.YN)){
+			siteid= InterfaceJsonfile_YN.SITEID;
+			NEWSLIST_url = InterfaceJsonfile_YN.NEWSLIST;
+		}else if (station.equals(StationConfig.TW)){
+			siteid= InterfaceJsonfile_TW.SITEID;
+			NEWSLIST_url = InterfaceJsonfile_TW.NEWSLIST;
+		}
 		RequestParams params = RequestParamsUtils.getParams();
-		params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+		params.addBodyParameter("siteid", siteid);
 		params.addBodyParameter("columnid", columnid.getCid());
 		params.addBodyParameter("nids", nids);
 		params.addBodyParameter("Page", "" + page);
@@ -322,7 +348,7 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 		params.addBodyParameter("update_time", spu.getCacheUpdatetime());
 
 		httpUtils.send(HttpMethod.POST
-				, InterfaceJsonfile.NEWSLIST
+				, NEWSLIST_url
 				, params
 				, new RequestCallBack<String>() {
 			@Override
@@ -425,12 +451,21 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 
 	private void getCounts(String nid) {
 		LogUtils.i("nid-->" + nid);
+		String station= SharePreferecesUtils.getParam(ZhuanTiActivity.this, StationConfig.STATION, "def").toString();
+		String subjectNum_url =null;
+		if (station.equals(StationConfig.DEF)){
+			subjectNum_url =InterfaceJsonfile.subjectNum;
+		}else if (station.equals(StationConfig.YN)){
+			subjectNum_url = InterfaceJsonfile_YN.subjectNum;
+		}else if (station.equals(StationConfig.TW)){
+			subjectNum_url = InterfaceJsonfile_TW.subjectNum;
+		}
 		RequestParams params = new RequestParams();
 		params.addBodyParameter("nids", nid);
 
 		HttpUtils httpUtils = new HttpUtils();
 		httpUtils.send(HttpMethod.POST
-				, InterfaceJsonfile.subjectNum
+				, subjectNum_url
 				, params
 				, new RequestCallBack<String>() {
 			@Override

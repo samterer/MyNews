@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/search_white_color"
+              android:gravity="left|center_vertical"
+              android:orientation="vertical"
+              android:paddingLeft="@dimen/search_padding_middle"
+    >
+
+    <com.hzpd.ui.widget.FontTextView
+        android:id="@+id/history_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_vertical"
+        android:paddingBottom="@dimen/search_padding_middle"
+        android:paddingLeft="@dimen/search_padding_middle"
+        android:paddingTop="@dimen/search_padding_middle"
+        android:text="@string/search_history_head"
+        android:textColor="@color/search_half_color"
+        android:textSize="@dimen/search_title_size"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/search_history_divider_background"/>
+</LinearLayout>

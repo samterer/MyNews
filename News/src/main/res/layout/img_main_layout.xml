@@ -23,7 +23,7 @@
         android:scrollbars="vertical"
         ptr:ptrAnimationStyle="flip"
         ptr:ptrHeaderSubTextColor="@color/grey_font"
-        ptr:ptrHeaderTextColor="@color/black"/>
+        ptr:ptrHeaderTextColor="@color/pulltorefresh_font"/>
 
     <ImageView
         android:id="@+id/album_nonetwork"

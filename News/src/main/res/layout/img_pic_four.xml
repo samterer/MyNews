@@ -19,7 +19,7 @@
         android:orientation="horizontal"
         android:background="@color/zqzx_album_lightyellow">
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/img_content_id4"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -29,7 +29,7 @@
             android:textColor="@color/white"
             android:textSize="20sp"/>
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/img_number_id4"
             android:layout_width="26dp"
             android:layout_height="26dp"
@@ -52,7 +52,7 @@
             android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:scaleType="centerCrop"
-            android:src="@drawable/lehuo_bg"/>
+         />
 
         <ImageView
             android:id="@+id/img_img4_id2"
@@ -61,7 +61,7 @@
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:scaleType="centerCrop"
-            android:src="@drawable/lehuo_bg"/>
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -77,7 +77,7 @@
             android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:scaleType="centerCrop"
-            android:src="@drawable/lehuo_bg"/>
+            />
 
         <ImageView
             android:id="@+id/img_img4_id4"
@@ -86,6 +86,6 @@
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:scaleType="centerCrop"
-            android:src="@drawable/lehuo_bg"/>
+            />
     </LinearLayout>
 </LinearLayout>

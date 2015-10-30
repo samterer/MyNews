@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hzpd.custorm.AutoScaleTextView
+<FrameLayout
+
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/edco_item_tv"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:minWidth="70dp"
-    android:minHeight="35dp"
-    android:maxLines="1"
-    android:textSize="18sp"
-    android:textColor="@color/black"
-    android:gravity="center"
-    app:minTextSize="8sp"
-    android:background="@drawable/editcolumn_shape"
-    />
+    android:layout_height="wrap_content">
+
+    <com.hzpd.ui.widget.FontTextView
+        android:id="@+id/edco_item_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/editcolumn_text_selector"
+        android:gravity="center"
+        android:maxLines="1"
+        android:minHeight="38.0dip"
+        android:minWidth="90.0dip"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+</FrameLayout><!--android:background="@drawable/editcolumn_new_shape"-->
 

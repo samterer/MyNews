@@ -21,7 +21,11 @@ import com.hzpd.modle.vote.VoteTitleBean;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.ui.fragments.action.ActionDetailActivity;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -141,6 +145,17 @@ public class VoteGroupFragment extends BaseFragment {
 	}
 
 	private void getPic() {
+
+		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+		String mVoteopts_url =null;
+		if (station.equals(StationConfig.DEF)){
+			mVoteopts_url =InterfaceJsonfile.mVoteopts;
+		}else if (station.equals(StationConfig.YN)){
+			mVoteopts_url = InterfaceJsonfile_YN.mVoteopts;
+		}else if (station.equals(StationConfig.TW)){
+			mVoteopts_url = InterfaceJsonfile_TW.mVoteopts;
+		}
+
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("device", androidId);
 		params.addBodyParameter("subjectid", vtb.getSubjectid());
@@ -149,7 +164,7 @@ public class VoteGroupFragment extends BaseFragment {
 		params.addBodyParameter("pagesize", "300");
 
 		httpUtils.send(HttpMethod.POST
-				, InterfaceJsonfile.mVoteopts
+				, mVoteopts_url
 				, params
 				, new RequestCallBack<String>() {
 			@Override
@@ -473,9 +488,9 @@ public class VoteGroupFragment extends BaseFragment {
 		mImageLoader = mImageLoader.getInstance();
 		displayImageOptions = new DisplayImageOptions.Builder()
 				.imageScaleType(ImageScaleType.EXACTLY)
-				.showImageOnFail(R.drawable.lehuo_bg)
-				.showImageForEmptyUri(R.drawable.lehuo_bg)
-				.showImageOnLoading(R.drawable.lehuo_bg)
+				.showImageOnFail(R.drawable.default_bg)
+				.showImageForEmptyUri(R.drawable.default_bg)
+				.showImageOnLoading(R.drawable.default_bg)
 				.cacheInMemory(true).cacheOnDisk(true)
 				.bitmapConfig(Config.RGB_565)
 				.displayer(new FadeInBitmapDisplayer(200))

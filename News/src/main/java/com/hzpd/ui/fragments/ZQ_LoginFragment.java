@@ -10,14 +10,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hzpd.custorm.CustomProgressDialog;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.UserBean;
-import com.hzpd.ui.activity.LoginActivity;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -45,8 +47,6 @@ public class ZQ_LoginFragment extends BaseFragment {
 	@ViewInject(R.id.login_register_tv_id)
 	private TextView login_register_tv_id;//注册
 
-	private CustomProgressDialog dialog;    //载入中对话框
-
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,8 +64,6 @@ public class ZQ_LoginFragment extends BaseFragment {
 	}
 
 	private void showDialog() {
-		dialog = CustomProgressDialog.createDialog(activity, false);
-		dialog.show();
 	}
 
 	@OnClick(R.id.login_login_comfirm_id)
@@ -88,30 +86,32 @@ public class ZQ_LoginFragment extends BaseFragment {
 
 		showDialog();
 
-
+		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+		String LOGIN_url =null;
+		if (station.equals(StationConfig.DEF)){
+			LOGIN_url =InterfaceJsonfile.LOGIN;
+		}else if (station.equals(StationConfig.YN)){
+			LOGIN_url = InterfaceJsonfile_YN.LOGIN;
+		}else if (station.equals(StationConfig.TW)){
+			LOGIN_url = InterfaceJsonfile_TW.LOGIN;
+		}
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("username", uname);
 		params.addBodyParameter("password", pwd);
 
 		httpUtils.send(HttpMethod.POST
-				, InterfaceJsonfile.LOGIN//InterfaceApi.mUserLogin
+				, LOGIN_url//InterfaceApi.mUserLogin
 				, params
 				, new RequestCallBack<String>() {
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {
 				LogUtils.i("login-failed");
 				TUtils.toast(getString(R.string.toast_server_no_response));
-				if (dialog.isShowing()) {
-					dialog.dismiss();
-				}
 			}
 
 			@Override
 			public void onSuccess(ResponseInfo<String> arg0) {
 				LogUtils.i("login-success-->" + arg0.result);
-				if (dialog.isShowing()) {
-					dialog.dismiss();
-				}
 				JSONObject object = FjsonUtil.parseObject(arg0.result);
 				if (null == object) {
 					return;
@@ -132,16 +132,6 @@ public class ZQ_LoginFragment extends BaseFragment {
 			}
 		});
 
-	}
-
-	@OnClick(R.id.login_register_tv_id)
-	private void register(View v) {
-		((LoginActivity) activity).toRegisterFm();
-	}
-
-	@OnClick(R.id.login_not_passwd)
-	private void forget(View v) {
-		((LoginActivity) activity).toFindbackpwdFm();
 	}
 
 	@OnClick(R.id.stitle_ll_back)

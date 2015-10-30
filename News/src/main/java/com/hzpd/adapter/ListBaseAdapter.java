@@ -24,7 +24,6 @@ public abstract class ListBaseAdapter<T> extends BaseAdapter {
 		this.context = context;
 		this.inflater = LayoutInflater.from(context);
 		list = new ArrayList<T>();
-		mImageLoader = ImageLoader.getInstance();
 		dbHelper = DBHelper.getInstance(context);
 	}
 

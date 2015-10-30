@@ -10,6 +10,7 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.PushmsgBean;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
+import com.hzpd.utils.SPUtil;
 
 public class PushmsgAdapter extends ListBaseAdapter<PushmsgBean> {
 
@@ -32,7 +33,7 @@ public class PushmsgAdapter extends ListBaseAdapter<PushmsgBean> {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		PushmsgBean pb = list.get(position);
-		mImageLoader.displayImage(pb.getSmallimgurl(), holder.lehuo_img_id
+		SPUtil.displayImage(pb.getSmallimgurl(), holder.lehuo_img_id
 				, DisplayOptionFactory.getOption(OptionTp.Small));
 		holder.lehuo_content_txt.setText(pb.getTitle());
 		holder.lehuo_sj_txt.setText(pb.getTime());

@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:text="@string/prompt_image"
         android:layout_toRightOf="@+id/btn_back"
         android:textColor="@android:color/white"

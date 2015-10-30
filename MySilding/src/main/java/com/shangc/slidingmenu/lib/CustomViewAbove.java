@@ -11,7 +11,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewConfigurationCompat;
 import android.util.AttributeSet;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.FocusFinder;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -595,8 +594,6 @@ public class CustomViewAbove extends ViewGroup {
 		} else {
 			allowed = mViewBehind.menuClosedSlideAllowed(dx);
 		}
-		if (DEBUG)
-			Log.v(TAG, "this slide allowed " + allowed + " dx: " + dx);
 		return allowed;
 	}
 
@@ -616,10 +613,6 @@ public class CustomViewAbove extends ViewGroup {
 			return false;
 
 		final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
-
-		if (DEBUG)
-			if (action == MotionEvent.ACTION_DOWN)
-				Log.v(TAG, "Received ACTION_DOWN");
 
 		if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP
 				|| (action != MotionEvent.ACTION_DOWN && mIsUnableToDrag)) {
@@ -837,7 +830,6 @@ public class CustomViewAbove extends ViewGroup {
 	private float mScrollX = 0.0f;
 
 	private void onSecondaryPointerUp(MotionEvent ev) {
-		if (DEBUG) Log.v(TAG, "onSecondaryPointerUp called");
 		final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 		final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
 		if (pointerId == mActivePointerId) {

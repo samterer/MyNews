@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="@color/white">
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/lotteryv_tv_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
         android:padding="15dp"
         android:textColor="@color/grey_font"/>
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/lotteryv_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
         android:background="#efefef"
         android:layout_gravity="center_horizontal"/>
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/lotteryv_tv_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

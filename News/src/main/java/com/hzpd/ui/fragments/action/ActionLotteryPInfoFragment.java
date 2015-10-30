@@ -12,8 +12,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -81,7 +85,15 @@ public class ActionLotteryPInfoFragment extends BaseFragment {
 		}
 
 		String addr = lotterypi_add.getText().toString();
-
+		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+		String submitPriceInfo_url =null;
+		if (station.equals(StationConfig.DEF)){
+			submitPriceInfo_url =InterfaceJsonfile.submitPriceInfo;
+		}else if (station.equals(StationConfig.YN)){
+			submitPriceInfo_url = InterfaceJsonfile_YN.submitPriceInfo;
+		}else if (station.equals(StationConfig.TW)){
+			submitPriceInfo_url = InterfaceJsonfile_TW.submitPriceInfo;
+		}
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("username", uname);
 		params.addBodyParameter("phone", phone);
@@ -91,7 +103,7 @@ public class ActionLotteryPInfoFragment extends BaseFragment {
 		params.addBodyParameter("number", number);
 
 		httpUtils.send(HttpMethod.POST
-				, InterfaceJsonfile.submitPriceInfo
+				, submitPriceInfo_url
 				, params
 				, new RequestCallBack<String>() {
 			@Override

@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -36,6 +37,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.sharesdk.facebook.Facebook;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.CustomerLogo;
@@ -95,9 +97,6 @@ public class PlatformGridView extends LinearLayout implements
 			public void run() {
 				try {
 					platformList = ShareSDK.getPlatformList();
-					if (platformList == null) {
-						platformList = new Platform[0];
-					}
 					UIHandler.sendEmptyMessage(MSG_PLATFORM_LIST_GOT, PlatformGridView.this);
 				} catch (Throwable t) {
 					t.printStackTrace();

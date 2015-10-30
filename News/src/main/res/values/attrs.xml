@@ -1,79 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <declare-styleable name="DonutProgress">
-        <attr name="donut_progress" format="integer"/>
-        <attr name="donut_max" format="integer"/>
-        <attr name="donut_unfinished_color" format="color"/>
-        <attr name="donut_finished_color" format="color"/>
-        <attr name="donut_finished_stroke_width" format="dimension"/>
-        <attr name="donut_unfinished_stroke_width" format="dimension"/>
-        <attr name="donut_text_size" format="dimension"/>
-        <attr name="donut_text_color" format="color"/>
-        <attr name="donut_prefix_text" format="string"/>
-        <attr name="donut_suffix_text" format="string"/>
-        <attr name="donut_background_color" format="color"/>
+        <attr name="donut_progress" format="integer" />
+        <attr name="donut_max" format="integer" />
+        <attr name="donut_unfinished_color" format="color" />
+        <attr name="donut_finished_color" format="color" />
+        <attr name="donut_finished_stroke_width" format="dimension" />
+        <attr name="donut_unfinished_stroke_width" format="dimension" />
+        <attr name="donut_text_size" format="dimension" />
+        <attr name="donut_text_color" format="color" />
+        <attr name="donut_prefix_text" format="string" />
+        <attr name="donut_suffix_text" format="string" />
+        <attr name="donut_background_color" format="color" />
     </declare-styleable>
     <declare-styleable name="CircleImageView">
-        <attr name="border_width" format="dimension"/>
-        <attr name="border_color" format="color"/>
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
     </declare-styleable>
     <declare-styleable name="slideswitch">
-        <attr name="themeColor" format="color"/>
-        <attr name="isOpen" format="boolean"/>
+        <attr name="themeColor" format="color" />
+        <attr name="isOpen" format="boolean" />
         <attr name="shape">
-            <enum name="rect" value="1"/>
-            <enum name="circle" value="2"/>
+            <enum name="rect" value="1" />
+            <enum name="circle" value="2" />
         </attr>
     </declare-styleable>
     <declare-styleable name="AutoScaleTextView">
-        <attr name="minTextSize" format="dimension"/>
+        <attr name="minTextSize" format="dimension" />
     </declare-styleable>
     <declare-styleable name="CoverFlow">
-        <attr name="imageWidth" format="dimension"/>
-        <attr name="imageHeight" format="dimension"/>
-        <attr name="withReflection" format="boolean"/>
-        <attr name="reflectionGap" format="dimension"/>
-        <attr name="imageReflectionRatio" format="float"/>
+        <attr name="imageWidth" format="dimension" />
+        <attr name="imageHeight" format="dimension" />
+        <attr name="withReflection" format="boolean" />
+        <attr name="reflectionGap" format="dimension" />
+        <attr name="imageReflectionRatio" format="float" />
     </declare-styleable>
     <declare-styleable name="NumberProgressBar">
-        <attr name="progress" format="integer"/>
-        <attr name="max" format="integer"/>
-        <attr name="progress_unreached_color" format="color"/>
-        <attr name="progress_reached_color" format="color"/>
-        <attr name="progress_reached_bar_height" format="dimension"/>
-        <attr name="progress_unreached_bar_height" format="dimension"/>
-        <attr name="progress_text_size" format="dimension"/>
-        <attr name="progress_text_color" format="color"/>
-        <attr name="progress_text_offset" format="dimension"/>
+        <attr name="progress" format="integer" />
+        <attr name="max" format="integer" />
+        <attr name="progress_unreached_color" format="color" />
+        <attr name="progress_reached_color" format="color" />
+        <attr name="progress_reached_bar_height" format="dimension" />
+        <attr name="progress_unreached_bar_height" format="dimension" />
+        <attr name="progress_text_size" format="dimension" />
+        <attr name="progress_text_color" format="color" />
+        <attr name="progress_text_offset" format="dimension" />
         <attr name="progress_text_visibility" format="enum">
-            <enum name="visible" value="0"/>
-            <enum name="invisible" value="1"/>
+            <enum name="visible" value="0" />
+            <enum name="invisible" value="1" />
         </attr>
     </declare-styleable>
     <declare-styleable name="Themes">
-        <attr name="numberProgressBarStyle" format="reference"/>
+        <attr name="numberProgressBarStyle" format="reference" />
     </declare-styleable>
 
 
     <declare-styleable name="JazzyViewPager">
         <attr name="style">
-            <enum name="standard" value="0"/>
-            <enum name="tablet" value="1"/>
-            <enum name="cubein" value="2"/>
-            <enum name="cubeout" value="3"/>
-            <enum name="flipvertical" value="4"/>
-            <enum name="fliphorizontal" value="5"/>
-            <enum name="stack" value="6"/>
-            <enum name="zoomin" value="7"/>
-            <enum name="zoomout" value="8"/>
-            <enum name="rotateup" value="9"/>
-            <enum name="rotatedown" value="10"/>
-            <enum name="accordion" value="11"/>
+            <enum name="standard" value="0" />
+            <enum name="tablet" value="1" />
+            <enum name="cubein" value="2" />
+            <enum name="cubeout" value="3" />
+            <enum name="flipvertical" value="4" />
+            <enum name="fliphorizontal" value="5" />
+            <enum name="stack" value="6" />
+            <enum name="zoomin" value="7" />
+            <enum name="zoomout" value="8" />
+            <enum name="rotateup" value="9" />
+            <enum name="rotatedown" value="10" />
+            <enum name="accordion" value="11" />
         </attr>
-        <attr name="outlineEnabled" format="boolean"/>
-        <attr name="outlineColor" format="color|reference"/>
-        <attr name="fadeabled" format="boolean"/>
+        <attr name="outlineEnabled" format="boolean" />
+        <attr name="outlineColor" format="color|reference" />
+        <attr name="fadeabled" format="boolean" />
     </declare-styleable>
+    <declare-styleable name="FloatingActionButton">
+        <attr name="drawable" format="integer" />
+        <attr name="fab_color" format="color" />
+        <attr name="shadowRadius" format="float" />
+        <attr name="shadowDx" format="float" />
+        <attr name="shadowDy" format="float" />
+        <attr name="shadowColor" format="integer" />
+    </declare-styleable>
+
+
+    <declare-styleable name="twowayview_TwoWayLayoutManager">
+        <attr name="android:orientation" tools:ignore="ResourceName" />
+    </declare-styleable>
+
+    <declare-styleable name="twowayview_TwoWayView">
+        <attr name="twowayview_layoutManager" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="twowayview_GridLayoutManager">
+        <attr name="twowayview_numColumns" format="integer" />
+        <attr name="twowayview_numRows" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="twowayview_SpacingItemDecoration">
+        <attr name="android:verticalSpacing" tools:ignore="ResourceName" />
+        <attr name="android:horizontalSpacing" tools:ignore="ResourceName" />
+    </declare-styleable>
+
+    <declare-styleable name="twowayview_DividerItemDecoration">
+        <attr name="android:divider" tools:ignore="ResourceName" />
+        <attr name="twowayview_verticalDivider" format="reference" />
+        <attr name="twowayview_horizontalDivider" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="twowayview_StaggeredGridViewChild">
+        <attr name="twowayview_span" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="twowayview_SpannableGridViewChild">
+        <attr name="twowayview_colSpan" format="integer" />
+        <attr name="twowayview_rowSpan" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="MaterialRippleLayout">
+        <attr name="rippleColor" format="color"/>
+        <attr name="rippleDimension" format="dimension"/>
+        <attr name="rippleOverlay" format="boolean"/>
+        <attr name="rippleAlpha" format="float"/>
+        <attr name="rippleDuration" format="integer"/>
+        <attr name="rippleFadeDuration" format="integer"/>
+        <attr name="rippleHover" format="boolean"/>
+        <attr name="rippleBackground" format="color"/>
+        <attr name="rippleDelayClick" format="boolean"/>
+        <attr name="ripplePersistent" format="boolean"/>
+        <attr name="rippleInAdapter" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="CircleIndicator">
+        <attr name="ci_width" format="dimension"/>
+        <attr name="ci_height" format="dimension"/>
+        <attr name="ci_margin" format="dimension"/>
+        <attr name="ci_animator" format="reference"/>
+        <attr name="ci_animator_reverse" format="reference"/>
+        <attr name="ci_drawable" format="reference"/>
+        <attr name="ci_drawable_unselected" format="reference"/>
+    </declare-styleable>
+
+    <!--  -->
+    <declare-styleable name="StarRatingbar">
+        <attr name="starNum" format="integer"/>
+        <attr name="totalNum" format="integer"/>
+    </declare-styleable>
+
+    <!-- 虚线 -->
+    <declare-styleable name="DotView">
+        <attr name="linecolor" format="integer"/>
+        <attr name="dashed" format="integer"/>
+    </declare-styleable>
+    <!-- 垂直滚动viewpager -->
+    <declare-styleable name="DirectionalViewPager">
+        <attr name="android:orientation" />
+    </declare-styleable>
+
 
 </resources>

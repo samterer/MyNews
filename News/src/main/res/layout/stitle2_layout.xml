@@ -18,7 +18,7 @@
             android:background="@drawable/back"/>
     </LinearLayout>
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/stitle_tv_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

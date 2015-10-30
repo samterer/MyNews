@@ -47,8 +47,8 @@ public class ZhuanTiListViewAdapter extends ListBaseAdapter<NewsBean> {
 		if (null != s && s.length > 0) {
 			simg = s[0];
 		}
-		mImageLoader.displayImage(simg, img,
-				DisplayOptionFactory.getOption(OptionTp.Big));
+		SPUtil.displayImage(simg, img,
+				DisplayOptionFactory.getOption(OptionTp.Small));
 
 		title.setTextSize(fontSize);
 		title.setText(nb.getTitle());

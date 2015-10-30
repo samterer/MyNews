@@ -10,7 +10,6 @@ import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.HttpUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,16 +53,12 @@ public class SBaseActivity extends SwipeBackActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		MobclickAgent.onPageStart(this.getClass().getName());
-		MobclickAgent.onResume(this);
 		JPushInterface.onResume(this);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		MobclickAgent.onPageEnd(this.getClass().getName());
-		MobclickAgent.onPause(this);
 		JPushInterface.onPause(this);
 	}
 

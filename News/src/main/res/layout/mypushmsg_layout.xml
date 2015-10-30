@@ -1,39 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:background="@color/zqzx_bg_lgrey">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/zqzx_bg_normal"
+    android:orientation="vertical">
 
-    <include
-        layout="@layout/stitle_layout"/>
+    <include layout="@layout/stitle_layout" />
+
+    <LinearLayout
+        android:id="@+id/mycomments_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <com.hzpd.ui.widget.FontTextView
+            android:id="@+id/mycoms_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:padding="10dp"
+            android:text="我的评论数"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/light_color_line" />
+    </LinearLayout>
 
 
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    <!--android:divider="@color/zqzx_bg_dark"
+            android:dividerHeight="1px"-->
+    <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/pushmsg_lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:cacheColorHint="@android:color/transparent"
         android:descendantFocusability="blocksDescendants"
-        android:divider="@color/zqzx_bg_dark"
-        android:dividerHeight="1px"
+        android:divider="@color/zqzx_bg_normal"
+        android:dividerHeight="5dp"
         android:fastScrollEnabled="false"
-        android:listSelector="@drawable/listview_selecter"
+        android:scrollbars="none"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:listSelector="@android:color/transparent"
         android:scrollbarThumbVertical="@drawable/base_list_scrollbar_handle"
         android:scrollbarTrackVertical="@color/transparent"
-        android:scrollbars="vertical"
+        ptr:ptrDrawable="@drawable/default_ptr_rotate"
         ptr:ptrAnimationStyle="flip"
-        ptr:ptrHeaderTextColor="@color/black"
-        ptr:ptrHeaderSubTextColor="@color/grey_font"/>
+        ptr:ptrHeaderSubTextColor="@color/grey_font"
+        ptr:ptrHeaderTextColor="@color/pulltorefresh_font" />
 
-    <TextView
+    <ImageView
         android:id="@+id/pushmsg_tv_empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/prompt_no_msg"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:textColor="@color/grey_font"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/zqzx_nonetwork" />
+
+
+    <com.mingle.widget.LoadingView
+        android:id="@+id/loadView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:loadingText="@string/load_more_loading" />
 
 </LinearLayout>

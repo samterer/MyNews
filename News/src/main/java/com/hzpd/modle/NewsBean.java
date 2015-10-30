@@ -1,177 +1,230 @@
 package com.hzpd.modle;
 
+import android.text.Html;
+
 import java.io.Serializable;
 import java.util.Arrays;
 
 
 public class NewsBean implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String nid;
-	private String title;
-	private String sid;
-	private String tid;//频道
-	private String outline;//子标题
-	private String type;//item样式  4三联图  其他图文
-	private String update_time;
-	private String json_url;//": "http://demo.99cms.cn/cms_json/bj/News/Content/201410/20/9446"
-	private String[] imgs;
-	private String rtype;//（跳转脚标）1新闻  2图集  3直播 4专题  5关联新闻 6视频 7引用
-	private String comcount;//": "0",
-	private String sort_order;//": "1736823498",
-	private String status;//": "0"删除
-	private String comflag;//": "0",//0不能评论
-	private String subjectsort;//": "0",//0不能评论
-	private String columnid;
+    private String nid;
+    private String title;
+    private String sid;
+    private String tid;//频道
+    private String outline;//子标题
+    private String type;//item样式  4三联图  其他图文
+    private String update_time;
+    private String json_url;//": "http://demo.99cms.cn/cms_json/bj/News/Content/201410/20/9446"
+    private String[] imgs;
+    private String rtype;//（跳转脚标）1新闻  2图集  3直播 4专题  5关联新闻 6视频 7引用
+    private String comcount;//": "0",
+    private String sort_order;//": "1736823498",
+    private String status;//": "0"删除
+    private String comflag;//": "0",//0不能评论
+    private String subjectsort;//": "0",//0不能评论
+    private String columnid;
+    private String copyfrom;//新闻来源
+    private String fav;//收藏数目
+    private String attname;//显示类型
+    private String like;
+    private String unlike;
 
-	@Override
-	public String toString() {
-		return "NewsBean{" +
-				"nid='" + nid + '\'' +
-				", title='" + title + '\'' +
-				", sid='" + sid + '\'' +
-				", tid='" + tid + '\'' +
-				", outline='" + outline + '\'' +
-				", type='" + type + '\'' +
-				", update_time='" + update_time + '\'' +
-				", json_url='" + json_url + '\'' +
-				", imgs=" + Arrays.toString(imgs) +
-				", rtype='" + rtype + '\'' +
-				", comcount='" + comcount + '\'' +
-				", sort_order='" + sort_order + '\'' +
-				", status='" + status + '\'' +
-				", comflag='" + comflag + '\'' +
-				", subjectsort='" + subjectsort + '\'' +
-				", columnid='" + columnid + '\'' +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "NewsBean{" +
+                "nid='" + nid + '\'' +
+                ", title='" + title + '\'' +
+                ", sid='" + sid + '\'' +
+                ", tid='" + tid + '\'' +
+                ", outline='" + outline + '\'' +
+                ", type='" + type + '\'' +
+                ", update_time='" + update_time + '\'' +
+                ", json_url='" + json_url + '\'' +
+                ", imgs=" + Arrays.toString(imgs) +
+                ", rtype='" + rtype + '\'' +
+                ", comcount='" + comcount + '\'' +
+                ", sort_order='" + sort_order + '\'' +
+                ", status='" + status + '\'' +
+                ", comflag='" + comflag + '\'' +
+                ", subjectsort='" + subjectsort + '\'' +
+                ", columnid='" + columnid + '\'' +
+                ", copyfrom='" + copyfrom + '\'' +
+                ", fav='" + fav + '\'' +
+                ", attname='" + attname + '\'' +
+                ", like='" + like + '\'' +
+                ", unlike='" + unlike + '\'' +
+                '}';
+    }
 
-	public String getTid() {
-		return tid;
-	}
+    public String getLike() {
+        return like;
+    }
 
-	public String getOutline() {
-		return outline;
-	}
+    public void setLike(String like) {
+        this.like = like;
+    }
 
-	public void setTid(String tid) {
-		this.tid = tid;
-	}
+    public String getUnlike() {
+        return unlike;
+    }
 
-	public void setOutline(String outline) {
-		this.outline = outline;
-	}
+    public void setUnlike(String unlike) {
+        this.unlike = unlike;
+    }
 
-	public String getJson_url() {
-		return json_url;
-	}
+    public String getAttname() {
+        return attname;
+    }
 
-	public void setJson_url(String json_url) {
-		this.json_url = json_url;
-	}
+    public void setAttname(String attname) {
+        this.attname = attname;
+    }
 
-	public String getSid() {
-		return sid;
-	}
+    public String getTid() {
+        return tid;
+    }
 
-	public void setSid(String sid) {
-		this.sid = sid;
-	}
+    public String getOutline() {
+        return outline;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public void setTid(String tid) {
+        this.tid = tid;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setOutline(String outline) {
+        this.outline = outline;
+    }
 
-	public String getNid() {
-		return nid;
-	}
+    public String getJson_url() {
+        return json_url;
+    }
 
-	public void setNid(String nid) {
-		this.nid = nid;
-	}
+    public void setJson_url(String json_url) {
+        this.json_url = json_url;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getSid() {
+        return sid;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setSid(String sid) {
+        this.sid = sid;
+    }
 
-	public String getUpdate_time() {
-		return update_time;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setUpdate_time(String update_time) {
-		this.update_time = update_time;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public String[] getImgs() {
-		return imgs;
-	}
+    public String getNid() {
+        return nid;
+    }
 
-	public void setImgs(String[] imgs) {
-		this.imgs = imgs;
-	}
+    public void setNid(String nid) {
+        this.nid = nid;
+    }
 
-	public String getRtype() {
-		return rtype;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setRtype(String rtype) {
-		this.rtype = rtype;
-	}
+    public void setTitle(String title) {
+        this.title = Html.fromHtml(title).toString();
+    }
 
-	public String getComcount() {
-		return comcount;
-	}
+    public String getUpdate_time() {
+        return update_time;
+    }
 
-	public void setComcount(String comcount) {
-		this.comcount = comcount;
-	}
+    public void setUpdate_time(String update_time) {
+        this.update_time = update_time;
+    }
 
-	public String getSort_order() {
-		return sort_order;
-	}
+    public String[] getImgs() {
+        return imgs;
+    }
 
-	public void setSort_order(String sort_order) {
-		this.sort_order = sort_order;
-	}
+    public void setImgs(String[] imgs) {
+        this.imgs = imgs;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public String getRtype() {
+        return rtype;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public void setRtype(String rtype) {
+        this.rtype = rtype;
+    }
 
-	public String getComflag() {
-		return comflag;
-	}
+    public String getComcount() {
+        return comcount;
+    }
 
-	public void setComflag(String comflag) {
-		this.comflag = comflag;
-	}
+    public void setComcount(String comcount) {
+        this.comcount = comcount;
+    }
 
-	public String getSubjectsort() {
-		return subjectsort;
-	}
+    public String getSort_order() {
+        return sort_order;
+    }
 
-	public void setSubjectsort(String subjectsort) {
-		this.subjectsort = subjectsort;
-	}
+    public void setSort_order(String sort_order) {
+        this.sort_order = sort_order;
+    }
 
-	public String getColumnid() {
-		return columnid;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public void setColumnid(String columnid) {
-		this.columnid = columnid;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getComflag() {
+        return comflag;
+    }
+
+    public void setComflag(String comflag) {
+        this.comflag = comflag;
+    }
+
+    public String getSubjectsort() {
+        return subjectsort;
+    }
+
+    public void setSubjectsort(String subjectsort) {
+        this.subjectsort = subjectsort;
+    }
+
+    public String getColumnid() {
+        return columnid;
+    }
+
+    public void setColumnid(String columnid) {
+        this.columnid = columnid;
+    }
+
+    public String getCopyfrom() {
+        return copyfrom;
+    }
+
+    public void setCopyfrom(String copyfrom) {
+        this.copyfrom = copyfrom;
+    }
+
+    public String getFav() {
+        return fav;
+    }
+
+    public void setFav(String fav) {
+        this.fav = fav;
+    }
+
 
 }

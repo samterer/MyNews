@@ -4,7 +4,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/tv_takephoto"
         android:drawableTop="@drawable/img_asy"
         android:drawablePadding="10dp"

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">LoadMore</string>
-    <string name="cube_views_load_more_loading">loading...</string>
-    <string name="cube_views_load_more_click_to_load_more">Click to load more</string>
-    <string name="cube_views_load_more_loaded_no_more">All the data has been loaded</string>
-    <string name="cube_views_load_more_loaded_empty">It is empty. :(</string>
+    <string name="cube_views_load_more_loading">sedang memproses...</string>
+    <string name="cube_views_load_more_click_to_load_more"> komentar lainnya</string>
+    <string name="cube_views_load_more_loaded_no_more"> </string>
+    <string name="cube_views_load_more_loaded_empty"> </string>
 </resources>

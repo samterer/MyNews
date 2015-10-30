@@ -26,10 +26,15 @@ import com.hzpd.ui.interfaces.I_Control;
 import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
+import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.DataCleanManager;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.db.VideoListDbTask;
 import com.lidroid.xutils.ViewUtils;
@@ -48,7 +53,17 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 public class VideoListFragment extends BaseFragment implements I_Control {
-
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		if (isVisible != isVisibleToUser) {
+			isVisible = isVisibleToUser;
+			if (isVisibleToUser) {
+				AnalyticUtils.sendGaEvent(getActivity(), AnalyticUtils.CATEGORY.newsType, AnalyticUtils.ACTION.viewPage, "视频",
+						0L);
+				AnalyticUtils.sendUmengEvent(getActivity(), AnalyticUtils.CATEGORY.newsType, "视频");
+			}
+		}
+	}
 	@ViewInject(R.id.video_lv)
 	private PullToRefreshListView mXListView;
 	@ViewInject(R.id.video_nonetwork)
@@ -83,6 +98,8 @@ public class VideoListFragment extends BaseFragment implements I_Control {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		init();
+		AnalyticUtils.sendGaEvent(getActivity(), AnalyticUtils.CATEGORY.newsType, AnalyticUtils.ACTION.viewPage, "视频", 0L);
+		AnalyticUtils.sendUmengEvent(getActivity(), AnalyticUtils.CATEGORY.newsType, "视频");
 	}
 
 	private void init() {
@@ -156,15 +173,28 @@ public class VideoListFragment extends BaseFragment implements I_Control {
 	@Override
 	public void getServerList(String ids) {
 		LogUtils.i("ids-->" + ids);
+		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+		String siteid=null;
+		String VIDEOLIST_url =null;
+		if (station.equals(StationConfig.DEF)){
+			siteid=InterfaceJsonfile.SITEID;
+			VIDEOLIST_url =InterfaceJsonfile.VIDEOLIST;
+		}else if (station.equals(StationConfig.YN)){
+			siteid= InterfaceJsonfile_YN.SITEID;
+			VIDEOLIST_url = InterfaceJsonfile_YN.VIDEOLIST;
+		}else if (station.equals(StationConfig.TW)){
+			siteid= InterfaceJsonfile_TW.SITEID;
+			VIDEOLIST_url = InterfaceJsonfile_TW.VIDEOLIST;
+		}
 		RequestParams params = RequestParamsUtils.getParams();
-		params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+		params.addBodyParameter("siteid", siteid);
 		params.addBodyParameter("ids", ids);
 		params.addBodyParameter("Page", "" + page);
 		params.addBodyParameter("PageSize", "" + pageSize);
 		params.addBodyParameter("update_time", spu.getCacheUpdatetime());
 
 		httpUtils.send(HttpMethod.POST
-				, InterfaceJsonfile.VIDEOLIST
+				, VIDEOLIST_url
 				, params
 				, new RequestCallBack<String>() {
 			@Override

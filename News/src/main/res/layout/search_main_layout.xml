@@ -1,137 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white"
-              android:paddingTop="20dp"
-              android:orientation="vertical">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fragment_background">
 
-    <LinearLayout
-        android:id="@+id/search_ll1_root"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/search_bg"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="8dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingTop="8dp">
 
-        <LinearLayout
-            android:id="@+id/search_ll2_search"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/zq_roundsearchbg_shape"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingBottom="6dp"
-            android:clickable="true"
-            android:paddingTop="6dp">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:contentDescription="@null"
-                android:src="@drawable/search_img"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="@string/prompt_search"
-                android:textColor="@color/zqzx_font_light"
-                android:textSize="16sp"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/search_ll3_root"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dip"
-        android:background="@drawable/search_bg"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:paddingBottom="8dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingTop="8dp">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:background="@drawable/zq_roundsearchbg_shape"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:contentDescription="@null"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
-                android:src="@drawable/search_img"/>
-
-            <EditText
-                android:id="@+id/search_edittext_id"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:hint="@string/prompt_search"
-                android:textColorHint="@color/zqzx_font_light"
-                android:imeOptions="actionSearch"
-                android:padding="5dp"
-                android:singleLine="true"
-                android:textColor="@color/zqzx_font_normal"
-                android:textSize="16sp"/>
-
-            <ImageView
-                android:id="@+id/zq_search_iv_clean"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="6dp"
-                android:contentDescription="@null"
-                android:visibility="gone"
-                android:src="@drawable/zq_search_close"/>
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/search_tv_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:clickable="true"
-            android:paddingBottom="3dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="3dp"
-            android:text="@android:string/cancel"
-            android:textColor="@color/toolbar_bg"
-            android:textSize="16sp"/>
-
-    </LinearLayout>
-
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    <com.handmark.pulltorefresh.library.PullToRefreshRecyclerView
         android:id="@+id/search_listview_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:cacheColorHint="@android:color/transparent"
-        android:descendantFocusability="blocksDescendants"
-        android:divider="@drawable/base_list_divider_drawable"
-        android:dividerHeight="1px"
-        android:fastScrollEnabled="false"
-        android:listSelector="@drawable/listview_selecter"
-        android:scrollbarThumbVertical="@drawable/base_list_scrollbar_handle"
-        android:scrollbarTrackVertical="@color/transparent"
-        android:scrollbars="vertical"
-        ptr:ptrAnimationStyle="flip"
-        ptr:ptrHeaderSubTextColor="@color/grey_font"
-        ptr:ptrHeaderTextColor="@color/black"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:divider="@color/fragment_background"
+        android:dividerPadding="5dp"
+        app:ptrDrawable="@drawable/default_ptr_rotate"
+        app:ptrHeaderSubTextColor="@color/zqzx_font_light"
+        app:ptrHeaderTextColor="@color/pulltorefresh_font" />
 
-</LinearLayout>
+    <FrameLayout
+        android:id="@+id/app_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.mingle.widget.LoadingView
+            android:id="@+id/loadView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:loadingText="@string/load_more_loading" />
+
+        <ProgressBar
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center"
+            android:indeterminateDrawable="@drawable/progressbar_drawable_h" />
+    </FrameLayout>
+
+
+</FrameLayout>

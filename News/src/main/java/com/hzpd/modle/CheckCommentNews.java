@@ -10,6 +10,15 @@ public class CheckCommentNews {
 	private String comcount;
 	private String coverpicid;
 	private String dateline;
+	private String fav;
+
+	public String getFav() {
+		return fav;
+	}
+
+	public void setFav(String fav) {
+		this.fav = fav;
+	}
 
 	public String getNid() {
 		return nid;

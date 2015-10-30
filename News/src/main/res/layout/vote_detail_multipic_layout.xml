@@ -5,7 +5,7 @@
               android:orientation="vertical"
               android:background="@color/white">
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/vote_detail_tv_right"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -15,7 +15,7 @@
         android:layout_marginLeft="12dp"
         android:textColor="@color/black"/>
 
-    <TextView
+    <com.hzpd.ui.widget.FontTextView
         android:id="@+id/vote_detail_tv_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
