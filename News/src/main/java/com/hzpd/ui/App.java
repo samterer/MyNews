@@ -25,6 +25,7 @@ import com.hzpd.hflt.BuildConfig;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.Adbean;
 import com.hzpd.modle.Menu_Item_Bean;
+import com.hzpd.modle.db.UserLog;
 import com.hzpd.utils.CODE;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.SPUtil;
@@ -49,6 +50,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,6 +67,7 @@ public class App extends Application {
     private static App mInstance = null;
 
     public static boolean isStartApp = false;//app是否已经启动
+    public List<UserLog> userLogs = new ArrayList<>();
 
     private SPUtil spu;
     public static SparseArray<Menu_Item_Bean> menuList;
@@ -72,10 +76,14 @@ public class App extends Application {
     public HashMap<String, Adbean> channelADMap = null;//频道列表广告
     public HashMap<String, Adbean> newsDetailADMap = null;//新闻详情广告
 
+    public String newTime; // 最新时间
+    public String oldTime; // 最早时间
+
     private String versionName;
 
     public static final boolean debug = BuildConfig.DEBUG;
     public static InputMethodManager inputMethodManager;//输入法管理
+    public static ExecutorService executorService = Executors.newFixedThreadPool(5);
 
     @Override
     public void onCreate() {
@@ -106,8 +114,11 @@ public class App extends Application {
             memoryClass = am.getLargeMemoryClass();
         }
         // Target ~15% of the available heap.
+        Log.e("test", "memoryClass " + memoryClass);
         return 1024 * 1024 * memoryClass / 7;
     }
+
+    final static int IMAGE_LOAD_SIZE = 1024 * 1024 * 5;
 
     private void init() {
         initAds();
@@ -130,9 +141,9 @@ public class App extends Application {
                 .defaultDisplayImageOptions(DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Big))
                 .diskCacheFileNameGenerator(new Md5FileNameGenerator())
                 .tasksProcessingOrder(QueueProcessingType.FIFO)
-                .memoryCacheSize(calculateMemoryCacheSize(getApplicationContext()))// 缓存大小
-                .memoryCache(new LruMemoryCache(calculateMemoryCacheSize(getApplicationContext())))
-                .threadPoolSize(20)
+                .memoryCacheSize(IMAGE_LOAD_SIZE)// 缓存大小
+                .memoryCache(new LruMemoryCache(IMAGE_LOAD_SIZE))
+                .threadPoolSize(5)
                 .build();
         ImageLoader.getInstance().init(config);
         L.writeDebugLogs(false);
@@ -205,7 +216,6 @@ public class App extends Application {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -228,6 +238,7 @@ public class App extends Application {
     public static final String zhuantiListDb = "zhuantilist.db"; //专题列表
     public static final String albumListDb = "albumlist.db"; //图集列表
     public static final String videoListDb = "videolist.db"; //视频列表
+    public static final String userLogDb = "userlog.db"; // 用户日志
 
     /**
      * 频道信息

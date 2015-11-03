@@ -274,10 +274,10 @@ public class VideoPlayerActivity extends MBaseActivity
 						vib = FjsonUtil.parseObject(obj.getString("data"), VideoItemBean.class);
 						getData();
 					} else {
-						TUtils.toast(getString(R.string.toast_server_error));
+						TUtils.toast(getString(R.string.toast_cannot_connect_network));
 					}
 				} else {
-					TUtils.toast(getString(R.string.toast_server_error));
+					TUtils.toast(getString(R.string.toast_cannot_connect_network));
 				}
 			}
 

@@ -21,15 +21,15 @@ public class FacebookSharedUtil {
     public static void showShares(String title, String link, String imagePath
             , final Context context) {
         try {
-//            if (installFacebook(context)) {
-//                Intent intent = ShareCompat.IntentBuilder.from((Activity) context).getIntent();
-//                intent.setType("text/plain");
-//                intent.putExtra(Intent.EXTRA_SUBJECT, title);
-//                intent.putExtra(Intent.EXTRA_TEXT, link); //TODO 生成短网址
+            if (installFacebook(context)) {
+                Intent intent = ShareCompat.IntentBuilder.from((Activity) context).createChooserIntent();
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, title);
+                intent.putExtra(Intent.EXTRA_TEXT, link); //TODO 短网址
 //                intent.setPackage("com.facebook.katana");
-//                context.startActivity(intent);
-//                return;
-//            }
+                context.startActivity(intent);
+                return;
+            }
             ShareDialog shareDialog = new ShareDialog((Activity) context);
             ShareLinkContent shareContent = new ShareLinkContent.Builder()
                     .setContentTitle(title)
@@ -78,18 +78,4 @@ public class FacebookSharedUtil {
         return flag;
     }
 
-    //获取短网址 //TODO http://163.gs/  https://goo.gl/
-
-    public static class ShareRunnable implements Runnable {
-        String link;
-
-        public ShareRunnable(String link) {
-            this.link = link;
-        }
-
-        @Override
-        public void run() {
-
-        }
-    }
 }

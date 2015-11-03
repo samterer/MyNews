@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Hot News</string>
+    <string name="app_name">HOT NEWS</string>
     <string name="VideoView_error_text_unknown">Sorry,this video is unable to play.</string>
     <string name="VideoView_error_text_invalid_progressive_playback">Sorry, this video is not valid for streaming to this device.</string>
     <string name="VideoView_error_button">OK</string>
@@ -79,8 +79,8 @@
     <string name="prompt_floors">%1$d floors</string>
     <string name="prompt_votes">%1$d votes</string>
     <string name="prompt_comment_belong_post">Original text:%1$s</string>
-    <string name="prompt_column_subscribe">Column subscription</string>
-    <string name="prompt_my_msg">My message</string>
+    <string name="prompt_column_subscribe">Column Option</string>
+    <string name="prompt_my_msg">Push message</string>
     <string name="prompt_no_msg">No Message</string>
     <string name="prompt_my_favorite">My favourite</string>
     <string name="prompt_no_favorite">No favourite</string>
@@ -133,7 +133,7 @@
     <string name="prompt_reply">Reply</string>
     <string name="prompt_auditing">Checking</string>
     <string name="prompt_long_press_to_adjust">Long press above text to adjust, click following text to add </string>
-    <string name="prompt_click_to_add_or_cancel">Click to add or cancel</string>
+    <string name="prompt_click_to_add_or_cancel">Press and drag to change channels</string>
     <string name="prompt_get_captcha">Obtain captcha</string>
     <string name="prompt_verify_captcha">Verify</string>
     <string name="prompt_get">Obtain</string>
@@ -170,7 +170,7 @@
     <string name="prompt_send">Send</string>
     <string name="prompt_relevant">relevant</string>
     <string name="prompt_login_now">Login now</string>
-    <string name="prompt_collect">Collect</string>
+    <string name="prompt_collect">Fav</string>
     <string name="prompt_push">Push</string>
     <string name="prompt_daytime">Daytime</string>
     <string name="prompt_qrcode">QR code</string>
@@ -202,7 +202,7 @@
     <string name="comment_item_hot"> Hot comments</string>
     <string name="comment_item_new">Latest comments</string>
     <string name="comment_check">Check comments</string>
-    <string name="comment_mine">My comment</string>
+    <string name="comment_mine">Comments</string>
     <string name="comment_none">No comment</string>
 
     <string name="toast_network_error">Error,please check network</string>
@@ -237,7 +237,9 @@
     <string name="toast_cache_failed">Invalidate cache,please reopen</string>
     <string name="toast_xx_cannot_be_empty">"%1$s can't be empty"</string>
     <string name="toast_feedback_cannot_be_empty">"Feedback can't be empty"</string>
+    <string name="toast_feedback_cannot_be_short">Please input more content </string>
     <string name="toast_email_cannot_be_empty">"Email can't be empty"</string>
+    <string name="toast_email_cannot_be_error">Email address format is not correct</string>
     <string name="toast_input_cannot_be_empty">"Content of input can't be empty"</string>
     <string name="toast_name_cannot_be_empty">"Name can't be empty"</string>
     <string name="toast_phone_cannot_be_empty">"Cellphone number can't be empty"</string>
@@ -311,4 +313,15 @@
     <string name="calendarutil_time_6">days ago</string>
     <string name="app_fbid">1902056863352757</string>
     <string name="sgin_time">Registered in: </string>
+
+    <string name="reply_comment">Reply to comment</string>
+    <string name="edit_my_colum">My Channel</string>
+    <string name="edit_other_colum">Recommended Channel</string>
+    <string name="update_version">Version update</string>
+    <string name="feed_ok">Feedback success</string>
+    <string name="feed_fail">Feedback failure</string>
+
+    <string name="editcolumn_edit">Edit</string>
+    <string name="editcolumn_ok">Done</string>
+
 </resources>

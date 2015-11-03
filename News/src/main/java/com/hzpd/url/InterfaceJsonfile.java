@@ -28,6 +28,11 @@ public class InterfaceJsonfile {
     public static final int GENDER = 2;
 
     //TODO 新增
+
+    public static final String USER_LOG = PATH_ROOT + "/Log/active";
+
+    //TODO 新的推荐频道数据接口
+    public static final String CHANNEL_RECOMMEND_NEW = PATH_ROOT + "/ChooseNews/getChoosedNewsByTag";
     //查看统计
     public static final String Stat = PATH_ROOT + "/Stat/getStat";
     //S_1. 添加浏览量（/Stat/setView）POST
@@ -35,7 +40,7 @@ public class InterfaceJsonfile {
     // H5 图文直播地址
     public static final String HTMLURL = ROOT + "api.php?s=/Livemsg/view/lid/";
     // ========================================
-    //TODO 推荐频道数据接口
+    //推荐频道数据接口
     public static final String CHANNEL_RECOMMEND = PATH_ROOT + "/ChooseNews/getChoosedNews";
 
     // 频道列表

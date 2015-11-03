@@ -1,20 +1,19 @@
 package com.hzpd.ui.activity;
 
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
@@ -22,6 +21,7 @@ import com.hzpd.custorm.DrawerArrowDrawable;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.UpdateBean;
 import com.hzpd.modle.event.RestartEvent;
+import com.hzpd.services.InitService;
 import com.hzpd.ui.App;
 import com.hzpd.ui.fragments.MySearchFragment;
 import com.hzpd.ui.fragments.NewsAlbumFragment;
@@ -55,14 +55,13 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import de.greenrobot.event.EventBus;
 
-import static android.view.Gravity.START;
-
 
 public class MainActivity extends BaseActivity implements I_ChangeFm {
     @Override
     public String getAnalyticPageName() {
         return "新闻主页";
     }
+
     public static final int REQUEST_IMAGE = 2;
     private int itemSelectPositon = 0;
     private Fragment currentFrag;
@@ -74,6 +73,10 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
     private float offset;
     private boolean flipped;
 
+    @Override
+    public void finish() {
+        super.finish();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,42 +105,10 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
         EventUtils.sendStart(this);
         Log.e("MainActivity", System.currentTimeMillis() - start);
 
+        Intent intent = new Intent(this, InitService.class);
+        intent.setAction(InitService.UserLogAction);
+        startService(intent);
 
-//        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        final ImageView imageView = (ImageView) findViewById(R.id.drawer_indicator);
-//        final Resources resources = getResources();
-//        drawerArrowDrawable = new DrawerArrowDrawable(resources);
-//        drawerArrowDrawable.setStrokeColor(resources.getColor(R.color.light_gray));
-//        imageView.setImageDrawable(drawerArrowDrawable);
-//
-//        drawer.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
-//            @Override
-//            public void onDrawerSlide(View drawerView, float slideOffset) {
-//                offset = slideOffset;
-//
-//                // Sometimes slideOffset ends up so close to but not quite 1 or 0.
-//                if (slideOffset >= .995) {
-//                    flipped = true;
-//                    drawerArrowDrawable.setFlip(flipped);
-//                } else if (slideOffset <= .005) {
-//                    flipped = false;
-//                    drawerArrowDrawable.setFlip(flipped);
-//                }
-//
-//                drawerArrowDrawable.setParameter(offset);
-//            }
-//        });
-//
-//        imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (drawer.isDrawerVisible(START)) {
-//                    drawer.closeDrawer(START);
-//                } else {
-//                    drawer.openDrawer(START);
-//                }
-//            }
-//        });
     }
 
     @OnClick({R.id.main_title_left, R.id.main_title_right})
@@ -275,6 +246,7 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
                 if (200 == obj.getIntValue("code")) {
                     UpdateBean mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), UpdateBean.class);
                     showNotification(mBean.getDescription());
+                    updateDialog(mBean.getDescription());
                 } else {
                 }
 
@@ -287,6 +259,33 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
         });
     }
 
+    private AlertDialog.Builder mUpdateDialog;
+
+    private void updateDialog(String description) {
+        mUpdateDialog = new AlertDialog.Builder(this);
+        mUpdateDialog.setTitle(R.string.update_version);
+        mUpdateDialog.setMessage(description);
+        mUpdateDialog.setNegativeButton(android.R.string.ok,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        final String appPackageName = getPackageName();
+                        Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)); // 点击该通知后要跳转的Activity
+                        startActivity(notificationIntent);
+                    }
+                });
+        mUpdateDialog.setPositiveButton(android.R.string.cancel,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        mUpdateDialog.show();
+    }
+
+
     /**
      * 在状态栏显示通知
      */
@@ -295,7 +294,7 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
                 this.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
         Notification notification = new Notification(R.drawable.logo,
                 getString(R.string.app_name), System.currentTimeMillis());
-        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+//        notification.flags |= Notification.FLAG_ONGOING_EVENT;
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         notification.flags |= Notification.FLAG_SHOW_LIGHTS;
         notification.defaults = Notification.DEFAULT_LIGHTS;

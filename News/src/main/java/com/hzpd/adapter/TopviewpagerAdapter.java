@@ -17,7 +17,7 @@ import com.hzpd.ui.activity.ZhuanTiActivity;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.hzpd.utils.SPUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +92,7 @@ public class TopviewpagerAdapter extends RecyclingPagerAdapter {
         iv.setScaleType(ScaleType.CENTER_CROP);
 
         final NewsPageListBean nplb = list.get(getPosition(position));
-        ImageLoader.getInstance().displayImage(nplb.getImgurl()
+        SPUtil.displayImage(nplb.getImgurl()
                 , iv, DisplayOptionFactory.getOption(OptionTp.Small));
         iv.setOnClickListener(new OnClickListener() {
             @Override

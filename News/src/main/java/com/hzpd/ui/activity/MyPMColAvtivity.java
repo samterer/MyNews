@@ -35,6 +35,7 @@ import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsItemBeanForCollection;
 import com.hzpd.modle.PushmsgBean;
 import com.hzpd.modle.VideoItemBean;
+import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
@@ -313,7 +314,7 @@ public class MyPMColAvtivity extends MBaseActivity {
             nb.setCopyfrom(cdb.getCopyfrom());
             nb.setComcount(cdb.getComcount());
             Log.e("test", "test--->" + cdb.getJson_url());
-            Log.e("test","test--->"+cdb.getNid());
+            Log.e("test", "test--->" + cdb.getNid());
             Log.e("test", "test--->" + nb.toString());
             intent.putExtra("newbean", nb);
 
@@ -510,81 +511,95 @@ public class MyPMColAvtivity extends MBaseActivity {
     }
 
     private void deletePop(View v, final CollectionJsonBean cb, final int position) {
+        try {
+            final NewsItemBeanForCollection nbfc = dbHelper.getCollectionDBUitls().findFirst(
+                    Selector.from(NewsItemBeanForCollection.class).where("colldataid", "=", cb.getData().getId()));
 
-        final PopupWindow mPopupWindow = new PopupWindow(this);
-        LinearLayout pv = (LinearLayout) LayoutInflater.from(this).inflate(
-                R.layout.comment_delete_pop, null);
-        ImageView mTwo = (ImageView) pv.findViewById(R.id.comment_delete_img);//删除
-        mTwo.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPopupWindow.dismiss();
-                if (null == spu.getUser()) {
-                    try {
-                        if ("2".equals(cb.getType())) {
-                            dbHelper.getCollectionDBUitls().delete(Jsonbean.class, WhereBuilder.b("fid", "=", cb.getId()));
-                        }
-                        dbHelper.getCollectionDBUitls().delete(NewsItemBeanForCollection.class, WhereBuilder.b("colldataid", "=", cb.getData().getId
-                                ()));
-                        TUtils.toast(getString(R.string.toast_delete_success));
-                        colladAdapter.deleteItem(position);
-                    } catch (DbException e) {
-                        e.printStackTrace();
-                        TUtils.toast(getString(R.string.toast_delete_failed));
-                    }
-                    return;
-                }
-                String station = SharePreferecesUtils.getParam(MyPMColAvtivity.this, StationConfig.STATION, "def").toString();
-                String DELETECOLLECTION_url = null;
-                if (station.equals(StationConfig.DEF)) {
-                    DELETECOLLECTION_url = InterfaceJsonfile.DELETECOLLECTION;
-                } else if (station.equals(StationConfig.YN)) {
-                    DELETECOLLECTION_url = InterfaceJsonfile_YN.DELETECOLLECTION;
-                } else if (station.equals(StationConfig.TW)) {
-                    DELETECOLLECTION_url = InterfaceJsonfile_TW.DELETECOLLECTION;
-                }
-                RequestParams pa = RequestParamsUtils.getParamsWithU();
-                pa.addBodyParameter("id", cb.getId());
+            if (null != nbfc) {
+                com.hzpd.utils.Log.e("NewsBeanDB", "NewsBeanDB--->" + nbfc.getTid() + "::::" + nbfc.getTitle());
+            } else {
+                com.hzpd.utils.Log.e("NewsBeanDB", "NewsBeanDB--->null");
+            }
 
-                httpUtils.send(HttpMethod.POST
-                        , DELETECOLLECTION_url//InterfaceApi.deletecollection
-                        , pa
-                        , new RequestCallBack<String>() {
-                    @Override
-                    public void onFailure(HttpException arg0,
-                                          String arg1) {
-                        TUtils.toast(getString(R.string.toast_cannot_connect_to_server));
-                    }
 
-                    @Override
-                    public void onSuccess(ResponseInfo<String> arg0) {
-                        LogUtils.i("delete reply-->" + arg0.result);
-                        JSONObject obj = null;
+            final PopupWindow mPopupWindow = new PopupWindow(this);
+            LinearLayout pv = (LinearLayout) LayoutInflater.from(this).inflate(
+                    R.layout.comment_delete_pop, null);
+            ImageView mTwo = (ImageView) pv.findViewById(R.id.comment_delete_img);//删除
+            mTwo.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mPopupWindow.dismiss();
+                    if (null != nbfc) {
                         try {
-                            obj = JSONObject.parseObject(arg0.result);
-                        } catch (Exception e) {
-                            return;
-                        }
-                        if (200 == obj.getIntValue("code")) {
+                            if ("2".equals(cb.getType())) {
+                                dbHelper.getCollectionDBUitls().delete(Jsonbean.class, WhereBuilder.b("fid", "=", cb.getId()));
+                            }
+                            dbHelper.getCollectionDBUitls().delete(NewsItemBeanForCollection.class, WhereBuilder.b("colldataid", "=", cb.getData().getId
+                                    ()));
                             TUtils.toast(getString(R.string.toast_delete_success));
                             colladAdapter.deleteItem(position);
-                        } else {
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                            TUtils.toast(getString(R.string.toast_delete_failed));
                         }
+                        return;
                     }
-                });
-            }
-        });
-        mPopupWindow.setContentView(pv);
-        mPopupWindow.setWindowLayoutMode(LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT);
-        ColorDrawable dw = new ColorDrawable(Color.TRANSPARENT);
-        mPopupWindow.setBackgroundDrawable(dw);
-        mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setFocusable(true);
+                    String station = SharePreferecesUtils.getParam(MyPMColAvtivity.this, StationConfig.STATION, "def").toString();
+                    String DELETECOLLECTION_url = null;
+                    if (station.equals(StationConfig.DEF)) {
+                        DELETECOLLECTION_url = InterfaceJsonfile.DELETECOLLECTION;
+                    } else if (station.equals(StationConfig.YN)) {
+                        DELETECOLLECTION_url = InterfaceJsonfile_YN.DELETECOLLECTION;
+                    } else if (station.equals(StationConfig.TW)) {
+                        DELETECOLLECTION_url = InterfaceJsonfile_TW.DELETECOLLECTION;
+                    }
+                    RequestParams pa = RequestParamsUtils.getParamsWithU();
+                    pa.addBodyParameter("id", cb.getId());
 
-        mPopupWindow.showAsDropDown(v,
-                v.getWidth() / 2 - 30,
-                -v.getHeight());
+                    httpUtils.send(HttpMethod.POST
+                            , DELETECOLLECTION_url//InterfaceApi.deletecollection
+                            , pa
+                            , new RequestCallBack<String>() {
+                        @Override
+                        public void onFailure(HttpException arg0,
+                                              String arg1) {
+                            TUtils.toast(getString(R.string.toast_cannot_connect_to_server));
+                        }
+
+                        @Override
+                        public void onSuccess(ResponseInfo<String> arg0) {
+                            LogUtils.i("delete reply-->" + arg0.result);
+                            JSONObject obj = null;
+                            try {
+                                obj = JSONObject.parseObject(arg0.result);
+                            } catch (Exception e) {
+                                return;
+                            }
+                            if (200 == obj.getIntValue("code")) {
+                                TUtils.toast(getString(R.string.toast_delete_success));
+                                colladAdapter.deleteItem(position);
+                            } else {
+                            }
+                        }
+                    });
+                }
+            });
+            mPopupWindow.setContentView(pv);
+            mPopupWindow.setWindowLayoutMode(LayoutParams.WRAP_CONTENT,
+                    LayoutParams.WRAP_CONTENT);
+            ColorDrawable dw = new ColorDrawable(Color.TRANSPARENT);
+            mPopupWindow.setBackgroundDrawable(dw);
+            mPopupWindow.setOutsideTouchable(true);
+            mPopupWindow.setFocusable(true);
+
+            mPopupWindow.showAsDropDown(v,
+                    v.getWidth() / 2 - 30,
+                    -v.getHeight());
+
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 
     @OnClick(R.id.stitle_ll_back)

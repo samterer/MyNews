@@ -53,6 +53,7 @@ import com.hzpd.modle.ReplayBean;
 import com.hzpd.modle.ThirdLoginBean;
 import com.hzpd.modle.UserBean;
 import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.db.UserLog;
 import com.hzpd.ui.App;
 import com.hzpd.ui.dialog.FontsizePop;
 import com.hzpd.ui.widget.FontTextView;
@@ -63,6 +64,7 @@ import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.CODE;
 import com.hzpd.utils.Constant;
+import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.GetFileSizeUtil;
@@ -89,6 +91,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 public class NewsDetailActivity extends MBaseActivity implements OnClickListener {
@@ -238,19 +241,13 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             } else if (station.equals(StationConfig.TW)) {
                 BASEURL = InterfaceJsonfile_TW.ROOT + "index.php?s=/Public/newsview/nid/";
             }
-
-//            mCommentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                    if (view.getTag() instanceof CommentListAdapter.ViewHolder) {
-//                        CommentListAdapter.ViewHolder viewHolder = (CommentListAdapter.ViewHolder) view.getTag();
-//                        Intent mIntent = new Intent();
-//                        mIntent.putExtra("uid", viewHolder.userId); //TODO
-//                        mIntent.setClass(activity, XF_PInfoActivity.class);
-//                        startActivity(mIntent);
-//                    }
-//                }
-//            });
+            try {
+                if (null != nb && !TextUtils.isEmpty(nb.getNid())) {
+                    DBHelper.getInstance(getApplicationContext()).getLogDbUtils()
+                            .save(new UserLog(nb.getNid(), SPUtil.format(Calendar.getInstance())));
+                }
+            } catch (Exception e) {
+            }
 
             // 适配器设置
 //            mCommentListAdapter = new CommentListAdapter();
@@ -635,11 +632,11 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             Drawable img = getResources().getDrawable(R.drawable.news_details_unpraise_select);
             img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
             text_undal_praise.setCompoundDrawables(img, null, null, null);
-            if (!TextUtils.isEmpty(nb.getUnlike())&&Integer.parseInt(nb.getUnlike())!=0) {
-                Log.e("getUnlike","getUnlike---1");
-                text_undal_praise.setText(""+(Integer.parseInt(nb.getUnlike())));
-            }else {
-                Log.e("getUnlike","getUnlike---2");
+            if (!TextUtils.isEmpty(nb.getUnlike()) && Integer.parseInt(nb.getUnlike()) != 0) {
+                Log.e("getUnlike", "getUnlike---1");
+                text_undal_praise.setText("" + (Integer.parseInt(nb.getUnlike())));
+            } else {
+                Log.e("getUnlike", "getUnlike---2");
                 text_undal_praise.setText("1");
             }
 //            text_undal_praise.setText("" + unlike_counts);
@@ -906,7 +903,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                                 AAnim.bottom2top(NewsDetailActivity.this);
                             }
                         } else {
-                            TUtils.toast(obj.getString("msg"));
+                            TUtils.toast(getString(R.string.toast_cannot_connect_network));
                         }
                     }
 
@@ -1354,7 +1351,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     loadingView.setVisibility(View.GONE);
                     news_detail_nonetwork.setVisibility(View.VISIBLE);
                     if (isResume) {
-                        TUtils.toast(getString(R.string.toast_server_no_response));
+                        TUtils.toast(getString(R.string.toast_cannot_connect_network));
                     }
                 }
             });

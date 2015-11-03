@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hzpd.adapter.DragAdapter2;
+import com.hzpd.adapter.RecommendDragAdapter;
 import com.hzpd.adapter.editcolumn.DragAdapter;
 import com.hzpd.adapter.editcolumn.LastEditColumnAdapter;
 import com.hzpd.custorm.DragGrid;
@@ -55,7 +55,7 @@ public class MyEditColumnActivity extends MBaseActivity {
     private SerializeUtil<List<NewsChannelBean>> mSaveTitleData;
 
     private LastEditColumnAdapter myAllAdapter;//所有title适配器
-    private DragAdapter2 dragAdapter;    //显示条目适配器
+    private RecommendDragAdapter dragAdapter;    //显示条目适配器
 
     //适配器内容
     private List<NewsChannelBean> channelData;
@@ -65,8 +65,13 @@ public class MyEditColumnActivity extends MBaseActivity {
     private String channelJsonPath;
     @ViewInject(R.id.editcolumn_item_tv)
     private TextView editcolumn_item_tv;
+    @ViewInject(R.id.text_editcolumn)
+    private TextView text_editcolumn;
 
     private ChannelSortedList csl;
+
+
+    private boolean isEdit;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,8 +80,28 @@ public class MyEditColumnActivity extends MBaseActivity {
             setContentView(R.layout.editcolumn_my_layout);
             ViewUtils.inject(this);
             stitle_tv_content.setText(R.string.prompt_column_subscribe);
+            text_editcolumn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!isEdit) {
+                        isEdit = true;
+                        Log.e("isEdit", "isEdit" + true);
+                        dragAdapter.isEditItem(isEdit);
+                        editcolumn_dragGridView.isEditColumn(isEdit);
+                        text_editcolumn.setText(getResources().getString(R.string.editcolumn_ok));
+                    } else {
+                        isEdit = false;
+                        dragAdapter.isEditItem(isEdit);
+                        text_editcolumn.setText(getResources().getString(R.string.editcolumn_edit));
+                        editcolumn_dragGridView.isEditColumn(isEdit);
+                        Log.e("isEdit", "isEdit" + false);
+                    }
+                }
+            });
             init();
             getChannelJson();
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -111,19 +136,25 @@ public class MyEditColumnActivity extends MBaseActivity {
     boolean modified = false;
 
     private void reReadVisibleChannel() {
+
         try {
             channelData = mSaveTitleData.readyDataToFile(getChannelInfoCacheSavePath());
-            dragAdapter = new DragAdapter2(this, channelData);
+            dragAdapter = new RecommendDragAdapter(this, channelData);
             editcolumn_dragGridView.setAdapter(dragAdapter);
-
             editcolumn_dragGridView.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, final View view,
                                         final int position, long id) {
                     LogUtils.e("position-->" + position);
+                    if (!isEdit) {
+                        return;
+                    }else{
+
+                    }
                     if (position == 0) {
                         return;
                     }
+
                     modified = true;
                     final NewsChannelBean ncb = channelData.get(position + DragAdapter.hiddenNum);
                     channelData.remove(position + DragAdapter.hiddenNum);
@@ -134,12 +165,20 @@ public class MyEditColumnActivity extends MBaseActivity {
             editcolumn_dragGridView.setOnDragListener(new DragGrid.OnDragListener() {
                 @Override
                 public void onDrag() {
+                    Log.e("editcolumn_dragGridView","editcolumn_dragGridView--->onDrag");
                     modified = true;
                 }
             });
+//            editcolumn_dragGridView.setEditListener(new DragGrid.OnEditListener() {
+//                @Override
+//                public void onEdit(boolean isEdit) {
+//
+//                }
+//            });
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     /**
@@ -262,6 +301,7 @@ public class MyEditColumnActivity extends MBaseActivity {
 
         // 更新用户可见的频道列表缓存
         mSaveTitleData.writeDataToFile(channelData, getChannelInfoCacheSavePath());
+
 
         reReadVisibleChannel();
 

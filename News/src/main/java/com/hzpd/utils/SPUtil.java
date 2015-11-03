@@ -4,6 +4,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -22,6 +23,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
+
+import java.util.Calendar;
 
 /**
  * @author color
@@ -98,6 +101,10 @@ public class SPUtil {
     public static void displayImage(String uri, ImageView imageView, DisplayImageOptions options, ImageLoadingListener loadingListener,
                                     ImageLoadingProgressListener progressListener) {
         if (isImageUri(uri)) {
+            try {
+                uri = uri.replaceAll("&amp;", "&");
+            } catch (Exception e) {
+            }
             ImageLoader.getInstance().displayImage(uri, imageView, options, mLoadingListener, progressListener);
         }
     }
@@ -105,6 +112,7 @@ public class SPUtil {
     static ImageLoadingListener mLoadingListener = new ImageLoadingListener() {
         @Override
         public void onLoadingStarted(String imageUri, View view) {
+            Log.w("ImageLoadingListener", imageUri);
         }
 
         @Override
@@ -114,7 +122,6 @@ public class SPUtil {
 
         @Override
         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-            Log.w("ImageLoadingListener", imageUri);
         }
 
         @Override
@@ -122,6 +129,12 @@ public class SPUtil {
             Log.e("ImageLoadingListener", imageUri);
         }
     };
+
+    private static String FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    public static String format(Calendar calendar) {
+        return "" + DateFormat.format(FORMAT, calendar);
+    }
 
     /**
      * 配置名称 *

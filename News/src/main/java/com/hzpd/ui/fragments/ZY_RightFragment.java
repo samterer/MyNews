@@ -237,10 +237,11 @@ public class ZY_RightFragment extends BaseFragment {
                 tlb.setPhoto(currentProfile.getProfilePictureUri(200, 200).toString());
                 tlb.setGender("3");
                 tlb.setThird("FaceBook");
-                Log.e("test","ThirdLoginBean"+tlb.toString());
+                Log.e("test", "ThirdLoginBean" + tlb.toString());
                 try {
                     zy_rfrag_tv_login.setText(currentProfile.getName());
-                    SPUtil.displayImage(currentProfile.getProfilePictureUri(200, 200).toString(), zy_rfrag_iv_login);
+                    SPUtil.displayImage(currentProfile.getProfilePictureUri(200, 200).toString(), zy_rfrag_iv_login
+                            , DisplayOptionFactory.getOption(OptionTp.Avatar));
                     login_facebook_button.setBackgroundResource(R.drawable.login_out_facebook_button);
                     thirdlogin(tlb);
                 } catch (Exception e) {
@@ -250,7 +251,7 @@ public class ZY_RightFragment extends BaseFragment {
                 android.util.Log.e("test", "oldProfile " + oldProfile);
                 spu.setUser(null);
                 zy_rfrag_tv_login.setText(R.string.prompt_login_now);
-                zy_rfrag_iv_login.setImageResource(R.drawable.zy_pic_touxiang);
+                zy_rfrag_iv_login.setImageResource(R.drawable.zy_pic_touxiang_new);
             }
         }
     };
@@ -373,7 +374,7 @@ public class ZY_RightFragment extends BaseFragment {
     private void setLogin() {
         LogUtils.i("imgUrl-->" + spu.getUser().getAvatar_path() + "  name-->" + spu.getUser().getNickname());
         SPUtil.displayImage(spu.getUser().getAvatar_path(), zy_rfrag_iv_login,
-                DisplayOptionFactory.getOption(OptionTp.Logo));
+                DisplayOptionFactory.getOption(OptionTp.Avatar));
         zy_rfrag_tv_login.setText(spu.getUser().getNickname());
         // -----
         JPushInterface.setAlias(activity, spu.getUser().getUid(), new TagAliasCallback() {

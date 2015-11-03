@@ -13,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,9 +28,10 @@ import com.hzpd.adapter.ChooseAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsChannelBean;
+import com.hzpd.modle.UserBean;
 import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.ui.App;
 import com.hzpd.ui.activity.NewsDetailActivity;
-import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.ui.widget.RecyclerViewPauseOnScrollListener;
 import com.hzpd.url.InterfaceJsonfile;
@@ -38,13 +40,14 @@ import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
+import com.hzpd.utils.TUtils;
 import com.hzpd.utils.db.NewsListDbTask;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
-import com.lidroid.xutils.util.LogUtils;
 import com.nineoldandroids.view.ViewHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -61,14 +64,17 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
 
     private NewsChannelBean channelbean;//本频道
     private NewsListDbTask newsListDbTask; //新闻列表数据库
-    private boolean isRefresh = false;//是否首次加载
+    private boolean isRefresh = true;//是否首次加载
     private SwipeRefreshLayout mSwipeRefreshWidget;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private ChooseAdapter adapter;
+
+    private int tagIndex = 1; //TAG索引
+    private int pageIndex = 1; //TAG页数
     private int page = 1;
     private static final int pageSize = 15;//
-    String nids = "";
+    private boolean loading = false;
     private View floatingView;
     private Animation animation;
     private ImageView background_empty;
@@ -87,9 +93,12 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         }
 
     };
-
+    private TextView update_counts;
     int padding = 20;
     public static int scroll_status = RecyclerView.SCROLL_STATE_IDLE;
+    boolean addLoading = false;
+    ChooseAdapter.CallBack callBack;
+    private boolean isRefreshCounts;
 
     public ChooseFragment(NewsChannelBean channelbean) {
         this.channelbean = channelbean;
@@ -107,6 +116,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         View view = inflater.inflate(R.layout.choose_fragment, container, false);
         background_empty = (ImageView) view.findViewById(R.id.background_empty);
         floatingView = view.findViewById(R.id.floating_button);
+        update_counts = (TextView) view.findViewById(R.id.update_counts);
         floatingView.setOnClickListener(this);
         ViewHelper.setAlpha(floatingView, 0.7f);
         mSwipeRefreshWidget = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
@@ -129,7 +139,11 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                 if (!isRefresh) {
                     floatingView.startAnimation(animation);
                 }
-                getServerList(nids);
+                page = 1;
+                ++tagIndex;
+                pageIndex = 1;
+                getServerList("");
+                isRefreshCounts=true;
             }
         });
 
@@ -147,7 +161,11 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                 int topRowVerticalPosition =
                         (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
                 mSwipeRefreshWidget.setEnabled(topRowVerticalPosition >= 0);
-
+                if (addLoading && !adapter.showLoading) {
+                    int count = adapter.getItemCount();
+                    adapter.showLoading = true;
+                    adapter.notifyItemInserted(count);
+                }
             }
 
         });
@@ -158,6 +176,18 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         mRecyclerView.addItemDecoration(itemDecoration);
         paddingTop = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
         animation = AnimationUtils.loadAnimation(getActivity(), R.anim.floating_button_anim);
+        callBack = new ChooseAdapter.CallBack() {
+            @Override
+            public void loadMore() {
+                if (loading) {
+                    return;
+                }
+                page = 2;
+                ++pageIndex;
+                getServerList("");
+            }
+        };
+        adapter.callBack = callBack;
         return view;
     }
 
@@ -208,6 +238,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        loading = false;
         page = 1;
         getDbList();
     }
@@ -223,67 +254,87 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
 
     //新闻列表
     public void getDbList() {
-        LogUtils.i("page-->" + page + "  pageSize-->" + pageSize);
         newsListDbTask.findList(channelbean.getTid(), page, pageSize, new I_SetList<NewsBeanDB>() {
             @Override
             public void setList(List<NewsBeanDB> list) {
+                if (!isAdded()) {
+                    return;
+                }
                 if (null != list && list.size() > 0) {
-                    StringBuilder sb = new StringBuilder();
                     List<NewsBean> nbList = new ArrayList<NewsBean>();
                     for (NewsBeanDB nbdb : list) {
-                        sb.append(nbdb.getNid() + ",");
                         nbList.add(nbdb.getNewsBean());
                     }
+                    for (NewsBean newsBean : nbList) {
+                        if (newsBean.getType().equals("99")) {
+                            nbList.remove(newsBean);
+                            nbList.add(0, newsBean);
+                            break;
+                        }
+                    }
+                    adapter.showLoading = true;
                     adapter.setData(nbList);
                     background_empty.setVisibility(View.GONE);
-                    if (sb.length() > 1) {
-                        nids = sb.substring(0, sb.length() - 1);
-                    }
                 }
             }
 
         });
-        getServerList(nids);
     }
 
     //获取新闻list
     public void getServerList(String nids) {
-        LogUtils.i("nids-->" + nids);
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-        params.addBodyParameter("tid", channelbean.getTid());
-        params.addBodyParameter("nids", nids);
+        params.addBodyParameter("newTime", App.getInstance().newTime);
+        params.addBodyParameter("oldTime", App.getInstance().oldTime);
         params.addBodyParameter("Page", "" + page);
         params.addBodyParameter("PageSize", "" + pageSize);
+        UserBean user = SPUtil.getInstance().getUser();
+        if (user != null && !TextUtils.isEmpty(user.getUid())) {
+            params.addBodyParameter("uid", "" + user.getUid());
+            params.addBodyParameter("tagIndex", "" + tagIndex);
+            params.addBodyParameter("pageIndex", "" + pageIndex);
+        }
         httpUtils.send(HttpRequest.HttpMethod.POST
-                , InterfaceJsonfile.CHANNEL_RECOMMEND
+                , InterfaceJsonfile.CHANNEL_RECOMMEND_NEW
                 , params
                 , new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                if(!isAdded()){
+                loading = false;
+                isRefresh = false;
+                if (!isAdded()) {
                     return;
                 }
-                mSwipeRefreshWidget.setRefreshing(false);
-                page++;
-                isRefresh = false;
-                final JSONObject obj = FjsonUtil
-                        .parseObject(responseInfo.result);
-                if (null != obj) {
-                    setData(obj);//处理数据
-                } else {
-                    page--;
+                try {
+                    mSwipeRefreshWidget.setRefreshing(false);
+                    final JSONObject obj = FjsonUtil
+                            .parseObject(responseInfo.result);
+                    if (null != obj) {
+                        setData(obj);//处理数据
+                        try {
+                            if (!TextUtils.isEmpty(obj.getString("newTime"))) {
+                                App.getInstance().newTime = obj.getString("newTime");
+                            } else if (!TextUtils.isEmpty(obj.getString("oldTime"))) {
+                                App.getInstance().oldTime = obj.getString("oldTime");
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+                } catch (Exception e) {
+                    onFailure(null, null);
                 }
             }
 
             @Override
             public void onFailure(HttpException error, String msg) {
-                if(!isAdded()){
+                loading = false;
+                isRefresh = false;
+                if (!isAdded()) {
                     return;
                 }
-                Log.e("onFailure", msg + error);
+                TUtils.toast(getString(R.string.toast_cannot_connect_network));
                 mSwipeRefreshWidget.setRefreshing(false);
-                isRefresh = false;
             }
         });
     }
@@ -300,27 +351,46 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                     }
                 }
                 if (null != list) {
+                    final  int i=list.size();
+                    if (isRefreshCounts) {
+                        update_counts.setVisibility(View.VISIBLE);
+                        update_counts.setText("已更新"+i+"条");
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.e("update_counts", "update_counts");
+                                update_counts.setVisibility(View.GONE);
+                            }
+                        }, 1000);
+                    }
                     mRecyclerView.stopScroll();
                     if (adapter.getItemCount() > 0) {
                         mRecyclerView.scrollToPosition(0);
                     }
-                    if (page > 2) {
-                        adapter.addNews(list);
-                    } else {
-                        adapter.setData(list);
+                    if (!TextUtils.isEmpty(obj.getString("newTime"))) {
+                        adapter.addTop(list);
+                    } else if (!TextUtils.isEmpty(obj.getString("oldTime"))) {
+                        adapter.addBottom(list);
                     }
                     background_empty.setVisibility(View.GONE);
                 }
-                newsListDbTask.saveList(list, new I_Result() {
-                    @Override
-                    public void setResult(Boolean flag) {
-                        if (!flag) {
-                            return;
-                        }
-                    }
-                });
+                newsListDbTask.saveList(list, null);
             }
             break;
+            default: {
+                TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
+                if (adapter.showLoading) {
+                    int count = adapter.getItemCount();
+                    adapter.showLoading = false;
+                    adapter.notifyItemRemoved(count);
+                    mRecyclerView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            addLoading = true;
+                        }
+                    }, 2000);
+                }
+            }
         }
 
     }
@@ -341,9 +411,10 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
             if (!isRefresh && v == floatingView) {
                 mRecyclerView.scrollToPosition(0);
                 mSwipeRefreshWidget.setRefreshing(true);
-                getServerList(nids);
-                //TODO
-                isRefresh = true;
+                pageIndex = 1;
+                ++tagIndex;
+                page = 1;
+                getServerList("");
                 v.setAnimation(animation);
                 v.startAnimation(animation);
                 return;

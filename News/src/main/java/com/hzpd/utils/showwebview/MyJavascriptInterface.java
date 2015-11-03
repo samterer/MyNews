@@ -17,7 +17,7 @@ public class MyJavascriptInterface {
 
     }
 
-    public MyJavascriptInterface(Activity context,NewsDetailBean nbd) {
+    public MyJavascriptInterface(Activity context, NewsDetailBean nbd) {
         this.context = context;
         this.ndb = ndb;
 
@@ -27,8 +27,15 @@ public class MyJavascriptInterface {
         this.ndb = ndb;
     }
 
+    private long time = 0L;
+
     @JavascriptInterface
     public void openImage(String img) {
+        long now = System.currentTimeMillis();
+        if (now - time < 800) {
+            return;
+        }
+        time = now;
         Intent intent = new Intent();
         if (null == ndb || null == ndb.getPic()) {
             return;

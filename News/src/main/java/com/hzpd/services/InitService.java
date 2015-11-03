@@ -6,16 +6,20 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hzpd.modle.UserBean;
+import com.hzpd.modle.db.UserLog;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
+import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
+import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -25,10 +29,12 @@ import com.lidroid.xutils.util.LogUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
+import java.util.List;
 
 public class InitService extends IntentService {
 
     public static final String InitAction = "initService";
+    public static final String UserLogAction = "user.log.action";
     public static final String SHARE_KEY_AD = "key_ad";
 
     private HttpUtils httpUtils;
@@ -46,6 +52,8 @@ public class InitService extends IntentService {
     public void onCreate() {
         super.onCreate();
         httpUtils = new HttpUtils();
+        httpUtils.configTimeout(10000);
+        httpUtils.configSoTimeout(5000);
         rootPath = App.getInstance().getJsonFileCacheRootDir();
         String station = SharePreferecesUtils.getParam(this, StationConfig.STATION, "def").toString();
 
@@ -140,8 +148,37 @@ public class InitService extends IntentService {
         if (intent != null) {
             if (InitService.InitAction.equals(intent.getAction())) {
                 GetWelcomePicJson();
-//                getAppModify();
+            } else if (InitService.UserLogAction.equals(intent.getAction())) {
+                Log.e("test", "send use log");
+                sendUserLog();
             }
+        }
+    }
+
+    private void sendUserLog() {
+        UserBean user = SPUtil.getInstance().getUser();
+        if (user == null || TextUtils.isEmpty(user.getUid())) {
+            return;
+        }
+        final DbUtils dbUtils = DBHelper.getInstance(getApplicationContext()).getLogDbUtils();
+        try {
+            List<UserLog> logs = dbUtils.findAll(UserLog.class);
+            if (logs.isEmpty() || logs.size() < 10) {
+                return;
+            }
+            String json = FjsonUtil.toJsonString(logs);
+            Log.e("test", "json " + json);
+            RequestParams params = RequestParamsUtils.getParams();
+            params.addBodyParameter("uid", user.getUid());
+            params.addBodyParameter("json", json);
+            ResponseStream rs = httpUtils.sendSync(HttpMethod.POST, InterfaceJsonfile.USER_LOG, params);
+            String str = rs.readString();
+            if (!TextUtils.isEmpty(str)) {
+                Log.e("test", str);
+                dbUtils.deleteAll(logs);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

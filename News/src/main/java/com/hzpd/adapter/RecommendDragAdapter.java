@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hzpd.hflt.R;
@@ -15,7 +16,7 @@ import com.hzpd.utils.Log;
 
 import java.util.List;
 
-public class DragAdapter2 extends BaseAdapter {
+public class RecommendDragAdapter extends BaseAdapter {
     /**
      * TAG
      */
@@ -49,12 +50,14 @@ public class DragAdapter2 extends BaseAdapter {
      * TextView 频道内容
      */
     private TextView item_text;
+
+    private ImageView iv_delete;
     /**
      * 要删除的position
      */
     public int remove_position = -1;
     private List<NewsChannelBean> titleData;
-    public DragAdapter2(Context context, List<NewsChannelBean> channelList) {
+    public RecommendDragAdapter(Context context, List<NewsChannelBean> channelList) {
         this.context = context;
         this.channelList = channelList;
     }
@@ -91,29 +94,53 @@ public class DragAdapter2 extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = LayoutInflater.from(context).inflate(R.layout.channel_item, null);
-        item_text = (TextView) view.findViewById(R.id.text_item);
-        NewsChannelBean channel = getItem(position);
-        item_text.setText(channel.getCnname());
-        //控制不可点击栏目颜色
-        if ((position == 0) ) {
-//			item_text.setTextColor(context.getResources().getColor(R.color.black));
-            item_text.setEnabled(false);
-        }
-        if (isChanged && (position == holdPosition) && !isItemShow) {
-            item_text.setText("");
-            item_text.setSelected(true);
-            item_text.setEnabled(true);
-            isChanged = false;
-        }
-        if (!isVisible && (position == -1 + channelList.size())) {
-            item_text.setText("");
-            item_text.setSelected(true);
-            item_text.setEnabled(true);
-        }
-        if (remove_position == position) {
-            item_text.setText("");
+        try {
+            item_text = (TextView) view.findViewById(R.id.text_item);
+            iv_delete= (ImageView) view.findViewById(R.id.iv_delete);
+            if (isEdit){
+                iv_delete.setVisibility(View.VISIBLE);
+            }else {
+                iv_delete.setVisibility(View.GONE);
+            }
+
+            NewsChannelBean channel = getItem(position);
+            item_text.setText(channel.getCnname().toUpperCase());
+            //控制不可点击栏目颜色
+            if ((position == 0) ) {
+    //			item_text.setTextColor(context.getResources().getColor(R.color.black));
+                item_text.setEnabled(false);
+                iv_delete.setVisibility(View.GONE);
+            }
+            if (isChanged && (position == holdPosition) && !isItemShow) {
+                Log.e("isChanged","isChanged");
+                item_text.setText("");
+                item_text.setSelected(true);
+                item_text.setEnabled(true);
+                isChanged = false;
+            }
+            if (!isVisible && (position == -1 + channelList.size())) {
+                Log.e("isVisible","isVisible");
+                item_text.setText("");
+                item_text.setSelected(true);
+                item_text.setEnabled(true);
+            }
+            if (remove_position == position) {
+                Log.e("remove_position","remove_position");
+                item_text.setText("");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return view;
+    }
+
+    private boolean isEdit;
+
+    public void isEditItem(boolean isEdit){
+        this.isEdit=isEdit;
+        Log.e("adapter","isEditItem"+isEdit);
+
+        notifyDataSetChanged();
     }
 
     /**

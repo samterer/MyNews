@@ -30,14 +30,13 @@
             android:layout_toRightOf="@id/main_title_left_img"
             android:background="@color/white"
             app:pstsDividerColor="#00ffffff"
-            app:pstsIndicatorColor="#fdb800"
+            app:pstsIndicatorColor="#ff7e00"
             app:pstsIndicatorHeight="2dp"
             app:pstsTabPaddingLeftRight="10dp"
             app:pstsTabTextColor="#bebebe"
-            app:pstsTabTextSelectedColor="#fdb800"
-            app:pstsTabTextSize="16sp"
+            app:pstsTabTextSelectedColor="#ff7e00"
+            app:pstsTabTextSize="15sp"
             app:pstsUnderlineColor="#33444444"
-            app:pstsTextAllCaps="false"
             app:pstsUnderlineHeight="0dp" />
 
         <View

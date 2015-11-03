@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:paddingLeft="10dp"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text=""
                 android:background="@drawable/details_comment_counts_selector"
                 />

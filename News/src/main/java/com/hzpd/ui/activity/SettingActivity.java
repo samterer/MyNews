@@ -30,6 +30,7 @@ import com.hzpd.ui.App;
 import com.hzpd.ui.widget.FontTextView;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
+import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CODE;
 import com.hzpd.utils.DataCleanManager;
 import com.hzpd.utils.FjsonUtil;
@@ -109,19 +110,6 @@ public class SettingActivity extends MBaseActivity {
     private View loadingView;
     private AlertDialog.Builder mDeleteDialog;
 
-    public void setReadedId(String nid) {
-        try {
-            NewsBeanDB nbdb = new NewsBeanDB();
-            nbdb.setNid(Integer.parseInt(nid));
-            nbdb.setIsreaded(10);
-            nbdb.setComcount("10");
-            dbHelper.getNewsListDbUtils().update(nbdb
-                    , WhereBuilder.b("nid", "=", nid)
-                    , "comcount");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,30 +121,19 @@ public class SettingActivity extends MBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //测试用
+        rl_test.setVisibility(View.GONE);
+//        rl_test.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent mIntent = new Intent(SettingActivity.this, CollapseActivity.class);
+//                startActivity(mIntent);
+//            }
+//        });
 
-//        rl_test.setVisibility(View.GONE);
-        rl_test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent mIntent = new Intent(SettingActivity.this, CollapseActivity.class);
-                startActivity(mIntent);
-            }
-        });
+        textSize= new String[]{this.getResources().getString(R.string.settings_option_font_large), this.getResources().getString(R.string.settings_option_font_medium), this.getResources().getString(R.string.settings_option_font_small)};//"Besar", "Sedang", "Kecil"
 
-        setReadedId("12295");
-        try {
-            NewsBeanDB nbfc = dbHelper.getNewsListDbUtils().findFirst(
-                    Selector.from(NewsBeanDB.class).where("nid", "=", "12571"));
-            if (null != nbfc) {
-                Log.e("NewsBeanDB", "NewsBeanDB--->" + nbfc.getFav()+"::::"+nbfc.getComcount());
-            } else {
-                Log.e("NewsBeanDB", "NewsBeanDB--->null");
-            }
 
-        } catch (DbException e) {
-            e.printStackTrace();
-            Log.e("DbException", "NewsBeanDB--->" + e);
-        }
         loadingView = findViewById(R.id.app_progress_bar);
         stitle_tv_content.setText(R.string.title_settings);
 
@@ -182,25 +159,20 @@ public class SettingActivity extends MBaseActivity {
         zqzx_setting_textsize.setOnClickListener(new TextSizeAlertClickListener());
 
 
-//        defaultStation();
-
         //弹出站点选择单选框
         zqzx_setting_choose.setOnClickListener(new AlertClickListener());
 
-//        setting_chosse_station.setText();
         Object obj = SharePreferecesUtils.getParam(SettingActivity.this, "STATION", "def");
         String station = obj.toString();
         if (station == null || station.equals("def")) {
             setting_chosse_station.setText("Indonesia");
         } else if (station.equals("yn")) {
             setting_chosse_station.setText("Indonesia");
-        }
-        else if (station.equals("tw")) {
+        } else if (station.equals("tw")) {
             setting_chosse_station.setText("test");
         }
 
 
-//		zqzx_setting_rb4.setChecked(true);
 //		获取当前状态
         LogUtils.e("spu.getOffTuiSong()" + spu.getOffTuiSong());
         if (spu.getOffTuiSong()) {
@@ -236,8 +208,6 @@ public class SettingActivity extends MBaseActivity {
         );
 
         getCacheSize();
-
-
 
 
     }
@@ -280,7 +250,7 @@ public class SettingActivity extends MBaseActivity {
         AAnim.ActivityStartAnimation(this);
     }
 
-    private String[] textSize = new String[]{"Besar", "Sedang", "Kecil"};
+    private String[] textSize;
     private int[] textSize1 = new int[]{CODE.textSize_big, CODE.textSize_normal, CODE.textSize_small};
 
     /**
@@ -490,7 +460,9 @@ public class SettingActivity extends MBaseActivity {
 
     @OnClick(R.id.zqzx_setting_update)
     private void checkUpdate(View v) {
-
+        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+            return;
+        }
         int version = 0;
         try {
             version = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode;
@@ -516,7 +488,7 @@ public class SettingActivity extends MBaseActivity {
                 Log.e("onSuccess", "onSuccess" + obj.toString());
                 if (200 == obj.getIntValue("code")) {
                     UpdateBean mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), UpdateBean.class);
-
+                    updateDialog(mBean.getDescription());
                     showNotification(mBean.getDescription());
                 } else {
                 }
@@ -529,7 +501,31 @@ public class SettingActivity extends MBaseActivity {
         });
     }
 
+    private AlertDialog.Builder mUpdateDialog;
 
+    private void updateDialog(String description) {
+        mUpdateDialog = new AlertDialog.Builder(this);
+        mUpdateDialog.setTitle(R.string.update_version);
+        mUpdateDialog.setMessage(description);
+        mUpdateDialog.setNegativeButton(android.R.string.ok,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        final String appPackageName = getPackageName();
+                        Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)); // 点击该通知后要跳转的Activity
+                        startActivity(notificationIntent);
+                    }
+                });
+        mUpdateDialog.setPositiveButton(android.R.string.cancel,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        mUpdateDialog.show();
+    }
 
     /**
      * 在状态栏显示通知更新

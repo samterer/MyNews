@@ -15,7 +15,9 @@ import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.ui.App;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
+import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 
 import org.lucasr.twowayview.widget.StaggeredGridLayoutManager;
@@ -27,20 +29,26 @@ import java.util.List;
 
 public class ChooseAdapter extends RecyclerView.Adapter {
 
+    public interface CallBack {
+        void loadMore();
+    }
+
+    public CallBack callBack = null;
+
     private Context context;
     View.OnClickListener onClickListener;
     private HashSet<String> readedNewsSet;
     DBHelper dbHelper;
 
     public ChooseAdapter(Context context, View.OnClickListener onClickListener) {
-        this.context=context;
+        this.context = context;
         this.onClickListener = onClickListener;
         readedNewsSet = new HashSet<String>();
         dbHelper = DBHelper.getInstance(context);
     }
 
     public ChooseAdapter(Context context) {
-        this.context=context;
+        this.context = context;
         readedNewsSet = new HashSet<String>();
         dbHelper = DBHelper.getInstance(context);
     }
@@ -68,7 +76,16 @@ public class ChooseAdapter extends RecyclerView.Adapter {
 
     final static int TYPE_FIRST = 0x99;
     final static int TYPE_SECOND = 0x88;
+    final static int TYPE_LOADING = 0xDD;
+    public boolean showLoading = false;
 
+    public class LoadingHolder extends RecyclerView.ViewHolder {
+        public LoadingHolder(View itemView) {
+            super(itemView);
+            ViewUtils.inject(this, itemView);
+        }
+
+    }
 
     protected class FirstViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
@@ -108,19 +125,24 @@ public class ChooseAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder value = null;
         try {
+            Context context = parent.getContext();
             switch (viewType) {
                 case TYPE_FIRST: {
                     FirstViewHolder holder = null;
-                    Context context = parent.getContext();
                     View view = LayoutInflater.from(context).inflate(R.layout.choose_item_first_layout, parent, false);
                     holder = new FirstViewHolder(view);
                     holder.clickView.setOnClickListener(onClickListener);
                     value = holder;
                 }
                 break;
+                case TYPE_LOADING: {
+                    View view = LayoutInflater.from(context).inflate(
+                            R.layout.list_load_more_layout, parent, false);
+                    value = new LoadingHolder(view);
+                }
+                break;
                 default: {
                     SecondViewHolder holder = null;
-                    Context context = parent.getContext();
                     View view = LayoutInflater.from(context).inflate(R.layout.choose_item_second_layout, parent, false);
                     holder = new SecondViewHolder(view);
                     holder.clickView.setOnClickListener(onClickListener);
@@ -138,8 +160,23 @@ public class ChooseAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder sHolder, int position) {
         try {
             int type = getItemViewType(position);
-            NewsBean bean = newsList.get(position);
+            NewsBean bean = null;
+            if (type != TYPE_LOADING) {
+                bean = newsList.get(position);
+            }
             switch (type) {
+                case TYPE_LOADING: {
+                    Log.e("test", " TYPE_LOADING ");
+                    if (showLoading && callBack != null) {
+                        callBack.loadMore();
+                    }
+                    final StaggeredGridLayoutManager.LayoutParams lp =
+                            (StaggeredGridLayoutManager.LayoutParams) sHolder.itemView.getLayoutParams();
+                    lp.span = COUNT_COLUMS;
+                    lp.setMargins(0, 0, 0, 0);
+                    sHolder.itemView.setLayoutParams(lp);
+                }
+                break;
                 case TYPE_FIRST: {
                     FirstViewHolder holder = (FirstViewHolder) sHolder;
                     holder.textView.setText(bean.getTitle());
@@ -198,12 +235,19 @@ public class ChooseAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
+        if (showLoading && position == getItemCount() - 1) {
+            return TYPE_LOADING;
+        }
         return "99".equals(newsList.get(position).getType()) ? TYPE_FIRST : TYPE_SECOND;
     }
 
     @Override
     public int getItemCount() {
-        return newsList.size();
+        int count = newsList.size();
+        if (showLoading) {
+            ++count;
+        }
+        return count;
     }
 
 
@@ -220,13 +264,25 @@ public class ChooseAdapter extends RecyclerView.Adapter {
 
 
     /**
-     * 追加搜索历史数据
+     * 底部追加数据
      */
-    public void addNews(List<NewsBean> data) {
+    public void addBottom(List<NewsBean> data) {
         if (data != null && !data.isEmpty()) {
-            int start = getItemCount();
+            int position = newsList.size();
+            newsList.addAll(data);
+            notifyDataSetChanged();
+//            notifyItemRangeInserted(position, data.size());
+        }
+    }
+
+    /**
+     * 顶部追加数据
+     */
+    public void addTop(List<NewsBean> data) {
+        if (data != null && !data.isEmpty()) {
             newsList.addAll(0, data);
             notifyDataSetChanged();
+//            notifyItemRangeChanged(0, data.size());
         }
     }
 

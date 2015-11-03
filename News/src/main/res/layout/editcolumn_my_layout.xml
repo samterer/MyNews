@@ -13,8 +13,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="10dp"
-        android:layout_below="@id/editcolum_include">
+        android:layout_below="@id/editcolum_include"
+        android:layout_marginBottom="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -54,14 +54,46 @@
                     android:layout_height="1px"
                     android:background="#f2e4d3" />
 
-                <com.hzpd.ui.widget.FontTextView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:text="Bacaan Saya"
-                    android:textColor="@color/pulltorefresh_font"
-                    android:textSize="18sp" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.hzpd.ui.widget.FontTextView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:text="@string/edit_my_colum"
+                        android:textColor="@color/pulltorefresh_font"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/text_editcolumn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="20dp"
+                        android:text="@string/editcolumn_edit"
+                        android:textSize="14sp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:background="@drawable/btn_order"
+                        android:textColor="@color/ssxinhongse1"
+                        android:gravity="center"/>
+
+
+                    <!--<style name="edit_order_btn">-->
+                        <!--<item name="android:gravity">center</item>-->
+                        <!--<item name="android:background">@drawable/btn_order</item>-->
+                        <!--<item name="android:minWidth">56.0dip</item>-->
+                        <!--<item name="android:minHeight">24.0dip</item>-->
+                    <!--</style>-->
+
+                </LinearLayout>
 
 
                 <View
@@ -93,7 +125,7 @@
                 android:layout_below="@id/editcolumn_dragGridView"
                 android:layout_marginTop="10dp"
                 android:background="#f6f6f6"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <!--推荐频道-->
             <LinearLayout
@@ -109,7 +141,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
-                    android:text="Tambahkan"
+                    android:text="@string/edit_other_colum"
                     android:textColor="@color/pulltorefresh_font"
                     android:textSize="18sp" />
 
@@ -125,9 +157,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/editcolumn_divider_ll"
+                android:layout_marginBottom="10dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
                 android:cacheColorHint="@android:color/transparent"
                 android:columnWidth="90dp"
                 android:gravity="center"

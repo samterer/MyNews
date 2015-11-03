@@ -55,8 +55,8 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
         fm = getSupportFragmentManager();
 
         httpUtils = new HttpUtils();
-        httpUtils.configSoTimeout(10000);
-        httpUtils.configTimeout(10000);
+        httpUtils.configSoTimeout(5000);
+        httpUtils.configTimeout(1000);
         spu = SPUtil.getInstance();
         startMills = System.currentTimeMillis();
         analyMap = new HashMap<String, String>();

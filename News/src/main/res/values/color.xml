@@ -224,4 +224,9 @@
     <color name="dark_gray_pressed">#373e44</color>
     <color name="darker_gray">#1f2226</color>
 
+    <color name="touming">#aa000000</color>
+
+    <color name="ssxinhongse1">#fff85959</color>
+    <color name="ssxinhongse1_press">#7ff85959</color>
+
 </resources>

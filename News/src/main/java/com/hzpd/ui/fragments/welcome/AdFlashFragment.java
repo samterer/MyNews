@@ -15,6 +15,7 @@ import com.hzpd.hflt.R;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.WelcomeActivity;
 import com.hzpd.ui.fragments.BaseFragment;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
@@ -49,8 +50,14 @@ public class AdFlashFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        adflash_img_ad.postDelayed(runnable, 2000);
         isAdd = true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("test", "  onResume ");
+        adflash_img_ad.postDelayed(runnable, 2000);
     }
 
     @Override
@@ -69,6 +76,7 @@ public class AdFlashFragment extends BaseFragment {
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
+            Log.e("test", "  AdFlashFragment " +  isAdd);
             Bitmap bm = null;
             if (!isAdd) {
                 return;
@@ -78,7 +86,7 @@ public class AdFlashFragment extends BaseFragment {
                 if (!TextUtils.isEmpty(url)) {
 
                     try {
-                        File fBitmap = DiskCacheUtils.findInCache(url, mImageLoader.getDiskCache());
+                        File fBitmap = DiskCacheUtils.findInCache(url.replaceAll("&amp;", "&"), mImageLoader.getDiskCache());
                         if (null != fBitmap) {
                             bm = BitmapFactory.decodeFile(fBitmap
                                     .getAbsolutePath());
@@ -115,6 +123,7 @@ public class AdFlashFragment extends BaseFragment {
                     try {
                         if (isAdd) {
                             adflash_img_ad.setImageResource(R.drawable.welcome_1);
+                            Log.e("test", "  loadMainUI ");
                             ((WelcomeActivity) getActivity()).loadMainUI();
                         }
                     } catch (Exception e) {

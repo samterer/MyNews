@@ -4,16 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -22,9 +18,9 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.custorm.CircleImageView;
+import com.hzpd.custorm.PopUpwindowLayout;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.CommentzqzxBean;
-import com.hzpd.modle.MyCommentListBean;
 import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.ui.activity.XF_PInfoActivity;
 import com.hzpd.ui.activity.ZQ_ReplyCommentActivity;
@@ -49,7 +45,6 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.LogUtils;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -171,34 +166,48 @@ public class CommentListAdapter extends BaseAdapter {
 
             // 评论内容
             holder.comment_text.setText(item.getContent());
-            holder.rl_comment_text.setOnClickListener(new View.OnClickListener() {
+//            holder.rl_comment_text.setOnClickListener(new View.OnClickListener() {
+            holder.comment_text.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showPopUp(v, parent);
-//                    final PopupWindow mPopupWindow = new PopupWindow(parent.getContext());
-//                    LinearLayout pv = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(
-//                            R.layout.comment_delete_pop, null);
-//                    mPopupWindow.setContentView(pv);
-//                    mPopupWindow.setWindowLayoutMode(LinearLayout.LayoutParams.WRAP_CONTENT,
-//                            LinearLayout.LayoutParams.WRAP_CONTENT);
-//                    ColorDrawable dw = new ColorDrawable(Color.TRANSPARENT);
-//                    mPopupWindow.setBackgroundDrawable(dw);
-//                    mPopupWindow.setOutsideTouchable(true);
-//                    mPopupWindow.setFocusable(true);
-//
-//
-////                    int[] location = new int[2];
-////                    v.getLocationOnScreen(location);
-////
-//                    int[] location = new int[2];
-//                    int popupWidth = pv.getMeasuredWidth();
-//                    int popupHeight = pv.getMeasuredHeight();
-//                    v.getLocationOnScreen(location);
-//                    mPopupWindow.showAsDropDown(v,
-//                            v.getWidth() / 2 - 30,
-//                            -v.getHeight());
-////                    mPopupWindow.showAtLocation(v, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2) - popupWidth / 2, location[1] - popupHeight);
-////                    mPopupWindow.showAsDropDown(v);
+
+                    ArrayList<String> titles = new ArrayList<String>();
+                    titles.add(parent.getContext().getResources().getString(R.string.reply_comment));
+//                titles.add("删除");
+                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_popupwindow, null);
+                    PopUpwindowLayout popUpwindowLayout = (PopUpwindowLayout) view.findViewById(R.id.llayout_popupwindow);
+                    popUpwindowLayout.initViews(parent.getContext(), titles, false);
+                    final PopupWindow popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                    int popupWidth = view.getMeasuredWidth();
+                    int popupHeight = view.getMeasuredHeight();
+                    int[] location = new int[2];
+                    // 允许点击外部消失
+                    popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                    popupWindow.setOutsideTouchable(true);
+                    popupWindow.setFocusable(true);
+                    // 获得位置
+                    v.getLocationOnScreen(location);
+                    popupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
+                    popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2) - popupWidth / 2, location[1] - popupHeight);
+                    popUpwindowLayout.setClickListener(new PopUpwindowLayout.OnClickCallback() {
+
+                        @Override
+                        public void onItemClick(LinearLayout parentView, int size, int index) {
+                            switch (index) {
+                                case 0:
+//                                    Toast.makeText(parent.getContext(), "回复评论", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(parent.getContext(), ZQ_ReplyCommentActivity.class);
+                                    intent.putExtra("USER_UID", item.getCid());
+                                    parent.getContext().startActivity(intent);
+                                    popupWindow.dismiss();
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    });
+
                 }
             });
 
@@ -289,28 +298,6 @@ public class CommentListAdapter extends BaseAdapter {
 
 
         return convertView;
-    }
-
-    private void showPopUp(View v, ViewGroup parent) {
-        LinearLayout layout = new LinearLayout(parent.getContext());
-        layout.setBackgroundColor(Color.GRAY);
-        TextView tv = new TextView(parent.getContext());
-        tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        tv.setText("I'm a popI'm a popI'm a popI'm a pop ");
-        tv.setTextColor(Color.WHITE);
-        layout.addView(tv);
-
-        PopupWindow popupWindow = new PopupWindow(layout, 120, 120);
-
-        popupWindow.setFocusable(true);
-        popupWindow.setOutsideTouchable(true);
-        popupWindow.setBackgroundDrawable(new BitmapDrawable());
-
-        int[] location = new int[2];
-        v.getLocationOnScreen(location);
-
-//        popupWindow.showAsDropDown(v);
-        popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, location[0], location[1] - popupWindow.getHeight());
     }
 
     public void appendData(List<CommentzqzxBean> data) {

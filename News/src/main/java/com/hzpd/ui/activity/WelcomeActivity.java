@@ -64,6 +64,7 @@ public class WelcomeActivity extends MWBaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
+        Log.e("test", "  WelcomeActivity ");
         exists = false;
         setContentView(R.layout.frame_welcome);
         welcome_top_view = findViewById(R.id.welcome_top_view);
@@ -233,6 +234,11 @@ public class WelcomeActivity extends MWBaseActivity {
                 final JSONObject obj = FjsonUtil
                         .parseObject(responseInfo.result);
                 if (null != obj) {
+                    try {
+                        App.getInstance().newTime = obj.getString("newTime");
+                        App.getInstance().oldTime = obj.getString("oldTime");
+                    } catch (Exception e) {
+                    }
                     List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
                     if (list != null) {
                         for (NewsBean bean : list) {
@@ -244,7 +250,10 @@ public class WelcomeActivity extends MWBaseActivity {
                         new NewsListDbTask(getApplicationContext()).saveList(list, new I_Result() {
                             @Override
                             public void setResult(Boolean flag) {
-                                loadMainUI();
+                                if (isResume) {
+                                    loadMainUI();
+                                }
+                                return;
                             }
                         });
                     } else {

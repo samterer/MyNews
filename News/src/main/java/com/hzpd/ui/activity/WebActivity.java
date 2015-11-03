@@ -99,7 +99,6 @@ public class WebActivity extends Activity {
                 super.onPageFinished(view, url);
                 background_empty.setVisibility(View.GONE);
                 wProgress = 100;
-                loading = false;
             }
 
             @Override

@@ -71,8 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/setting_item_selector"
-        android:padding="10dip"
-        >
+        android:padding="10dip">
 
         <com.hzpd.ui.widget.FontTextView
             android:id="@+id/setting_textsize"
@@ -88,8 +87,8 @@
             android:id="@+id/setting_chosse_textsize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/choose_textsize_iv"
             android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/choose_textsize_iv"
             android:text="@string/settings_option_font_small"
             android:textColor="@color/zqzx_font_set_normal"
             android:textSize="20sp" />
@@ -129,8 +128,7 @@
             android:textColor="@color/zqzx_font_set_title"
             android:textSize="20sp" />
 
-        <com.hzpd.custorm.SlideSwitch
-            xmlns:slideswitch="http://schemas.android.com/apk/res-auto"
+        <com.hzpd.custorm.SlideSwitch xmlns:slideswitch="http://schemas.android.com/apk/res-auto"
             android:id="@+id/zqzx_setting_push"
             android:layout_width="60dp"
             android:layout_height="30dp"
@@ -157,8 +155,7 @@
             android:textColor="@color/zqzx_font_set_title"
             android:textSize="20sp" />
 
-        <com.hzpd.custorm.SlideSwitch
-            xmlns:slideswitch="http://schemas.android.com/apk/res-auto"
+        <com.hzpd.custorm.SlideSwitch xmlns:slideswitch="http://schemas.android.com/apk/res-auto"
             android:id="@+id/zqzx_setting_weibo"
             android:layout_width="60dp"
             android:layout_height="30dp"
@@ -253,8 +250,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/setting_item_selector"
-        android:padding="10dip"
-        >
+        android:padding="10dip">
 
         <com.hzpd.ui.widget.FontTextView
             android:id="@+id/setting_station"
@@ -270,8 +266,8 @@
             android:id="@+id/setting_chosse_station"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/choose_station_iv"
             android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/choose_station_iv"
             android:text="Indonesia"
             android:textColor="@color/zqzx_font_set_normal"
             android:textSize="20sp" />
@@ -372,7 +368,7 @@
             android:textSize="20sp" />
     </RelativeLayout>
 
-    <!--检查更新-->
+    <!--测试-->
     <RelativeLayout
         android:id="@+id/rl_test"
         android:layout_width="match_parent"

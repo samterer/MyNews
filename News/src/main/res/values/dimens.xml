@@ -40,7 +40,7 @@
     <dimen name="item_news_comments">13sp</dimen>
 
 
-
+    <dimen name="text_size_16">16sp</dimen>
 
 
 
@@ -489,6 +489,6 @@
     <dimen name="float_title_size_large">36sp</dimen>
     <dimen name="float_title_size_large1">16sp</dimen>
 
-
+    <dimen name="category_item_corner">24.0dip</dimen>
     <dimen name="actionbar_dimen">40dp</dimen>
 </resources>

@@ -217,4 +217,24 @@
         <item name="android:backgroundDimAmount">0.6</item>
     </style>
 
+    <style name="mypopwindow_anim_style">
+
+        <!-- 指定显示的动画xml -->
+        <item name="android:windowEnterAnimation">@anim/anim_popupwindow_show</item>
+
+        <!-- 指定消失的动画xml -->
+        <item name="android:windowExitAnimation">@anim/anim_popupwindow_hide</item>
+    </style>
+
+
+
+    <style name="edit_order_btn">
+        <item name="android:textSize">14.0sp</item>
+        <item name="android:textColor">@color/ssxinhongse1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/btn_order</item>
+        <item name="android:minWidth">56.0dip</item>
+        <item name="android:minHeight">24.0dip</item>
+    </style>
+
 </resources>

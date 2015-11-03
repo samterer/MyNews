@@ -248,7 +248,7 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 						TUtils.toast(obj.getString("msg"));
 					}
 				} else {
-					TUtils.toast(getString(R.string.toast_server_error));
+					TUtils.toast(getString(R.string.toast_cannot_connect_network));
 				}
 			}
 
@@ -375,7 +375,7 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 						setData(columnid, obj);
 					}
 				} else {
-					TUtils.toast(getString(R.string.toast_server_error));
+					TUtils.toast(getString(R.string.toast_cannot_connect_network));
 				}
 			}
 

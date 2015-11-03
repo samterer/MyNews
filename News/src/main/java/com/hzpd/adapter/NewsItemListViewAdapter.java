@@ -31,6 +31,7 @@ import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.db.NewsListDbTask;
 import com.lidroid.xutils.ViewUtils;
@@ -44,6 +45,11 @@ import java.util.List;
 
 public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
+    public interface CallBack {
+        void loadMore();
+    }
+
+    public CallBack callBack;
     Context context;
     LayoutInflater inflater;
     List<NewsBean> list = null;
@@ -52,13 +58,14 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
     DBHelper dbHelper;
     List<NewsBean> appendoldlist = null;
 
-    final int TYPE_FLASH = 9;
-    final int TYPE_THREEPIC = 0;
-    final int TYPE_LEFTPIC = 1;
-    final int TYPE_BIGPIC = 2;
-    final int TYPE_LARGE = 3;
-    final int TYPE_AD = 0xad;
-
+    final static int TYPE_FLASH = 9;
+    final static int TYPE_THREEPIC = 0;
+    final static int TYPE_LEFTPIC = 1;
+    final static int TYPE_BIGPIC = 2;
+    final static int TYPE_LARGE = 3;
+    final static int TYPE_AD = 0xad;
+    final static int TYPE_LOADING = 0xDD;
+    public boolean showLoading = false;
     private SPUtil spu;
     private float fontSize = 0;//字体大小
 
@@ -82,6 +89,9 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             @Override
             public void onAdLoaded(Ad ad) {
                 try {
+                    if (!isAdd) {
+                        return;
+                    }
                     newsBeanAD = new NewsBean();
                     newsBeanAD.setType("ad");
                     String titleForAd = nativeAd.getAdTitle();
@@ -99,6 +109,9 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     newsBeanAD.setImgs(images);
                     int position = list.size() > positionAD ? positionAD : list.size();
                     list.add(position, newsBeanAD);
+                    if (viewPagelist.size() > 0) {
+                        ++position;
+                    }
                     notifyItemInserted(position);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -145,7 +158,10 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         if (data == null) {
             return;
         }
-        int positon = list.size();
+        int index = getItemCount();
+        if (showLoading) {
+            index = index - 1;
+        }
         if (isClearOld) {
             list.clear();
         }
@@ -161,7 +177,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             }
             notifyDataSetChanged();
         } else {
-            notifyItemRangeInserted(positon, data.size());
+            notifyItemRangeInserted(index, data.size());
         }
     }
 
@@ -194,6 +210,20 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         }
     }
 
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        isAdd = false;
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        isAdd = true;
+    }
+
+    boolean isAdd = true;
+
     public void getReaded(List<NewsBean> list) {
         if (null == list) {
             return;
@@ -203,8 +233,12 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             newsListDbTask.isRead(bean.getNid(), new I_Result() {
                 @Override
                 public void setResult(Boolean flag) {
-                    if (flag) {
-                        readedNewsSet.add(bean.getNid());
+                    try {
+                        if (isAdd && flag) {
+                            readedNewsSet.add(bean.getNid());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             });
@@ -247,6 +281,11 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                         R.layout.news_list_ad_layout, parent, false);
                 viewHolder = new AdHolder(convertView);
                 break;
+            case TYPE_LOADING:
+                convertView = inflater.inflate(
+                        R.layout.list_load_more_layout, parent, false);
+                viewHolder = new LoadingHolder(convertView);
+                break;
         }
         return viewHolder;
     }
@@ -260,6 +299,12 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                 --position;
             }
             switch (type) {
+                case TYPE_LOADING:
+                    Log.e("test", " TYPE_LOADING ");
+                    if (showLoading && callBack != null) {
+                        callBack.loadMore();
+                    }
+                    break;
                 case TYPE_FLASH:
                     FlashHolder flashHolder = (FlashHolder) holder;
                     topviewAdapter.setTid(viewPagelist.get(0).getTid());
@@ -659,6 +704,9 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
+        if (showLoading && position == getItemCount() - 1) {
+            return TYPE_LOADING;
+        }
         if (viewPagelist.size() > 0) {
             if (position == 0) {
                 return TYPE_FLASH;
@@ -681,7 +729,11 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return list.size() + (viewPagelist.size() > 0 ? 1 : 0);
+        int count = list.size() + (viewPagelist.size() > 0 ? 1 : 0);
+        if (showLoading) {
+            ++count;
+        }
+        return count;
     }
 
     public void setFontSize(float mfontSize) {
@@ -698,6 +750,14 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         private ImageView newsitem_img;
 
         public AdHolder(View itemView) {
+            super(itemView);
+            ViewUtils.inject(this, itemView);
+        }
+
+    }
+
+    public class LoadingHolder extends RecyclerView.ViewHolder {
+        public LoadingHolder(View itemView) {
             super(itemView);
             ViewUtils.inject(this, itemView);
         }

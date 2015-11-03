@@ -3,7 +3,7 @@
     <string name="app_fbid">1902056863352757</string>
 
     <!-- 翻译 -->
-    <string name="recommend">rekomendasi</string>
+    <string name="recommend">REKOMENDASI</string>
     <string name="comment_ok">komen berhasil</string>
     <string name="search_none">"Maaf, tidak dapat menemukan “%1$s” yet"</string>
     <string name="language">Bahasa</string>
@@ -153,7 +153,7 @@
     <string name="prompt_reply">Reply</string>
     <string name="prompt_auditing">Memeriksa</string>
     <string name="prompt_long_press_to_adjust">Tahan teks diatas untuk menyesuaikan, klik teks untuk menambah </string>
-    <string name="prompt_click_to_add_or_cancel">Klik untuk tambah atau batal</string>
+    <string name="prompt_click_to_add_or_cancel">Tekan Untuk Memindahkan Kolom</string>
     <string name="prompt_get_captcha">Dapatkan captcha</string>
     <string name="prompt_verify_captcha">Verifikasi</string>
     <string name="prompt_get">Dapatkan</string>
@@ -258,7 +258,9 @@
     <string name="toast_cache_failed">Cache tidak berlaku, harap buka kembali</string>
     <string name="toast_xx_cannot_be_empty">%1$s tidak boleh kosong</string>
     <string name="toast_feedback_cannot_be_empty">Feedback tidak boleh kosong</string>
+    <string name="toast_feedback_cannot_be_short">Silahkan tulis konten</string>
     <string name="toast_email_cannot_be_empty">Email tidak boleh kosong</string>
+    <string name="toast_email_cannot_be_error">Alamat Email salah</string>
     <string name="toast_input_cannot_be_empty">Masukan konten tidak boleh kosong</string>
     <string name="toast_name_cannot_be_empty">Nama tidak boleh kosong</string>
     <string name="toast_phone_cannot_be_empty">Nomor handphone tidak boleh kosong</string>
@@ -327,5 +329,15 @@
     <string name="load_more_loading">sedang memproses...</string>
 
     <string name="reply_share">Bagikan di Facebook</string>
+    <string name="reply_comment">balas komentar</string>
+    <string name="edit_my_colum">Bacaan Saya</string>
+    <string name="edit_other_colum">Tambahkan</string>
+    <string name="update_version">Versi Terbaru</string>
+    <string name="feed_ok">Laporan Berhasil</string>
+    <string name="feed_fail">Laporan Gagal</string>
+    <string name="editcolumn_edit">Edit</string>
+    <string name="editcolumn_ok">Berhasil</string>
+
+
 
 </resources>

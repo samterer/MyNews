@@ -1,16 +1,10 @@
 package com.hzpd.custorm;
 
-import com.hzpd.adapter.DragAdapter2;
-import com.hzpd.hflt.R;
-import com.hzpd.utils.DataTools;
-
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.os.Vibrator;
 import android.util.AttributeSet;
-import com.hzpd.utils.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +17,11 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.hzpd.adapter.RecommendDragAdapter;
+import com.hzpd.hflt.R;
+import com.hzpd.utils.DataTools;
+import com.hzpd.utils.Log;
 
 public class DragGrid extends GridView {
     /**
@@ -132,6 +131,7 @@ public class DragGrid extends GridView {
     /* 移动时候最后个动画的ID */
     private String LastAnimationID;
 
+
     public DragGrid(Context context) {
         super(context);
         init(context);
@@ -151,29 +151,37 @@ public class DragGrid extends GridView {
         mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         //将布局文件中设置的间距dip转为px
         mHorizontalSpacing = DataTools.dip2px(context, mHorizontalSpacing);
+
     }
 
 
     //监听 msq
     public interface OnDragListener {
         void onDrag();
+
     }
 
     OnDragListener onDragListener;
 
+
     public void setOnDragListener(OnDragListener onDragListener) {
         this.onDragListener = onDragListener;
+
     }
+
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         // TODO Auto-generated method stub
-        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            downX = (int) ev.getX();
-            downY = (int) ev.getY();
-            windowX = (int) ev.getX();
-            windowY = (int) ev.getY();
-            setOnItemClickListener(ev);
+//        if (isEdit) {
+            if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+                downX = (int) ev.getX();
+                downY = (int) ev.getY();
+                windowX = (int) ev.getX();
+                windowY = (int) ev.getY();
+                setOnItemClickListener(ev);
+//            }
+
         }
         return super.onInterceptTouchEvent(ev);
     }
@@ -240,7 +248,7 @@ public class DragGrid extends GridView {
         int tempPostion = pointToPosition(x, y);
 //		if (tempPostion != AdapterView.INVALID_POSITION) {
         dropPosition = tempPostion;
-        DragAdapter2 mDragAdapter = (DragAdapter2) getAdapter();
+        RecommendDragAdapter mDragAdapter = (RecommendDragAdapter) getAdapter();
         //显示刚拖动的ITEM
         mDragAdapter.setShowDropItem(true);
         //刷新适配器，让对应的ITEM显示
@@ -248,6 +256,14 @@ public class DragGrid extends GridView {
         if (onDragListener != null)
             onDragListener.onDrag();
 //		}
+
+    }
+
+    private boolean isEdit;
+
+    public void isEditColumn(boolean isEdit) {
+        this.isEdit = isEdit;
+        Log.e("isEditColumn", "isEditColumn--->" + isEdit);
     }
 
     /**
@@ -261,6 +277,10 @@ public class DragGrid extends GridView {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                            int position, long id) {
+                Log.e("onItemLongClick", "onItemLongClick--->" + isEdit);
+//                if (!isEdit) {
+//                    return true;
+//                }
                 int x = (int) ev.getX();// 长安事件的X位置
                 int y = (int) ev.getY();// 长安事件的y位置
 
@@ -270,9 +290,9 @@ public class DragGrid extends GridView {
                     return false;
                 }
                 ViewGroup dragViewGroup = (ViewGroup) getChildAt(dragPosition - getFirstVisiblePosition());
-                TextView dragTextView = (TextView) dragViewGroup.findViewById(R.id.text_item);
-                dragTextView.setSelected(true);
-                dragTextView.setEnabled(false);
+//                TextView dragTextView = (TextView) dragViewGroup.findViewById(R.id.text_item);
+//                dragTextView.setSelected(true);
+//                dragTextView.setEnabled(false);
                 itemHeight = dragViewGroup.getHeight();
                 itemWidth = dragViewGroup.getWidth();
                 itemTotalCount = DragGrid.this.getCount();
@@ -291,9 +311,10 @@ public class DragGrid extends GridView {
                     dragOffsetX = (int) (ev.getRawX() - x);//手指在屏幕的上X位置-手指在控件中的位置就是距离最左边的距离
                     dragOffsetY = (int) (ev.getRawY() - y);//手指在屏幕的上y位置-手指在控件中的位置就是距离最上边的距离
                     dragItemView = dragViewGroup;
-                    dragViewGroup.destroyDrawingCache();
                     dragViewGroup.setDrawingCacheEnabled(true);
+                    dragViewGroup.buildDrawingCache();
                     Bitmap dragBitmap = Bitmap.createBitmap(dragViewGroup.getDrawingCache());
+                    dragViewGroup.setDrawingCacheEnabled(false);
                     mVibrator.vibrate(50);//设置震动时间
                     startDrag(dragBitmap, (int) ev.getRawX(), (int) ev.getRawY());
                     hideDropItem();
@@ -359,7 +380,7 @@ public class DragGrid extends GridView {
      * 隐藏 放下 的ITEM
      */
     private void hideDropItem() {
-        ((DragAdapter2) getAdapter()).setShowDropItem(false);
+        ((RecommendDragAdapter) getAdapter()).setShowDropItem(false);
     }
 
     /**
@@ -475,7 +496,7 @@ public class DragGrid extends GridView {
                             // TODO Auto-generated method stub
                             // 如果为最后个动画结束，那执行下面的方法
                             if (animation.toString().equalsIgnoreCase(LastAnimationID)) {
-                                DragAdapter2 mDragAdapter = (DragAdapter2) getAdapter();
+                                RecommendDragAdapter mDragAdapter = (RecommendDragAdapter) getAdapter();
                                 mDragAdapter.exchange(startPosition, dropPosition);
                                 startPosition = dropPosition;
                                 dragPosition = dropPosition;

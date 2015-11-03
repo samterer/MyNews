@@ -339,11 +339,11 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
                 if (currentItem == i) {
 //					tab.setTypeface(Const.Font.GOTHICB, Typeface.BOLD);
                     tab.setTextColor(tabTextSelectedColor);
-                    tab.getPaint().setFakeBoldText(false);//改变字体变粗
+                    tab.getPaint().setFakeBoldText(true);//改变字体变粗
                 } else {
 //					tab.setTypeface(Const.Font.GOTHIC, Typeface.NORMAL);
                     tab.setTextColor(tabTextColor);
-                    tab.getPaint().setFakeBoldText(false);
+                    tab.getPaint().setFakeBoldText(true);
                 }
 
                 // setAllCaps() is only available from API 14, so the upper case

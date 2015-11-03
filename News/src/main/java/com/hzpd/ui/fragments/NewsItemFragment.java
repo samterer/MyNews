@@ -2,26 +2,21 @@ package com.hzpd.ui.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.facebook.ads.NativeAd;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshRecyclerView;
 import com.hzpd.adapter.NewsItemListViewAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.Adbean;
@@ -63,7 +58,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-
 public class NewsItemFragment extends BaseFragment implements I_Control, View.OnClickListener {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -81,29 +75,24 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         }
     }
 
-    private PullToRefreshRecyclerView pullToRefreshRecyclerView;
-    private RecyclerView mXListView;
-    private View background_empty;
-
     private NewsItemListViewAdapter adapter;
-
     private NewsChannelBean channelbean;//本频道
     private String newsItemPath;//本频道根目录flash
-
     private int page = 1;
     private static final int pageSize = 15;//
-
     private NewsListDbTask newsListDbTask; //新闻列表数据库
-
     // 是否刷新最新数据
     private boolean mFlagRefresh = true;
     private boolean isRefresh = true;//是否首次加载
     private boolean isNeedRefresh = true;
     private int position = -1;
     private NativeAd nativeAd;
-
     private TextView update_counts;
 
+    private SwipeRefreshLayout mSwipeRefreshWidget;
+    private RecyclerView mRecyclerView;
+
+    NewsItemListViewAdapter.CallBack callBack;
 
     public NewsItemFragment() {
 
@@ -132,6 +121,11 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     }
 
     RecyclerView.LayoutManager layoutManager;
+    private ImageView background_empty;
+
+    boolean addLoading = false;
+
+    private boolean  isRefreshCounts;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -139,61 +133,63 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         page = 1;
         isRefresh = true;
         View view = inflater.inflate(R.layout.news_channel_fragment, container, false);
-        pullToRefreshRecyclerView = (PullToRefreshRecyclerView) view.findViewById(R.id.pull_to_refresh_recyclerview);
+        background_empty = (ImageView) view.findViewById(R.id.background_empty);
         update_counts = (TextView) view.findViewById(R.id.update_counts);
-        mXListView = pullToRefreshRecyclerView.getRefreshableView();
-        layoutManager = new LinearLayoutManager(activity);
-        mXListView.setLayoutManager(layoutManager);
-        mXListView.scrollToPosition(0);
-        adapter = new NewsItemListViewAdapter(activity, this);
-        mXListView.setAdapter(adapter);
-//        mXListView.addItemDecoration(itemDecoration);
-        background_empty = view.findViewById(R.id.background_empty);
         background_empty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pullToRefreshRecyclerView.setRefreshing(true);
+                mSwipeRefreshWidget.setRefreshing(true);
             }
         });
-        padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
+        mSwipeRefreshWidget = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recylerlist);
+
+        mSwipeRefreshWidget.setColorScheme(R.color.google_blue, R.color.google_red, R.color.google_yellow, R.color.google_green);
+        mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                page = 1;
+                mFlagRefresh = true;
+                getFlash();
+                getServerList("");
+                isRefreshCounts=true;
+            }
+        });
+
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                //解决RecyclerView和SwipeRefreshLayout共用存在的bug
+                int topRowVerticalPosition =
+                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+                mSwipeRefreshWidget.setEnabled(topRowVerticalPosition >= 0);
+
+                if (addLoading && !adapter.showLoading) {
+                    int count = adapter.getItemCount();
+                    adapter.showLoading = true;
+                    adapter.notifyItemInserted(count);
+                }
+            }
+
+        });
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        layoutManager = new LinearLayoutManager(activity);
+        mRecyclerView.setLayoutManager(layoutManager);
+        adapter = new NewsItemListViewAdapter(activity, this);
+        mRecyclerView.setAdapter(adapter);
+        callBack = new NewsItemListViewAdapter.CallBack() {
+            @Override
+            public void loadMore() {
+                getServerList("");
+            }
+        };
+        adapter.callBack = callBack;
         return view;
     }
 
-    RecyclerView.ItemDecoration itemDecoration = new MyItemDecoration();
-
-    int padding = 20;
-
-    class MyItemDecoration extends RecyclerView.ItemDecoration {
-        Paint mPaint;
-
-        MyItemDecoration() {
-            mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mPaint.setColor(0xfff5f5f5);
-        }
-
-        @Override
-        public void onDraw(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
-            final int left = parent.getPaddingLeft();
-            final int right = parent.getMeasuredWidth() - parent.getPaddingRight();
-            final int childSize = parent.getChildCount();
-            for (int i = 0; i < childSize; i++) {
-                final View child = parent.getChildAt(i);
-                RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) child.getLayoutParams();
-                final int top = child.getBottom() + layoutParams.bottomMargin;
-                final int bottom = top + padding;
-                canvas.drawRect(left, top, right, bottom, mPaint);
-            }
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            outRect.set(0, 0, 0, padding);
-        }
-    }
-
-    public void setIsNeedRefresh() {
-        isNeedRefresh = true;
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -204,27 +200,10 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             nativeAd = new NativeAd(getActivity().getApplicationContext(), adbean.getFacebookid());
             adapter.setNativeAd(nativeAd, adbean.getPosition());
         }
-        pullToRefreshRecyclerView.setMode(Mode.BOTH);
-        pullToRefreshRecyclerView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
 
-                //下拉刷新
-                refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_pull_label));
-                page = 1;
-                mFlagRefresh = true;
-                getFlash();
-                getServerList("");
-            }
+        page = 1;
+        mFlagRefresh = true;
 
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
-                //上拉加载
-                refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_from_bottom_pull_label));
-                mFlagRefresh = false;
-                getServerList("");
-            }
-        });
     }
 
     @Override
@@ -238,9 +217,8 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     }
 
     public void init() {
-        Log.e("test", " init ");
         if (page == 1) {
-            mXListView.postDelayed(new Runnable() {
+            mRecyclerView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     getFlash();
@@ -259,6 +237,9 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
             @Override
             public void setList(List<NewsBeanDB> list) {
+                if (!isAdded()) {
+                    return;
+                }
                 String nids = "";
                 if (null != list && list.size() > 0) {
                     StringBuilder sb = new StringBuilder();
@@ -278,11 +259,15 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         });
     }
 
+    boolean isLoading = false;
+
     //获取新闻list
     @Override
     public void getServerList(String nids) {
         Log.e("test", "getServerList ");
-
+        if (isLoading) {
+            return;
+        }
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("tid", channelbean.getTid());
@@ -297,22 +282,18 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 , new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                isLoading = false;
+                page++;
                 if (!isAdded()) {
                     return;
                 }
-//                update_counts.setVisibility(View.VISIBLE);
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        update_counts.setVisibility(View.GONE);
-//                    }
-//                }, 1000);
+                mSwipeRefreshWidget.setRefreshing(false);
+
+
                 page++;
-                pullToRefreshRecyclerView.onRefreshComplete();
-//                Log.e("obj1", "obj--->" + responseInfo.result.toString());
+
                 final JSONObject obj = FjsonUtil
                         .parseObject(responseInfo.result);
-//                Log.e("obj","obj--->"+obj.toString());
                 if (null != obj) {
                     //缓存更新
                     JSONObject cache = obj.getJSONObject("cachetime");
@@ -330,18 +311,18 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                         setData(obj);
                     }
                 } else if (isAdded()) {
-                    TUtils.toast(getString(R.string.toast_server_error));
+                    TUtils.toast(getString(R.string.toast_cannot_connect_network));
                 }
             }
 
             @Override
             public void onFailure(HttpException error, String msg) {
+                isLoading = false;
                 if (!isAdded()) {
                     return;
                 }
-                pullToRefreshRecyclerView.onRefreshComplete();
-                pullToRefreshRecyclerView.setMode(Mode.BOTH);
-                TUtils.toast(getString(R.string.toast_server_error));
+                mSwipeRefreshWidget.setRefreshing(false);
+                TUtils.toast(getString(R.string.toast_cannot_connect_network));
             }
         });
     }
@@ -351,19 +332,38 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     //服务端返回数据处理
     @Override
     public void setData(JSONObject obj) {
+        if (!isAdded()) {
+            return;
+        }
         //数据处理
         switch (obj.getIntValue("code")) {
             case 200: {
                 List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
+
                 if (null != list) {
+                    final int i=list.size();
+
+                    if (isRefreshCounts) {
+                        update_counts.setVisibility(View.VISIBLE);
+                        update_counts.setText("已更新"+i+"条");
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.e("update_counts", "update_counts");
+                                update_counts.setVisibility(View.GONE);
+                            }
+                        }, 1000);
+                    }
+
                     adapter.removeOld();
                     StringBuilder builder = new StringBuilder();
                     for (NewsBean bean : list) {
                         builder.append(bean.getNid() + ",");
                     }
+                    adapter.showLoading = true;
                     adapter.appendData(list, mFlagRefresh, false);
+                    mFlagRefresh = false;
                     background_empty.setVisibility(View.GONE);
-                    pullToRefreshRecyclerView.setMode(Mode.BOTH);
                     if (loadad) {
                         try {
                             nativeAd.loadAd();
@@ -372,33 +372,23 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                             e.printStackTrace();
                         }
                     }
+                    newsListDbTask.saveList(list, null);
                 }
-                newsListDbTask.saveList(list, new I_Result() {
-                    @Override
-                    public void setResult(Boolean flag) {
-                        if (!flag) {
-                            return;
-                        }
-                    }
-                });
             }
             break;
-            case 201: {
-                pullToRefreshRecyclerView.setMode(Mode.BOTH);
-            }
-            break;
-            case 202: {
-                pullToRefreshRecyclerView.setMode(Mode.BOTH);
-                TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
-            }
-            break;
-            case 209: {
-                pullToRefreshRecyclerView.setMode(Mode.BOTH);
-            }
-            break;
-
             default: {
-//                TUtils.toast(obj.getString("msg"));
+                TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
+                if (adapter.showLoading) {
+                    int count = adapter.getItemCount();
+                    adapter.showLoading = false;
+                    adapter.notifyItemRemoved(count);
+                    mRecyclerView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            addLoading = true;
+                        }
+                    }, 2000);
+                }
             }
             break;
         }
@@ -425,6 +415,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                             responseInfo.result.delete();
                             return;
                         }
+                        mSwipeRefreshWidget.setRefreshing(false);
                         List<NewsPageListBean> mViewPagelist = null;
                         if (200 == obj.getIntValue("code")) {
                             JSONObject object = obj.getJSONObject("data");

@@ -16,6 +16,7 @@ public class DBHelper {
     private DbUtils bianminListDbUtils;//便民列表数据库
     private DbUtils zhuantiListDbUtils;//专题列表数据库
 
+    private DbUtils logDbUtils;
 
     private static DBHelper instance;
 
@@ -37,7 +38,7 @@ public class DBHelper {
         videoDBUitls.configAllowTransaction(true);
 
         newsListDbUtils = DbUtils.create(context
-                , dbPath, App.newsListDb, 3, new DbUtils.DbUpgradeListener() {
+                , dbPath, App.newsListDb, 4, new DbUtils.DbUpgradeListener() {
             @Override
             public void onUpgrade(DbUtils dbUtils, int i, int i1) {
                 try {
@@ -51,6 +52,8 @@ public class DBHelper {
                 , dbPath, App.bianminListDb);
         zhuantiListDbUtils = DbUtils.create(context
                 , dbPath, App.zhuantiListDb);
+        logDbUtils = DbUtils.create(context
+                , dbPath, App.userLogDb);
 
 
     }
@@ -86,5 +89,7 @@ public class DBHelper {
         return bianminListDbUtils;
     }
 
-
+    public DbUtils getLogDbUtils() {
+        return logDbUtils;
+    }
 }

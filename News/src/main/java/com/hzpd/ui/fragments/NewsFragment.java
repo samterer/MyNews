@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.hzpd.adapter.NewsFragmentPagerAdapter1;
+import com.hzpd.adapter.NewsFragmentPagerAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.modle.event.ChannelSortedList;
@@ -17,6 +17,7 @@ import com.hzpd.ui.activity.MyEditColumnActivity;
 import com.hzpd.ui.widget.PagerSlidingTabStrip;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.SerializeUtil;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.util.LogUtils;
@@ -40,7 +41,7 @@ public class NewsFragment extends BaseFragment {
     @ViewInject(R.id.psts_tabs_app)
     private PagerSlidingTabStrip tabStrip;
 
-    private NewsFragmentPagerAdapter1 adapter;
+    private NewsFragmentPagerAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,7 +94,7 @@ public class NewsFragment extends BaseFragment {
         }
         LogUtils.i("mList-->" + mList.size());
 
-        adapter = new NewsFragmentPagerAdapter1(fm);
+        adapter = new NewsFragmentPagerAdapter(fm);
         pager.setAdapter(adapter);
         adapter.sortChannel(mList);
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -104,11 +105,12 @@ public class NewsFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(int position) {
+                Log.e("onPageSelected", "onPageSelected--->" + position);
                 pager.setCurrentItem(position);
                 adapter.setSelectedPosition(position);
                 BaseFragment fragment = (BaseFragment) adapter.getItem(position);
-                if (fragment instanceof NewsItemFragment1) {
-                    NewsItemFragment1 frag = (NewsItemFragment1) fragment;
+                if (fragment instanceof NewsItemFragment) {
+                    NewsItemFragment frag = (NewsItemFragment) fragment;
                     frag.init();
                 }
             }
@@ -135,6 +137,11 @@ public class NewsFragment extends BaseFragment {
         adapter.sortChannel(csl.getSaveTitleList());
         pager.setOffscreenPageLimit(adapter.getCount());
         tabStrip.notifyDataSetChanged();
+        BaseFragment fragment = (BaseFragment) adapter.getItem(pager.getCurrentItem());
+        if (fragment instanceof NewsItemFragment) {
+            NewsItemFragment frag = (NewsItemFragment) fragment;
+            frag.init();
+        }
     }
 
 }

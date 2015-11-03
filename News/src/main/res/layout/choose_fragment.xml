@@ -28,6 +28,17 @@
         android:layout_gravity="center"
         android:src="@drawable/zqzx_nonetwork" />
 
+    <TextView
+        android:id="@+id/update_counts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/zqzx_left_html"
+        android:gravity="center"
+        android:padding="5dp"
+        android:visibility="gone"
+        />
+
     <ImageView
         android:id="@+id/floating_button"
         android:layout_width="42dp"
