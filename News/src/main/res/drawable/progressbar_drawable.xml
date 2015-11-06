@@ -11,7 +11,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
     <clip>
         <shape>
             <corners android:radius="0.0dip" />
-            <gradient android:startColor="#fdb800" android:endColor="#fdb800" android:angle="90.0" />
+            <gradient android:startColor="#ff7e00" android:endColor="#ff7e00" android:angle="90.0" />
         </shape>
     </clip>
 </item>
@@ -19,7 +19,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
     <clip>
         <shape>
             <corners android:radius="0.0dip" />
-            <gradient android:startColor="#fdb800" android:endColor="#fdb800" android:angle="90.0"/>
+            <gradient android:startColor="#ff7e00" android:endColor="#ff7e00" android:angle="90.0"/>
         </shape>
     </clip>
 </item>

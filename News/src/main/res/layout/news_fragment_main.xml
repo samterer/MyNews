@@ -1,64 +1,101 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/zqzx_bg_normal"
-    android:orientation="vertical">
+    >
 
-    <RelativeLayout
-        android:id="@+id/news_indicator_root"
+
+
+    <LinearLayout
+        android:id="@+id/ll_main"
         android:layout_width="match_parent"
-        android:layout_height="33dp"
-        android:background="@color/white">
+        android:layout_height="match_parent"
+        android:background="@color/zqzx_bg_normal"
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/news_button"
-            android:layout_width="45dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            android:background="@drawable/main_channel_selector"
-            android:contentDescription="@null" />
-
-        <!--顶部频道展示-->
-        <com.hzpd.ui.widget.PagerSlidingTabStrip
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/psts_tabs_app"
+        <RelativeLayout
+            android:id="@+id/news_indicator_root"
             android:layout_width="match_parent"
             android:layout_height="33dp"
-            android:layout_toLeftOf="@id/news_button"
-            android:layout_toRightOf="@id/main_title_left_img"
-            android:background="@color/white"
-            app:pstsDividerColor="#00ffffff"
-            app:pstsIndicatorColor="#ff7e00"
-            app:pstsIndicatorHeight="2dp"
-            app:pstsTabPaddingLeftRight="10dp"
-            app:pstsTabTextColor="#bebebe"
-            app:pstsTabTextSelectedColor="#ff7e00"
-            app:pstsTabTextSize="15sp"
-            app:pstsUnderlineColor="#33444444"
-            app:pstsUnderlineHeight="0dp" />
+            android:background="@color/white">
 
+            <Button
+                android:id="@+id/news_button"
+                android:layout_width="45dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/main_channel_selector"
+                android:contentDescription="@null" />
+
+            <!--顶部频道展示-->
+            <com.hzpd.ui.widget.PagerSlidingTabStrip xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/psts_tabs_app"
+                android:layout_width="match_parent"
+                android:layout_height="33dp"
+                android:layout_toLeftOf="@id/news_button"
+                android:layout_toRightOf="@id/main_title_left_img"
+                android:background="@color/white"
+                app:pstsDividerColor="#00ffffff"
+                app:pstsIndicatorColor="#ff7e00"
+                app:pstsIndicatorHeight="2dp"
+                app:pstsTabPaddingLeftRight="10dp"
+                app:pstsTabTextColor="#bebebe"
+                app:pstsTabTextSelectedColor="#ff7e00"
+                app:pstsTabTextSize="15sp"
+                app:pstsUnderlineColor="#33444444"
+                app:pstsUnderlineHeight="0dp" />
+
+            <View
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_alignParentBottom="true"
+                android:background="#33444444" />
+        </RelativeLayout>
+
+        <!--分割线-->
         <View
-            android:id="@+id/line"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:layout_alignParentBottom="true"
-            android:background="#33444444" />
-    </RelativeLayout>
+            android:background="#33444444"
+            android:visibility="gone" />
 
-    <!--分割线-->
-    <View
+        <!--频道跟换ViewPager-->
+        <android.support.v4.view.ViewPager
+            android:id="@+id/news_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/background_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingBottom="60dp"
+        android:src="@drawable/zqzx_nonetwork"
+        android:visibility="gone"/>
+
+    <FrameLayout
+        android:id="@+id/app_progress_bar"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#33444444"
-        android:visibility="gone" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="3dp"
+        android:background="@color/white"
+        android:visibility="gone">
 
-    <!--频道跟换ViewPager-->
-    <android.support.v4.view.ViewPager
-        android:id="@+id/news_pager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        <ProgressBar
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateDrawable="@drawable/progressbar_drawable_h" />
 
-</LinearLayout>
+    </FrameLayout>
+
+
+</FrameLayout>

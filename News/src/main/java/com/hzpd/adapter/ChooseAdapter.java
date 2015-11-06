@@ -29,10 +29,16 @@ import java.util.List;
 
 public class ChooseAdapter extends RecyclerView.Adapter {
 
+    public void setFontSize(int fontSize) {
+        this.fontSize = fontSize;
+        notifyDataSetChanged();
+    }
+
     public interface CallBack {
         void loadMore();
     }
 
+    private int fontSize;
     public CallBack callBack = null;
 
     private Context context;
@@ -45,6 +51,7 @@ public class ChooseAdapter extends RecyclerView.Adapter {
         this.onClickListener = onClickListener;
         readedNewsSet = new HashSet<String>();
         dbHelper = DBHelper.getInstance(context);
+        this.fontSize = SPUtil.getInstance().getTextSize();
     }
 
     public ChooseAdapter(Context context) {
@@ -179,6 +186,7 @@ public class ChooseAdapter extends RecyclerView.Adapter {
                 break;
                 case TYPE_FIRST: {
                     FirstViewHolder holder = (FirstViewHolder) sHolder;
+                    holder.textView.setTextSize(fontSize);
                     holder.textView.setText(bean.getTitle());
                     holder.imageView.setImageResource(R.drawable.default_bg);
                     SPUtil.displayImage(bean.getImgs()[0], holder.imageView, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
@@ -192,6 +200,7 @@ public class ChooseAdapter extends RecyclerView.Adapter {
                 break;
                 default: {
                     final SecondViewHolder holder = (SecondViewHolder) sHolder;
+                    holder.textView.setTextSize(fontSize);
                     holder.textView.setText(bean.getTitle());
 
                     if (readedNewsSet.contains(bean.getNid())) {
@@ -268,10 +277,8 @@ public class ChooseAdapter extends RecyclerView.Adapter {
      */
     public void addBottom(List<NewsBean> data) {
         if (data != null && !data.isEmpty()) {
-            int position = newsList.size();
             newsList.addAll(data);
             notifyDataSetChanged();
-//            notifyItemRangeInserted(position, data.size());
         }
     }
 
@@ -282,7 +289,6 @@ public class ChooseAdapter extends RecyclerView.Adapter {
         if (data != null && !data.isEmpty()) {
             newsList.addAll(0, data);
             notifyDataSetChanged();
-//            notifyItemRangeChanged(0, data.size());
         }
     }
 

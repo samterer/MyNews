@@ -7,25 +7,46 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.hzpd.adapter.NewsFragmentPagerAdapter;
 import com.hzpd.hflt.R;
+import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsChannelBean;
-import com.hzpd.modle.event.ChannelSortedList;
+import com.hzpd.modle.event.ChangeChannelEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.MyEditColumnActivity;
+import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.widget.PagerSlidingTabStrip;
+import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.InterfaceJsonfile_TW;
+import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
+import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
+import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SerializeUtil;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.StationConfig;
+import com.hzpd.utils.db.NewsListDbTask;
 import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -40,6 +61,12 @@ public class NewsFragment extends BaseFragment {
     private Button news_button;
     @ViewInject(R.id.psts_tabs_app)
     private PagerSlidingTabStrip tabStrip;
+    @ViewInject(R.id.ll_main)
+    private LinearLayout ll_main;
+    @ViewInject(R.id.background_empty)
+    private ImageView background_empty;
+    @ViewInject(R.id.app_progress_bar)
+    private View app_progress_bar;
 
     private NewsFragmentPagerAdapter adapter;
 
@@ -79,6 +106,7 @@ public class NewsFragment extends BaseFragment {
 //		news_button.setEnabled(false);
     }
 
+    private List<NewsChannelBean> mList;
 
     /**
      * 读取频道信息
@@ -86,14 +114,29 @@ public class NewsFragment extends BaseFragment {
     private void readTitleData() {
         // 频道信息即tab，在开屏的时候获取过了，现在取出来
         SerializeUtil<List<NewsChannelBean>> mSu = new SerializeUtil<List<NewsChannelBean>>();
-        List<NewsChannelBean> mList = mSu.readyDataToFile(App.getInstance().getAllDiskCacheDir()
+        mList = mSu.readyDataToFile(App.getInstance().getAllDiskCacheDir()
                 + File.separator + App.mTitle);
 
         if (null == mList) {
             mList = new ArrayList<NewsChannelBean>();
+            ll_main.setVisibility(View.GONE);
+            background_empty.setVisibility(View.VISIBLE);
+            app_progress_bar.setVisibility(View.GONE);
+            background_empty.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    Toast.makeText(getActivity(), "频道刷新", Toast.LENGTH_SHORT).show();
+                    app_progress_bar.setVisibility(View.VISIBLE);
+                    background_empty.setVisibility(View.GONE);
+                    getChannelJson();
+                }
+            });
+        } else {
+            ll_main.setVisibility(View.VISIBLE);
+            background_empty.setVisibility(View.GONE);
+            app_progress_bar.setVisibility(View.GONE);
         }
         LogUtils.i("mList-->" + mList.size());
-
         adapter = new NewsFragmentPagerAdapter(fm);
         pager.setAdapter(adapter);
         adapter.sortChannel(mList);
@@ -133,14 +176,174 @@ public class NewsFragment extends BaseFragment {
         );
     }
 
-    public void onEventMainThread(ChannelSortedList csl) {
-        adapter.sortChannel(csl.getSaveTitleList());
-        pager.setOffscreenPageLimit(adapter.getCount());
-        tabStrip.notifyDataSetChanged();
-        BaseFragment fragment = (BaseFragment) adapter.getItem(pager.getCurrentItem());
-        if (fragment instanceof NewsItemFragment) {
-            NewsItemFragment frag = (NewsItemFragment) fragment;
-            frag.init();
+    //TODO 提前获取推荐频道第一页
+    public void getChooseNewsJson() {
+        RequestParams params = RequestParamsUtils.getParams();
+        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+        params.addBodyParameter("tid", "" + NewsChannelBean.TYPE_RECOMMEND);
+        params.addBodyParameter("nids", "0");
+        params.addBodyParameter("Page", "1");
+        params.addBodyParameter("PageSize", "15");
+
+        httpUtils.send(HttpRequest.HttpMethod.POST
+                , InterfaceJsonfile.CHANNEL_RECOMMEND
+                , params
+                , new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                final JSONObject obj = FjsonUtil
+                        .parseObject(responseInfo.result);
+                if (null != obj) {
+                    try {
+                        App.getInstance().newTime = obj.getString("newTime");
+                        App.getInstance().oldTime = obj.getString("oldTime");
+                    } catch (Exception e) {
+                    }
+                    List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
+                    if (list != null) {
+                        for (NewsBean bean : list) {
+                            bean.setTid("" + NewsChannelBean.TYPE_RECOMMEND);
+                        }
+                    }
+                    if (null != list) {
+                        LogUtils.i(" getChooseNewsJson --> " + list.size());
+                        new NewsListDbTask(getActivity()).saveList(list, new I_Result() {
+                            @Override
+                            public void setResult(Boolean flag) {
+                            }
+                        });
+                    } else {
+                    }
+                } else {
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException error, String msg) {
+//                loadMainUI();
+            }
+        });
+    }
+
+    public void getChannelJson() {
+        Log.e("test", "test--->getChannelJson");
+        final String channelCachePath = App.getInstance().getAllDiskCacheDir()
+                + File.separator
+                + App.mTitle;
+        final File channelCacheFile = new File(channelCachePath);
+        final File target = App.getFile(App.getInstance().getAllDiskCacheDir() + File.separator + "News");
+        String station = SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
+        String CHANNELLIST_url = null;
+        if (station.equals(StationConfig.DEF)) {
+            CHANNELLIST_url = InterfaceJsonfile.CHANNELLIST;
+        } else if (station.equals(StationConfig.YN)) {
+            CHANNELLIST_url = InterfaceJsonfile_YN.CHANNELLIST;
+        } else if (station.equals(StationConfig.TW)) {
+            CHANNELLIST_url = InterfaceJsonfile_TW.CHANNELLIST;
+        }
+        String urlChannelList = CHANNELLIST_url + "News";
+//			下载信息并保存
+        httpUtils.download(urlChannelList,
+                target.getAbsolutePath(),
+                new RequestCallBack<File>() {
+                    @Override
+                    public void onSuccess(ResponseInfo<File> responseInfo) {
+                        String json = App.getFileContext(responseInfo.result);
+                        if (json != null) {
+                            LogUtils.i("channel-->" + json);
+                            JSONObject obj = FjsonUtil.parseObject(json);
+                            if (null == obj) {
+                                return;
+                            }
+                            // 读取json，获取频道信息
+                            JSONArray array = obj.getJSONArray("data");
+                            List<NewsChannelBean> newestChannels = JSONArray
+                                    .parseArray(array.toJSONString(),
+                                            NewsChannelBean.class);
+                            for (int i = 0; i < newestChannels.size(); i++) {
+                                NewsChannelBean newsChannelBean = newestChannels.get(i);
+                                newsChannelBean.getCnname();
+                            }
+                            // 读取频道信息的本地缓存
+                            SerializeUtil<List<NewsChannelBean>> serializeUtil = new SerializeUtil<List<NewsChannelBean>>();
+                            List<NewsChannelBean> cacheChannels = serializeUtil
+                                    .readyDataToFile(channelCacheFile.getAbsolutePath());
+                            // 如果没有缓存
+                            if (null == cacheChannels || cacheChannels.size() < 1) {
+                                if (newestChannels != null && newestChannels.size() > 0) {
+                                    addLocalChannels(newestChannels);
+                                    // 缓存频道信息到SD卡上
+                                    serializeUtil.writeDataToFile(newestChannels, channelCachePath);
+                                }
+                            } else { // 如果有缓存
+                                HashMap<String, NewsChannelBean> channelMap = new HashMap<String, NewsChannelBean>();
+                                for (NewsChannelBean stb : newestChannels) {
+                                    channelMap.put(stb.getTid(), stb);
+                                }
+                                for (int i = 0; i < cacheChannels.size(); i++) {
+                                    // 缓存的频道信息
+                                    NewsChannelBean cacheChannel = cacheChannels.get(i);
+                                    // 最新获取的频道信息
+                                    NewsChannelBean newestChannel = channelMap.get(cacheChannel.getTid());
+
+                                    if (null != newestChannel) {
+                                        // 最新的数据中有和缓存中对应的频道，则更新频道信息
+                                        cacheChannel.setStyle(newestChannel.getStyle());
+                                        cacheChannel.setCnname(newestChannel.getCnname());
+                                    } else {
+                                        // 最新的数据中没有和缓存中对应的频道，删除该频道信息
+                                        cacheChannels.remove(i);
+                                    }
+                                }
+                                addLocalChannels(cacheChannels);
+                                // 更新后信息再次保存到SD卡中
+                                serializeUtil.writeDataToFile(cacheChannels, channelCachePath);
+
+                            }
+                            app_progress_bar.setVisibility(View.GONE);
+                            readTitleData();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        app_progress_bar.setVisibility(View.GONE);
+                        background_empty.setVisibility(View.VISIBLE);
+                    }
+                });
+    }
+
+    //	直接添加本地频道
+    private void addLocalChannels(List<NewsChannelBean> list) {
+
+        // 添加推荐频道
+        NewsChannelBean channelRecommend = new NewsChannelBean();
+        channelRecommend.setTid("" + NewsChannelBean.TYPE_RECOMMEND);
+        channelRecommend.setType(NewsChannelBean.TYPE_RECOMMEND);
+        channelRecommend.setCnname(getString(R.string.recommend));
+        if (!list.contains(channelRecommend)) {
+            list.add(0, channelRecommend);
+        }
+
+    }
+
+    public void onEventMainThread(ChangeChannelEvent event) {
+        boolean changed = false;
+        if (event.csl != null) {
+            changed = true;
+            adapter.sortChannel(event.csl.getSaveTitleList());
+            pager.setOffscreenPageLimit(adapter.getCount());
+            tabStrip.notifyDataSetChanged();
+        }
+        if (event.position != -1) {
+            pager.setCurrentItem(event.position);
+        }
+        if (changed) {
+            BaseFragment fragment = (BaseFragment) adapter.getItem(pager.getCurrentItem());
+            if (fragment instanceof NewsItemFragment) {
+                NewsItemFragment frag = (NewsItemFragment) fragment;
+                frag.init();
+            }
         }
     }
 

@@ -112,7 +112,6 @@ public class SearchKeyFragment extends BaseFragment {
                 }
                 adapter.setData(keys);
             } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }

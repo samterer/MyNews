@@ -8,7 +8,6 @@
     <string name="search_none">"Maaf, tidak dapat menemukan “%1$s” yet"</string>
     <string name="language">Bahasa</string>
     <!-- 搜索页面 -->
-    <string name="search_name">Cari</string>
     <string name="search_empty_content">cari berita</string>
     <string name="search_key_head">Cari Terpopuler</string>
     <string name="search_history_head">Cari Histori</string>
@@ -29,33 +28,16 @@
     <string name="VideoView_error_title">Video tidak dapat diputar</string>
     <string name="mediacontroller_play_pause">Play/Pause</string>
     <string name="video_layout_loading">Loading...</string>
-    <string name="init_decoders">Melakukan dekompresi pertama Codec Pack...</string>
-    <string name="update_cencal">(Klik untuk Batal)</string>
-    <string name="rf_co_des"></string>
-    <string name="shared_img">shared_img</string>
-    <string name="shared_appdownload">shared_appdownload</string>
-    <string name="shared_site">shared_site</string>
     <!--  -->
     <string name="smsappkey">smsappkey</string>
     <string name="smsappsecret">smsappsecret</string>
 
     <!--  -->
-    <string name="select_mode">Pilih Mode</string>
-    <string name="mode_single">Single</string>
-    <string name="mode_multi">Multi</string>
-    <string name="max_select_amount">Jumlah maksimum seleksi</string>
-    <string name="hint_default_amount">Nomor awal adalah 9</string>
-    <string name="enable_camera">Aktifkan camera atau tidak?</string>
-    <string name="enable">Yes</string>
-    <string name="disable">No</string>
-    <string name="go_select">Pilih Gambar</string>
     <string name="folder_all">Semua Gambar</string>
     <string name="preview">Preview</string>
     <string name="msg_no_camera">Tidak ada camera</string>
     <string name="msg_amount_limit">Mencapai jumlah maksimum seleksi</string>
     <!--  -->
-
-    <string name="scan_text">Put the Qr code into box to scan automatically</string>
 
     <!-- 菜单 -->
     <string name="menu_news">Informasi Berita</string>
@@ -77,7 +59,6 @@
     <string name="settings_check_update">Cek Update</string>
     <string name="settings_feedback">Feedback</string>
     <string name="settings_about_us">Tentang Kami</string>
-    <string name="settings_spare_traffic">Save Traffic Mode</string>
 
     <string name="title_more_column">Tambah Kolom</string>
     <string name="title_prompt">Prompt</string>
@@ -93,7 +74,6 @@
     <string name="title_about_us">>Tentang Kami</string>
     <string name="login">Login</string>
 
-    <string name="prompt_no_network">Periksa koneksi internet</string>
     <string name="prompt_images">%1$d gambar</string>
     <string name="prompt_reports">%1$s laporan</string>
     <string name="prompt_floors">%1$d lantai</string>
@@ -101,23 +81,15 @@
     <string name="prompt_comment_belong_post">Original text:%1$s</string>
     <string name="prompt_column_subscribe">Langganan Kolom</string>
     <string name="prompt_my_msg">Pesan</string>
-    <string name="prompt_no_msg">Tidak ada pesan</string>
-    <string name="prompt_my_favorite">Favorit</string>
-    <string name="prompt_no_favorite">Tidak Terfavorit</string>
-    <string name="prompt_relate_news">  Berita Terkait</string>
     <string name="prompt_clear_cache_dialog_title">Konfirmasi bersihan cache</string>
     <string name="prompt_clear_cache_dialog_msg">Informasi gambar dibutuhkan kembali setelah dihapus</string>
-    <string name="prompt_comment">komentar</string>
     <string name="prompt_subject">topik Spesial</string>
-    <string name="prompt_subject_in_vertical">Special\n topic</string>
     <string name="prompt_feedback">Feedback</string>
     <string name="prompt_activity_period">Waktu:%1$s~%2$s</string>
     <string name="prompt_start_lottery">Mengundi</string>
-    <string name="prompt_start_register">Mendaftar</string>
     <string name="prompt_join_lottery">Terdapat Lucky Draw di aktivitas ini.</string>
     <string name="prompt_name">Nama:%1$s</string>
     <string name="prompt_brief_intro">Pengantar:				%1$s</string>
-    <string name="prompt_search">Cari</string>
     <string name="prompt_seconds">%1$d detik</string>
     <string name="prompt_get_again">Pemulihan</string>
     <string name="prompt_find_password">Pemulihan Password</string>
@@ -129,12 +101,7 @@
     <string name="prompt_male">Pria</string>
     <string name="prompt_female">Wanita</string>
     <string name="prompt_keep_secret">Biarkan Rahasia</string>
-    <string name="prompt_qq_user">QQ User</string>
-    <string name="prompt_weixin_user">Wechat User</string>
-    <string name="prompt_weibo_user">Microblog User</string>
-    <string name="prompt_register_user">User Terdaftar</string>
     <string name="prompt_set_avatar">Setting Avatar</string>
-    <string name="prompt_developer_info">%1$s Client\tv%2$s\n technical support\t Letang Animation Inc.</string>
     <string name="prompt_yesterday">Kemarin</string>
     <string name="prompt_today">Hari Ini</string>
     <string name="prompt_reopen_app">Harap konfirmasi koneksi internet kamu\n Coba buka kembali!</string>
@@ -147,19 +114,12 @@
     <string name="prompt_vote">Vote</string>
     <string name="prompt_lottery">Lucky Draw</string>
     <string name="prompt_share">Berbagi</string>
-    <string name="prompt_anonym">User tidak dikenal</string>
-    <string name="prompt_just_now">Baru saja</string>
-    <string name="prompt_why_cannot_comment">Mengapa tidak dapat komentar!</string>
-    <string name="prompt_reply">Reply</string>
+    
     <string name="prompt_auditing">Memeriksa</string>
-    <string name="prompt_long_press_to_adjust">Tahan teks diatas untuk menyesuaikan, klik teks untuk menambah </string>
     <string name="prompt_click_to_add_or_cancel">Tekan Untuk Memindahkan Kolom</string>
     <string name="prompt_get_captcha">Dapatkan captcha</string>
     <string name="prompt_verify_captcha">Verifikasi</string>
-    <string name="prompt_get">Dapatkan</string>
-    <string name="prompt_login">Login</string>
     <string name="prompt_register_with_space">Daftar</string>
-    <string name="prompt_bind">Kunci</string>
     <string name="prompt_write_comment">Tulis komentar</string>
     <string name="prompt_image">Gambar</string>
     <string name="prompt_all_images">Semua gambar</string>
@@ -167,8 +127,6 @@
     <string name="prompt_preview">Preview(1)</string>
     <string name="prompt_complete">Selesai</string>
     <string name="prompt_complete_with_number">Selesai(%1$d/%2$d)</string>
-    <string name="prompt_enter_now">Masukkan sekarang</string>
-    <string name="prompt_select_from_gallery">Pilih dari album</string>
     <string name="prompt_forget_password">Lupa password</string>
     <string name="prompt_has_no_account">Tidak memiliki akun?</string>
     <string name="prompt_register">Daftar</string>
@@ -178,24 +136,15 @@
     <string name="prompt_font_big">Besar</string>
     <string name="prompt_font_medium">Sedang</string>
     <string name="prompt_font_small">Kecil</string>
-    <string name="prompt_download_just_start">Download 0%</string>
     <string name="prompt_login_name">Nama Login</string>
     <string name="prompt_logout">Logout</string>
     <string name="prompt_personal_info">Informasi Pribadi</string>
-    <string name="prompt_bind_other_platform">Kunci platform lain</string>
-    <string name="prompt_content_font">Ukuran font</string>
     <string name="prompt_vote_rule">Peraturan Voting</string>
     <string name="prompt_hot_comment">Komentar Panas</string>
-    <string name="prompt_sso_login">Tanpa registrasi, login dengan akun sosial media</string>
     <string name="prompt_send">Kirim</string>
-    <string name="prompt_relevant">Berhubungan</string>
     <string name="prompt_login_now">Login Sekarang</string>
     <string name="prompt_collect">Kumpulkan</string>
-    <string name="prompt_push">Push</string>
-    <string name="prompt_daytime">Daytime</string>
-    <string name="prompt_qrcode">QR code</string>
 
-    <string name="hint_account">Akun</string>
     <string name="hint_input_new_nickname">Harap masukkan nickname baru...</string>
     <string name="hint_input_phone">Harap masukkan nomor Handphone</string>
     <string name="hint_msm_captcha">Pesan captcha</string>
@@ -207,7 +156,6 @@
     <string name="hint_please_input_password_again">Masukkan password kembali...</string>
     <string name="hint_input_new_password">Masukkan password baru</string>
     <string name="hint_confirm_password">Konfirmasi password baru</string>
-    <string name="hint_username_or_phone">Username/Nomor Handphone</string>
     <string name="hint_password">Password</string>
     <string name="hint_phone">Nomor Handphone</string>
     <string name="hint_feedback_at_content">Harap tinggalkan saran dan komentar, kami akan perbaiki untuk kedepannya</string>
@@ -215,15 +163,12 @@
 
     <string name="pull_to_refresh_pull_label">Tarik kebawah untuk refresh…</string>
     <string name="pull_to_refresh_from_bottom_pull_label">Dorong keatas untuk memperbarui</string>
-    <string name="pull_to_refresh_reached_end">The end</string>
+    <string name="pull_to_refresh_reached_end">No more Article</string>
 
     <string name="activity_item_start_end_time">Waktu mulai: %1$s\n Waktu akhir: %2$s</string>
 
-    <string name="comment_item_hot">Komentar Saat Ini</string>
     <string name="comment_item_new">Komentar Terbaru</string>
-    <string name="comment_check">Periksa Komentar</string>
     <string name="comment_mine">Komentarku</string>
-    <string name="comment_none">Tidak ada komentar</string>
     <string name="comment">Komentar</string>
 
     <string name="toast_network_error">Error, harap periksa jaringan</string>
@@ -232,12 +177,10 @@
     <string name="toast_cannot_connect_to_server">Tidak dapat terhubung ke server</string>
     <string name="toast_cannot_connect_network">Gagal terhubung</string>
     <string name="toast_check_network">Harap periksa jaringan</string>
-    <string name="toast_please_login">Harap login</string>
     <string name="toast_collect_success">Sukses mengumpulkan</string>
     <string name="toast_collect_failed">Gagal mengumpulkan</string>
     <string name="toast_collect_cancelled">Batal mengumpulkan</string>
     <string name="toast_scan_content">Konten discan:%1$s</string>
-    <string name="toast_scan_failed">Gagal scan</string>
     <string name="toast_delete_success">Sukses menghapus</string>
     <string name="toast_delete_failed">Gagal menghapus</string>
     <string name="toast_no_sdcard">Tidak ada SD card</string>
@@ -248,16 +191,11 @@
     <string name="toast_qq_format_is_wrong">Format QQ salah</string>
     <string name="toast_downloaded_at">Download ke</string>
     <string name="toast_download_failed">Gagal mendownload</string>
-    <string name="toast_request_failed">Gagal meminta</string>
     <string name="toast_cache_invalidate">Cache tidak berlaku, harap buka kembali</string>
-    <string name="toast_no_update">Tidak ada update</string>
-    <string name="toast_update_only_in_wifi">Tidak ada koneksi wifi, update hanya dengan koneksi wifi</string>
-    <string name="toast_timeout">Timeout</string>
     <string name="toast_bind_success">Sukses mengkunci</string>
     <string name="toast_bind_failed">Gagal mengkunci</string>
     <string name="toast_cache_failed">Cache tidak berlaku, harap buka kembali</string>
     <string name="toast_xx_cannot_be_empty">%1$s tidak boleh kosong</string>
-    <string name="toast_feedback_cannot_be_empty">Feedback tidak boleh kosong</string>
     <string name="toast_feedback_cannot_be_short">Silahkan tulis konten</string>
     <string name="toast_email_cannot_be_empty">Email tidak boleh kosong</string>
     <string name="toast_email_cannot_be_error">Alamat Email salah</string>
@@ -269,7 +207,6 @@
     <string name="toast_password_cannot_be_empty">Password tidak boleh kosong</string>
     <string name="toast_fail_to_comment">Gagal komentar</string>
     <string name="toast_activity_not_started">Aktivitas belum dimulai</string>
-    <string name="toast_award_only_for_members">Lucky draw hanya untuk user terdaftar</string>
     <string name="toast_take_award">Selamat mendapatkan %1$s\n Harap tukarkan</string>
     <string name="toast_no_award">Tidak ada hadiah</string>
     <string name="toast_left_vote_award_today">Vote sisa hari ini:%1$s\n Lucky draw sisa hari ini:%2$s</string>
@@ -300,7 +237,6 @@
     <string name="toast_password_change_failed">Gagal ubah password</string>
     <string name="toast_input_username">Masukkan username</string>
     <string name="toast_login_success">Sukses login</string>
-    <string name="toast_login_cancelled">Batal login</string>
     <string name="toast_modify_success">Sukses merubah</string>
     <string name="toast_app_not_installed">Bukan aplikasi terinstal</string>
     <string name="toast_cannot_modify_password">Login dari pihak ketiga, tidak dapat merubah password</string>
@@ -310,8 +246,6 @@
     <string name="toast_register_success">Sukses mendaftar</string>
     <string name="toast_register_failed">Gagal mendaftar</string>
     <string name="toast_press_again_to_exit">Tekan sekali lagi untuk keluar</string>
-    <!--1、terkini 2、menit lalu 3、jam lalu 4、kemarin
-    5、2 Hari Lalu 6、hari lalu-->
     <string name="calendarutil_time_1">terkini</string>
     <string name="calendarutil_time_2">menit lalu</string>
     <string name="calendarutil_time_3">jam lalu</string>
@@ -329,7 +263,7 @@
     <string name="load_more_loading">sedang memproses...</string>
 
     <string name="reply_share">Bagikan di Facebook</string>
-    <string name="reply_comment">balas komentar</string>
+    <string name="reply_comment">Balas Komentar</string>
     <string name="edit_my_colum">Bacaan Saya</string>
     <string name="edit_other_colum">Tambahkan</string>
     <string name="update_version">Versi Terbaru</string>
@@ -337,7 +271,6 @@
     <string name="feed_fail">Laporan Gagal</string>
     <string name="editcolumn_edit">Edit</string>
     <string name="editcolumn_ok">Berhasil</string>
-
-
-
+    <string name="update_counts">berita terbaru%1$dartikel</string>
+    <!--发现%1$d条更新-->
 </resources>

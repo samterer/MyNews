@@ -2,7 +2,6 @@ package com.hzpd.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -14,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.custorm.CircleImageView;
@@ -117,7 +115,7 @@ public class CommentListAdapter extends BaseAdapter {
             }
         } else {
             final ViewHolder holder;
-            if (convertView == null || convertView.getId() != R.id.detail_comments) {
+            if (convertView == null || convertView.getId() != R.id.root_layout) {
                 convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.details_comment_list_item, parent, false);
                 holder = new ViewHolder();
                 holder.comment_user_icon = (CircleImageView) convertView.findViewById(R.id.comment_user_icon);

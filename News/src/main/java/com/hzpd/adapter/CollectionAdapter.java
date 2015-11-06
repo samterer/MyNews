@@ -42,8 +42,10 @@ public class CollectionAdapter extends ListBaseAdapter<CollectionJsonBean> {
     }
 
     public void deleteItem(int position) {
-        this.list.remove(position);
-        notifyDataSetChanged();
+        if (list != null&&list.size()>0) {
+            this.list.remove(position);
+//            notifyDataSetChanged();
+        }
     }
 
 
@@ -55,13 +57,16 @@ public class CollectionAdapter extends ListBaseAdapter<CollectionJsonBean> {
     @Override
     public int getItemViewType(int position) {
         CollectionJsonBean cb = list.get(position);
-        if ("4".equals(cb.getType())) {
-            return Itemtype.THREEPIC.getType();
-        } else if ("10".equals(cb.getType())) {
-            return Itemtype.BIGPIC.getType();
-        } else {
-            return Itemtype.LEFTPIC.getType();
+        if (cb != null) {
+            if ("4".equals(cb.getType())) {
+                return Itemtype.THREEPIC.getType();
+            } else if ("10".equals(cb.getType())) {
+                return Itemtype.BIGPIC.getType();
+            } else {
+                return Itemtype.LEFTPIC.getType();
+            }
         }
+        return -1;
     }
 
 
@@ -74,6 +79,11 @@ public class CollectionAdapter extends ListBaseAdapter<CollectionJsonBean> {
 
         CollectionJsonBean cb = list.get(position);
         CollectionDataBean cdb = cb.getData();
+        if (cb!=null)
+        Log.e("CollectionJsonBean","CollectionJsonBean--->"+cb.toString());
+        else
+        Log.e("CollectionJsonBean","CollectionJsonBean--->null");
+
 
         if (convertView == null) {
             switch (type) {
@@ -85,7 +95,7 @@ public class CollectionAdapter extends ListBaseAdapter<CollectionJsonBean> {
                 break;
                 case 1: {
                     holder = new ViewHolder();
-                    convertView = inflater.inflate(R.layout.collection_list_item_layout, parent, false);
+                    convertView = inflater.inflate(R.layout.news_list_item_layout, parent, false);
                     holder.newsitem_img1 = (ImageView) convertView.findViewById(R.id.newsitem_img);
                     holder.newsitem_title = (TextView) convertView.findViewById(R.id.newsitem_title);
                     holder.newsitem_time = (TextView) convertView.findViewById(R.id.newsitem_time);

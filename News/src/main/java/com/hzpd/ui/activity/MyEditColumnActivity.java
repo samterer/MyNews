@@ -15,6 +15,7 @@ import com.hzpd.custorm.DragGrid;
 import com.hzpd.custorm.OtherGridView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsChannelBean;
+import com.hzpd.modle.event.ChangeChannelEvent;
 import com.hzpd.modle.event.ChannelSortedList;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
@@ -134,6 +135,7 @@ public class MyEditColumnActivity extends MBaseActivity {
 
     //TODO 是否有修改
     boolean modified = false;
+    private int selPosition = -1;
 
     private void reReadVisibleChannel() {
 
@@ -141,15 +143,16 @@ public class MyEditColumnActivity extends MBaseActivity {
             channelData = mSaveTitleData.readyDataToFile(getChannelInfoCacheSavePath());
             dragAdapter = new RecommendDragAdapter(this, channelData);
             editcolumn_dragGridView.setAdapter(dragAdapter);
+            editcolumn_dragGridView.text_editcolumn = text_editcolumn;
             editcolumn_dragGridView.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, final View view,
                                         final int position, long id) {
                     LogUtils.e("position-->" + position);
                     if (!isEdit) {
+                        selPosition = position;
+                        finish();
                         return;
-                    }else{
-
                     }
                     if (position == 0) {
                         return;
@@ -165,7 +168,7 @@ public class MyEditColumnActivity extends MBaseActivity {
             editcolumn_dragGridView.setOnDragListener(new DragGrid.OnDragListener() {
                 @Override
                 public void onDrag() {
-                    Log.e("editcolumn_dragGridView","editcolumn_dragGridView--->onDrag");
+                    Log.e("editcolumn_dragGridView", "editcolumn_dragGridView--->onDrag");
                     modified = true;
                 }
             });
@@ -359,11 +362,17 @@ public class MyEditColumnActivity extends MBaseActivity {
 
     @Override
     protected void onDestroy() {
+        if (!modified) {
+            csl = null;
+        }
+        if (isEdit) {
+            selPosition = -1;
+        }
         if (modified) {
             writeData();
-            EventBus.getDefault().post(csl);
             modified = false;
         }
+        EventBus.getDefault().post(new ChangeChannelEvent(csl, selPosition));
         super.onDestroy();
     }
 

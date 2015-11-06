@@ -35,7 +35,6 @@ import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsItemBeanForCollection;
 import com.hzpd.modle.PushmsgBean;
 import com.hzpd.modle.VideoItemBean;
-import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
@@ -113,14 +112,24 @@ public class MyPMColAvtivity extends MBaseActivity {
         }
     }
 
+
+    OnItemLongClickListener onItemLongClickListener = new OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent,
+                                       View view, int position, long id) {
+            CollectionJsonBean cb = (CollectionJsonBean) colladAdapter.getItem(position - 1);
+            deletePop(view, cb, position - 1);
+            return true;
+        }
+    };
+
+
     private void init() {
         Intent intent = getIntent();
         if (null == intent) {
             return;
         }
         type = intent.getStringExtra("type");
-        LogUtils.i("type-->" + type);
-
         pushmsg_lv.setEmptyView(pushmsg_tv_empty);
         pushmsg_lv.setMode(Mode.PULL_FROM_START);
 
@@ -135,16 +144,7 @@ public class MyPMColAvtivity extends MBaseActivity {
 
             colladAdapter = new CollectionAdapter(this);
             pushmsg_lv.setAdapter(colladAdapter);
-            pushmsg_lv.getRefreshableView().setOnItemLongClickListener(new OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> parent,
-                                               View view, int position, long id) {
-                    LogUtils.i("position-->" + position + " id-->" + id);
-                    CollectionJsonBean cb = (CollectionJsonBean) colladAdapter.getItem(position - 1);
-                    deletePop(view, cb, position - 1);
-                    return true;
-                }
-            });
+            pushmsg_lv.getRefreshableView().setOnItemLongClickListener(onItemLongClickListener);
         }
 
         pushmsg_lv.setOnRefreshListener(new OnRefreshListener2<ListView>() {
@@ -152,7 +152,6 @@ public class MyPMColAvtivity extends MBaseActivity {
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 LogUtils.i("下拉刷新");
                 //下拉刷新
-
                 refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_pull_label));
                 Page = 1;
                 mFlagRefresh = true;
@@ -266,7 +265,7 @@ public class MyPMColAvtivity extends MBaseActivity {
 
     private void pushmsgItemclick(AdapterView<?> parent, View view,
                                   int position, long id) {
-        PushmsgBean pb = (PushmsgBean) pmgadapter.getItem(position - 1);
+        PushmsgBean pb = (PushmsgBean) pmgadapter.getItem(position);
         Intent intent = new Intent();
         boolean flag = false;//是否是预定类型
 
@@ -295,6 +294,14 @@ public class MyPMColAvtivity extends MBaseActivity {
         Intent intent = new Intent();
         intent.putExtra("from", "collection");
         boolean flag = false;//是否是预定类型
+        try {
+            NewsItemBeanForCollection bean = dbHelper.getCollectionDBUitls().findFirst(Selector.from(NewsItemBeanForCollection.class).where("colldataid", "=", cb.getData().getId()));
+            if (bean != null) {
+                cdb.setNid(bean.getColldataid());
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
         //跳转脚标）1新闻  2图集  3视频 4html5
         LogUtils.i("type-->" + cb.getType());
         if ("1".equals(cb.getType())) {//
@@ -313,9 +320,6 @@ public class MyPMColAvtivity extends MBaseActivity {
             nb.setFav(cdb.getFav());
             nb.setCopyfrom(cdb.getCopyfrom());
             nb.setComcount(cdb.getComcount());
-            Log.e("test", "test--->" + cdb.getJson_url());
-            Log.e("test", "test--->" + cdb.getNid());
-            Log.e("test", "test--->" + nb.toString());
             intent.putExtra("newbean", nb);
 
             flag = true;
@@ -344,10 +348,7 @@ public class MyPMColAvtivity extends MBaseActivity {
             nb.setType(cb.getType());
             nb.setTid(cb.getData().getTid());
             nb.setUpdate_time(cb.getData().getTime());
-//            String imgs[] = new String[3];
-//            imgs = cb.getData().getImgs();
             nb.setImgs(cdb.getImgs());
-            Log.e("test", "test--->" + nb.toString());
             intent.putExtra("newbean", nb);
 
             flag = true;
@@ -393,11 +394,9 @@ public class MyPMColAvtivity extends MBaseActivity {
                             .offset((Page - 1) * PageSize));
 
                     if (null != list && list.size() > 0) {
-                        LogUtils.i("list.size-->" + list.size());
                         LogUtils.i("list.size-->" + list.toString());
                         ArrayList<CollectionJsonBean> mlist = new ArrayList<CollectionJsonBean>();
                         for (NewsItemBeanForCollection nifc : list) {
-                            LogUtils.i("list.size-->" + nifc);
                             mlist.add(nifc.getCollectionJsonBean());
                         }
                         Message msg = handler.obtainMessage();
@@ -432,7 +431,6 @@ public class MyPMColAvtivity extends MBaseActivity {
     //获取数据
     private void getCollectionInfoFromServer() {
         if (null != spu.getUser()) { //登录
-            LogUtils.i("uid-->" + spu.getUser().getUid());
             String station = SharePreferecesUtils.getParam(MyPMColAvtivity.this, StationConfig.STATION, "def").toString();
             String siteid = null;
             String COLLECTIONLIST_url = null;
@@ -511,17 +509,8 @@ public class MyPMColAvtivity extends MBaseActivity {
     }
 
     private void deletePop(View v, final CollectionJsonBean cb, final int position) {
-        try {
-            final NewsItemBeanForCollection nbfc = dbHelper.getCollectionDBUitls().findFirst(
-                    Selector.from(NewsItemBeanForCollection.class).where("colldataid", "=", cb.getData().getId()));
 
-            if (null != nbfc) {
-                com.hzpd.utils.Log.e("NewsBeanDB", "NewsBeanDB--->" + nbfc.getTid() + "::::" + nbfc.getTitle());
-            } else {
-                com.hzpd.utils.Log.e("NewsBeanDB", "NewsBeanDB--->null");
-            }
-
-
+        if (cb != null) {
             final PopupWindow mPopupWindow = new PopupWindow(this);
             LinearLayout pv = (LinearLayout) LayoutInflater.from(this).inflate(
                     R.layout.comment_delete_pop, null);
@@ -530,8 +519,14 @@ public class MyPMColAvtivity extends MBaseActivity {
                 @Override
                 public void onClick(View v) {
                     mPopupWindow.dismiss();
-                    if (null != nbfc) {
-                        try {
+
+                    //本地数据库获取
+                    try {
+                        List<NewsItemBeanForCollection> nibfc = dbHelper.getCollectionDBUitls().findAll(NewsItemBeanForCollection.class);
+                        if (nibfc != null&&nibfc.size()>0) {
+
+                            Log.e("","");
+
                             if ("2".equals(cb.getType())) {
                                 dbHelper.getCollectionDBUitls().delete(Jsonbean.class, WhereBuilder.b("fid", "=", cb.getId()));
                             }
@@ -539,50 +534,60 @@ public class MyPMColAvtivity extends MBaseActivity {
                                     ()));
                             TUtils.toast(getString(R.string.toast_delete_success));
                             colladAdapter.deleteItem(position);
-                        } catch (DbException e) {
-                            e.printStackTrace();
-                            TUtils.toast(getString(R.string.toast_delete_failed));
-                        }
-                        return;
-                    }
-                    String station = SharePreferecesUtils.getParam(MyPMColAvtivity.this, StationConfig.STATION, "def").toString();
-                    String DELETECOLLECTION_url = null;
-                    if (station.equals(StationConfig.DEF)) {
-                        DELETECOLLECTION_url = InterfaceJsonfile.DELETECOLLECTION;
-                    } else if (station.equals(StationConfig.YN)) {
-                        DELETECOLLECTION_url = InterfaceJsonfile_YN.DELETECOLLECTION;
-                    } else if (station.equals(StationConfig.TW)) {
-                        DELETECOLLECTION_url = InterfaceJsonfile_TW.DELETECOLLECTION;
-                    }
-                    RequestParams pa = RequestParamsUtils.getParamsWithU();
-                    pa.addBodyParameter("id", cb.getId());
-
-                    httpUtils.send(HttpMethod.POST
-                            , DELETECOLLECTION_url//InterfaceApi.deletecollection
-                            , pa
-                            , new RequestCallBack<String>() {
-                        @Override
-                        public void onFailure(HttpException arg0,
-                                              String arg1) {
-                            TUtils.toast(getString(R.string.toast_cannot_connect_to_server));
+                            colladAdapter.notifyDataSetChanged();
                         }
 
-                        @Override
-                        public void onSuccess(ResponseInfo<String> arg0) {
-                            LogUtils.i("delete reply-->" + arg0.result);
-                            JSONObject obj = null;
-                            try {
-                                obj = JSONObject.parseObject(arg0.result);
-                            } catch (Exception e) {
-                                return;
-                            }
-                            if (200 == obj.getIntValue("code")) {
-                                TUtils.toast(getString(R.string.toast_delete_success));
-                                colladAdapter.deleteItem(position);
-                            } else {
-                            }
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                        TUtils.toast(getString(R.string.toast_delete_failed));
+                    }
+
+
+                    //网络获取
+                    if (spu.getUser() != null) {
+                        String station = SharePreferecesUtils.getParam(MyPMColAvtivity.this, StationConfig.STATION, "def").toString();
+                        String DELETECOLLECTION_url = null;
+                        if (station.equals(StationConfig.DEF)) {
+                            DELETECOLLECTION_url = InterfaceJsonfile.DELETECOLLECTION;
+                        } else if (station.equals(StationConfig.YN)) {
+                            DELETECOLLECTION_url = InterfaceJsonfile_YN.DELETECOLLECTION;
+                        } else if (station.equals(StationConfig.TW)) {
+                            DELETECOLLECTION_url = InterfaceJsonfile_TW.DELETECOLLECTION;
                         }
-                    });
+                        RequestParams pa = RequestParamsUtils.getParamsWithU();
+                        pa.addBodyParameter("id", cb.getId());
+
+                        httpUtils.send(HttpMethod.POST
+                                , DELETECOLLECTION_url//InterfaceApi.deletecollection
+                                , pa
+                                , new RequestCallBack<String>() {
+
+
+                            @Override
+                            public void onSuccess(ResponseInfo<String> arg0) {
+                                LogUtils.i("delete reply-->" + arg0.result);
+                                JSONObject obj = null;
+                                try {
+                                    obj = JSONObject.parseObject(arg0.result);
+                                } catch (Exception e) {
+                                    return;
+                                }
+                                if (200 == obj.getIntValue("code")) {
+                                    TUtils.toast(getString(R.string.toast_delete_success));
+
+                                    colladAdapter.deleteItem(position);
+                                    colladAdapter.notifyDataSetChanged();
+                                } else {
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(HttpException arg0,
+                                                  String arg1) {
+                                TUtils.toast(getString(R.string.toast_cannot_connect_to_server));
+                            }
+                        });
+                    }
                 }
             });
             mPopupWindow.setContentView(pv);
@@ -597,8 +602,6 @@ public class MyPMColAvtivity extends MBaseActivity {
                     v.getWidth() / 2 - 30,
                     -v.getHeight());
 
-        } catch (DbException e) {
-            e.printStackTrace();
         }
     }
 

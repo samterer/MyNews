@@ -120,6 +120,7 @@ public class WelcomeActivity extends MWBaseActivity {
             exists = true;
             loadMainUI();
         }
+        Log.e("loadMainUI()","loadMainUI()");
         String station = SharePreferecesUtils.getParam(WelcomeActivity.this, StationConfig.STATION, "def").toString();
         String CHANNELLIST_url = null;
         if (station.equals(StationConfig.DEF)) {

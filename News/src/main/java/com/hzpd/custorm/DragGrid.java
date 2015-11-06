@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hzpd.adapter.RecommendDragAdapter;
-import com.hzpd.hflt.R;
 import com.hzpd.utils.DataTools;
 import com.hzpd.utils.Log;
 
@@ -154,6 +153,7 @@ public class DragGrid extends GridView {
 
     }
 
+    public TextView text_editcolumn;
 
     //监听 msq
     public interface OnDragListener {
@@ -174,12 +174,12 @@ public class DragGrid extends GridView {
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         // TODO Auto-generated method stub
 //        if (isEdit) {
-            if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-                downX = (int) ev.getX();
-                downY = (int) ev.getY();
-                windowX = (int) ev.getX();
-                windowY = (int) ev.getY();
-                setOnItemClickListener(ev);
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            downX = (int) ev.getX();
+            downY = (int) ev.getY();
+            windowX = (int) ev.getX();
+            windowY = (int) ev.getY();
+            setOnItemClickListener(ev);
 //            }
 
         }
@@ -277,10 +277,9 @@ public class DragGrid extends GridView {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                            int position, long id) {
-                Log.e("onItemLongClick", "onItemLongClick--->" + isEdit);
-//                if (!isEdit) {
-//                    return true;
-//                }
+                if (!isEdit) {
+                    text_editcolumn.performClick();
+                }
                 int x = (int) ev.getX();// 长安事件的X位置
                 int y = (int) ev.getY();// 长安事件的y位置
 

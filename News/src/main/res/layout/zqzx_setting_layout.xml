@@ -163,6 +163,7 @@
             slideswitch:shape="circle"
             slideswitch:themeColor="@color/zqzx_green" />
     </RelativeLayout>
+
     <!--缓存清理-->
     <RelativeLayout
         android:id="@+id/zqzx_setting_deletecache"
@@ -375,7 +376,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/setting_item_selector"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:visibility="gone">
 
         <com.hzpd.ui.widget.FontTextView
             android:layout_width="wrap_content"

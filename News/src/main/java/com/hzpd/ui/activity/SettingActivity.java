@@ -431,6 +431,8 @@ public class SettingActivity extends MBaseActivity {
                         dialog.dismiss();
                         loadingView.setVisibility(View.VISIBLE);
                         activity.startService(new Intent(activity, ClearCacheService.class));
+                        //刪除SharedPreference
+                        DataCleanManager.cleanSharedPreference(SettingActivity.this);
                         handler.sendEmptyMessageDelayed(111, 2000);
                     }
                 });
@@ -447,7 +449,6 @@ public class SettingActivity extends MBaseActivity {
 
     @OnClick(R.id.zqzx_setting_feedback)
     private void feedBack(View v) {
-//        EventBus.getDefault().post(new UpdateNewsBeanDbEvent("Update_OK"));
         Intent intent = new Intent(this, ZQ_FeedBackActivity.class);
         startActivity(intent);
         AAnim.ActivityStartAnimation(this);

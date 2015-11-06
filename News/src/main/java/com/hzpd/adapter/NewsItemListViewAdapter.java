@@ -67,7 +67,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
     final static int TYPE_LOADING = 0xDD;
     public boolean showLoading = false;
     private SPUtil spu;
-    private float fontSize = 0;//字体大小
+    private int fontSize = 0;//字体大小
 
     private HashSet<String> readedNewsSet;
     private NewsListDbTask newsListDbTask;
@@ -736,7 +736,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         return count;
     }
 
-    public void setFontSize(float mfontSize) {
+    public void setFontSize(int mfontSize) {
         this.fontSize = mfontSize;
         notifyDataSetChanged();
     }

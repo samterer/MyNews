@@ -140,7 +140,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private ImageView newdetail_more;//更多
 
     private LinearLayout newsdetails_title_comment;// 跳转到评论
-    //    private TextView newsdetails_title_num;
     // -------------------------
     private FontsizePop fontpop;
 
@@ -196,7 +195,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         }
     };
 
-    private TextView newsdetails_title_num;
     private ImageView details_iv_comment;
 
     @Override
@@ -207,7 +205,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         setContentView(R.layout.news_details_layout);
 
         try {
-            newsdetails_title_num = (TextView) findViewById(R.id.newsdetails_title_num);
             load_progress_bar = (ProgressBar) findViewById(R.id.load_progress_bar);
             details_iv_comment = (ImageView) findViewById(R.id.details_iv_comment);
             if (loading) {
@@ -215,14 +212,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 wProgress = 0;
                 load_progress_bar.postDelayed(runnable, 50);
             }
-            if (nb.getComcount() != null && Integer.parseInt(nb.getComcount()) > 0) {
-                details_iv_comment.setVisibility(View.GONE);
-//                newsdetails_title_num.setVisibility(View.VISIBLE);
-                newsdetails_title_num.setText(nb.getComcount());
-            } else {
-                details_iv_comment.setVisibility(View.VISIBLE);
-//                newsdetails_title_num.setVisibility(View.GONE);
-            }
+            details_iv_comment.setVisibility(View.VISIBLE);
             details_iv_comment.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -275,9 +265,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                                 Selector.from(NewsBeanDB.class).where("nid", "=", nb.getNid()));
                         if (null != nbfc) {
                             if (Integer.parseInt(nbfc.getComcount()) > 0) {
-                                details_iv_comment.setVisibility(View.GONE);
-                                newsdetails_title_num.setVisibility(View.VISIBLE);
-                                newsdetails_title_num.setText("" + nbfc.getComcount());
+//                                details_iv_comment.setVisibility(View.GONE);
                             }
                         } else {
                         }
@@ -320,7 +308,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     mLayoutRoot.updateUI();
 //                    if (nb.getComcount()!=null||latestList.size()>=0){
 //                        details_iv_comment.setVisibility(View.GONE);
-//                        newsdetails_title_num.setVisibility(View.VISIBLE);
 //                    }
                 }
                 break;
@@ -962,15 +949,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 } else {
                     return true;
                 }
-//                if (!TextUtils.isEmpty(url) && url.startsWith(IMG_PREFIX)) {
-//                    //TODO 自动下载图片
-//                    mWebView.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            mWebView.loadUrl("javascript:image_load_client(0,1)");
-//                        }
-//                    }, 1000);
-//                }
             }
 
             @Override
@@ -993,13 +971,17 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 if (isDetail) {
                     return;
                 }
+                Object obj = SharePreferecesUtils.getParam(getApplicationContext(), StationConfig.DETAILS_LOCATION+nb.getNid(), 0);
+                final int y = Integer.parseInt(obj.toString());
+                if (y <50) {
+                    return;
+                }
                 mWebView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         mLayoutRoot.updateUI();
                         SPUtil.addImageClickListner(mWebView);
-                        Object obj = SharePreferecesUtils.getParam(getApplicationContext(), StationConfig.DETAILS_LOCATION, 0);
-                        int y = Integer.parseInt(obj.toString());
+
                         int realY = mWebView.getContentHeight();
                         mWebView.scrollTo(0, realY < y ? realY : y);
                     }
@@ -1218,24 +1200,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 latestList = (ArrayList<CommentzqzxBean>) JSONArray.parseArray(
                         obj.getString("data"), CommentzqzxBean.class);
 
-                Log.e("newsdetails_title_num", "newsdetails_title_num" + latestList.size());
                 Log.e("test", "test--->" + latestList.toString());
-                if (!TextUtils.isEmpty(nb.getComcount()) && latestList != null && latestList.size() >= Integer.parseInt(nb.getComcount())) {
-                    newsdetails_title_num.setVisibility(View.VISIBLE);
-                    details_iv_comment.setVisibility(View.GONE);
-                    newsdetails_title_num.setText("" + latestList.size());
-                } else {
-                    details_iv_comment.setVisibility(View.VISIBLE);
-                    if (nb.getComcount() != null) {
-                        newsdetails_title_num.setVisibility(View.VISIBLE);
-                        details_iv_comment.setVisibility(View.GONE);
-                        newsdetails_title_num.setText("" + nb.getComcount());
-                    } else {
-                        newsdetails_title_num.setVisibility(View.GONE);
-                        details_iv_comment.setVisibility(View.VISIBLE);
-                    }
-                }
-
                 // 添加数据到Adpater
                 mCommentListAdapter.appendData(latestList);
                 hasMore = true;
@@ -1663,7 +1628,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     @Override
     protected void onPause() {
-        SharePreferecesUtils.setParam(this, StationConfig.DETAILS_LOCATION, mWebView.getScrollY());
+        SharePreferecesUtils.setParam(this, StationConfig.DETAILS_LOCATION+nb.getNid(), mWebView.getScrollY());
         super.onPause();
     }
 

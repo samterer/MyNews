@@ -147,7 +147,7 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
             }
         }
 
-//退出程序
+        //退出程序
         ExitApplication.exit(this);
     }
 
@@ -243,6 +243,9 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 JSONObject obj = FjsonUtil
                         .parseObject(responseInfo.result);
+                if (obj == null) {
+                    return;
+                }
                 if (200 == obj.getIntValue("code")) {
                     UpdateBean mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), UpdateBean.class);
                     showNotification(mBean.getDescription());

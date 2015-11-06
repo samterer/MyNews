@@ -30,8 +30,10 @@ import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.modle.UserBean;
 import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.event.FontSizeEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.NewsDetailActivity;
+import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.ui.widget.RecyclerViewPauseOnScrollListener;
 import com.hzpd.url.InterfaceJsonfile;
@@ -48,6 +50,7 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
+import com.lidroid.xutils.util.LogUtils;
 import com.nineoldandroids.view.ViewHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -132,7 +135,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         }
 
 
-        mSwipeRefreshWidget.setColorScheme(R.color.google_blue, R.color.google_red, R.color.google_yellow, R.color.google_green);
+        mSwipeRefreshWidget.setColorScheme(R.color.google_blue, R.color.google_tool);
         mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -143,7 +146,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                 ++tagIndex;
                 pageIndex = 1;
                 getServerList("");
-                isRefreshCounts=true;
+                isRefreshCounts = false;
             }
         });
 
@@ -162,9 +165,16 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                         (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
                 mSwipeRefreshWidget.setEnabled(topRowVerticalPosition >= 0);
                 if (addLoading && !adapter.showLoading) {
-                    int count = adapter.getItemCount();
-                    adapter.showLoading = true;
-                    adapter.notifyItemInserted(count);
+                    addLoading = false;
+                    mRecyclerView.scrollToPosition(0);
+                    mRecyclerView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            int count = adapter.getItemCount();
+                            adapter.showLoading = true;
+                            adapter.notifyDataSetChanged();
+                        }
+                    }, 300);
                 }
             }
 
@@ -275,9 +285,60 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                     adapter.showLoading = true;
                     adapter.setData(nbList);
                     background_empty.setVisibility(View.GONE);
+                } else {
+                    Log.e("list", "list--->null");
+                    getChooseNewsJson();
                 }
             }
 
+        });
+    }
+
+    //TODO 提前获取推荐频道第一页
+    public void getChooseNewsJson() {
+        RequestParams params = RequestParamsUtils.getParams();
+        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+        params.addBodyParameter("tid", "" + NewsChannelBean.TYPE_RECOMMEND);
+        params.addBodyParameter("nids", "0");
+        params.addBodyParameter("Page", "1");
+        params.addBodyParameter("PageSize", "15");
+
+        httpUtils.send(HttpRequest.HttpMethod.POST
+                , InterfaceJsonfile.CHANNEL_RECOMMEND
+                , params
+                , new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                final JSONObject obj = FjsonUtil
+                        .parseObject(responseInfo.result);
+                if (null != obj) {
+                    setData(obj);
+                    try {
+                        App.getInstance().newTime = obj.getString("newTime");
+                        App.getInstance().oldTime = obj.getString("oldTime");
+                    } catch (Exception e) {
+                    }
+                    List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
+                    if (list != null) {
+                        for (NewsBean bean : list) {
+                            bean.setTid("" + NewsChannelBean.TYPE_RECOMMEND);
+                        }
+                    }
+                    if (null != list) {
+                        LogUtils.i(" getChooseNewsJson --> " + list.size());
+                        new NewsListDbTask(getActivity()).saveList(list, new I_Result() {
+                            @Override
+                            public void setResult(Boolean flag) {
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException error, String msg) {
+//                loadMainUI();
+            }
         });
     }
 
@@ -351,11 +412,12 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                     }
                 }
                 if (null != list) {
-                    final  int i=list.size();
+
                     if (isRefreshCounts) {
                         update_counts.setVisibility(View.VISIBLE);
-                        update_counts.setText("已更新"+i+"条");
-                        new Handler().postDelayed(new Runnable() {
+                        update_counts.setText(String.format(getString(R.string.update_counts), list.size()));
+                        mRecyclerView.postDelayed(new Runnable() {
+
                             @Override
                             public void run() {
                                 Log.e("update_counts", "update_counts");
@@ -380,9 +442,9 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
             default: {
                 TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
                 if (adapter.showLoading) {
-                    int count = adapter.getItemCount();
                     adapter.showLoading = false;
-                    adapter.notifyItemRemoved(count);
+                    mRecyclerView.scrollToPosition(0);
+                    adapter.notifyDataSetChanged();
                     mRecyclerView.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -435,4 +497,10 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         }
 
     }
+
+
+    public void onEventMainThread(FontSizeEvent event) {
+        adapter.setFontSize(event.getFontSize());
+    }
+
 }

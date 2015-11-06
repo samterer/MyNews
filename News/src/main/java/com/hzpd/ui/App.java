@@ -76,6 +76,8 @@ public class App extends Application {
     public HashMap<String, Adbean> channelADMap = null;//频道列表广告
     public HashMap<String, Adbean> newsDetailADMap = null;//新闻详情广告
 
+    public HashMap<String, String> newTimeMap = new HashMap<>(); // 缓存时间戳
+
     public String newTime; // 最新时间
     public String oldTime; // 最早时间
 

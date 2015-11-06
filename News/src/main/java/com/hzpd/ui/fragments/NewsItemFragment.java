@@ -3,7 +3,6 @@ package com.hzpd.ui.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,7 +19,6 @@ import com.facebook.ads.NativeAd;
 import com.hzpd.adapter.NewsItemListViewAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.Adbean;
-import com.hzpd.modle.CacheBean;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.modle.NewsPageListBean;
@@ -34,13 +32,11 @@ import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.XF_NewsHtmlDetailActivity;
 import com.hzpd.ui.activity.ZhuanTiActivity;
 import com.hzpd.ui.interfaces.I_Control;
-import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.AvoidOnClickFastUtils;
-import com.hzpd.utils.DataCleanManager;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
@@ -58,6 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+
 public class NewsItemFragment extends BaseFragment implements I_Control, View.OnClickListener {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -125,7 +122,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
     boolean addLoading = false;
 
-    private boolean  isRefreshCounts;
+    private boolean isRefreshCounts;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -144,7 +141,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         mSwipeRefreshWidget = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recylerlist);
 
-        mSwipeRefreshWidget.setColorScheme(R.color.google_blue, R.color.google_red, R.color.google_yellow, R.color.google_green);
+        mSwipeRefreshWidget.setColorScheme(R.color.google_blue,R.color.google_tool);
         mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -152,7 +149,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 mFlagRefresh = true;
                 getFlash();
                 getServerList("");
-                isRefreshCounts=true;
+                isRefreshCounts = false; //TODO hide
             }
         });
 
@@ -167,6 +164,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 mSwipeRefreshWidget.setEnabled(topRowVerticalPosition >= 0);
 
                 if (addLoading && !adapter.showLoading) {
+                    addLoading = false;
                     int count = adapter.getItemCount();
                     adapter.showLoading = true;
                     adapter.notifyItemInserted(count);
@@ -254,7 +252,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                         nids = sb.substring(0, sb.length() - 1);
                     }
                 }
-                getServerList(nids);
+                getServerList("");
             }
         });
     }
@@ -264,17 +262,19 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     //获取新闻list
     @Override
     public void getServerList(String nids) {
-        Log.e("test", "getServerList ");
         if (isLoading) {
             return;
         }
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("tid", channelbean.getTid());
-        params.addBodyParameter("nids", nids);
         params.addBodyParameter("Page", "" + page);
         params.addBodyParameter("PageSize", "" + pageSize);
-        params.addBodyParameter("update_time", spu.getCacheUpdatetime());
+        if (page == 1) {
+            String newTimew = App.getInstance().newTimeMap.get(channelbean.getTid());
+            newTimew = newTimew == null ? "" : newTimew;
+            params.addBodyParameter("newTime", newTimew);
+        }
 
         httpUtils.send(HttpMethod.POST
                 , InterfaceJsonfile.NEWSLIST
@@ -283,33 +283,17 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 isLoading = false;
-                page++;
                 if (!isAdded()) {
                     return;
                 }
                 mSwipeRefreshWidget.setRefreshing(false);
 
-
-                page++;
-
                 final JSONObject obj = FjsonUtil
                         .parseObject(responseInfo.result);
                 if (null != obj) {
                     //缓存更新
-                    JSONObject cache = obj.getJSONObject("cachetime");
-                    if (null != cache) {
-                        spu.setCacheUpdatetime(cache.getString("update_time"));
-                        List<CacheBean> cacheList = FjsonUtil.parseArray(cache.getString("data"), CacheBean.class);
-                        DataCleanManager dcm = new DataCleanManager();
-                        dcm.deleteDb(cacheList, activity, new I_Result() {
-                            @Override
-                            public void setResult(Boolean flag) {
-                                setData(obj);
-                            }
-                        });
-                    } else {
-                        setData(obj);
-                    }
+                    setData(obj);
+                    page++;
                 } else if (isAdded()) {
                     TUtils.toast(getString(R.string.toast_cannot_connect_network));
                 }
@@ -341,12 +325,11 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
 
                 if (null != list) {
-                    final int i=list.size();
 
                     if (isRefreshCounts) {
                         update_counts.setVisibility(View.VISIBLE);
-                        update_counts.setText("已更新"+i+"条");
-                        new Handler().postDelayed(new Runnable() {
+                        update_counts.setText(String.format(getString(R.string.update_counts), list.size()));
+                        mRecyclerView.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 Log.e("update_counts", "update_counts");
@@ -362,8 +345,10 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                     }
                     adapter.showLoading = true;
                     adapter.appendData(list, mFlagRefresh, false);
-                    mFlagRefresh = false;
                     background_empty.setVisibility(View.GONE);
+                    if (page == 1) {
+                        App.getInstance().newTimeMap.put(channelbean.getTid(), obj.getString("newTime"));
+                    }
                     if (loadad) {
                         try {
                             nativeAd.loadAd();
@@ -374,11 +359,12 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                     }
                     newsListDbTask.saveList(list, null);
                 }
+
             }
             break;
             default: {
                 TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
-                if (adapter.showLoading) {
+                if (page > 1 && adapter.showLoading) {
                     int count = adapter.getItemCount();
                     adapter.showLoading = false;
                     adapter.notifyItemRemoved(count);
@@ -392,6 +378,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             }
             break;
         }
+        mFlagRefresh = false;
     }
 
 

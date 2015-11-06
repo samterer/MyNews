@@ -48,7 +48,6 @@ public class XF_NewsCommentsActivity extends MBaseActivity {
     private int Page = 1;
     private static final int PageSize = 15;
     private boolean mFlagRefresh;
-    private MycommentsAdapter adapter;
 
     private MyCommentListAdapter myCommentListAdapter;
 
@@ -67,11 +66,8 @@ public class XF_NewsCommentsActivity extends MBaseActivity {
         LogUtils.e("bean" + bean.getId() + bean.getType());
 
         stitle_tv_content.setText(R.string.comment_item_new);
-//        pushmsg_tv_empty.setText(R.string.comment_none);
         pushmsg_lv.setEmptyView(pushmsg_tv_empty);
         pushmsg_lv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-        adapter = new MycommentsAdapter(this);
-//		pushmsg_lv.setAdapter(adapter);
 
         pushmsg_lv.postDelayed(new Runnable() {
             @Override

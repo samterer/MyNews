@@ -177,6 +177,7 @@ public class MycommentsAdapter extends ListBaseAdapter<MycommentsBean> {
             SPUtil.displayImage(itembean.getAvatar_path()
                     , my_avatar
                     , DisplayOptionFactory.getOption(OptionTp.XF_Avatar));
+            mycomment_news.setText(""+itembean.getNickname());
             mycomments_itemc_tv_content.setText(itembean.getContent());
             mycomments_itemc_tv_sj_txt.setText(CalendarUtil.friendlyTime1(itembean.getDateline(),context));
 //

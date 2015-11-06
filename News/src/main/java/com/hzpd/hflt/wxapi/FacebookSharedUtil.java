@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.ShareCompat;
 import android.text.TextUtils;
 
 import com.facebook.share.model.ShareLinkContent;
@@ -21,22 +20,11 @@ public class FacebookSharedUtil {
     public static void showShares(String title, String link, String imagePath
             , final Context context) {
         try {
-            if (installFacebook(context)) {
-                Intent intent = ShareCompat.IntentBuilder.from((Activity) context).createChooserIntent();
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_SUBJECT, title);
-                intent.putExtra(Intent.EXTRA_TEXT, link); //TODO 短网址
-//                intent.setPackage("com.facebook.katana");
-                context.startActivity(intent);
-                return;
-            }
-            ShareDialog shareDialog = new ShareDialog((Activity) context);
-            ShareLinkContent shareContent = new ShareLinkContent.Builder()
-                    .setContentTitle(title)
-                    .setImageUrl(!TextUtils.isEmpty(imagePath) ? Uri.parse(imagePath) : null)
-                    .setContentUrl(!TextUtils.isEmpty(link) ? Uri.parse(link) : null)
-                    .build();
-            shareDialog.show((Activity) context, shareContent);
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, title);
+            intent.putExtra(Intent.EXTRA_TEXT, link); //TODO 生成短网址
+            context.startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
         }

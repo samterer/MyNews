@@ -41,7 +41,8 @@
                     android:layout_centerVertical="true"
                     android:clickable="true"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/newsdetails_title_num"
@@ -65,7 +66,7 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
                     android:background="@drawable/details_nocomment_selector"
-                    android:visibility="gone" />
+                    />
 
 
             </RelativeLayout>
@@ -154,7 +155,6 @@
 
             </FrameLayout>
         </LinearLayout>
-
     </LinearLayout>
 
     <!--分割线-->
@@ -163,6 +163,7 @@
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/details_bottom_line" />
+
     <!-- 底部菜单 -->
     <LinearLayout
         android:id="@+id/news_detail_ll_bottom1"
