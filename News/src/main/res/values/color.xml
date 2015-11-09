@@ -105,7 +105,7 @@
 
     <color name="pulltorefresh_font">#8d8d8d</color>
 
-    <color name="time_color">#bbb</color>
+    <color name="time_color">#bbbbbb</color>
     <color name="praise_select">#f1b159</color>
     <color name="praise_unselect">#ccc</color>
 

@@ -63,9 +63,10 @@ public class CalendarUtil {
     }
 
     private Context context;
+
     public CalendarUtil(Context context) {
         setGregorian(1901, 1, 1);
-        this.context=context;
+        this.context = context;
     }
 
     public static String getChinese() {
@@ -1039,7 +1040,7 @@ public class CalendarUtil {
     private final static ThreadLocal<SimpleDateFormat> dateFormater2 = new ThreadLocal<SimpleDateFormat>() {
         @Override
         protected SimpleDateFormat initialValue() {
-            return new SimpleDateFormat("yyyy-MM-dd");
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm");
         }
     };
 
@@ -1096,20 +1097,21 @@ public class CalendarUtil {
             if (hour == 0) {
                 ftime = Math.max(
                         (cal.getTimeInMillis() - time.getTime()) / 60000, 1)
-                        +c.getResources().getString(R.string.calendarutil_time_3) ;//
+                        + c.getResources().getString(R.string.calendarutil_time_3);//
             } else {
-                ftime = hour +  c.getResources().getString(R.string.calendarutil_time_3);
+                ftime = hour + c.getResources().getString(R.string.calendarutil_time_3);
             }
-        } else if (days == 1) {
-            ftime =  c.getResources().getString(R.string.calendarutil_time_4);//" kemarin";
-        } else if (days == 2) {
-            ftime = c.getResources().getString(R.string.calendarutil_time_5);//"2 Hari Lalu ";
-        } else if (days > 2 && days <= 7) {
-            ftime = days +c.getResources().getString(R.string.calendarutil_time_6);// " hari lalu";
         }
+//        else if (days == 1) {
+//            ftime =  c.getResources().getString(R.string.calendarutil_time_4);//" kemarin";
+//        } else if (days == 2) {
+//            ftime = c.getResources().getString(R.string.calendarutil_time_5);//"2 Hari Lalu ";
+//        } else if (days > 2 && days <= 7) {
+//            ftime = days +c.getResources().getString(R.string.calendarutil_time_6);// " hari lalu";
+//        }
         else {
-//            ftime = dateFormater2.get().format(time);
-            ftime="";
+            ftime = dateFormater2.get().format(time);
+//            ftime="";
         }
 //        else if (days > 7 && days < 31) {
 //            ftime = days + "天前";
@@ -1124,6 +1126,7 @@ public class CalendarUtil {
 //        }
         return ftime;
     }
+
     /**
      * 以友好的方式显示时间
      *
@@ -1177,18 +1180,17 @@ public class CalendarUtil {
             if (hour == 0) {
                 ftime = Math.max(
                         (cal.getTimeInMillis() - time.getTime()) / 60000, 1)
-                        +c.getResources().getString(R.string.calendarutil_time_3) ;//
+                        + c.getResources().getString(R.string.calendarutil_time_3);//
             } else {
-                ftime = hour +  c.getResources().getString(R.string.calendarutil_time_3);
+                ftime = hour + c.getResources().getString(R.string.calendarutil_time_3);
             }
         } else if (days == 1) {
-            ftime =  c.getResources().getString(R.string.calendarutil_time_4);//" kemarin";
+            ftime = c.getResources().getString(R.string.calendarutil_time_4);//" kemarin";
         } else if (days == 2) {
             ftime = c.getResources().getString(R.string.calendarutil_time_5);//"2 Hari Lalu ";
         } else if (days > 2 && days <= 7) {
-            ftime = days +c.getResources().getString(R.string.calendarutil_time_6);// " hari lalu";
-        }
-        else {
+            ftime = days + c.getResources().getString(R.string.calendarutil_time_6);// " hari lalu";
+        } else {
             ftime = dateFormater2.get().format(time);
 //            ftime="";
         }

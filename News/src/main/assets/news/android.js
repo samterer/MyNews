@@ -30,104 +30,10 @@ var img_type = "origin", //默认图片类型-原图
 
 /**
 * 从小图/无图状态点击时加载大图
-* @param {object} parent 图片容器
 */
-function show_large_image(parent) {
-	var is_offline = has_elt_class(parent, "offline");
-	
-	if (is_offline) {
-		del_elt_class(parent, "thumb");
-		del_elt_class(parent, "offline");
-	}
-	add_elt_class(parent, "loading");
-	
-	var img = null,
-		img_a = parent.querySelectorAll('img');
-
-	if (img_a.length > 0) {
-		img = img_a[0];
-	}
-
-	if ( img ) {
-		var n = null;
-		if (img_a.length > 1) {
-			n = img_a[1];
-		}
-		if ( n ){
-			return;
-		}
-		// remove thumb img if it's not compelete
-		if (img.naturalWidth == 0) {
-			parent.removeChild(img);
-		}
-	}
-
-	var index = parent.getAttribute("ss_index"),
-		h = parent.getAttribute("s_height"),
-		w = parent.getAttribute("s_width"),
-		src_path = parent.getAttribute("zip_src_path"),
-		src = url_prefix + "getimage/origin/" + src_path + "/"  + group_id + "/" + index,
-		t = document.createElement('div');
-
-	t.innerHTML = "<img onload='appendimg.call(this)' style='display:none' onerror='errorimg.call(this)' src='"+src+"' alt_src='"+src+"' width='1' height='1'/>";
-	var o = t.firstElementChild;
-	t.removeChild(o);
-	parent.appendChild(o);
-	
-	if (!is_offline) {
-		var spinner = document.createElement("i");
-		spinner.className = 'spinner';
-		parent.appendChild(spinner);
-	}
-
-	setTimeout(function(){
-		var event = "hotnews://";
-		if (is_offline) {
-			event += "show_image";
-		} else {
-			event += "origin_image";
-		}
-		event += "?index=" + index;
-		window.location.href = event;
-	}, 500);
-
-	unbind_loadOriginImg_trigger(parent);
-}
-
-/**
-* 点击“小图/无图”加载“origin原图”事件处理函数
-* @param {object} e 点击事件event对像
-*/
-function loadOriginImg_handler(e){
-	var that = this;
-
-	setTimeout(function(){
-		show_large_image(that);
-	}, 100);
-	
-	e.preventDefault();
-}
-
-/**
-* 绑定点击“小图/无图”加载“origin原图”事件
-* @param {object} a 图片链接
-*/
-function bind_loadOriginImg_trigger(a) {
-	if (a.getAttribute("ss_href")){
-		a.setAttribute("href", "javascript:void(0)");
-		a.addEventListener("click", loadOriginImg_handler, false);
-	}
-}
-
-/**
-* 取消绑定点击“小图/无图”加载“origin原图”事件
-* @param {object} a 图片链接
-*/
-function unbind_loadOriginImg_trigger(a) {
-	a.removeEventListener("click", loadOriginImg_handler, false);
-	if ( a.getAttribute("ss_href") ){
-		a.setAttribute("href", a.getAttribute("ss_href"));
-	}
+function largeImg(){
+ 	window.imagelistner.openImage(this.src);
+ 	return true;
 }
 
 /**
@@ -569,10 +475,16 @@ var ClientFun = {
 * 页面初始化入口
 *****************************************************************/
 function initPage(){
+
+	var images = document.getElementsByTagName("img");
+	for(var i=0;i<images.length;i++){
+		images[i].onclick=largeImg;
+	}
+	return;
 //TODO alert(document.body.innerHTML);
 	//页面相关变量初始化
 	initVars();
-	
+
 	//显示视频app4.5+ TODO
 //	showCustomVideo();
 
@@ -606,7 +518,7 @@ function initPage(){
 };
 
 //TODO
- //document.addEventListener("DOMContentLoaded",initPage,false);
+document.addEventListener("DOMContentLoaded",initPage,false);
 
 /**
 * window.load相关动作

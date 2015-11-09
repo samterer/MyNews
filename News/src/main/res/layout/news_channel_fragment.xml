@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fragment_background">
 
-    <TextView
-        android:id="@+id/update_counts"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="123213"
-        android:gravity="center"
-        android:background="@color/zqzx_logintxt_blue"
-        android:visibility="gone"/>
-
-    <!-- com.handmark.pulltorefresh.library.PullToRefreshRecyclerView -->
-    <!-- android.support.v7.widget.RecyclerView -->
-    <com.handmark.pulltorefresh.library.PullToRefreshRecyclerView
-        android:id="@+id/pull_to_refresh_recyclerview"
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_refresh_widget"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/update_counts"
-        app:ptrDrawable="@drawable/default_ptr_rotate"
-        app:ptrHeaderSubTextColor="@color/zqzx_font_light"
-        app:ptrHeaderTextColor="@color/pulltorefresh_font" />
+        android:scrollbars="none">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recylerlist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="@null"
+            android:scrollbars="none" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <ImageView
         android:id="@+id/background_empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_centerInParent="true"
         android:paddingBottom="60dp"
         android:src="@drawable/zqzx_nonetwork" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/update_counts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/toolbar_bg"
+        android:gravity="center"
+        android:padding="5dp"
+        android:visibility="gone"
+        />
+</FrameLayout>

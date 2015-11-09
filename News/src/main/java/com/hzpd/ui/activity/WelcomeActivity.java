@@ -301,11 +301,11 @@ public class WelcomeActivity extends MWBaseActivity {
 //        }
 
 
-        // 添加推荐频道
         NewsChannelBean channelRecommend = new NewsChannelBean();
         channelRecommend.setTid("" + NewsChannelBean.TYPE_RECOMMEND);
         channelRecommend.setType(NewsChannelBean.TYPE_RECOMMEND);
         channelRecommend.setCnname(getString(R.string.recommend));
+        // 添加推荐频道
         if (!list.contains(channelRecommend)) {
             list.add(0, channelRecommend);
         }

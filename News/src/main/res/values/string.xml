@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_fbid">1902056863352757</string>
-
+    <string name="icon_name">BeritaKini</string>
     <!-- 翻译 -->
     <string name="recommend">REKOMENDASI</string>
     <string name="comment_ok">komen berhasil</string>
@@ -267,10 +267,12 @@
     <string name="edit_my_colum">Bacaan Saya</string>
     <string name="edit_other_colum">Tambahkan</string>
     <string name="update_version">Versi Terbaru</string>
+    <string name="update_no_version">Belum ada terbaru</string>
     <string name="feed_ok">Laporan Berhasil</string>
     <string name="feed_fail">Laporan Gagal</string>
     <string name="editcolumn_edit">Edit</string>
     <string name="editcolumn_ok">Berhasil</string>
     <string name="update_counts">berita terbaru%1$dartikel</string>
+    <string name="click_here_to_refresh">Tekan untuk Perbaharui</string>
     <!--发现%1$d条更新-->
 </resources>

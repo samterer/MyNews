@@ -227,7 +227,6 @@
     </style>
 
 
-
     <style name="edit_order_btn">
         <item name="android:textSize">14.0sp</item>
         <item name="android:textColor">@color/ssxinhongse1</item>
@@ -237,4 +236,5 @@
         <item name="android:minHeight">24.0dip</item>
     </style>
 
+    <style name="loadingProgressBar" parent="android:Widget.Holo.ProgressBar.Large" />
 </resources>

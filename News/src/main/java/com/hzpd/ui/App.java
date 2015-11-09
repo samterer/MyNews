@@ -140,6 +140,7 @@ public class App extends Application {
         // 初始化UniversalImageLoader
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
                 .Builder(getApplicationContext())
+                .memoryCacheExtraOptions(720, 1280) // max width, max height，即保存的每个缓存文件的最大长宽
                 .defaultDisplayImageOptions(DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Big))
                 .diskCacheFileNameGenerator(new Md5FileNameGenerator())
                 .tasksProcessingOrder(QueueProcessingType.FIFO)

@@ -1,9 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/zqzx_bg_normal"
-    >
-
+    android:background="@color/zqzx_bg_normal">
 
 
     <LinearLayout
@@ -71,14 +69,38 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/background_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:paddingBottom="60dp"
-        android:src="@drawable/zqzx_nonetwork"
-        android:visibility="gone"/>
+    <FrameLayout
+        android:id="@+id/main_no_news"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="100dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/background_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/main_none" />
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/click_here_to_refresh" />
+
+
+        </LinearLayout>
+
+
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/app_progress_bar"

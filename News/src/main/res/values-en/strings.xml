@@ -250,6 +250,8 @@
     <string name="edit_my_colum">My Channel</string>
     <string name="edit_other_colum">Recommended Channel</string>
     <string name="update_version">Version update</string>
+    <string name="update_no_version">No Update</string>
+
     <string name="feed_ok">Feedback success</string>
     <string name="feed_fail">Feedback failure</string>
 
@@ -260,6 +262,8 @@
     <string name="load_more_loading">loading more ...</string>
     <string name="reply_share">share to Facebook</string>
     <string name="update_counts_head">has update</string>
+    <string name="click_here_to_refresh">Press for Refresh</string>
+
 
 
 </resources>

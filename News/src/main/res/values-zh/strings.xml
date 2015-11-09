@@ -326,6 +326,8 @@
     <string name="toast_feedback_cannot_be_short">请输入更多内容</string>
     <string name="update_counts">已更新%1$d条</string>
     <string name="update_version">版本更新</string>
+    <string name="update_no_version">暂无更新</string>
+
     <string name="reply_comment">回复评论</string>
     <string name="feed_ok">反馈成功</string>
     <string name="feed_fail">反馈失败</string>
@@ -333,5 +335,6 @@
     <string name="editcolumn_ok">完成</string>
     <string name="edit_my_colum">我的频道</string>
     <string name="edit_other_colum">推荐频道</string>
+    <string name="click_here_to_refresh">点此刷新</string>
 
 </resources>

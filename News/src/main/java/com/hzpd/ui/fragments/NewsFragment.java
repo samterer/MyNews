@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -65,6 +64,8 @@ public class NewsFragment extends BaseFragment {
     private LinearLayout ll_main;
     @ViewInject(R.id.background_empty)
     private ImageView background_empty;
+    @ViewInject(R.id.main_no_news)
+    private View main_no_news;
     @ViewInject(R.id.app_progress_bar)
     private View app_progress_bar;
 
@@ -120,20 +121,20 @@ public class NewsFragment extends BaseFragment {
         if (null == mList) {
             mList = new ArrayList<NewsChannelBean>();
             ll_main.setVisibility(View.GONE);
-            background_empty.setVisibility(View.VISIBLE);
+            main_no_news.setVisibility(View.VISIBLE);
             app_progress_bar.setVisibility(View.GONE);
-            background_empty.setOnClickListener(new View.OnClickListener() {
+            main_no_news.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 //                    Toast.makeText(getActivity(), "频道刷新", Toast.LENGTH_SHORT).show();
                     app_progress_bar.setVisibility(View.VISIBLE);
-                    background_empty.setVisibility(View.GONE);
+                    main_no_news.setVisibility(View.GONE);
                     getChannelJson();
                 }
             });
         } else {
             ll_main.setVisibility(View.VISIBLE);
-            background_empty.setVisibility(View.GONE);
+            main_no_news.setVisibility(View.GONE);
             app_progress_bar.setVisibility(View.GONE);
         }
         LogUtils.i("mList-->" + mList.size());
@@ -308,7 +309,7 @@ public class NewsFragment extends BaseFragment {
                     @Override
                     public void onFailure(HttpException error, String msg) {
                         app_progress_bar.setVisibility(View.GONE);
-                        background_empty.setVisibility(View.VISIBLE);
+                        main_no_news.setVisibility(View.VISIBLE);
                     }
                 });
     }

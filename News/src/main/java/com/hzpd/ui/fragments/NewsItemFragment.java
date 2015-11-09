@@ -29,6 +29,7 @@ import com.hzpd.ui.App;
 import com.hzpd.ui.activity.HtmlActivity;
 import com.hzpd.ui.activity.NewsAlbumActivity;
 import com.hzpd.ui.activity.NewsDetailActivity;
+import com.hzpd.ui.activity.VideoPlayerActivity;
 import com.hzpd.ui.activity.XF_NewsHtmlDetailActivity;
 import com.hzpd.ui.activity.ZhuanTiActivity;
 import com.hzpd.ui.interfaces.I_Control;
@@ -141,7 +142,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         mSwipeRefreshWidget = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recylerlist);
 
-        mSwipeRefreshWidget.setColorScheme(R.color.google_blue,R.color.google_tool);
+        mSwipeRefreshWidget.setColorScheme(R.color.google_blue, R.color.google_tool);
         mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -407,6 +408,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                         if (200 == obj.getIntValue("code")) {
                             JSONObject object = obj.getJSONObject("data");
                             mViewPagelist = FjsonUtil.parseArray(object.getString("flash"), NewsPageListBean.class);
+                            mRecyclerView.scrollToPosition(0);
                         }
                         if (mViewPagelist != null && mViewPagelist.size() > 0) {
                             adapter.setFlashlist(mViewPagelist);
@@ -466,6 +468,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         adapter.setReadedId(nb.getNid());
         ////////////////////////////
         //1新闻  2图集  3直播 4专题  5关联新闻 6视频
+//TODO 视频新闻
         if ("1".equals(nb.getRtype())) {
             mIntent.setClass(getActivity(), NewsDetailActivity.class);
         } else if ("2".equals(nb.getRtype())) {
@@ -477,8 +480,8 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         } else if ("5".equals(nb.getRtype())) {
             mIntent.setClass(getActivity(), NewsDetailActivity.class);
         } else if ("6".equals(nb.getRtype())) {
-//					mIntent.setClass(getActivity(),VideoPlayerActivity.class);
-            mIntent.setClass(getActivity(), NewsDetailActivity.class);
+            mIntent.setClass(getActivity(), VideoPlayerActivity.class);
+//            mIntent.setClass(getActivity(), NewsDetailActivity.class);
         } else if ("7".equals(nb.getRtype())) {
             mIntent.setClass(getActivity(), HtmlActivity.class);
         } else if ("9".equals(nb.getRtype())) {

@@ -325,6 +325,8 @@
     <string name="toast_feedback_cannot_be_short">請輸入更多內容</string>
     <string name="update_counts">已更新%1$d條</string>
     <string name="update_version">版本更新</string>
+    <string name="update_no_version">暫無更新</string>
+
     <string name="reply_comment">回復評論</string>
     <string name="feed_ok">反饋成功</string>
     <string name="feed_fail">反饋失敗</string>
@@ -332,4 +334,6 @@
     <string name="editcolumn_ok">完成</string>
     <string name="edit_my_colum">我的頻道</string>
     <string name="edit_other_colum">推薦頻道</string>
+    <string name="click_here_to_refresh">點此刷新</string>
+
 </resources>

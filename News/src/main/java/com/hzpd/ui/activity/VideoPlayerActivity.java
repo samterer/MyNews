@@ -48,6 +48,7 @@ import com.hzpd.utils.Constant;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.GetFileSizeUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SharePreferecesUtils;
@@ -138,7 +139,6 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
         mVideoView.setMediaController(new MediaController(this));
         mVideoView.requestFocus();
         mVideoView.setOnPreparedListener(this);
-
         mVideoView.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -151,6 +151,11 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
             }
         });
 
+
+        if(false){
+            mVideoView.setVideoURI(Uri.parse("http://10.80.3.123/cmsv2/Public/Uploads/video/1446794282887.mp4"));
+            return;
+        }
         // ~~~ 获取播放地址和标题
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -837,6 +842,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-
+        Log.e("test", "" + mVideoView);
+        mLoadingView.setVisibility(View.GONE);
     }
 }

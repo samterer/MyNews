@@ -39,7 +39,6 @@
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@+id/main_title_left"
             android:paddingBottom="6.5dp"
-            android:text="12321"
             android:textColor="@color/white"
             android:textSize="18sp" />
 

@@ -2,6 +2,7 @@ package com.hzpd.utils;
 
 import android.content.Context;
 
+import com.hzpd.modle.NewsItemBeanForCollection;
 import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.ui.App;
 import com.lidroid.xutils.DbUtils;
@@ -29,7 +30,16 @@ public class DBHelper {
 //		dbPath= mContext.getCacheDir().getAbsolutePath();
         dbPath = this.context.getDatabasePath("hzpd").getAbsolutePath();
         collectionDBUitls = DbUtils.create(context
-                , dbPath, App.collectiondbname);
+                , dbPath, App.collectiondbname, 2, new DbUtils.DbUpgradeListener() {
+            @Override
+            public void onUpgrade(DbUtils dbUtils, int i, int i1) {
+                try {
+                    dbUtils.dropTable(NewsItemBeanForCollection.class);
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         albumDBUitls = DbUtils.create(context
                 , dbPath, App.albumListDb);
         albumDBUitls.configAllowTransaction(true);

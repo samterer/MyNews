@@ -955,6 +955,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             public void onLoadResource(WebView view, String url) {
                 Log.e("test", "url " + url);
                 super.onLoadResource(view, url);
+                if (SPUtil.isImageUri(url)) {
+                    wProgress = 100;
+                }
             }
 
             @Override
@@ -966,26 +969,35 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             @Override
             public void onPageFinished(WebView view, String url) {
                 Log.e("webview", "onPageFinished ");
-                wProgress = 100;
-                mCommentListView.setVisibility(View.VISIBLE);
-                if (isDetail) {
-                    return;
-                }
-                Object obj = SharePreferecesUtils.getParam(getApplicationContext(), StationConfig.DETAILS_LOCATION+nb.getNid(), 0);
-                final int y = Integer.parseInt(obj.toString());
-                if (y <50) {
-                    return;
-                }
-                mWebView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mLayoutRoot.updateUI();
-                        SPUtil.addImageClickListner(mWebView);
-
-                        int realY = mWebView.getContentHeight();
-                        mWebView.scrollTo(0, realY < y ? realY : y);
+                try {
+                    wProgress = 100;
+                    mCommentListView.setVisibility(View.VISIBLE);
+                    if (isDetail) {
+                        return;
                     }
-                }, 300);
+                    if (nb == null) {
+                        return;
+                    }
+                    Object obj = SharePreferecesUtils.getParam(getApplicationContext(), StationConfig.DETAILS_LOCATION + nb.getNid(), 0);
+                    final int y = Integer.parseInt(obj.toString());
+                    if (y < 50) {
+                        return;
+                    }
+                    mWebView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                mLayoutRoot.updateUI();
+                                int realY = mWebView.getContentHeight();
+                                mWebView.scrollTo(0, realY < y ? realY : y);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, 300);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
         mWebView.setWebChromeClient(new WebChromeClient() {
@@ -1018,7 +1030,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 if (wProgress < MIDDLE_PROGRESS && progress < MIDDLE_PROGRESS) {
                     progress += 1;
                 } else if (wProgress > MIDDLE_PROGRESS) {
-                    progress += 3;
+                    progress += 5;
                     if (progress > 100) {
                         progress = 100;
                         wProgress = 101;
@@ -1628,7 +1640,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     @Override
     protected void onPause() {
-        SharePreferecesUtils.setParam(this, StationConfig.DETAILS_LOCATION+nb.getNid(), mWebView.getScrollY());
+        SharePreferecesUtils.setParam(this, StationConfig.DETAILS_LOCATION + nb.getNid(), mWebView.getScrollY());
         super.onPause();
     }
 

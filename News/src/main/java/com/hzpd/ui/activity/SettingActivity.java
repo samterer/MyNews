@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.custorm.SlideSwitch;
@@ -492,12 +493,14 @@ public class SettingActivity extends MBaseActivity {
                     updateDialog(mBean.getDescription());
                     showNotification(mBean.getDescription());
                 } else {
+                    Toast.makeText(SettingActivity.this,getString(R.string.update_no_version),Toast.LENGTH_SHORT).show();
                 }
 
             }
 
             @Override
             public void onFailure(HttpException error, String msg) {
+                Toast.makeText(SettingActivity.this,getString(R.string.toast_cannot_connect_to_server),Toast.LENGTH_SHORT).show();
             }
         });
     }
