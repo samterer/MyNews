@@ -115,15 +115,6 @@
                     android:scheme="hflt" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="io.vov.vitamio.activity.InitActivity"
-            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
-            android:hardwareAccelerated="true"
-            android:launchMode="singleTop"
-            android:windowSoftInputMode="stateAlwaysHidden">
-
-        </activity>
-
 
         <!-- >>> 极光推送组件声明 -->
         <!-- Required -->

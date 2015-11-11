@@ -334,5 +334,5 @@
     <string name="edit_my_colum">我的頻道</string>
     <string name="edit_other_colum">推薦頻道</string>
     <string name="click_here_to_refresh">點此刷新</string>
-
+    <string name="delete">刪除</string>
 </resources>

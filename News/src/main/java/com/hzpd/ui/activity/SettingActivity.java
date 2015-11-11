@@ -319,33 +319,6 @@ public class SettingActivity extends MBaseActivity {
 
     }
 
-    private void checkStation(final RadioButton v, final String str, final String url) {
-        mDeleteDialog = new Builder(this);
-        mDeleteDialog.setTitle("站点设置");
-        mDeleteDialog.setMessage("设置站点信息需要重新启动");
-        mDeleteDialog.setNegativeButton(android.R.string.ok,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        v.setChecked(true);
-                        SharePreferecesUtils.setParam(SettingActivity.this, StationConfig.STATION, str);
-                        SharePreferecesUtils.setParam(SettingActivity.this, StationConfig.STATION_URL, url);
-                        LogUtils.e("设置成功");
-                        activity.startService(new Intent(activity, ClearCacheService.class));
-
-                    }
-                });
-        mDeleteDialog.setPositiveButton(android.R.string.cancel,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        v.setChecked(false);
-                        defaultStation();
-                    }
-                });
-        mDeleteDialog.show();
-    }
 
     private void defaultStation() {
         Object obj = SharePreferecesUtils.getParam(SettingActivity.this, "STATION", "def");

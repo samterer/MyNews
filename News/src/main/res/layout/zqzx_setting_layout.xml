@@ -338,6 +338,7 @@
             android:background="@drawable/bbs_modle_jt"
             android:gravity="center_vertical" />
     </RelativeLayout>
+
     <!--检查更新-->
     <RelativeLayout
         android:id="@+id/zqzx_setting_update"

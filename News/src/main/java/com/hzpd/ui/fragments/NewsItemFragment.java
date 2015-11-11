@@ -326,6 +326,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
 
                 if (null != list) {
+                Log.e("newBean","newBean--->"+list.toString());
 
                     if (isRefreshCounts) {
                         update_counts.setVisibility(View.VISIBLE);

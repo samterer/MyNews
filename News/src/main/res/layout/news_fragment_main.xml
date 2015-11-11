@@ -111,11 +111,10 @@
         android:visibility="gone">
 
         <ProgressBar
-            style="@style/Widget.AppCompat.ProgressBar"
+            style="@style/loadingProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:indeterminateDrawable="@drawable/progressbar_drawable_h" />
+            android:layout_gravity="center" />
 
     </FrameLayout>
 

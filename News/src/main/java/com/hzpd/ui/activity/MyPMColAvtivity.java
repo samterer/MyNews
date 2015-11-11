@@ -514,7 +514,7 @@ public class MyPMColAvtivity extends MBaseActivity {
             final PopupWindow mPopupWindow = new PopupWindow(this);
             LinearLayout pv = (LinearLayout) LayoutInflater.from(this).inflate(
                     R.layout.comment_delete_pop, null);
-            ImageView mTwo = (ImageView) pv.findViewById(R.id.comment_delete_img);//删除
+            View mTwo = (View) pv.findViewById(R.id.comment_delete_ll);//删除
             mTwo.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

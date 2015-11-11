@@ -1033,14 +1033,14 @@ public class CalendarUtil {
     private final static ThreadLocal<SimpleDateFormat> dateFormater = new ThreadLocal<SimpleDateFormat>() {
         @Override
         protected SimpleDateFormat initialValue() {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm");
         }
     };
 
     private final static ThreadLocal<SimpleDateFormat> dateFormater2 = new ThreadLocal<SimpleDateFormat>() {
         @Override
         protected SimpleDateFormat initialValue() {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            return new SimpleDateFormat("yyyy-MM-dd");
         }
     };
 
@@ -1055,14 +1055,7 @@ public class CalendarUtil {
             return null;
         }
         Date time = null;
-
-        if (isInEasternEightZones()) {
-            time = toDate(sdate);
-        } else {
-            time = transformTime(toDate(sdate), TimeZone.getTimeZone("GMT+08"),
-                    TimeZone.getDefault());
-        }
-
+        time = toDate(sdate);
         if (time == null) {
             return sdate;
         }
@@ -1080,11 +1073,9 @@ public class CalendarUtil {
                     ftime = c.getResources().getString(R.string.calendarutil_time_1);//" terkini"
                 } else {
                     ftime = minite + c.getResources().getString(R.string.calendarutil_time_2);
-//                    ftime = minite + " menit lalu";
                 }
             } else {
                 ftime = hour + c.getResources().getString(R.string.calendarutil_time_3);
-//                ftime = hour + " jam lalu";
             }
             return ftime;
         }
@@ -1103,27 +1094,11 @@ public class CalendarUtil {
             }
         }
 //        else if (days == 1) {
-//            ftime =  c.getResources().getString(R.string.calendarutil_time_4);//" kemarin";
-//        } else if (days == 2) {
-//            ftime = c.getResources().getString(R.string.calendarutil_time_5);//"2 Hari Lalu ";
-//        } else if (days > 2 && days <= 7) {
-//            ftime = days +c.getResources().getString(R.string.calendarutil_time_6);// " hari lalu";
+//            ftime = c.getResources().getString(R.string.calendarutil_time_4);//" kemarin";
 //        }
         else {
-            ftime = dateFormater2.get().format(time);
-//            ftime="";
+            ftime = dateFormater.get().format(time);
         }
-//        else if (days > 7 && days < 31) {
-//            ftime = days + "天前";
-//        } else if (days >= 31 && days <= 2 * 31) {
-//            ftime = "一个月前";
-//        } else if (days > 2 * 31 && days <= 3 * 31) {
-//            ftime = "2个月前";
-//        } else if (days > 3 * 31 && days <= 4 * 31) {
-//            ftime = "3个月前";
-//        } else {
-//            ftime = dateFormater2.get().format(time);
-//        }
         return ftime;
     }
 
@@ -1138,14 +1113,7 @@ public class CalendarUtil {
             return null;
         }
         Date time = null;
-
-        if (isInEasternEightZones()) {
-            time = toDate(sdate);
-        } else {
-            time = transformTime(toDate(sdate), TimeZone.getTimeZone("GMT+08"),
-                    TimeZone.getDefault());
-        }
-
+        time = toDate(sdate);
         if (time == null) {
             return sdate;
         }
@@ -1163,11 +1131,9 @@ public class CalendarUtil {
                     ftime = c.getResources().getString(R.string.calendarutil_time_1);//" terkini"
                 } else {
                     ftime = minite + c.getResources().getString(R.string.calendarutil_time_2);
-//                    ftime = minite + " menit lalu";
                 }
             } else {
                 ftime = hour + c.getResources().getString(R.string.calendarutil_time_3);
-//                ftime = hour + " jam lalu";
             }
             return ftime;
         }
@@ -1184,27 +1150,9 @@ public class CalendarUtil {
             } else {
                 ftime = hour + c.getResources().getString(R.string.calendarutil_time_3);
             }
-        } else if (days == 1) {
-            ftime = c.getResources().getString(R.string.calendarutil_time_4);//" kemarin";
-        } else if (days == 2) {
-            ftime = c.getResources().getString(R.string.calendarutil_time_5);//"2 Hari Lalu ";
-        } else if (days > 2 && days <= 7) {
-            ftime = days + c.getResources().getString(R.string.calendarutil_time_6);// " hari lalu";
         } else {
-            ftime = dateFormater2.get().format(time);
-//            ftime="";
+            ftime = dateFormater.get().format(time);
         }
-//        else if (days > 7 && days < 31) {
-//            ftime = days + "天前";
-//        } else if (days >= 31 && days <= 2 * 31) {
-//            ftime = "一个月前";
-//        } else if (days > 2 * 31 && days <= 3 * 31) {
-//            ftime = "2个月前";
-//        } else if (days > 3 * 31 && days <= 4 * 31) {
-//            ftime = "3个月前";
-//        } else {
-//            ftime = dateFormater2.get().format(time);
-//        }
         return ftime;
     }
 
@@ -1233,7 +1181,7 @@ public class CalendarUtil {
      */
     public static boolean isInEasternEightZones() {
         boolean defaultVaule = true;
-        if (TimeZone.getDefault() == TimeZone.getTimeZone("GMT+08"))
+        if (TimeZone.getDefault() == TimeZone.getTimeZone("GMT+07"))
             defaultVaule = true;
         else
             defaultVaule = false;

@@ -57,7 +57,7 @@
     <string name="settings_weibo_bind">Bind microblog </string>
     <string name="settings_clear_cache">Bersihkan Histori</string>
     <string name="settings_check_update">Cek Update</string>
-    <string name="settings_feedback">Feedback</string>
+    <string name="settings_feedback">Kritik dan Saran</string>
     <string name="settings_about_us">Tentang Kami</string>
 
     <string name="title_more_column">Tambah Kolom</string>
@@ -163,7 +163,7 @@
 
     <string name="pull_to_refresh_pull_label">Tarik kebawah untuk refresh…</string>
     <string name="pull_to_refresh_from_bottom_pull_label">Dorong keatas untuk memperbarui</string>
-    <string name="pull_to_refresh_reached_end">No more Article</string>
+    <string name="pull_to_refresh_reached_end">Belum Ada Artikel Terbaru</string>
 
     <string name="activity_item_start_end_time">Waktu mulai: %1$s\n Waktu akhir: %2$s</string>
 
@@ -267,7 +267,7 @@
     <string name="edit_my_colum">Bacaan Saya</string>
     <string name="edit_other_colum">Tambahkan</string>
     <string name="update_version">Versi Terbaru</string>
-    <string name="update_no_version">Belum ada terbaru</string>
+    <string name="update_no_version">Versi Terbaru Saat Ini</string>
     <string name="feed_ok">Laporan Berhasil</string>
     <string name="feed_fail">Laporan Gagal</string>
     <string name="editcolumn_edit">Edit</string>
@@ -275,4 +275,5 @@
     <string name="update_counts">berita terbaru%1$dartikel</string>
     <string name="click_here_to_refresh">Tekan untuk Perbaharui</string>
     <!--发现%1$d条更新-->
+    <string name="delete">Hapus</string>
 </resources>

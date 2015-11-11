@@ -123,7 +123,7 @@ public class ZQ_ReplyActivity extends MBaseActivity {
                             Selector.from(NewsBeanDB.class).where("nid", "=", bean.getId()));
                     if (null != nbfc) {
                         com.hzpd.utils.Log.e("NewsBeanDB", "NewsBeanDB--->" + nbfc.getFav() + "::::" + nbfc.getComcount());
-                        if (Integer.parseInt(nbfc.getComcount()) >= Integer.parseInt(comcount)) {
+                        if (nbfc.getColumnid()!=null||Integer.parseInt(nbfc.getComcount()) >= Integer.parseInt(comcount)) {
                             comcount = nbfc.getComcount();
                         }
                     } else {

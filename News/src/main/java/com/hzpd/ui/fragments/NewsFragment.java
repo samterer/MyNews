@@ -347,6 +347,5 @@ public class NewsFragment extends BaseFragment {
             }
         }
     }
-
 }
 

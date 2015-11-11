@@ -1,5 +1,7 @@
 package com.hzpd.modle;
 
+import android.text.Html;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
@@ -44,9 +46,9 @@ public class NewsDetailBean implements Serializable {
         this.type = nb.getType();
         this.outline = nb.getOutline();
         this.update_time = nb.getUpdate_time();
-        this.copyfrom=nb.getCopyfrom();
-        this.fav=nb.getFav();
-        this.comcount=nb.getComcount();
+        this.copyfrom = nb.getCopyfrom();
+        this.fav = nb.getFav();
+        this.comcount = nb.getComcount();
     }
 
     private String fav;
@@ -178,7 +180,7 @@ public class NewsDetailBean implements Serializable {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = Html.fromHtml(title).toString();
     }
 
     public String getCopyfrom() {
