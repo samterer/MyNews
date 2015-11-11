@@ -75,6 +75,7 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
 
     @Override
     public void finish() {
+        App.isStartApp = false;
         super.finish();
     }
 

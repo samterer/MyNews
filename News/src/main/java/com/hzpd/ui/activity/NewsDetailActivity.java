@@ -1409,9 +1409,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             return;
         }
 
-        if (!App.isStartApp && ("push".equals(from) || "browser".equals(from))) {
+        if (!App.isStartApp) {
             Intent in = new Intent();
-            in.setClass(this, WelcomeActivity.class);
+            in.setClass(this, MainActivity.class);
             startActivity(in);
         }
 
