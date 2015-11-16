@@ -292,7 +292,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
             NewsItemBeanForCollection nibfc = new NewsItemBeanForCollection(vib);
             try {
                 NewsItemBeanForCollection mnbean = dbHelper.getCollectionDBUitls().findFirst(
-                        Selector.from(NewsItemBeanForCollection.class).where("colldataid", "=", vib.getVid()));
+                        Selector.from(NewsItemBeanForCollection.class).where("nid", "=", vib.getVid()));
                 if (mnbean == null) {
                     dbHelper.getCollectionDBUitls().save(nibfc);
                     TUtils.toast(getString(R.string.toast_collect_success));
@@ -300,7 +300,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
 
                 } else {
                     dbHelper.getCollectionDBUitls().delete(NewsItemBeanForCollection.class,
-                            WhereBuilder.b("colldataid", "=", vib.getVid()));
+                            WhereBuilder.b("nid", "=", vib.getVid()));
                     TUtils.toast(getString(R.string.toast_collect_cancelled));
                     isCollected = false;
                 }
@@ -413,7 +413,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
         } else {
             try {
                 NewsItemBeanForCollection nbfc = dbHelper.getCollectionDBUitls()
-                        .findFirst(Selector.from(NewsItemBeanForCollection.class).where("colldataid", "=", vib.getVid())
+                        .findFirst(Selector.from(NewsItemBeanForCollection.class).where("nid", "=", vib.getVid())
                                 .and("type", "=", "3"));
                 if (null != nbfc) {
                     isCollected = true;

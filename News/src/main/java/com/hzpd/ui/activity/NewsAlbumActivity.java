@@ -639,7 +639,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
             try {
                 NewsItemBeanForCollection nitb = dbHelper.getCollectionDBUitls().findFirst(Selector
                         .from(NewsItemBeanForCollection.class)
-                        .where("colldataid", "=", imgListBean.getPid()));
+                        .where("nid", "=", imgListBean.getPid()));
                 if (null == nitb) {
                     dbHelper.getCollectionDBUitls().save(nibfc);
                     dbHelper.getCollectionDBUitls().save(tcb);
@@ -647,7 +647,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                     TUtils.toast(getString(R.string.toast_collect_success));
                 } else {
                     dbHelper.getCollectionDBUitls().delete(NewsItemBeanForCollection.class
-                            , WhereBuilder.b("colldataid", "=", imgListBean.getPid()));
+                            , WhereBuilder.b("nid", "=", imgListBean.getPid()));
                     dbHelper.getCollectionDBUitls().delete(Jsonbean.class, WhereBuilder.b("fid", "=", imgListBean.getPid()));
 
                     TUtils.toast(getString(R.string.toast_collect_cancelled));

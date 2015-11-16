@@ -351,7 +351,7 @@ public class HtmlActivity extends MBaseActivity {
 		} else {
 			try {
 				NewsItemBeanForCollection nbfc = dbHelper.getCollectionDBUitls()
-						.findFirst(Selector.from(NewsItemBeanForCollection.class).where("colldataid", "=", nb.getNid())
+						.findFirst(Selector.from(NewsItemBeanForCollection.class).where("nid", "=", nb.getNid())
 								.and("type", "=", "4"));
 				if (null != nbfc) {
 					newdetail_collection.setImageResource(R.drawable.details_collect_unselect);
@@ -368,14 +368,14 @@ public class HtmlActivity extends MBaseActivity {
 			NewsItemBeanForCollection nibfc = new NewsItemBeanForCollection(nb, "");
 			try {
 				NewsItemBeanForCollection mnbean = dbHelper.getCollectionDBUitls().findFirst(
-						Selector.from(NewsItemBeanForCollection.class).where("colldataid", "=", nb.getNid()));
+						Selector.from(NewsItemBeanForCollection.class).where("nid", "=", nb.getNid()));
 				if (mnbean == null) {
 					dbHelper.getCollectionDBUitls().save(nibfc);
 					TUtils.toast(getString(R.string.toast_collect_success));
 					newdetail_collection.setImageResource(R.drawable.details_collect_unselect);
 				} else {
 					dbHelper.getCollectionDBUitls().delete(NewsItemBeanForCollection.class,
-							WhereBuilder.b("colldataid", "=", nb.getNid()));
+							WhereBuilder.b("nid", "=", nb.getNid()));
 					TUtils.toast(getString(R.string.toast_collect_cancelled));
 					newdetail_collection.setImageResource(R.drawable.details_collect_select);
 				}

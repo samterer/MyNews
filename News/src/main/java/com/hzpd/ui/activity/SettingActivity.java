@@ -23,9 +23,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzpd.custorm.SlideSwitch;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.UpdateBean;
-import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.event.FontSizeEvent;
 import com.hzpd.modle.event.RestartEvent;
+import com.hzpd.modle.event.SetThemeEvent;
 import com.hzpd.services.ClearCacheService;
 import com.hzpd.ui.App;
 import com.hzpd.ui.widget.FontTextView;
@@ -42,9 +42,6 @@ import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.db.sqlite.WhereBuilder;
-import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -111,9 +108,16 @@ public class SettingActivity extends MBaseActivity {
     private View loadingView;
     private AlertDialog.Builder mDeleteDialog;
 
+    private String str;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        str = SharePreferecesUtils.getParam(SettingActivity.this, "THEME", "0").toString();
+        if (str.equals("1") ) {
+            setTheme(R.style.ThemeNight);
+        } else {
+            setTheme(R.style.ThemeDefault);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zqzx_setting_layout);
 
@@ -123,14 +127,21 @@ public class SettingActivity extends MBaseActivity {
             e.printStackTrace();
         }
         //测试用
-        rl_test.setVisibility(View.GONE);
-//        rl_test.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent mIntent = new Intent(SettingActivity.this, CollapseActivity.class);
-//                startActivity(mIntent);
-//            }
-//        });
+        rl_test.setVisibility(View.VISIBLE);
+        rl_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (str.equals("1")) {
+                    SharePreferecesUtils.setParam(SettingActivity.this, "THEME", "0");
+                } else {
+                    SharePreferecesUtils.setParam(SettingActivity.this, "THEME", "1");
+                }
+//                EventBus
+                EventBus.getDefault().post(new SetThemeEvent());
+                recreate();
+
+            }
+        });
 
         textSize= new String[]{this.getResources().getString(R.string.settings_option_font_large), this.getResources().getString(R.string.settings_option_font_medium), this.getResources().getString(R.string.settings_option_font_small)};//"Besar", "Sedang", "Kecil"
 
@@ -407,6 +418,8 @@ public class SettingActivity extends MBaseActivity {
                         activity.startService(new Intent(activity, ClearCacheService.class));
                         //刪除SharedPreference
                         DataCleanManager.cleanSharedPreference(SettingActivity.this);
+//                        App.getInstance().newTimeMap.put(channelbean.getTid(), obj.getString("newTime"));
+                        App.getInstance().newTimeMap.clear();
                         handler.sendEmptyMessageDelayed(111, 2000);
                     }
                 });

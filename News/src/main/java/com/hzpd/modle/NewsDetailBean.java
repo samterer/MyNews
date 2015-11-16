@@ -69,14 +69,6 @@ public class NewsDetailBean implements Serializable {
         this.ref = ref;
     }
 
-    public String[] getTag() {
-        return tag;
-    }
-
-    public void setTag(String[] tag) {
-        this.tag = tag;
-    }
-
     @Override
     public String toString() {
         return "NewsDetailBean{" +
@@ -101,6 +93,14 @@ public class NewsDetailBean implements Serializable {
                 ", ref=" + ref +
                 ", fav='" + fav + '\'' +
                 '}';
+    }
+
+    public String[] getTag() {
+        return tag;
+    }
+
+    public void setTag(String[] tag) {
+        this.tag = tag;
     }
 
     public int getVote() {

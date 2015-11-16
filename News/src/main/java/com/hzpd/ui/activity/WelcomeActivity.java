@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.alibaba.fastjson.JSONArray;
@@ -12,6 +13,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsChannelBean;
+import com.hzpd.modle.UserBean;
 import com.hzpd.modle.db.AlbumBeanDB;
 import com.hzpd.modle.db.AlbumItemBeanDB;
 import com.hzpd.modle.db.NewsBeanDB;
@@ -29,6 +31,7 @@ import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SerializeUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
@@ -42,6 +45,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.LogUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -120,7 +124,7 @@ public class WelcomeActivity extends MWBaseActivity {
             exists = true;
             loadMainUI();
         }
-        Log.e("loadMainUI()","loadMainUI()");
+        Log.e("loadMainUI()", "loadMainUI()");
         String station = SharePreferecesUtils.getParam(WelcomeActivity.this, StationConfig.STATION, "def").toString();
         String CHANNELLIST_url = null;
         if (station.equals(StationConfig.DEF)) {
@@ -140,7 +144,7 @@ public class WelcomeActivity extends MWBaseActivity {
                         String json = App.getFileContext(responseInfo.result);
 //							LogUtils.e("WelcomeActivity数据源问题--->"+json);
                         if (json != null) {
-                            LogUtils.i("channel-->" + json);
+                            Log.i("", "channel-->" + json);
                             JSONObject obj = FjsonUtil.parseObject(json);
                             if (null == obj) {
                                 return;
@@ -154,7 +158,6 @@ public class WelcomeActivity extends MWBaseActivity {
                             for (int i = 0; i < newestChannels.size(); i++) {
                                 NewsChannelBean newsChannelBean = newestChannels.get(i);
                                 newsChannelBean.getCnname();
-//									LogUtils.e("WelcomeActivity数据源问题--->"+newsChannelBean.getCnname());
                             }
 
                             // 读取频道信息的本地缓存
@@ -162,11 +165,20 @@ public class WelcomeActivity extends MWBaseActivity {
                             List<NewsChannelBean> cacheChannels = serializeUtil
                                     .readyDataToFile(channelCacheFile.getAbsolutePath());
 
+                            List<NewsChannelBean> showChannel = new ArrayList<NewsChannelBean>();
                             // 如果没有缓存
                             if (null == cacheChannels || cacheChannels.size() < 1) {
 
                                 if (newestChannels != null && newestChannels.size() > 0) {
 
+                                    for (int i = 0; i < newestChannels.size(); i++) {
+                                        String default_show = newestChannels.get(i).getDefault_show();
+                                        if (default_show.equals("0")) {
+                                            newestChannels.remove(i);
+                                            --i;
+                                        }
+                                    }
+                                    Log.e("showChannel", "showChannel-->" + showChannel.toString() + "\n" + showChannel.size());
                                     addLocalChannels(newestChannels);
                                     // 缓存频道信息到SD卡上
                                     serializeUtil.writeDataToFile(newestChannels, channelCachePath);
@@ -190,13 +202,12 @@ public class WelcomeActivity extends MWBaseActivity {
                                     } else {
                                         // 最新的数据中没有和缓存中对应的频道，删除该频道信息
                                         cacheChannels.remove(i);
+                                        --i;
                                     }
                                 }
                                 addLocalChannels(cacheChannels);
-
                                 // 更新后信息再次保存到SD卡中
                                 serializeUtil.writeDataToFile(cacheChannels, channelCachePath);
-
                             }
                         }
                         if (!exists) {
@@ -222,10 +233,16 @@ public class WelcomeActivity extends MWBaseActivity {
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("tid", "" + NewsChannelBean.TYPE_RECOMMEND);
-        params.addBodyParameter("nids", "0");
+        params.addBodyParameter("newTime", App.getInstance().newTime);
+        params.addBodyParameter("oldTime", App.getInstance().oldTime);
         params.addBodyParameter("Page", "1");
         params.addBodyParameter("PageSize", "15");
-
+        UserBean user = SPUtil.getInstance().getUser();
+        if (user != null && !TextUtils.isEmpty(user.getUid())) {
+            params.addBodyParameter("uid", "" + user.getUid());
+            params.addBodyParameter("tagIndex", "1");
+            params.addBodyParameter("pageIndex", "1");
+        }
         httpUtils.send(HttpRequest.HttpMethod.POST
                 , InterfaceJsonfile.CHANNEL_RECOMMEND
                 , params
@@ -305,6 +322,7 @@ public class WelcomeActivity extends MWBaseActivity {
         channelRecommend.setTid("" + NewsChannelBean.TYPE_RECOMMEND);
         channelRecommend.setType(NewsChannelBean.TYPE_RECOMMEND);
         channelRecommend.setCnname(getString(R.string.recommend));
+        channelRecommend.setDefault_show("1");
         // 添加推荐频道
         if (!list.contains(channelRecommend)) {
             list.add(0, channelRecommend);
@@ -312,11 +330,4 @@ public class WelcomeActivity extends MWBaseActivity {
 
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        Intent intent = new Intent(this, InitService.class);
-//        stopService(intent);
-//        finish();
-//    }
 }

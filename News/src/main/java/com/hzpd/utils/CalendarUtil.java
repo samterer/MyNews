@@ -1045,6 +1045,30 @@ public class CalendarUtil {
     };
 
     /**
+     * 显示手机时区时间
+     *
+     * @param sdate
+     * @return
+     */
+    public static String loaclTime(String sdate) {
+        if (TextUtils.isEmpty(sdate)) {
+            return null;
+        }
+        Date time = null;
+        if (isInEasternEightZones()) {
+            time = toDate(sdate);
+        } else {
+            time = transformTime(toDate(sdate), TimeZone.getTimeZone("GMT+07"),
+                    TimeZone.getDefault());
+        }
+        if (time == null) {
+            return sdate;
+        }
+        String ftime = dateFormater.get().format(time);
+        return ftime;
+    }
+
+    /**
      * 以友好的方式显示时间
      *
      * @param sdate
@@ -1055,7 +1079,12 @@ public class CalendarUtil {
             return null;
         }
         Date time = null;
-        time = toDate(sdate);
+        if (isInEasternEightZones()) {
+            time = toDate(sdate);
+        } else {
+            time = transformTime(toDate(sdate), TimeZone.getTimeZone("GMT+07"),
+                    TimeZone.getDefault());
+        }
         if (time == null) {
             return sdate;
         }
@@ -1065,11 +1094,14 @@ public class CalendarUtil {
         // 判断是否是同一天
         String curDate = dateFormater2.get().format(cal.getTime());
         String paramDate = dateFormater2.get().format(time);
+
         if (curDate.equals(paramDate)) {
             int hour = (int) ((cal.getTimeInMillis() - time.getTime()) / 3600000);
             if (hour == 0) {
                 int minite = (int) ((cal.getTimeInMillis() - time.getTime()) / 60000);
-                if (minite < 4) {
+                if (minite < 0) {
+                    ftime = c.getResources().getString(R.string.calendarutil_time_1);//" terkini"
+                } else if (minite >= 0 && minite < 4) {
                     ftime = c.getResources().getString(R.string.calendarutil_time_1);//" terkini"
                 } else {
                     ftime = minite + c.getResources().getString(R.string.calendarutil_time_2);
@@ -1085,7 +1117,9 @@ public class CalendarUtil {
         int days = (int) (ct - lt);
         if (days == 0) {
             int hour = (int) ((cal.getTimeInMillis() - time.getTime()) / 3600000);
-            if (hour == 0) {
+            if (hour < 0) {
+                ftime = c.getResources().getString(R.string.calendarutil_time_1);//" terkini"
+            } else if (hour == 0) {
                 ftime = Math.max(
                         (cal.getTimeInMillis() - time.getTime()) / 60000, 1)
                         + c.getResources().getString(R.string.calendarutil_time_3);//
@@ -1113,10 +1147,16 @@ public class CalendarUtil {
             return null;
         }
         Date time = null;
-        time = toDate(sdate);
+        if (isInEasternEightZones()) {
+            time = toDate(sdate);
+        } else {
+            time = transformTime(toDate(sdate), TimeZone.getTimeZone("GMT+07"),
+                    TimeZone.getDefault());
+        }
         if (time == null) {
             return sdate;
         }
+        Log.e("time", "time-->" + time);
         String ftime = "";
         Calendar cal = Calendar.getInstance();
 
@@ -1193,6 +1233,7 @@ public class CalendarUtil {
      */
     public static Date transformTime(Date date, TimeZone oldZone,
                                      TimeZone newZone) {
+
         Date finalDate = null;
         if (date != null) {
             int timeOffset = oldZone.getOffset(date.getTime())

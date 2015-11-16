@@ -19,9 +19,9 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.custorm.DrawerArrowDrawable;
 import com.hzpd.hflt.R;
-import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.UpdateBean;
 import com.hzpd.modle.event.RestartEvent;
+import com.hzpd.modle.event.SetThemeEvent;
 import com.hzpd.services.InitService;
 import com.hzpd.ui.App;
 import com.hzpd.ui.fragments.MySearchFragment;
@@ -42,6 +42,7 @@ import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
+import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
@@ -80,9 +81,16 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
         super.finish();
     }
 
+    private String str;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        str = SharePreferecesUtils.getParam(MainActivity.this, "THEME", "0").toString();
+        if (str.equals("1") ) {
+            setTheme(R.style.ThemeNight);
+        } else {
+            setTheme(R.style.ThemeDefault);
+        }
         super.onCreate(null);
         EventBus.getDefault().register(this);
         long start = System.currentTimeMillis();
@@ -111,7 +119,7 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
         Intent intent = new Intent(this, InitService.class);
         intent.setAction(InitService.UserLogAction);
         startService(intent);
-        showNotification("ssssssssssss");
+
     }
 
     @OnClick({R.id.main_title_left, R.id.main_title_right})
@@ -310,20 +318,7 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
         CharSequence contentText = description; // 通知栏内容
         final String appPackageName = getPackageName();
         Log.e("test", "test" + appPackageName);
-        Intent notificationIntent = new Intent(this, NewsDetailActivity.class); // 点击该通知后要跳转的Activity
-        NewsBean nb = new NewsBean();
-        nb.setNid("279885");
-        nb.setSid("0");
-        nb.setTitle("123123");
-        nb.setJson_url("http://d1esugnuegojvh.cloudfront.net/ltcms/./cms_json/hflt/News/Content/201511/11/279885");
-        nb.setType("1");
-        nb.setRtype("1");
-        nb.setTid("130");
-        nb.setLike("1");
-        nb.setUnlike("12");
-        nb.setUpdate_time("2015-11-11 13:12:24");
-        notificationIntent.putExtra("newbean", nb);
-//        notificationIntent.putExtra("from", "mycomments");
+        Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)); // 点击该通知后要跳转的Activity
         PendingIntent contentItent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         notification.setLatestEventInfo(this, contentTitle, contentText, contentItent);
         notificationManager.notify(0, notification);
@@ -338,6 +333,13 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
     public void onEventMainThread(RestartEvent event) {
         restartApplication();
     }
+
+    public void onEventMainThread(SetThemeEvent event) {
+        recreate();
+//        finish();
+    }
+
+
 
     private void restartApplication() {
         final Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());

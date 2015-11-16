@@ -20,8 +20,8 @@ public class NewsItemBeanForCollection {
 	private String type;//":"1",
 	@Column(column = "datetime")
 	private String datetime;//":"2014-12-31 12:12:12"
-	@Column(column = "colldataid")
-	private String colldataid;
+	@Column(column = "nid")
+	private String nid;
 	@Column(column = "tid")
 	private String tid;
 	@Column(column = "title")
@@ -42,12 +42,18 @@ public class NewsItemBeanForCollection {
 	private String fav;//收藏数目
 	@Column(column = "comcount")
 	private String comcount;//": "0",
+	@Column(column = "like")
+	private String like;
+	@Column(column = "unlike")
+	private String unlike;
+
+
 
 	public NewsItemBeanForCollection() {
 	}
 
 	public NewsItemBeanForCollection(NewsBean newsbean) {
-		colldataid = newsbean.getNid();
+		nid = newsbean.getNid();
 		title = newsbean.getTitle();
 		tid = newsbean.getTid();
 		type = "1";
@@ -56,6 +62,8 @@ public class NewsItemBeanForCollection {
 		copyfrom=newsbean.getCopyfrom();
 		fav=newsbean.getFav();
 		comcount=newsbean.getComcount();
+		like=newsbean.getLike();
+		unlike=newsbean.getUnlike();
 //		String limgs[] = newsbean.getImgs();
 //		if (null != limgs && limgs.length > 0) {
 //			imgs = limgs[0];
@@ -71,14 +79,11 @@ public class NewsItemBeanForCollection {
 				imgs = sb.substring(0, sb.length() - 1);
 			}
 		}
-
-
-
 		collect_time = System.currentTimeMillis();
 	}
 
 	public NewsItemBeanForCollection(NewsBean newsbean, String html5) {
-		colldataid = newsbean.getNid();
+		nid = newsbean.getNid();
 		title = newsbean.getTitle();
 		tid = newsbean.getTid();
 		type = "4";
@@ -87,6 +92,8 @@ public class NewsItemBeanForCollection {
 		copyfrom=newsbean.getCopyfrom();
 		fav=newsbean.getFav();
 		comcount=newsbean.getComcount();
+		like=newsbean.getLike();
+		unlike=newsbean.getUnlike();
 //		String limgs[] = newsbean.getImgs();
 //		if (null != limgs && limgs.length > 0) {
 //			imgs = limgs[0];
@@ -107,7 +114,7 @@ public class NewsItemBeanForCollection {
 	}
 
 	public NewsItemBeanForCollection(ImgListBean imglistbean) {
-		colldataid = imglistbean.getPid();
+		nid = imglistbean.getPid();
 		title = imglistbean.getTitle();
 		type = "2";
 		time = imglistbean.getCreate_time();
@@ -116,7 +123,6 @@ public class NewsItemBeanForCollection {
 		copyfrom=imglistbean.getCopyfrom();
 		fav=imglistbean.getFav();
 		comcount=imglistbean.getComcount();
-
 		List<ImageListSubBean> li = imglistbean.getSubphoto();
 		if (li.size() > 0) {
 			imgs= li.get(0).getSubphoto();
@@ -125,7 +131,7 @@ public class NewsItemBeanForCollection {
 	}
 
 	public NewsItemBeanForCollection(VideoItemBean vib) {
-		colldataid = vib.getVid();
+		nid = vib.getVid();
 		title = vib.getTitle();
 		type = "3";
 		time = vib.getTime();
@@ -140,7 +146,7 @@ public class NewsItemBeanForCollection {
 
 	public NewsBean getNewsBean() {
 		NewsBean nb = new NewsBean();
-		nb.setNid(colldataid);
+		nb.setNid(nid);
 		nb.setJson_url(json_url);
 
 		nb.setTid(tid);
@@ -172,8 +178,8 @@ public class NewsItemBeanForCollection {
 		if (!TextUtils.isEmpty(imgs)) {
 			 nbImgs = imgs.split(",");
 		}
-		CollectionDataBean cdb = new CollectionDataBean(colldataid, tid, title, time, nbImgs, json_url, rtype,copyfrom,fav,comcount);
-//		CollectionDataBean cdb = new CollectionDataBean(colldataid, tid, title, time, thumb, json_url, rtype);
+		CollectionDataBean cdb = new CollectionDataBean(nid, tid, title, time, nbImgs, json_url, rtype,copyfrom,fav,comcount);
+//		CollectionDataBean cdb = new CollectionDataBean(nid, tid, title, time, thumb, json_url, rtype);
 		cb.setData(cdb);
 		cb.setDatetime(time);
 		cb.setType(type);
@@ -186,7 +192,7 @@ public class NewsItemBeanForCollection {
 		vib.setJson_url(this.json_url);
 		vib.setMainpic(this.imgs);
 		vib.setTitle(this.title);
-		vib.setVid(this.colldataid);
+		vib.setVid(this.nid);
 		vib.setTime(this.time);
 		vib.setCopyfrom(this.copyfrom);
 		vib.setFav(this.fav);
@@ -247,9 +253,6 @@ public class NewsItemBeanForCollection {
 		return datetime;
 	}
 
-	public String getColldataid() {
-		return colldataid;
-	}
 
 	public String getTid() {
 		return tid;
@@ -287,8 +290,12 @@ public class NewsItemBeanForCollection {
 		this.datetime = datetime;
 	}
 
-	public void setColldataid(String colldataid) {
-		this.colldataid = colldataid;
+	public String getNid() {
+		return nid;
+	}
+
+	public void setNid(String nid) {
+		this.nid = nid;
 	}
 
 	public void setTid(String tid) {
@@ -316,6 +323,23 @@ public class NewsItemBeanForCollection {
 	}
 
 
+
+	public String getLike() {
+		return like;
+	}
+
+	public void setLike(String like) {
+		this.like = like;
+	}
+
+	public String getUnlike() {
+		return unlike;
+	}
+
+	public void setUnlike(String unlike) {
+		this.unlike = unlike;
+	}
+
 	@Override
 	public String toString() {
 		return "NewsItemBeanForCollection{" +
@@ -323,17 +347,20 @@ public class NewsItemBeanForCollection {
 				", collectionid='" + collectionid + '\'' +
 				", type='" + type + '\'' +
 				", datetime='" + datetime + '\'' +
-				", colldataid='" + colldataid + '\'' +
+				", nid='" + nid + '\'' +
 				", tid='" + tid + '\'' +
 				", title='" + title + '\'' +
 				", time='" + time + '\'' +
-				", imgs=" + imgs +
+				", imgs='" + imgs + '\'' +
 				", json_url='" + json_url + '\'' +
 				", rtype='" + rtype + '\'' +
 				", collect_time=" + collect_time +
 				", copyfrom='" + copyfrom + '\'' +
 				", fav='" + fav + '\'' +
 				", comcount='" + comcount + '\'' +
+				", like='" + like + '\'' +
+				", unlike='" + unlike + '\'' +
 				'}';
 	}
+
 }

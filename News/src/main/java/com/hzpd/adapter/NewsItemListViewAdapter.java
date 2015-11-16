@@ -430,10 +430,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     if (readedNewsSet.contains(bean.getNid())) {
                         vhLeftPic.newsitem_title.setTextColor(App.getInstance()
                                 .getResources().getColor(R.color.grey_font));
-                    } else {
-                        vhLeftPic.newsitem_title.setTextColor(App.getInstance()
-                                .getResources().getColor(R.color.black));
-                    }
+                    } 
                     if (!TextUtils.isEmpty(bean.getAttname())) {
                         String attname = bean.getAttname();
                         if (attname.equals("a")) {

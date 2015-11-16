@@ -295,9 +295,9 @@ public class MyPMColAvtivity extends MBaseActivity {
         intent.putExtra("from", "collection");
         boolean flag = false;//是否是预定类型
         try {
-            NewsItemBeanForCollection bean = dbHelper.getCollectionDBUitls().findFirst(Selector.from(NewsItemBeanForCollection.class).where("colldataid", "=", cb.getData().getId()));
+            NewsItemBeanForCollection bean = dbHelper.getCollectionDBUitls().findFirst(Selector.from(NewsItemBeanForCollection.class).where("nid", "=", cb.getData().getId()));
             if (bean != null) {
-                cdb.setNid(bean.getColldataid());
+                cdb.setNid(bean.getNid());
             }
         } catch (DbException e) {
             e.printStackTrace();
@@ -530,7 +530,7 @@ public class MyPMColAvtivity extends MBaseActivity {
                             if ("2".equals(cb.getType())) {
                                 dbHelper.getCollectionDBUitls().delete(Jsonbean.class, WhereBuilder.b("fid", "=", cb.getId()));
                             }
-                            dbHelper.getCollectionDBUitls().delete(NewsItemBeanForCollection.class, WhereBuilder.b("colldataid", "=", cb.getData().getId
+                            dbHelper.getCollectionDBUitls().delete(NewsItemBeanForCollection.class, WhereBuilder.b("nid", "=", cb.getData().getId
                                     ()));
                             TUtils.toast(getString(R.string.toast_delete_success));
                             colladAdapter.deleteItem(position);

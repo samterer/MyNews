@@ -69,6 +69,7 @@
 
     </LinearLayout>
 
+    <!--数据为空时显示-->
     <FrameLayout
         android:id="@+id/main_no_news"
         android:layout_width="match_parent"
@@ -102,6 +103,7 @@
 
     </FrameLayout>
 
+    <!-- 为空时点击屏幕加载Loading-->
     <FrameLayout
         android:id="@+id/app_progress_bar"
         android:layout_width="match_parent"

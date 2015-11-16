@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -124,6 +125,9 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     boolean addLoading = false;
 
     private boolean isRefreshCounts;
+    boolean pullRefresh = false;
+    private boolean isScrolled;
+    private int y1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -141,11 +145,11 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         });
         mSwipeRefreshWidget = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recylerlist);
-
         mSwipeRefreshWidget.setColorScheme(R.color.google_blue, R.color.google_tool);
         mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                pullRefresh = true;
                 page = 1;
                 mFlagRefresh = true;
                 getFlash();
@@ -156,9 +160,18 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                isScrolled = true;
+            }
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+//                isScrolled = true;
                 //解决RecyclerView和SwipeRefreshLayout共用存在的bug
                 int topRowVerticalPosition =
                         (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
@@ -171,9 +184,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                     adapter.notifyItemInserted(count);
                 }
             }
-
         });
-        mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         layoutManager = new LinearLayoutManager(activity);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -202,7 +213,8 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
         page = 1;
         mFlagRefresh = true;
-
+        firstLoading = false;
+        Log.e("test", "===" + getTitle());
     }
 
     @Override
@@ -215,8 +227,15 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         super.onDetach();
     }
 
-    public void init() {
-        if (page == 1) {
+    boolean firstLoading = false;
+
+    public void loadData() {
+        Log.e("test", firstLoading + "===" + getTitle() + mRecyclerView);
+        if (firstLoading) {
+            return;
+        }
+        if (page == 1 && mRecyclerView != null) {
+            firstLoading = true;
             mRecyclerView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -240,18 +259,16 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                     return;
                 }
                 String nids = "";
-                if (null != list && list.size() > 0) {
+                if (null != list && list.size() > 5) {
                     StringBuilder sb = new StringBuilder();
                     List<NewsBean> nbList = new ArrayList<NewsBean>();
                     for (NewsBeanDB nbdb : list) {
                         sb.append(nbdb.getNid() + ",");
                         nbList.add(nbdb.getNewsBean());
                     }
+                    addLoading = true;
                     adapter.appendData(nbList, mFlagRefresh, true);
                     background_empty.setVisibility(View.GONE);
-                    if (sb.length() > 1) {
-                        nids = sb.substring(0, sb.length() - 1);
-                    }
                 }
                 getServerList("");
             }
@@ -303,6 +320,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             @Override
             public void onFailure(HttpException error, String msg) {
                 isLoading = false;
+                pullRefresh = false;
                 if (!isAdded()) {
                     return;
                 }
@@ -325,8 +343,8 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             case 200: {
                 List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
 
-                if (null != list) {
-                Log.e("newBean","newBean--->"+list.toString());
+                if (null != list && list.size() > 5) {
+                    Log.e("newBean", "newBean--->" + list.toString());
 
                     if (isRefreshCounts) {
                         update_counts.setVisibility(View.VISIBLE);
@@ -340,12 +358,16 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                         }, 1000);
                     }
 
-                    adapter.removeOld();
+                    if (page == 1) {
+                        adapter.removeOld();
+                    }
                     StringBuilder builder = new StringBuilder();
                     for (NewsBean bean : list) {
                         builder.append(bean.getNid() + ",");
                     }
-                    adapter.showLoading = true;
+                    if (list.size() == pageSize) {
+                        adapter.showLoading = true;
+                    }
                     adapter.appendData(list, mFlagRefresh, false);
                     background_empty.setVisibility(View.GONE);
                     if (page == 1) {
@@ -365,7 +387,9 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             }
             break;
             default: {
-                TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
+                if (pullRefresh) {
+                    TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
+                }
                 if (page > 1 && adapter.showLoading) {
                     int count = adapter.getItemCount();
                     adapter.showLoading = false;
@@ -380,6 +404,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             }
             break;
         }
+        pullRefresh = false;
         mFlagRefresh = false;
     }
 
@@ -409,7 +434,19 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                         if (200 == obj.getIntValue("code")) {
                             JSONObject object = obj.getJSONObject("data");
                             mViewPagelist = FjsonUtil.parseArray(object.getString("flash"), NewsPageListBean.class);
-                            mRecyclerView.scrollToPosition(0);
+
+//                            mRecyclerView.get;
+                            Log.e("mViewPagelist", "mViewPagelist--->" + isScrolled);
+
+//                            mRecyclerView.postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+                            if (!isScrolled) {
+                                mRecyclerView.scrollToPosition(0);
+                            }
+//                                }
+//                            }, 3000);
+
                         }
                         if (mViewPagelist != null && mViewPagelist.size() > 0) {
                             adapter.setFlashlist(mViewPagelist);

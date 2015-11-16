@@ -98,6 +98,10 @@ public class BaseFragment extends Fragment implements AnalyticCallback {
         action.onStop(this);
     }
 
+    //LOAD DATA
+    public void loadData() {
+
+    }
 
     @Override
     public String getAnalyticPageName() {

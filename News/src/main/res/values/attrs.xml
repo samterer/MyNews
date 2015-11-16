@@ -159,4 +159,8 @@
     </declare-styleable>
 
 
+    <attr name="title_bar_color" format="reference|color"/>
+    <attr name="title_name_color" format="reference|color"/>
+
+
 </resources>

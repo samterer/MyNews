@@ -23,6 +23,33 @@ public class NewsChannelBean implements Comparable<NewsChannelBean>, Serializabl
     private String style;//": "2",
     private String status;//": "1",
     private String siteid;//": "1"
+    private String default_show;
+
+    @Override
+    public String toString() {
+        return "NewsChannelBean{" +
+                "tid='" + tid + '\'' +
+                ", cnname='" + cnname + '\'' +
+                ", sort_order='" + sort_order + '\'' +
+                ", fid='" + fid + '\'' +
+                ", path='" + path + '\'' +
+                ", source='" + source + '\'' +
+                ", style='" + style + '\'' +
+                ", status='" + status + '\'' +
+                ", siteid='" + siteid + '\'' +
+                ", default_show='" + default_show + '\'' +
+                ", type=" + type +
+                '}';
+    }
+
+    public String getDefault_show() {
+        return default_show;
+    }
+
+    public void setDefault_show(String default_show) {
+        this.default_show = default_show;
+    }
+
     private int type = TYPE_NORMAL;
 
     public int getType() {
@@ -126,19 +153,4 @@ public class NewsChannelBean implements Comparable<NewsChannelBean>, Serializabl
         return super.equals(o);
     }
 
-    @Override
-    public String toString() {
-        return "NewsChannelBean{" +
-                "tid='" + tid + '\'' +
-                ", cnname='" + cnname + '\'' +
-                ", sort_order='" + sort_order + '\'' +
-                ", fid='" + fid + '\'' +
-                ", path='" + path + '\'' +
-                ", source='" + source + '\'' +
-                ", style='" + style + '\'' +
-                ", status='" + status + '\'' +
-                ", siteid='" + siteid + '\'' +
-                ", type=" + type +
-                '}';
-    }
 }

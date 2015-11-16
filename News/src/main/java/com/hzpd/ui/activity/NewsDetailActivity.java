@@ -63,6 +63,7 @@ import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.CODE;
+import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.Constant;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.EventUtils;
@@ -196,9 +197,16 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     };
 
     private ImageView details_iv_comment;
+    private String str;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        str = SharePreferecesUtils.getParam(NewsDetailActivity.this, "THEME", "0").toString();
+        if (str.equals("1") ) {
+            setTheme(R.style.ThemeNight);
+        } else {
+            setTheme(R.style.ThemeDefault);
+        }
         getThisIntent();
         super.onCreate(savedInstanceState);
         App.getInstance().setProfileTracker(callback);
@@ -660,8 +668,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             public void onFailure(HttpException error, String msg) {
             }
         });
-
-
     }
 
     private void initCommentListView() {
@@ -1095,14 +1101,31 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         EventUtils.sendReadAtical(activity);
     }
 
+    public static final String DIV = "</div>";
+
     // 对内容做特殊处理
     private String processContent(String content) {
+        String localTime = CalendarUtil.loaclTime(nb.getUpdate_time());
+        Log.e("localTime", "head  localTime" + localTime);
         int start = content.indexOf(CONTENT_START) + CONTENT_START.length();
+        Log.e("head", "head  length--->" + start);
         String head = "";
+        String str = "";
         if (start > 10) {
             head = content.substring(0, start);
+            str = head.substring(start - 45, start-29);
+            head=head.substring(0,start-45);
+            localTime=localTime+DIV+" "+CONTENT_START;
+            head=head+localTime;
             content = content.substring(start);
         }
+        Log.e("head", "head  --->" + head);
+        Log.e("head", "head  str--->" + str);
+        Log.e("head", "head  localTime--->" + localTime);
+        int headStart = head.indexOf(DIV) + DIV.length();
+        Log.e("head", "head  headStart--->" + headStart);
+
+
         content = content.replaceAll("<style>[^/]*?</style>", " ");
         content = content.replaceAll("style=\"[^\"]*?\"", " ");
         content = content.replaceAll("style='[^']*?'", " ");
@@ -1251,6 +1274,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     String data = App.getFileContext(pageFile);
                     JSONObject obj = JSONObject.parseObject(data);
                     mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
+                    Log.e("mBean", "mBean--->" + mBean.toString());
                     refList = mBean.getRef();
                     int textSize = spu.getTextSize();
                     setupWebView(textSize);
@@ -1258,7 +1282,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     mLayoutRoot.setVisibility(View.VISIBLE);
                     mButtomLayout1.setVisibility(View.VISIBLE);
                     news_detail_nonetwork.setVisibility(View.GONE);
-                    if (mBean.getRef() != null) {
+                    if (mBean.getRef() != null && refList.size() > 0) {
                         rl_related.setVisibility(View.VISIBLE);
                         addRelatedNewsView();
                     }
@@ -1268,6 +1292,13 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                             loadingView.setVisibility(View.GONE);
                         }
                     }, 500);
+                    if (mBean.getTag() != null) {
+                        rl_related.setVisibility(View.VISIBLE);
+                        ll_tag.setVisibility(View.VISIBLE);
+                        Log.e("tag", "从缓存中获取tag--->" + mBean.getTag().toString());
+                    } else {
+                        Log.e("tag", "从缓存中获取tag--->null");
+                    }
                     addRelatedTagView();
                     getLatestComm();
                 } catch (Exception e) {
@@ -1306,9 +1337,20 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         }
                         try {
                             mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
+                            Log.e("mBean", "mBean--->" + mBean.toString());
                             int textSize = spu.getTextSize();
                             setupWebView(textSize);
+                            if (mBean.getRef() != null && mBean.getRef().size() < 0) {
+                                rl_related.setVisibility(View.VISIBLE);
+                            }
                             addRelatedNewsView();
+                            if (mBean.getTag() != null) {
+                                rl_related.setVisibility(View.VISIBLE);
+                                ll_tag.setVisibility(View.VISIBLE);
+                                Log.e("tag", "httpUtils tag--->" + mBean.getTag().toString());
+                            } else {
+                                Log.e("tag", "httpUtils tag--->null");
+                            }
                             addRelatedTagView();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -1367,14 +1409,27 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     //获取相关tag
     private void addRelatedTagView() {
         if (mBean != null && mBean.getTag() != null) {
-            for (int i = 0; i < mBean.getTag().length; i++) {
-                View view = LayoutInflater.from(this).inflate(R.layout.details_related_tag, null);
-                TextView text = (TextView) view.findViewById(R.id.details_tag1);
-                text.setText(mBean.getTag()[i]);
-                String tagcontent = mBean.getTag()[i];
-                view.setOnClickListener(new MyOnClickListener(tagcontent));
-                ll_tag.addView(view);
+            Log.e("tag", "tag--->" + mBean.getTag());
+            if (mBean.getTag().length > 3) {
+                for (int i = 0; i < 3; i++) {
+                    View view = LayoutInflater.from(this).inflate(R.layout.details_related_tag, null);
+                    TextView text = (TextView) view.findViewById(R.id.details_tag1);
+                    text.setText(mBean.getTag()[i]);
+                    String tagcontent = mBean.getTag()[i];
+                    view.setOnClickListener(new MyOnClickListener(tagcontent));
+                    ll_tag.addView(view);
+                }
+            } else {
+                for (int i = 0; i < mBean.getTag().length; i++) {
+                    View view = LayoutInflater.from(this).inflate(R.layout.details_related_tag, null);
+                    TextView text = (TextView) view.findViewById(R.id.details_tag1);
+                    text.setText(mBean.getTag()[i]);
+                    String tagcontent = mBean.getTag()[i];
+                    view.setOnClickListener(new MyOnClickListener(tagcontent));
+                    ll_tag.addView(view);
+                }
             }
+
         }
     }
 
@@ -1502,7 +1557,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         NewsItemBeanForCollection nibfc = new NewsItemBeanForCollection(nb);
         try {
             NewsItemBeanForCollection mnbean = dbUtils.findFirst(
-                    Selector.from(NewsItemBeanForCollection.class).where("colldataid", "=", nb.getNid()));
+                    Selector.from(NewsItemBeanForCollection.class).where("nid", "=", nb.getNid()));
 
             if (mnbean == null) {
                 dbUtils.save(nibfc);
@@ -1512,7 +1567,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 LogUtils.i("type-->" + nibfc.getType());
                 newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
             } else {
-                dbUtils.delete(NewsItemBeanForCollection.class, WhereBuilder.b("colldataid", "=", nb.getNid()));
+                dbUtils.delete(NewsItemBeanForCollection.class, WhereBuilder.b("nid", "=", nb.getNid()));
                 TUtils.toast(getString(R.string.toast_collect_cancelled));
                 newdetail_collection.setImageResource(R.drawable.details_collect_select);
             }
@@ -1625,7 +1680,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         } else {
             try {
                 NewsItemBeanForCollection nbfc = dbHelper.getCollectionDBUitls()
-                        .findFirst(Selector.from(NewsItemBeanForCollection.class).where("colldataid", "=", nb.getNid())
+                        .findFirst(Selector.from(NewsItemBeanForCollection.class).where("nid", "=", nb.getNid())
                                 .and("type", "=", "1"));
                 if (null != nbfc) {
                     newdetail_collection.setImageResource(R.drawable.details_collect_already_select);

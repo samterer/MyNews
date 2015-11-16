@@ -114,10 +114,22 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         channelbean.setCnname(getString(R.string.recommend));
     }
 
+    private boolean isAgainLoading;
+    private boolean pullRefresh;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.choose_fragment, container, false);
         background_empty = (ImageView) view.findViewById(R.id.background_empty);
+        background_empty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isAgainLoading = true;
+                mSwipeRefreshWidget.setRefreshing(true);
+//                getChooseNewsJson();
+            }
+        });
         floatingView = view.findViewById(R.id.floating_button);
         update_counts = (TextView) view.findViewById(R.id.update_counts);
         floatingView.setOnClickListener(this);
@@ -139,9 +151,19 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                if (isAgainLoading) {
+                    page = 1;
+                    tagIndex = 1;
+                    pageIndex = 1;
+                    getServerList("");
+                    floatingView.startAnimation(animation);
+                    return;
+                }
+                Log.e("isAgainLoading", "isAgainLoading--->false");
                 if (!isRefresh) {
                     floatingView.startAnimation(animation);
                 }
+                pullRefresh = true;
                 page = 1;
                 ++tagIndex;
                 pageIndex = 1;
@@ -271,6 +293,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                     return;
                 }
                 if (null != list && list.size() > 0) {
+                    isRefresh = false;
                     List<NewsBean> nbList = new ArrayList<NewsBean>();
                     for (NewsBeanDB nbdb : list) {
                         nbList.add(nbdb.getNewsBean());
@@ -282,6 +305,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                             break;
                         }
                     }
+
                     adapter.showLoading = true;
                     adapter.setData(nbList);
                     background_empty.setVisibility(View.GONE);
@@ -299,9 +323,16 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("tid", "" + NewsChannelBean.TYPE_RECOMMEND);
-        params.addBodyParameter("nids", "0");
+        params.addBodyParameter("newTime", App.getInstance().newTime);
+        params.addBodyParameter("oldTime", App.getInstance().oldTime);
         params.addBodyParameter("Page", "1");
-        params.addBodyParameter("PageSize", "15");
+        params.addBodyParameter("PageSize", "" + pageSize);
+        UserBean user = SPUtil.getInstance().getUser();
+        if (user != null && !TextUtils.isEmpty(user.getUid())) {
+            params.addBodyParameter("uid", "" + user.getUid());
+            params.addBodyParameter("tagIndex", "" + tagIndex);
+            params.addBodyParameter("pageIndex", "" + pageIndex);
+        }
 
         httpUtils.send(HttpRequest.HttpMethod.POST
                 , InterfaceJsonfile.CHANNEL_RECOMMEND
@@ -309,6 +340,8 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                 , new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                isRefresh = false;
+                mSwipeRefreshWidget.setRefreshing(false);
                 final JSONObject obj = FjsonUtil
                         .parseObject(responseInfo.result);
                 if (null != obj) {
@@ -337,6 +370,9 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
 
             @Override
             public void onFailure(HttpException error, String msg) {
+                isRefresh = false;
+                pullRefresh = false;
+                mSwipeRefreshWidget.setRefreshing(false);
 //                loadMainUI();
             }
         });
@@ -391,6 +427,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
             public void onFailure(HttpException error, String msg) {
                 loading = false;
                 isRefresh = false;
+                pullRefresh = false;
                 if (!isAdded()) {
                     return;
                 }
@@ -437,10 +474,13 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                     background_empty.setVisibility(View.GONE);
                 }
                 newsListDbTask.saveList(list, null);
+                adapter.showLoading = true;
             }
             break;
             default: {
-                TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
+                if (pullRefresh) {
+                    TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
+                }
                 if (adapter.showLoading) {
                     adapter.showLoading = false;
                     mRecyclerView.scrollToPosition(0);
@@ -454,7 +494,8 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                 }
             }
         }
-
+        isRefresh = false;
+        pullRefresh = false;
     }
 
 
@@ -469,6 +510,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         }
 //        NewsBean nb=(NewsBean)v.getTag();
 //        adapter.setReadedId(nb.getNid());
+        Log.e("isRefresh", "isRefresh--->" + isRefresh);
         try {
             if (!isRefresh && v == floatingView) {
                 mRecyclerView.scrollToPosition(0);

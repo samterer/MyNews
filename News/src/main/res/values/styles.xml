@@ -10,6 +10,17 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
+
+    <style name="ThemeDefault" parent="AppBaseTheme">
+        <item name="title_bar_color">@color/toolbar_bg</item>
+        <item name="title_name_color">@color/white</item>
+    </style>
+
+    <style name="ThemeNight" parent="AppBaseTheme">
+        <item name="title_bar_color">@color/red</item>
+        <item name="title_name_color">@color/toolbar_bg</item>
+    </style>
+
     <style name="dialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>

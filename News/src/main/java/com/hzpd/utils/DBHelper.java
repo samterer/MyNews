@@ -26,11 +26,10 @@ public class DBHelper {
 
     private DBHelper(Context mContext) {
         this.context = mContext;
-
 //		dbPath= mContext.getCacheDir().getAbsolutePath();
         dbPath = this.context.getDatabasePath("hzpd").getAbsolutePath();
         collectionDBUitls = DbUtils.create(context
-                , dbPath, App.collectiondbname, 2, new DbUtils.DbUpgradeListener() {
+                , dbPath, App.collectiondbname, 4, new DbUtils.DbUpgradeListener() {
             @Override
             public void onUpgrade(DbUtils dbUtils, int i, int i1) {
                 try {

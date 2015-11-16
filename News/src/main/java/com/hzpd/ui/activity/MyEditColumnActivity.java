@@ -22,6 +22,7 @@ import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SerializeUtil;
+import com.hzpd.utils.SharePreferecesUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -73,9 +74,15 @@ public class MyEditColumnActivity extends MBaseActivity {
 
 
     private boolean isEdit;
-
+    private String str;
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        str = SharePreferecesUtils.getParam(MyEditColumnActivity.this, "THEME", "0").toString();
+        if (str.equals("1") ) {
+            setTheme(R.style.ThemeNight);
+        } else {
+            setTheme(R.style.ThemeDefault);
+        }
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.editcolumn_my_layout);
@@ -118,6 +125,7 @@ public class MyEditColumnActivity extends MBaseActivity {
         if (channelData == null) {
             return;
         }
+        Log.e("channelData","channelData"+channelData.toString());
         // 不显示在新闻tab栏的频道列表
         myAllList = new ArrayList<>();
         myAllAdapter = new LastEditColumnAdapter(this);
@@ -126,7 +134,7 @@ public class MyEditColumnActivity extends MBaseActivity {
         csl = new ChannelSortedList();
     }
 
-    //修改频道缓存配置，清楚缓存时不删除频道
+    //修改频道缓存配置，清除缓存时不删除频道
     private String getChannelInfoCacheSavePath() {
         return App.getInstance().getAllDiskCacheDir()
                 + File.separator
@@ -282,7 +290,7 @@ public class MyEditColumnActivity extends MBaseActivity {
         myAllList = JSONArray.parseArray(array.toJSONString(), NewsChannelBean.class);
         Collections.sort(myAllList);
         addLocalChannels(myAllList);
-        Log.i(getLogTag(), "Channel count : " + myAllList.size());
+        Log.i(getLogTag(), "Channel count : " + myAllList.size()+"::::"+myAllList.toString());
 
         // 将新获取的频道临时保存到map中
         for (NewsChannelBean stb : myAllList) {

@@ -90,6 +90,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+//        newTimeMap.clear();
         long start = System.currentTimeMillis();
         FacebookSdk.sdkInitialize(getApplicationContext());
         mInstance = this;

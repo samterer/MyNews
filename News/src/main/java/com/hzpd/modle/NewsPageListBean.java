@@ -1,5 +1,7 @@
 package com.hzpd.modle;
 
+import android.text.Html;
+
 import java.io.Serializable;
 
 public class NewsPageListBean implements Serializable, Comparable<NewsPageListBean> {
@@ -55,7 +57,7 @@ public class NewsPageListBean implements Serializable, Comparable<NewsPageListBe
 	}
 
 	public void setTitle(String title) {
-		this.title = title;
+		this.title = Html.fromHtml(title).toString();
 	}
 
 	public String getImgurl() {

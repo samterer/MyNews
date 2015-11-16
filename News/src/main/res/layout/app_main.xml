@@ -39,7 +39,8 @@
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@+id/main_title_left"
             android:paddingBottom="6.5dp"
-            android:textColor="@color/white"
+            android:text="标题"
+            android:textColor="?title_name_color"
             android:textSize="18sp" />
 
         <RelativeLayout

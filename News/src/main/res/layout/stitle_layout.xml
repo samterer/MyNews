@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/main_title_bar"
-    android:background="@color/toolbar_bg">
-
+    android:background="?title_bar_color">
+<!--@color/toolbar_bg-->
     <ImageView
         android:id="@+id/stitle_ll_back1"
         android:layout_width="wrap_content"

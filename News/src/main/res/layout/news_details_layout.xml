@@ -23,7 +23,7 @@
                 android:id="@+id/news_detail_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/main_title_bar"
-                android:background="@color/toolbar_bg">
+                android:background="?title_bar_color">
                 <!--返回按钮-->
 
                 <ImageView

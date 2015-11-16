@@ -13,6 +13,7 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.ui.App;
+import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.Log;
@@ -99,6 +100,7 @@ public class ChooseAdapter extends RecyclerView.Adapter {
         public ImageView imageView;
         public View clickView;
 
+
         public FirstViewHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.newsitem_title);
@@ -110,6 +112,7 @@ public class ChooseAdapter extends RecyclerView.Adapter {
 
     protected class SecondViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
+        public TextView timeView;
         public TextView fromView;
         public TextView collView;
         public TextView commentView;
@@ -119,6 +122,7 @@ public class ChooseAdapter extends RecyclerView.Adapter {
         public SecondViewHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.newsitem_title);
+            timeView = (TextView) itemView.findViewById(R.id.newsitem_time);
             fromView = (TextView) itemView.findViewById(R.id.newsitem_source);
             collView = (TextView) itemView.findViewById(R.id.newsitem_collectcount);
             commentView = (TextView) itemView.findViewById(R.id.newsitem_commentcount);
@@ -202,6 +206,7 @@ public class ChooseAdapter extends RecyclerView.Adapter {
                     final SecondViewHolder holder = (SecondViewHolder) sHolder;
                     holder.textView.setTextSize(fontSize);
                     holder.textView.setText(bean.getTitle());
+                    holder.timeView.setText(CalendarUtil.friendlyTime(bean.getUpdate_time(), context));
 
                     if (readedNewsSet.contains(bean.getNid())) {
                         holder.textView.setTextColor(App.getInstance()

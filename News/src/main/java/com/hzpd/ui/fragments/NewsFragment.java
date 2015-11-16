@@ -14,12 +14,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.adapter.NewsFragmentPagerAdapter;
 import com.hzpd.hflt.R;
-import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.modle.event.ChangeChannelEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.MyEditColumnActivity;
-import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.widget.PagerSlidingTabStrip;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
@@ -28,17 +26,13 @@ import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
-import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SerializeUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
-import com.hzpd.utils.db.NewsListDbTask;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
@@ -148,15 +142,9 @@ public class NewsFragment extends BaseFragment {
             }
 
             @Override
-            public void onPageSelected(int position) {
-                Log.e("onPageSelected", "onPageSelected--->" + position);
-                pager.setCurrentItem(position);
+            public void onPageSelected(final int position) {
+                Log.e("test", " position [[[[[[[[  " + position);
                 adapter.setSelectedPosition(position);
-                BaseFragment fragment = (BaseFragment) adapter.getItem(position);
-                if (fragment instanceof NewsItemFragment) {
-                    NewsItemFragment frag = (NewsItemFragment) fragment;
-                    frag.init();
-                }
             }
 
             @Override
@@ -164,66 +152,16 @@ public class NewsFragment extends BaseFragment {
 
             }
         });
-        pager.setOffscreenPageLimit(adapter.getCount());
+        pager.setOffscreenPageLimit(PAGE_LIMIT);
         tabStrip.setViewPager(pager);
         tabStrip.setOnTabClickListener(new PagerSlidingTabStrip.TabClickListener() {
 
                                            public void onTabClicked(int position) {
                                                pager.setCurrentItem(position);
-                                               adapter.setSelectedPosition(position);
                                            }
                                        }
 
         );
-    }
-
-    //TODO 提前获取推荐频道第一页
-    public void getChooseNewsJson() {
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-        params.addBodyParameter("tid", "" + NewsChannelBean.TYPE_RECOMMEND);
-        params.addBodyParameter("nids", "0");
-        params.addBodyParameter("Page", "1");
-        params.addBodyParameter("PageSize", "15");
-
-        httpUtils.send(HttpRequest.HttpMethod.POST
-                , InterfaceJsonfile.CHANNEL_RECOMMEND
-                , params
-                , new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                final JSONObject obj = FjsonUtil
-                        .parseObject(responseInfo.result);
-                if (null != obj) {
-                    try {
-                        App.getInstance().newTime = obj.getString("newTime");
-                        App.getInstance().oldTime = obj.getString("oldTime");
-                    } catch (Exception e) {
-                    }
-                    List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
-                    if (list != null) {
-                        for (NewsBean bean : list) {
-                            bean.setTid("" + NewsChannelBean.TYPE_RECOMMEND);
-                        }
-                    }
-                    if (null != list) {
-                        LogUtils.i(" getChooseNewsJson --> " + list.size());
-                        new NewsListDbTask(getActivity()).saveList(list, new I_Result() {
-                            @Override
-                            public void setResult(Boolean flag) {
-                            }
-                        });
-                    } else {
-                    }
-                } else {
-                }
-            }
-
-            @Override
-            public void onFailure(HttpException error, String msg) {
-//                loadMainUI();
-            }
-        });
     }
 
     public void getChannelJson() {
@@ -272,6 +210,12 @@ public class NewsFragment extends BaseFragment {
                             // 如果没有缓存
                             if (null == cacheChannels || cacheChannels.size() < 1) {
                                 if (newestChannels != null && newestChannels.size() > 0) {
+                                    for (int i = 0; i < newestChannels.size(); i++) {
+                                        String default_show = newestChannels.get(i).getDefault_show();
+                                        if (default_show.equals("0")) {
+                                            newestChannels.remove(i);
+                                        }
+                                    }
                                     addLocalChannels(newestChannels);
                                     // 缓存频道信息到SD卡上
                                     serializeUtil.writeDataToFile(newestChannels, channelCachePath);
@@ -332,20 +276,15 @@ public class NewsFragment extends BaseFragment {
         boolean changed = false;
         if (event.csl != null) {
             changed = true;
+            pager.setOffscreenPageLimit(PAGE_LIMIT);
             adapter.sortChannel(event.csl.getSaveTitleList());
-            pager.setOffscreenPageLimit(adapter.getCount());
             tabStrip.notifyDataSetChanged();
         }
         if (event.position != -1) {
             pager.setCurrentItem(event.position);
         }
-        if (changed) {
-            BaseFragment fragment = (BaseFragment) adapter.getItem(pager.getCurrentItem());
-            if (fragment instanceof NewsItemFragment) {
-                NewsItemFragment frag = (NewsItemFragment) fragment;
-                frag.init();
-            }
-        }
     }
+
+    final static int PAGE_LIMIT = 2;
 }
 
