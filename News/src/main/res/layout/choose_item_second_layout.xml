@@ -7,7 +7,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="#ffffff"
+        app:cardBackgroundColor="?fragment_choose_card_backgroup_color"
         app:cardCornerRadius="1dp"
         app:cardElevation="@dimen/list_cardview_padding"
         app:cardMaxElevation="@dimen/list_cardview_padding"

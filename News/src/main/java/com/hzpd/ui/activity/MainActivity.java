@@ -81,16 +81,8 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
         super.finish();
     }
 
-    private String str;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        str = SharePreferecesUtils.getParam(MainActivity.this, "THEME", "0").toString();
-        if (str.equals("1") ) {
-            setTheme(R.style.ThemeNight);
-        } else {
-            setTheme(R.style.ThemeDefault);
-        }
         super.onCreate(null);
         EventBus.getDefault().register(this);
         long start = System.currentTimeMillis();

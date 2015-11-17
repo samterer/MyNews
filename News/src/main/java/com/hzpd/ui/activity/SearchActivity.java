@@ -49,15 +49,8 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
     public static final String TAG_KEY = "key";
 
     private String tagcontext;
-    private String str;
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        str = SharePreferecesUtils.getParam(SearchActivity.this, "THEME", "0").toString();
-        if (str.equals("1") ) {
-            setTheme(R.style.ThemeNight);
-        } else {
-            setTheme(R.style.ThemeDefault);
-        }
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         handleIntent();

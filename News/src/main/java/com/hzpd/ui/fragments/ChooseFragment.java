@@ -117,11 +117,16 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
     private boolean isAgainLoading;
     private boolean pullRefresh;
 
+    private int color;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.choose_fragment, container, false);
+        TypedValue typedValue = new TypedValue();
+        getActivity().getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
+        color = typedValue.data;
         background_empty = (ImageView) view.findViewById(R.id.background_empty);
+
         background_empty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -232,7 +237,9 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
 
         MyItemDecoration() {
             mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mPaint.setColor(0xfff5f5f5);
+
+//            mPaint.setColor(0xfff5f5f5);
+            mPaint.setColor(color);
         }
 
         @Override

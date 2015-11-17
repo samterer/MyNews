@@ -2,9 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rl_subscribe"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:minHeight="35.0dip"
-    android:minWidth="90.0dip">
+    android:layout_height="wrap_content">
 
     <com.hzpd.ui.widget.FontTextView
         android:id="@+id/text_item"
@@ -14,8 +12,8 @@
         android:background="@drawable/subscribe_item_bg"
         android:ellipsize="end"
         android:gravity="center"
-        android:minHeight="35.0dip"
-        android:minWidth="90.0dip"
+        android:minHeight="30.0dip"
+        android:minWidth="95.0dip"
         android:singleLine="true"
         android:textColor="@color/subscribe_item_text_color"
         android:textSize="12.0sp" />
@@ -25,8 +23,8 @@
         android:id="@+id/iv_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/closeicon_repost_normal"
-        android:layout_gravity="end"
-        android:visibility="gone"/>
+        android:layout_gravity="right"
+        android:background="@drawable/channel_item_close"
+        android:visibility="gone" />
 
 </FrameLayout>

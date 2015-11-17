@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/zqzx_bg_lgrey"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/zqzx_bg_lgrey"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <include
-        layout="@layout/stitle_layout"/>
+    <include layout="@layout/stitle_layout" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,7 +16,7 @@
         <com.hzpd.ui.widget.FontTextView
             android:id="@+id/aboutus"
             android:layout_width="match_parent"
-            android:text="@string/about_us"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:text="@string/about_us" />
     </ScrollView>
 </LinearLayout>

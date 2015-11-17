@@ -170,9 +170,13 @@
     <attr name="fragment_main_psts_tabs_background" format="reference|color"/>
     <attr name="fragment_main_psts_tabs_indicator_color" format="reference|color"/>
     <attr name="fragment_main_psts_tabs_text_color" format="reference|color"/>
-
+    <!-- choosefragment-->
+    <attr name="fragment_choose_main_backgroup_color" format="reference|color"/>
+    <attr name="fragment_choose_card_backgroup_color" format="reference|color"/>
     <!--Setting-->
+    <attr name="zqzx_setting_main_color" format="reference|color"/>
     <attr name="zqzx_onclik_setting_item" format="reference|color"/>
+    <attr name="setting_item_selector_color" format="reference"/>
     <attr name="zqzx_setting_item_text" format="reference|color"/>
     <attr name="zqzx_setting_item_right_text" format="reference|color"/>
 

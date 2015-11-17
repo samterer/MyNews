@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_color"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:background="?zqzx_setting_main_color"
     android:orientation="vertical">
     <!--标题-->
     <include layout="@layout/stitle_layout" />
-
-
 
     <!--字体大小2-->
     <RelativeLayout

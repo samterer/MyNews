@@ -27,9 +27,14 @@
         <item name="fragment_main_psts_tabs_background">@color/white</item>
         <item name="fragment_main_psts_tabs_indicator_color">#ff7e00</item>
         <item name="fragment_main_psts_tabs_text_color">#bebebe</item>
+        <!-- choosefragment-->
+        <item name="fragment_choose_main_backgroup_color">#f5f5f5</item>
+        <item name="fragment_choose_card_backgroup_color">#ffffff</item>
 
         <!--Setting-->
+        <item name="zqzx_setting_main_color">@color/grey_color</item>
         <item name="zqzx_onclik_setting_item">@drawable/setting_item_selector</item>
+        <item name="setting_item_selector_color">@color/zqzx_font_light</item>
         <item name="zqzx_setting_item_text">@color/zqzx_font_set_title</item>
         <item name="zqzx_setting_item_right_text">@color/zqzx_font_set_normal</item>
 
@@ -39,7 +44,7 @@
         <item name="zq_feedback_btn_color">@color/white</item>
     </style>
 
-    <style name="ThemeNight" parent="AppBaseTheme">
+    <style name="ThemeNight" parent="AppTheme">
         <item name="title_bar_color">@color/red</item>
         <item name="title_bar_name_color">@color/white</item>
         <item name="m_background_tab_pressed">@color/zqzx_welcome_blue</item>
@@ -48,11 +53,16 @@
         <item name="left_menu_item_name">@color/black</item>
         <item name="left_menu_version_name">@color/black</item>
 
+        <item name="zqzx_setting_main_color">#232323</item>
         <item name="fragment_main_psts_tabs_background">@color/red</item>
         <item name="fragment_main_psts_tabs_indicator_color">@color/white</item>
         <item name="fragment_main_psts_tabs_text_color">#ff7e00</item>
 
+        <item name="fragment_choose_main_backgroup_color">#ff7e00</item>
+        <item name="fragment_choose_card_backgroup_color">#ff7e00</item>
+
         <item name="zqzx_onclik_setting_item">@drawable/setting_item_selector</item>
+        <item name="setting_item_selector_color">@color/red</item>
         <item name="zqzx_setting_item_text">@color/red</item>
         <item name="zqzx_setting_item_right_text">@color/red</item>
 

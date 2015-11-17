@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="#fafafa">
 
 
     <include
@@ -16,16 +16,18 @@
         android:layout_below="@id/editcolum_include"
         android:layout_marginBottom="10dp">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <!--提醒-->
             <LinearLayout
                 android:id="@+id/editcolumn_remind_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <com.hzpd.ui.widget.FontTextView
                     android:layout_width="match_parent"
@@ -59,39 +61,33 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <com.hzpd.ui.widget.FontTextView
+                    <TextView
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:paddingLeft="15dp"
                         android:text="@string/edit_my_colum"
-                        android:textColor="@color/pulltorefresh_font"
-                        android:textSize="18sp" />
+                        android:textStyle="bold"
+                        android:textColor="@color/subscribe_item_text_color_normal"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/text_editcolumn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="23dp"
                         android:text="@string/editcolumn_edit"
                         android:textSize="12sp"
-                        android:paddingTop="3dp"
-                        android:paddingBottom="3dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="18dp"
+                        android:paddingRight="18dp"
                         android:background="@drawable/btn_order"
                         android:textColor="@color/ssxinhongse1"
                         android:gravity="center"/>
 
-
-                    <!--<style name="edit_order_btn">-->
-                        <!--<item name="android:gravity">center</item>-->
-                        <!--<item name="android:background">@drawable/btn_order</item>-->
-                        <!--<item name="android:minWidth">56.0dip</item>-->
-                        <!--<item name="android:minHeight">24.0dip</item>-->
-                    <!--</style>-->
 
                 </LinearLayout>
 
@@ -107,7 +103,6 @@
                 android:id="@+id/editcolumn_dragGridView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/editcolumn_my_channel_ll"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:cacheColorHint="@android:color/transparent"
@@ -142,8 +137,9 @@
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:text="@string/edit_other_colum"
-                    android:textColor="@color/pulltorefresh_font"
-                    android:textSize="18sp" />
+                    android:textStyle="bold"
+                    android:textColor="@color/subscribe_item_text_color_normal"
+                    android:textSize="14sp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -152,25 +148,31 @@
                     android:visibility="gone" />
             </LinearLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:text="输入你感兴趣的任意频道"
+                android:textSize="12sp"
+                android:layout_margin="23dp"
+                android:textColor="@color/pulltorefresh_font"/>
+
             <com.hzpd.custorm.OtherGridView
                 android:id="@+id/editcolumn_gridview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/editcolumn_divider_ll"
-                android:layout_marginBottom="10dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:cacheColorHint="@android:color/transparent"
-                android:columnWidth="90dp"
                 android:gravity="center"
-                android:horizontalSpacing="10dp"
+                android:horizontalSpacing="8dp"
                 android:listSelector="@android:color/transparent"
                 android:numColumns="3"
                 android:stretchMode="columnWidth"
                 android:verticalSpacing="10dp">
 
             </com.hzpd.custorm.OtherGridView>
-        </RelativeLayout>
+        </LinearLayout>
     </ScrollView>
 
     <include
