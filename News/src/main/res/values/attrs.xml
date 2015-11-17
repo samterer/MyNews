@@ -160,7 +160,20 @@
 
 
     <attr name="title_bar_color" format="reference|color"/>
-    <attr name="title_name_color" format="reference|color"/>
+    <attr name="title_bar_name_color" format="reference|color"/>
+    <attr name="m_background_tab_pressed" format="reference|color"/>
+
+    <attr name="left_menu_fb_name" format="reference|color"/>
+    <attr name="left_menu_item_name" format="reference|color"/>
+    <attr name="left_menu_version_name" format="reference|color"/>
+
+    <attr name="zqzx_onclik_setting_item" format="reference|color"/>
+    <attr name="zqzx_setting_item_text" format="reference|color"/>
+    <attr name="zqzx_setting_item_right_text" format="reference|color"/>
+
+    <attr name="zq_feedback_color" format="reference|color"/>
+    <attr name="zq_feedback_edit_color" format="reference|color"/>
+    <attr name="zq_feedback_btn_color" format="reference|color"/>
 
 
 </resources>

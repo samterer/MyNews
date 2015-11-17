@@ -38,7 +38,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:text="@string/prompt_login_now"
-            android:textColor="#ffffff"
+            android:textColor="?left_menu_fb_name"
             android:textSize="18dp" />
 
         <RelativeLayout
@@ -97,7 +97,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@color/toolbar_bg"
                     android:padding="8dp">
 
                     <ImageView
@@ -114,7 +113,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
                         android:text="@string/comment_mine"
-                        android:textColor="#bfc3e2"
+                        android:textColor="?left_menu_item_name"
                         android:textSize="16sp" />
                 </RelativeLayout>
                 <!-- 收藏-->
@@ -123,7 +122,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@color/toolbar_bg"
                     android:padding="8dp">
 
                     <ImageView
@@ -142,7 +140,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginTop="5dp"
                         android:text="@string/prompt_collect"
-                        android:textColor="#bfc3e2"
+                        android:textColor="?left_menu_item_name"
                         android:textSize="16sp" />
                 </RelativeLayout>
             </LinearLayout>
@@ -161,7 +159,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:layout_weight="1"
-                    android:background="@color/toolbar_bg"
                     android:padding="8dp">
 
                     <ImageView
@@ -180,7 +177,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginTop="5dp"
                         android:text="@string/prompt_my_msg"
-                        android:textColor="#bfc3e2"
+                        android:textColor="?left_menu_item_name"
                         android:textSize="16sp" />
                 </RelativeLayout>
                 <!--设置-->
@@ -189,7 +186,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@color/toolbar_bg"
                     android:padding="8dp">
 
                     <ImageView
@@ -208,7 +204,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginTop="5dp"
                         android:text="@string/title_settings"
-                        android:textColor="#bfc3e2"
+                        android:textColor="?left_menu_item_name"
                         android:textSize="16sp" />
                 </RelativeLayout>
             </LinearLayout>
@@ -216,7 +212,7 @@
 
         </LinearLayout>
 
-        <ImageView
+        <View
             android:id="@+id/slidemenu_version_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -224,7 +220,7 @@
             android:layout_marginBottom="6dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:background="@drawable/slidemenu_version_line" />
+            android:background="#5f7bcb" />
 
         <com.hzpd.ui.widget.FontTextView
             android:id="@+id/zy_version"
@@ -236,7 +232,7 @@
             android:layout_weight="2"
             android:gravity="bottom"
             android:text="@string/app_name"
-            android:textColor="#5f7bcb"
+            android:textColor="?left_menu_version_name"
             android:textSize="14sp" />
 
     </RelativeLayout>

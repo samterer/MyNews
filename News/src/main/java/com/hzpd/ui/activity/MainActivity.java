@@ -8,16 +8,12 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
@@ -33,7 +29,6 @@ import com.hzpd.ui.fragments.NewsAlbumFragment;
 import com.hzpd.ui.fragments.NewsFragment;
 import com.hzpd.ui.fragments.VideoListFragment;
 import com.hzpd.ui.fragments.WebviewFragment;
-import com.hzpd.ui.fragments.ZY_RightFragment;
 import com.hzpd.ui.fragments.ZhuantiFragment;
 import com.hzpd.ui.fragments.action.ActionListFragment;
 import com.hzpd.ui.interfaces.I_ChangeFm;
@@ -62,8 +57,6 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import de.greenrobot.event.EventBus;
 
-import static android.view.Gravity.START;
-
 
 public class MainActivity extends BaseActivity implements I_ChangeFm {
     @Override
@@ -81,9 +74,6 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
     private DrawerArrowDrawable drawerArrowDrawable;
     private float offset;
     private boolean flipped;
-
-    private ZY_RightFragment rightFragment;
-
 
     @Override
     public void finish() {
@@ -115,46 +105,6 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
                 System.exit(0);
             }
         });
-
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        final ImageView imageView = (ImageView) findViewById(R.id.drawer_indicator);
-        final Resources resources = getResources();
-        drawerArrowDrawable = new DrawerArrowDrawable(resources);
-        //设置按钮颜色
-        drawerArrowDrawable.setStrokeColor(resources.getColor(R.color.white));
-        imageView.setImageDrawable(drawerArrowDrawable);
-
-        drawer.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                offset = slideOffset;
-
-                // Sometimes slideOffset ends up so close to but not quite 1 or 0.
-                if (slideOffset >= .995) {
-                    flipped = true;
-                    drawerArrowDrawable.setFlip(flipped);
-                } else if (slideOffset <= .005) {
-                    flipped = false;
-                    drawerArrowDrawable.setFlip(flipped);
-                }
-
-                drawerArrowDrawable.setParameter(offset);
-            }
-        });
-
-        findViewById(R.id.ll_back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (drawer.isDrawerVisible(Gravity.LEFT)) {
-                    drawer.closeDrawer(Gravity.LEFT);
-                } else {
-                    drawer.openDrawer(Gravity.LEFT);
-                }
-            }
-        });
-        rightFragment=new ZY_RightFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.ll_menu, rightFragment).commit();
-
         FragmentTransaction ft = fm.beginTransaction();
         currentFrag = new NewsFragment();
         ft.add(R.id.root, currentFrag, App.menuList.get(CODE.MENU_NEWS).getName());

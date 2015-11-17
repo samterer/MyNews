@@ -70,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/setting_item_selector"
+        android:background="?zqzx_onclik_setting_item"
         android:padding="10dip">
 
         <com.hzpd.ui.widget.FontTextView
@@ -80,7 +80,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dip"
             android:text="@string/settings_font"
-            android:textColor="@color/zqzx_font_set_title"
+            android:textColor="?zqzx_setting_item_text"
             android:textSize="20sp" />
 
         <com.hzpd.ui.widget.FontTextView
@@ -90,7 +90,7 @@
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@+id/choose_textsize_iv"
             android:text="@string/settings_option_font_small"
-            android:textColor="@color/zqzx_font_set_normal"
+            android:textColor="?zqzx_setting_item_right_text"
             android:textSize="20sp" />
 
         <ImageView
@@ -116,7 +116,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/setting_item_selector"
+        android:background="?zqzx_onclik_setting_item"
         android:padding="10dp">
 
         <com.hzpd.ui.widget.FontTextView
@@ -125,7 +125,7 @@
             android:layout_marginLeft="10dip"
             android:gravity="center_vertical"
             android:text="@string/settings_push"
-            android:textColor="@color/zqzx_font_set_title"
+            android:textColor="?zqzx_setting_item_text"
             android:textSize="20sp" />
 
         <com.hzpd.custorm.SlideSwitch xmlns:slideswitch="http://schemas.android.com/apk/res-auto"
@@ -170,7 +170,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/setting_item_selector"
+        android:background="?zqzx_onclik_setting_item"
         android:clickable="true"
         android:padding="10dp">
 
@@ -180,7 +180,7 @@
             android:layout_marginLeft="10dip"
             android:gravity="center_vertical"
             android:text="@string/settings_clear_cache"
-            android:textColor="@color/zqzx_font_set_title"
+            android:textColor="?zqzx_setting_item_text"
             android:textSize="20sp" />
 
         <com.hzpd.ui.widget.FontTextView
@@ -192,7 +192,7 @@
             android:layout_marginRight="10dip"
             android:gravity="center_vertical"
             android:text="10m"
-            android:textColor="@color/zqzx_font_set_normal"
+            android:textColor="?zqzx_setting_item_right_text"
             android:textSize="20sp" />
 
         <com.pnikosis.materialishprogress.ProgressWheel
@@ -250,7 +250,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/setting_item_selector"
+        android:background="?zqzx_onclik_setting_item"
         android:padding="10dip">
 
         <com.hzpd.ui.widget.FontTextView
@@ -260,7 +260,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dip"
             android:text="@string/language"
-            android:textColor="@color/zqzx_font_set_title"
+            android:textColor="?zqzx_setting_item_text"
             android:textSize="20sp" />
 
         <com.hzpd.ui.widget.FontTextView
@@ -270,7 +270,7 @@
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@+id/choose_station_iv"
             android:text="Indonesia"
-            android:textColor="@color/zqzx_font_set_normal"
+            android:textColor="?zqzx_setting_item_right_text"
             android:textSize="20sp" />
 
         <ImageView
@@ -289,7 +289,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/setting_item_selector"
+        android:background="?zqzx_onclik_setting_item"
         android:padding="10dp">
 
         <com.hzpd.ui.widget.FontTextView
@@ -298,7 +298,7 @@
             android:layout_marginLeft="10dip"
             android:gravity="center_vertical"
             android:text="@string/settings_feedback"
-            android:textColor="@color/zqzx_font_set_title"
+            android:textColor="?zqzx_setting_item_text"
             android:textSize="20sp" />
 
         <ImageView
@@ -345,7 +345,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/setting_item_selector"
+        android:background="?zqzx_onclik_setting_item"
         android:padding="10dp">
 
         <com.hzpd.ui.widget.FontTextView
@@ -354,7 +354,7 @@
             android:layout_marginLeft="10dip"
             android:gravity="center_vertical"
             android:text="@string/settings_check_update"
-            android:textColor="@color/zqzx_font_set_title"
+            android:textColor="?zqzx_setting_item_text"
             android:textSize="20sp" />
 
         <com.hzpd.ui.widget.FontTextView
@@ -366,7 +366,7 @@
             android:layout_marginRight="10dip"
             android:gravity="center_vertical"
             android:text="1.0.0"
-            android:textColor="@color/zqzx_font_set_normal"
+            android:textColor="?zqzx_setting_item_right_text"
             android:textSize="20sp" />
     </RelativeLayout>
 

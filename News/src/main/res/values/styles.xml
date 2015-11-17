@@ -12,13 +12,43 @@
 
 
     <style name="ThemeDefault" parent="AppBaseTheme">
+        <!-- MainActivity-->
         <item name="title_bar_color">@color/toolbar_bg</item>
-        <item name="title_name_color">@color/white</item>
+        <item name="title_bar_name_color">@color/white</item>
+        <item name="m_background_tab_pressed">@color/background_tab_pressed1</item>
+        <!--侧滑菜单-->
+        <item name="left_menu_fb_name">@color/white</item>
+        <item name="left_menu_item_name">#bfc3e2</item>
+        <item name="left_menu_version_name">#5f7bcb</item>
+
+        <!--Setting-->
+        <item name="zqzx_onclik_setting_item">@drawable/setting_item_selector</item>
+        <item name="zqzx_setting_item_text">@color/zqzx_font_set_title</item>
+        <item name="zqzx_setting_item_right_text">@color/zqzx_font_set_normal</item>
+
+        <!-- FeedBack-->
+        <item name="zq_feedback_color">@color/zqzx_bg_normal</item>
+        <item name="zq_feedback_edit_color">@color/zqzx_font_normal</item>
+        <item name="zq_feedback_btn_color">@color/white</item>
     </style>
 
     <style name="ThemeNight" parent="AppBaseTheme">
         <item name="title_bar_color">@color/red</item>
-        <item name="title_name_color">@color/toolbar_bg</item>
+        <item name="title_bar_name_color">@color/white</item>
+        <item name="m_background_tab_pressed">@color/zqzx_welcome_blue</item>
+
+        <item name="left_menu_fb_name">@color/black</item>
+        <item name="left_menu_item_name">@color/black</item>
+        <item name="left_menu_version_name">@color/black</item>
+
+        <item name="zqzx_onclik_setting_item">@drawable/setting_item_selector</item>
+        <item name="zqzx_setting_item_text">@color/red</item>
+        <item name="zqzx_setting_item_right_text">@color/red</item>
+
+        <item name="zq_feedback_edit_color">@color/red</item>
+        <item name="zq_feedback_color">#5f7bcb</item>
+        <item name="zq_feedback_btn_color">@color/red</item>
+
     </style>
 
     <style name="dialog" parent="@android:style/Theme.Dialog">

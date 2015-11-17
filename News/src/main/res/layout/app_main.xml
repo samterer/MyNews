@@ -12,31 +12,14 @@
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/toolbar_bg">
-
-
-        <LinearLayout
-            android:id="@+id/ll_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/title_bar_btn_selector1">
-
-            <ImageView
-                android:id="@+id/drawer_indicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center"
-                android:paddingLeft="5dp"
-                android:scaleType="centerInside" />
-        </LinearLayout>
+        android:background="?title_bar_color">
 
         <RelativeLayout
             android:id="@+id/main_title_left"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:background="@drawable/title_bar_btn_selector1"
-            android:clickable="true"
-            android:visibility="gone">
+            android:clickable="true">
 
             <ImageView
                 android:id="@+id/main_title_left_img"
@@ -54,10 +37,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/ll_back"
+            android:layout_toRightOf="@+id/main_title_left"
             android:paddingBottom="6.5dp"
             android:text="标题"
-            android:textColor="?title_name_color"
+            android:textColor="?title_bar_name_color"
             android:textSize="18sp" />
 
         <RelativeLayout
@@ -77,31 +60,11 @@
                 android:layout_marginBottom="8dp"
                 android:src="@drawable/main_title_search_r" />
         </RelativeLayout>
-
-
     </RelativeLayout>
 
-
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
+    <FrameLayout
+        android:id="@+id/root"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-        <FrameLayout
-            android:id="@+id/root"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <LinearLayout
-            android:id="@+id/ll_menu"
-            android:layout_width="300dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:orientation="vertical"
-        ></LinearLayout>
-
-
-    </android.support.v4.widget.DrawerLayout>
+        android:layout_height="match_parent" />
 
 </LinearLayout>
