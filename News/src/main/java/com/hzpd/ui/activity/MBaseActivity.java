@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 
 import com.hzpd.custorm.SwipeBackLayout;
 import com.hzpd.hflt.R;
+import com.hzpd.ui.App;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.SPUtil;
@@ -42,18 +43,17 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
 
 
     boolean isResume = false;
-    private String str;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        str = SharePreferecesUtils.getParam(this, "THEME", "0").toString();
-        if (str.equals("1") ) {
+        super.onCreate(null);
+//        initSystemBar();
+        action.onCreate(this);
+        if (App.getInstance().getThemeName().equals("1")) {
             setTheme(R.style.ThemeNight);
         } else {
             setTheme(R.style.ThemeDefault);
         }
-        super.onCreate(null);
-//        initSystemBar();
-        action.onCreate(this);
         setTheme(android.R.style.Theme_Translucent_NoTitleBar);
         layout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
                 R.layout.base, null);

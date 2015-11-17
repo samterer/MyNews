@@ -87,9 +87,21 @@ public class App extends Application {
     public static InputMethodManager inputMethodManager;//输入法管理
     public static ExecutorService executorService = Executors.newFixedThreadPool(5);
 
+    public String themeName;
+
+    public String getThemeName() {
+        return themeName;
+    }
+
+    public void setThemeName(String themeName) {
+        SharePreferecesUtils.setParam(this, "THEME", "0");
+        this.themeName = themeName;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        themeName = SharePreferecesUtils.getParam(this, "THEME", "0").toString();
 //        newTimeMap.clear();
         long start = System.currentTimeMillis();
         FacebookSdk.sdkInitialize(getApplicationContext());

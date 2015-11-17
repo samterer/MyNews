@@ -276,4 +276,5 @@
     <string name="click_here_to_refresh">Tekan untuk Perbaharui</string>
     <!--发现%1$d条更新-->
     <string name="delete">Hapus</string>
+    <string name="setting_skin">Skin</string>
 </resources>

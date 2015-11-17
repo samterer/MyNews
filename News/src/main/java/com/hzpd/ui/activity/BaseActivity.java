@@ -4,13 +4,16 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Interpolator;
 
 import com.hzpd.hflt.R;
+import com.hzpd.ui.App;
 import com.hzpd.ui.fragments.ZY_RightFragment;
+import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.SystemBarTintManager;
 import com.shangc.slidingmenu.lib.SlidingMenu;
 import com.shangc.slidingmenu.lib.app.SlidingFragmentActivity;
@@ -36,6 +39,11 @@ public class BaseActivity extends SlidingFragmentActivity implements AnalyticCal
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        if (App.getInstance().getThemeName().equals("1")) {
+            setTheme(R.style.ThemeNight);
+        } else {
+            setTheme(R.style.ThemeDefault);
+        }
         super.onCreate(null);
         action.onCreate(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -49,7 +57,12 @@ public class BaseActivity extends SlidingFragmentActivity implements AnalyticCal
 
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
-        tintManager.setStatusBarTintResource(R.color.toolbar_bg);
+
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
+        int color = typedValue.data;
+        tintManager.setStatusBarTintColor(color);
+
 
         slidingMenu = getSlidingMenu();
 

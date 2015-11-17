@@ -3,15 +3,18 @@
     <style name="AppBaseTheme" parent="android:Theme.Light">
         <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+
     </style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <item name="android:windowIsTranslucent">true</item>
+        <!--<item name="windowNoTitle">true</item>-->
+        <!--<item name="windowContentOverlay">@null</item>-->
     </style>
 
 
-    <style name="ThemeDefault" parent="AppBaseTheme">
+    <style name="ThemeDefault" parent="AppTheme">
         <!-- MainActivity-->
         <item name="title_bar_color">@color/toolbar_bg</item>
         <item name="title_bar_name_color">@color/white</item>
@@ -20,6 +23,10 @@
         <item name="left_menu_fb_name">@color/white</item>
         <item name="left_menu_item_name">#bfc3e2</item>
         <item name="left_menu_version_name">#5f7bcb</item>
+        <!-- newsfragment-->
+        <item name="fragment_main_psts_tabs_background">@color/white</item>
+        <item name="fragment_main_psts_tabs_indicator_color">#ff7e00</item>
+        <item name="fragment_main_psts_tabs_text_color">#bebebe</item>
 
         <!--Setting-->
         <item name="zqzx_onclik_setting_item">@drawable/setting_item_selector</item>
@@ -40,6 +47,10 @@
         <item name="left_menu_fb_name">@color/black</item>
         <item name="left_menu_item_name">@color/black</item>
         <item name="left_menu_version_name">@color/black</item>
+
+        <item name="fragment_main_psts_tabs_background">@color/red</item>
+        <item name="fragment_main_psts_tabs_indicator_color">@color/white</item>
+        <item name="fragment_main_psts_tabs_text_color">#ff7e00</item>
 
         <item name="zqzx_onclik_setting_item">@drawable/setting_item_selector</item>
         <item name="zqzx_setting_item_text">@color/red</item>

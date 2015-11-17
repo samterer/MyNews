@@ -15,7 +15,7 @@
             android:id="@+id/news_indicator_root"
             android:layout_width="match_parent"
             android:layout_height="33dp"
-            android:background="@color/white">
+            android:background="?fragment_main_psts_tabs_background">
 
             <Button
                 android:id="@+id/news_button"
@@ -23,7 +23,6 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="8dp"
                 android:background="@drawable/main_channel_selector"
                 android:contentDescription="@null" />
 
@@ -34,13 +33,13 @@
                 android:layout_height="33dp"
                 android:layout_toLeftOf="@id/news_button"
                 android:layout_toRightOf="@id/main_title_left_img"
-                android:background="@color/white"
+                android:background="?fragment_main_psts_tabs_background"
                 app:pstsDividerColor="#00ffffff"
-                app:pstsIndicatorColor="#ff7e00"
+                app:pstsIndicatorColor="?fragment_main_psts_tabs_indicator_color"
                 app:pstsIndicatorHeight="2dp"
                 app:pstsTabPaddingLeftRight="10dp"
-                app:pstsTabTextColor="#bebebe"
-                app:pstsTabTextSelectedColor="#ff7e00"
+                app:pstsTabTextColor="?fragment_main_psts_tabs_text_color"
+                app:pstsTabTextSelectedColor="?fragment_main_psts_tabs_indicator_color"
                 app:pstsTabTextSize="15sp"
                 app:pstsUnderlineColor="#33444444"
                 app:pstsUnderlineHeight="0dp" />

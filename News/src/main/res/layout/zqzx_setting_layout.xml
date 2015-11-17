@@ -6,6 +6,48 @@
     android:orientation="vertical">
     <!--标题-->
     <include layout="@layout/stitle_layout" />
+
+
+
+    <!--字体大小2-->
+    <RelativeLayout
+        android:id="@+id/zqzx_setting_skin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="?zqzx_onclik_setting_item"
+        android:padding="10dip">
+
+        <com.hzpd.ui.widget.FontTextView
+            android:id="@+id/setting_skin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dip"
+            android:text="@string/setting_skin"
+            android:textColor="?zqzx_setting_item_text"
+            android:textSize="20sp" />
+
+        <com.hzpd.ui.widget.FontTextView
+            android:id="@+id/setting_chosse_skin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/choose_skin_iv"
+            android:textColor="?zqzx_setting_item_right_text"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/choose_skin_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/bbs_modle_jt"
+            android:gravity="center_vertical" />
+    </RelativeLayout>
+
     <!--字体大小-->
     <RelativeLayout
         android:layout_width="match_parent"

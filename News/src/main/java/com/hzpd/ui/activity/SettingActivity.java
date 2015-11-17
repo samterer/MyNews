@@ -68,6 +68,11 @@ public class SettingActivity extends MBaseActivity {
     @ViewInject(R.id.stitle_tv_content)
     private TextView stitle_tv_content;
 
+    @ViewInject(R.id.zqzx_setting_skin)
+    private RelativeLayout zqzx_setting_skin;
+    @ViewInject(R.id.setting_chosse_skin)
+    private TextView setting_chosse_skin;
+
 
     @ViewInject(R.id.zqzx_setting_textsize)
     private RelativeLayout zqzx_setting_textsize;
@@ -108,16 +113,8 @@ public class SettingActivity extends MBaseActivity {
     private View loadingView;
     private AlertDialog.Builder mDeleteDialog;
 
-    private String str;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        str = SharePreferecesUtils.getParam(SettingActivity.this, "THEME", "0").toString();
-        if (str.equals("1") ) {
-            setTheme(R.style.ThemeNight);
-        } else {
-            setTheme(R.style.ThemeDefault);
-        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zqzx_setting_layout);
 
@@ -127,25 +124,35 @@ public class SettingActivity extends MBaseActivity {
             e.printStackTrace();
         }
         //测试用
-        rl_test.setVisibility(View.VISIBLE);
-        rl_test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (str.equals("1")) {
-                    SharePreferecesUtils.setParam(SettingActivity.this, "THEME", "0");
-                } else {
-                    SharePreferecesUtils.setParam(SettingActivity.this, "THEME", "1");
-                }
-//                EventBus
-                EventBus.getDefault().post(new SetThemeEvent());
-                recreate();
-
+//        rl_test.setVisibility(View.VISIBLE);
+//        rl_test.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (App.getInstance().getThemeName().equals("1")) {
+//                    App.getInstance().setThemeName("0");
+//                } else {
+//                    App.getInstance().setThemeName("1");
+//                }
+//                EventBus.getDefault().post(new SetThemeEvent());
+//                recreate();
+//
+//            }
+//        });
+        switch (App.getInstance().getThemeName()){
+            case "0":{
+                setting_chosse_skin.setText("默认");
             }
-        });
+            break;
+            case "1":{
+                setting_chosse_skin.setText("黑夜");
+            }
+            break;
 
-        textSize= new String[]{this.getResources().getString(R.string.settings_option_font_large), this.getResources().getString(R.string.settings_option_font_medium), this.getResources().getString(R.string.settings_option_font_small)};//"Besar", "Sedang", "Kecil"
+        }
 
+        zqzx_setting_skin.setOnClickListener(new ChooseSkinClickListener());
 
+        textSize = new String[]{this.getResources().getString(R.string.settings_option_font_large), this.getResources().getString(R.string.settings_option_font_medium), this.getResources().getString(R.string.settings_option_font_small)};//"Besar", "Sedang", "Kecil"
         loadingView = findViewById(R.id.app_progress_bar);
         stitle_tv_content.setText(R.string.title_settings);
 
@@ -261,6 +268,30 @@ public class SettingActivity extends MBaseActivity {
         startActivity(mIntent);
         AAnim.ActivityStartAnimation(this);
     }
+
+    private String[] skin = new String[]{"默认","黑夜"};
+
+    /**
+     * 菜单弹出窗口
+     */
+    class ChooseSkinClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            new AlertDialog.Builder(SettingActivity.this).setTitle("选择皮肤").setItems(skin, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    if (App.getInstance().getThemeName().equals(""+which)){
+                        return;
+                    }
+                    setting_chosse_skin.setText(skin[which]);
+                    Log.e("which","which"+which);
+                    App.getInstance().setThemeName("" + which);
+                    EventBus.getDefault().post(new SetThemeEvent());
+                    recreate();
+                }
+            }).show();
+        }
+    }
+
 
     private String[] textSize;
     private int[] textSize1 = new int[]{CODE.textSize_big, CODE.textSize_normal, CODE.textSize_small};
@@ -479,14 +510,14 @@ public class SettingActivity extends MBaseActivity {
                     updateDialog(mBean.getDescription());
                     showNotification(mBean.getDescription());
                 } else {
-                    Toast.makeText(SettingActivity.this,getString(R.string.update_no_version),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingActivity.this, getString(R.string.update_no_version), Toast.LENGTH_SHORT).show();
                 }
 
             }
 
             @Override
             public void onFailure(HttpException error, String msg) {
-                Toast.makeText(SettingActivity.this,getString(R.string.toast_cannot_connect_to_server),Toast.LENGTH_SHORT).show();
+                Toast.makeText(SettingActivity.this, getString(R.string.toast_cannot_connect_to_server), Toast.LENGTH_SHORT).show();
             }
         });
     }

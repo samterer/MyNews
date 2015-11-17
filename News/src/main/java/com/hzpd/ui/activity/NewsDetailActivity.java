@@ -197,16 +197,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     };
 
     private ImageView details_iv_comment;
-    private String str;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        str = SharePreferecesUtils.getParam(NewsDetailActivity.this, "THEME", "0").toString();
-        if (str.equals("1") ) {
-            setTheme(R.style.ThemeNight);
-        } else {
-            setTheme(R.style.ThemeDefault);
-        }
         getThisIntent();
         super.onCreate(savedInstanceState);
         App.getInstance().setProfileTracker(callback);

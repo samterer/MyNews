@@ -74,15 +74,8 @@ public class MyEditColumnActivity extends MBaseActivity {
 
 
     private boolean isEdit;
-    private String str;
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        str = SharePreferecesUtils.getParam(MyEditColumnActivity.this, "THEME", "0").toString();
-        if (str.equals("1") ) {
-            setTheme(R.style.ThemeNight);
-        } else {
-            setTheme(R.style.ThemeDefault);
-        }
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.editcolumn_my_layout);
