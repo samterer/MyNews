@@ -17,7 +17,7 @@
             android:id="@+id/main_title_left"
             android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:background="@drawable/title_bar_btn_selector1"
+            android:background="?m_background_tab_pressed"
             android:clickable="true">
 
             <ImageView
@@ -47,7 +47,7 @@
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:background="@drawable/title_bar_btn_selector"
+            android:background="?m_background_tab_pressed"
             android:orientation="vertical">
 
             <ImageView

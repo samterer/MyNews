@@ -86,13 +86,11 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
         activity = this;
         fm = getSupportFragmentManager();
 
-        httpUtils = new HttpUtils();
-        httpUtils.configSoTimeout(5000);
-        httpUtils.configTimeout(1000);
+        httpUtils = SPUtil.getHttpUtils();
         spu = SPUtil.getInstance();
         startMills = System.currentTimeMillis();
         analyMap = new HashMap<String, String>();
-        dbHelper = DBHelper.getInstance(this);
+        dbHelper = DBHelper.getInstance(getApplicationContext());
     }
 
     @TargetApi(19)
@@ -106,6 +104,12 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
             winParams.flags &= ~bits;
         }
         win.setAttributes(winParams);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        App.getInstance().getRefWatcher().watch(this);
     }
 
     @Override

@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.view.LayoutInflater;
 
-import com.hzpd.custorm.SwipeBackLayout;
-import com.hzpd.hflt.R;
+import com.hzpd.ui.App;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.SPUtil;
@@ -46,13 +44,11 @@ public class MWBaseActivity extends FragmentActivity implements AnalyticCallback
         activity = this;
         fm = getSupportFragmentManager();
 
-        httpUtils = new HttpUtils();
-        httpUtils.configSoTimeout(10000);
-        httpUtils.configTimeout(10000);
+        httpUtils = SPUtil.getHttpUtils();
         spu = SPUtil.getInstance();
         startMills = System.currentTimeMillis();
         analyMap = new HashMap<String, String>();
-        dbHelper = DBHelper.getInstance(this);
+        dbHelper = DBHelper.getInstance(getApplicationContext());
     }
 
     @Override
@@ -90,6 +86,12 @@ public class MWBaseActivity extends FragmentActivity implements AnalyticCallback
     public void finish() {
         super.finish();
         AAnim.ActivityFinish(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        App.getInstance().getRefWatcher().watch(this);
     }
 
     @Override

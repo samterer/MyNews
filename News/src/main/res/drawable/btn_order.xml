@@ -12,13 +12,13 @@
         <shape>
             <corners android:radius="@dimen/category_item_corner" />
             <solid android:color="@android:color/transparent" />
-            <stroke android:width="0.5dip" android:color="@color/ssxinhongse1_press" />
+            <stroke android:width="0.5dip" android:color="#ff7e00" />
         </shape>
     </item>
     <item>
         <shape>
             <corners android:radius="@dimen/category_item_corner" />
-            <stroke android:width="0.5dip" android:color="#fff85959" />
+            <stroke android:width="0.5dip" android:color="#ff7e00" />
             <solid android:color="@android:color/transparent" />
         </shape>
     </item>

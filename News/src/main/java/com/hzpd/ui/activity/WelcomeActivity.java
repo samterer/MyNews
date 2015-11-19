@@ -27,6 +27,7 @@ import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
+import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
@@ -56,7 +57,7 @@ public class WelcomeActivity extends MWBaseActivity {
 
     @Override
     public String getAnalyticPageName() {
-        return "欢迎页";
+        return AnalyticUtils.SCREEN.welcome;
     }
 
     private volatile int done;
@@ -85,6 +86,11 @@ public class WelcomeActivity extends MWBaseActivity {
         this.startService(service);
         Log.d(getLogTag(), "");
         createDb();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     // 创建数据库

@@ -89,6 +89,8 @@ public class VoteGroupFragment extends BaseFragment {
 
 		initDownImage();
 		httpUtils = new HttpUtils();
+		httpUtils.configSoTimeout(1000);
+		httpUtils.configTimeout(5000);
 		getPic();
 	}
 

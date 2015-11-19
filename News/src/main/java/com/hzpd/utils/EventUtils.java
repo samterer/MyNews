@@ -37,7 +37,7 @@ public class EventUtils {
 			siteid= InterfaceJsonfile_TW.SITEID;
 			XF_UPLOADEVENT_url =InterfaceJsonfile_TW.XF_UPLOADEVENT;
 		}
-		HttpUtils httpUtils = new HttpUtils();
+		HttpUtils httpUtils = SPUtil.getHttpUtils();
 		RequestParams params = new RequestParams();
 		params.addBodyParameter("siteid", siteid);
 		params.addBodyParameter("jsonstr", FjsonUtil.toJsonString(events));
@@ -79,7 +79,7 @@ public class EventUtils {
 			siteid= InterfaceJsonfile_TW.SITEID;
 			XF_UPLOADEVENT_url =InterfaceJsonfile_TW.XF_UPLOADEVENT;
 		}
-		HttpUtils httpUtils = new HttpUtils();
+		HttpUtils httpUtils = SPUtil.getHttpUtils();
 		RequestParams params = new RequestParams();
 		params.addBodyParameter("siteid", siteid);
 		params.addBodyParameter("jsonstr", FjsonUtil.toJsonString(events));
@@ -121,7 +121,7 @@ public class EventUtils {
 			siteid= InterfaceJsonfile_TW.SITEID;
 			XF_UPLOADEVENT_url =InterfaceJsonfile_TW.XF_UPLOADEVENT;
 		}
-		HttpUtils httpUtils = new HttpUtils();
+		HttpUtils httpUtils = SPUtil.getHttpUtils();
 		RequestParams params = new RequestParams();
 		params.addBodyParameter("siteid", siteid);
 		params.addBodyParameter("jsonstr", FjsonUtil.toJsonString(events));
@@ -165,7 +165,7 @@ public class EventUtils {
 			siteid= InterfaceJsonfile_TW.SITEID;
 			XF_UPLOADEVENT_url =InterfaceJsonfile_TW.XF_UPLOADEVENT;
 		}
-		HttpUtils httpUtils = new HttpUtils();
+		HttpUtils httpUtils = SPUtil.getHttpUtils();
 		RequestParams params = new RequestParams();
 		params.addBodyParameter("siteid", siteid);
 		params.addBodyParameter("jsonstr", FjsonUtil.toJsonString(events));
@@ -207,7 +207,7 @@ public class EventUtils {
 			siteid= InterfaceJsonfile_TW.SITEID;
 			XF_UPLOADEVENT_url =InterfaceJsonfile_TW.XF_UPLOADEVENT;
 		}
-		HttpUtils httpUtils = new HttpUtils();
+		HttpUtils httpUtils = SPUtil.getHttpUtils();
 		RequestParams params = new RequestParams();
 		params.addBodyParameter("siteid", siteid);
 		params.addBodyParameter("jsonstr", FjsonUtil.toJsonString(events));

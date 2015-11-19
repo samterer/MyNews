@@ -13,7 +13,7 @@
         <View
             android:id="@+id/search_title_container"
             android:layout_width="match_parent"
-            android:layout_height="50dp"></View>
+            android:layout_height="@dimen/main_title_bar"></View>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
@@ -22,12 +22,21 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <ImageView
+            <RelativeLayout
                 android:id="@+id/title_bar_applist_btn_back"
                 android:layout_width="@dimen/main_title_bar"
                 android:layout_height="@dimen/main_title_bar"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/background_tab_pressed_selector" />
+                android:background="?m_background_tab_pressed">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/background_tab_pressed_select_back" />
+
+            </RelativeLayout>
+
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -62,9 +71,9 @@
 
                     <ImageView
                         android:id="@+id/search_cancel"
-                        android:layout_width="30dp"
+                        android:layout_width="40dp"
                         android:layout_height="match_parent"
-                        android:background="@drawable/title_bar_btn_selector"
+                        android:background="?m_background_tab_pressed"
                         android:scaleType="centerInside"
                         android:src="@drawable/app_search_cancle" />
 
@@ -80,16 +89,22 @@
 
             </LinearLayout>
 
-            <ImageView
+            <RelativeLayout
                 android:id="@+id/search_button"
                 android:layout_width="@dimen/main_title_bar"
                 android:layout_height="@dimen/main_title_bar"
-                android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
-                android:background="@drawable/rightfrag_sett_selector"
-                android:gravity="center"
-                android:scaleType="centerInside" />
+                android:background="?m_background_tab_pressed">
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/main_title_search_select"
+                    android:gravity="center"
+                    android:scaleType="centerInside" />
+            </RelativeLayout>
         </LinearLayout>
 
 

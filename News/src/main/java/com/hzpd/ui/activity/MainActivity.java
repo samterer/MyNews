@@ -59,10 +59,6 @@ import de.greenrobot.event.EventBus;
 
 
 public class MainActivity extends BaseActivity implements I_ChangeFm {
-    @Override
-    public String getAnalyticPageName() {
-        return "新闻主页";
-    }
 
     public static final int REQUEST_IMAGE = 2;
     private int itemSelectPositon = 0;
@@ -89,14 +85,7 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
         setContentView(R.layout.app_main);
         ViewUtils.inject(this);
         checkVersion();
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
-                Log.e("Alert", "MainActivity  UncaughtException !!!");
-                paramThrowable.printStackTrace();
-                System.exit(0);
-            }
-        });
+        Thread.setDefaultUncaughtExceptionHandler(App.uncaughtExceptionHandler);
         FragmentTransaction ft = fm.beginTransaction();
         currentFrag = new NewsFragment();
         ft.add(R.id.root, currentFrag, App.menuList.get(CODE.MENU_NEWS).getName());
@@ -228,7 +217,7 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
     protected HttpUtils httpUtils;
 
     private void checkVersion() {
-        httpUtils = new HttpUtils();
+        httpUtils = SPUtil.getHttpUtils();
         int version = 0;
         try {
             version = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode;

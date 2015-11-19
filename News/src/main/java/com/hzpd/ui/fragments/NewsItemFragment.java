@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -58,20 +57,29 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 public class NewsItemFragment extends BaseFragment implements I_Control, View.OnClickListener {
+    public final static String PREFIX = "C:";
+
+    @Override
+    public String getAnalyticPageName() {
+        if (channelbean != null) {
+            return PREFIX + channelbean.getCnname();
+        } else {
+            return AnalyticUtils.SCREEN.newsType;
+        }
+    }
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (isVisible != isVisibleToUser) {
-            isVisible = isVisibleToUser;
-            try {
+            if (isVisibleToUser) {
                 if (isVisibleToUser) {
                     AnalyticUtils.sendGaEvent(getActivity(), AnalyticUtils.CATEGORY.newsType, AnalyticUtils.ACTION.viewPage, channelbean.getCnname(),
                             0L);
                     AnalyticUtils.sendUmengEvent(getActivity(), AnalyticUtils.CATEGORY.newsType, channelbean.getCnname());
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
+        super.setUserVisibleHint(isVisibleToUser);
     }
 
     private NewsItemListViewAdapter adapter;
@@ -126,8 +134,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
     private boolean isRefreshCounts;
     boolean pullRefresh = false;
-    private boolean isScrolled;
-    private int y1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -160,18 +166,9 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                isScrolled = true;
-            }
-
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-//                isScrolled = true;
                 //解决RecyclerView和SwipeRefreshLayout共用存在的bug
                 int topRowVerticalPosition =
                         (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
@@ -434,19 +431,10 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                         if (200 == obj.getIntValue("code")) {
                             JSONObject object = obj.getJSONObject("data");
                             mViewPagelist = FjsonUtil.parseArray(object.getString("flash"), NewsPageListBean.class);
-
-//                            mRecyclerView.get;
-                            Log.e("mViewPagelist", "mViewPagelist--->" + isScrolled);
-
-//                            mRecyclerView.postDelayed(new Runnable() {
-//                                @Override
-//                                public void run() {
-                            if (!isScrolled) {
+                            Log.e("", "" + mViewPagelist);
+                            if (mRecyclerView.getScrollY() < 10) {
                                 mRecyclerView.scrollToPosition(0);
                             }
-//                                }
-//                            }, 3000);
-
                         }
                         if (mViewPagelist != null && mViewPagelist.size() > 0) {
                             adapter.setFlashlist(mViewPagelist);

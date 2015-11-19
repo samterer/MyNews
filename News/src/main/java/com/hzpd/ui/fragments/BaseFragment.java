@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 
+import com.hzpd.ui.App;
 import com.hzpd.utils.ACache;
+import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.HttpUtils;
@@ -17,6 +20,24 @@ import org.common.lib.analytics.FragmentLifecycleAction;
 import java.lang.reflect.Field;
 
 public class BaseFragment extends Fragment implements AnalyticCallback {
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (TextUtils.isEmpty(getAnalyticPageName())) {
+            return;
+        }
+        if (isVisible != isVisibleToUser) {
+            isVisible = isVisibleToUser;
+            try {
+                if (isVisibleToUser) {
+                    AnalyticUtils.sendGaScreenViewHit(getActivity(), getAnalyticPageName());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public boolean isVisible = false;
     public int mPosition = -2; //ViewPager Position
 
@@ -36,9 +57,7 @@ public class BaseFragment extends Fragment implements AnalyticCallback {
         super.onCreate(savedInstanceState);
         action.onCreate(this);
         fm = getChildFragmentManager();
-        httpUtils = new HttpUtils();
-        httpUtils.configSoTimeout(10000);
-        httpUtils.configTimeout(10000);
+        httpUtils = SPUtil.getHttpUtils();
         spu = SPUtil.getInstance();
         mImageLoader = ImageLoader.getInstance();
     }
@@ -47,7 +66,7 @@ public class BaseFragment extends Fragment implements AnalyticCallback {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = activity;
-        dbHelper = DBHelper.getInstance(activity);
+        dbHelper = DBHelper.getInstance(getActivity().getApplicationContext());
     }
 
     public void onResume() {
@@ -105,6 +124,12 @@ public class BaseFragment extends Fragment implements AnalyticCallback {
 
     @Override
     public String getAnalyticPageName() {
-        return getClass().getSimpleName();
+        return null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        App.getInstance().getRefWatcher().watch(this);
     }
 }

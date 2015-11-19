@@ -43,6 +43,13 @@ public class WebActivity extends Activity {
         initViews();
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        App.getInstance().getRefWatcher().watch(this);
+    }
+
     public final static String KEY_URL = "key_url";
     private String url;
     private WebView webView;

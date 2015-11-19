@@ -31,8 +31,8 @@
     <item android:state_pressed="true">
         <shape>
             <!-- 点击效果-->
-            <stroke android:width="0.5dip" android:color="@color/subscribe_item_pressed_stroke" />
-            <solid android:color="@color/subscribe_item_pressed_bg" />
+            <stroke android:width="0.5dip" android:color="#ff7e00" />
+            <solid android:color="@color/white" /><!--拖动颜色-->
             <corners android:radius="20dp" />
         </shape>
     </item>
@@ -40,7 +40,7 @@
         <shape>
             <!--默认效果-->
             <stroke android:width="0.5dip" android:color="@color/subscribe_item_normal_stroke" />
-            <solid android:color="@color/subscribe_item_normal_bg" />
+            <solid android:color="@color/white" />
             <corners android:radius="20dp" />
         </shape>
     </item>

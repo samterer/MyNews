@@ -2,7 +2,8 @@
 <resources>
     <color name="fragment_background">#f5f5f5</color>
     <color name="click_color">#c5cae9</color>
-    <color name="background_tab_pressed1">#303F9F</color>
+    <color name="background_tab_pressed_color">#303F9F</color>
+    <color name="background_tab_pressed_red_color">#ff0000</color>
     <color name="zjxf_newsdetail_comment">#b7c9df</color>
 
     <color name="white">#ffffffff</color>
@@ -94,9 +95,6 @@
     <color name="subscribe_item_selected_stroke">#0033ee</color>
     <color name="subscribe_item_disabled_bg">#ffefefef</color>
     <color name="subscribe_item_disabled_stroke">#ffd9d9d9</color>
-    <color name="subscribe_item_pressed_bg">#ff5369e3</color>
-    <color name="subscribe_item_pressed_stroke">#ffcdcdcd</color>
-    <color name="subscribe_item_normal_bg">#fff5f5f5</color>
     <color name="subscribe_item_normal_stroke">#ffcdcdcd</color>
     <item name="subscribe_item_text_color_normal" type="color">@color/default_text</item>
     <color name="default_text">#555</color>
@@ -119,5 +117,7 @@
 
     <color name="ssxinhongse1">#fff85959</color>
     <color name="ssxinhongse1_press">#7ff85959</color>
+
+    <color name="edit_tab">#ababab</color>
 
 </resources>

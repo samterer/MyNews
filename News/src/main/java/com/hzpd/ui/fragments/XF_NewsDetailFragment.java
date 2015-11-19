@@ -3,7 +3,6 @@ package com.hzpd.ui.fragments;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
-import com.hzpd.utils.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +36,8 @@ import com.hzpd.ui.activity.XF_NewsHtmlDetailActivity;
 import com.hzpd.url.Constant;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.EventUtils;
+import com.hzpd.utils.Log;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.showwebview.MyJavascriptInterface;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.HttpUtils;
@@ -636,7 +637,7 @@ public class XF_NewsDetailFragment extends BaseFragment {
         RequestParams params = new RequestParams();
         params.addBodyParameter("type", Constant.TYPE.NewsA.toString());
         params.addBodyParameter("nids", nb.getNid());
-        HttpUtils httpUtils = new HttpUtils();
+        HttpUtils httpUtils = SPUtil.getHttpUtils();
         httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.Stat, params,
                 new RequestCallBack<String>() {
                     @Override
@@ -686,7 +687,7 @@ public class XF_NewsDetailFragment extends BaseFragment {
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("num", "1");
 
-        HttpUtils httpUtils = new HttpUtils();
+        HttpUtils httpUtils = SPUtil.getHttpUtils();
         httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.XF_BROWSE, params,
                 new RequestCallBack<String>() {
                     @Override

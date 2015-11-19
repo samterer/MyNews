@@ -139,7 +139,7 @@
     <string name="prompt_reply">回复</string>
     <string name="prompt_auditing">审核中</string>
     <string name="prompt_long_press_to_adjust">长按上文调整，点击下文添加</string>
-    <string name="prompt_click_to_add_or_cancel">长按拖动更改频道</string>
+    <string name="prompt_click_to_add_or_cancel">(拖动频道可排序)</string>
     <string name="prompt_get_captcha">获取验证码</string>
     <string name="prompt_verify_captcha">验    证</string>
     <string name="prompt_get">获   取</string>

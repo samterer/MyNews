@@ -1,5 +1,6 @@
 package com.hzpd.utils;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.hzpd.modle.NewsItemBeanForCollection;
@@ -68,6 +69,9 @@ public class DBHelper {
     }
 
     public static synchronized DBHelper getInstance(Context context) {
+        if (context instanceof Activity) {
+            context = context.getApplicationContext();
+        }
         if (null == instance) {
             instance = new DBHelper(context);
         }

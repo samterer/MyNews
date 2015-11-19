@@ -5,6 +5,7 @@
 	android:layout_height="wrap_content"
 	android:background="@color/search_content_background"
 	android:gravity="left|center_vertical"
+	android:padding="@dimen/search_padding_middle"
 	android:orientation="horizontal">
 
 	<com.hzpd.ui.widget.FontTextView
@@ -13,7 +14,8 @@
 		android:layout_height="wrap_content"
 		android:layout_weight="1"
 		android:gravity="left|center_vertical"
-		android:padding="@dimen/search_padding_middle"
+
+		android:paddingLeft="@dimen/detail_margin_left"
 		android:text="@string/search_history_head"
 		android:textColor="@color/search_key_head_text"
 		android:textSize="@dimen/search_title_size"/>

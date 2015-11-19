@@ -1,13 +1,10 @@
 package com.hzpd.ui;
 
-import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -37,6 +34,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.L;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -103,6 +102,8 @@ public class App extends Application {
         super.onCreate();
         themeName = SharePreferecesUtils.getParam(this, "THEME", "0").toString();
 //        newTimeMap.clear();
+        refWatcher = LeakCanary.install(this);
+        newTimeMap.clear();
         long start = System.currentTimeMillis();
         FacebookSdk.sdkInitialize(getApplicationContext());
         mInstance = this;
@@ -121,16 +122,10 @@ public class App extends Application {
         com.hzpd.utils.Log.e("App", "App 2here " + (System.currentTimeMillis() - start));
     }
 
-    public static int calculateMemoryCacheSize(Context context) {
-        ActivityManager am = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
-        boolean largeHeap = (context.getApplicationInfo().flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0;
-        int memoryClass = am.getMemoryClass();
-        if (largeHeap && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            memoryClass = am.getLargeMemoryClass();
-        }
-        // Target ~15% of the available heap.
-        Log.e("test", "memoryClass " + memoryClass);
-        return 1024 * 1024 * memoryClass / 7;
+    private RefWatcher refWatcher;
+
+    public RefWatcher getRefWatcher() {
+        return refWatcher;
     }
 
     final static int IMAGE_LOAD_SIZE = 1024 * 1024 * 5;
@@ -200,6 +195,19 @@ public class App extends Application {
 
 
     }
+
+    public static Thread.UncaughtExceptionHandler uncaughtExceptionHandler = new Thread.UncaughtExceptionHandler() {
+        @Override
+        public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
+            try {
+                com.hzpd.utils.Log.e("Alert", " UncaughtException !!! " + paramThrowable.toString());
+                paramThrowable.printStackTrace();
+                System.exit(0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     public void initAds() {
         // 初始化广告容器
@@ -572,22 +580,22 @@ public class App extends Application {
         void onSuccess(Profile currentProfile);
     }
 
-    Callback callback = new Callback() {
-        @Override
-        public void onSuccess(Profile currentProfile) {
-            return;
-        }
-    };
+    Callback callback = null;
 
     public void setProfileTracker(final Callback callback) {
         this.callback = callback;
-        Log.e("test", " setProfileTracker ");
-        if (profileTracker == null) {
+        if (callback == null) {
+            profileTracker = null;
+            if (profileTracker != null) {
+                profileTracker.stopTracking();
+                profileTracker = null;
+            }
+        } else if (profileTracker == null) {
             profileTracker = new ProfileTracker() {
                 @Override
                 protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
                     Log.e("test", " detail onCurrentProfileChanged " + currentProfile);
-                    callback.onSuccess(currentProfile);
+                    //callback.onSuccess(currentProfile);
                 }
             };
         }

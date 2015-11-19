@@ -93,7 +93,7 @@
     <string name="prompt_lottery">Lucky draw</string>
     <string name="prompt_share">Share</string>
     <string name="prompt_auditing">Checking</string>
-    <string name="prompt_click_to_add_or_cancel">Press and drag to change channels</string>
+    <string name="prompt_click_to_add_or_cancel">(Drag to Change Channels)</string>
     <string name="prompt_get_captcha">Obtain captcha</string>
     <string name="prompt_verify_captcha">Verify</string>
     <string name="prompt_register_with_space">Register</string>

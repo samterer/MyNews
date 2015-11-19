@@ -135,52 +135,6 @@ public class ZQ_RegisterFragment extends BaseFragment {
 
 			lgr_bt_get.setClickable(false);
 
-
-			/**
-			 RequestParams params = RequestParamsUtis.getParams();
-			 params.addBodyParameter("mobile", ph);
-			 params.addBodyParameter("flag", "1");// 1用户注册 2修改密码
-
-			 httpUtils.send(HttpMethod.POST, InterfaceJsonfile.smsCode, params,
-			 new RequestCallBack<String>() {
-			@Override public void onFailure(HttpException arg0, String arg1) {
-			handler.sendEmptyMessage(446);
-			}
-
-			@Override public void onSuccess(ResponseInfo<String> arg0) {
-			LogUtils.i("verify-->" + arg0.result);
-			JSONObject obj = null;
-			try {
-			obj = JSONObject.parseObject(arg0.result);
-			} catch (Exception e) {
-			e.printStackTrace();
-			handler.sendEmptyMessage(446);
-			return;
-			}
-
-			switch (obj.getIntValue("code")) {
-			case 200: {
-			verify = obj.getJSONObject("data").getString(
-			"mobile_code");
-			LogUtils.i("verify-->" + verify);
-			// 获取验证码成功
-			handler.sendEmptyMessage(445);
-			}
-			break;
-			case 201: {
-			TUtils.toast("已注册,请登录");
-			lgr_bt_get.setClickable(false);
-			}
-			break;
-			default: {
-			handler.sendEmptyMessage(446);
-			}
-			break;
-			}
-
-			}
-			});
-			 */
 		} else {
 			// 提示
 			TUtils.toast(getString(R.string.toast_please_input_correct_phone));

@@ -12,6 +12,7 @@ import com.hzpd.hflt.R;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
+import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
@@ -32,6 +33,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ZQ_FeedBackActivity extends MBaseActivity {
+    @Override
+    public String getAnalyticPageName() {
+        return AnalyticUtils.SCREEN.feedback;
+    }
+
     @ViewInject(R.id.stitle_tv_content)
     private TextView stitle_tv_content;
 
@@ -54,6 +60,11 @@ public class ZQ_FeedBackActivity extends MBaseActivity {
         SPUtil.setFont(zq_feedback_btn_submit);
         stitle_tv_content.setText(getString(R.string.prompt_feedback));
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @OnClick(R.id.zq_feedback_btn_submit)
@@ -86,11 +97,11 @@ public class ZQ_FeedBackActivity extends MBaseActivity {
             return;
         }
         if (!TextUtils.isEmpty(email)) {
-            if (!isEmail(email)){
+            if (!isEmail(email)) {
                 TUtils.toast(getString(R.string.toast_email_cannot_be_error));//格式不正确
                 return;
             }
-        }else{
+        } else {
             TUtils.toast(getString(R.string.toast_email_cannot_be_empty));//不能为空
             return;
         }

@@ -56,6 +56,7 @@ public class SearchKeyFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         try {
+            EventBus.getDefault().unregister(this);
             super.onDestroy();
         } catch (Exception e) {
         }

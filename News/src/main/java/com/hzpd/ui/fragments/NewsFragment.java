@@ -47,11 +47,16 @@ import de.greenrobot.event.EventBus;
 
 public class NewsFragment extends BaseFragment {
 
+    @Override
+    public String getAnalyticPageName() {
+        return null;
+    }
+
     @ViewInject(R.id.news_pager)
     private ViewPager pager;
 
-    @ViewInject(R.id.news_button)
-    private Button news_button;
+    @ViewInject(R.id.ll_news_button)
+    private View ll_news_button;
     @ViewInject(R.id.psts_tabs_app)
     private PagerSlidingTabStrip tabStrip;
     @ViewInject(R.id.ll_main)
@@ -78,6 +83,11 @@ public class NewsFragment extends BaseFragment {
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -89,8 +99,9 @@ public class NewsFragment extends BaseFragment {
         }
     }
 
-    @OnClick(R.id.news_button)
-    private void editChannel(View v) {
+
+    @OnClick(R.id.ll_news_button)
+    private void editChannel1(View v) {
         if (AvoidOnClickFastUtils.isFastDoubleClick()) {
             return;
         }
@@ -98,7 +109,6 @@ public class NewsFragment extends BaseFragment {
         in.setClass(getActivity(), MyEditColumnActivity.class);
         startActivity(in);
         AAnim.ActivityStartAnimation(getActivity());
-//		news_button.setEnabled(false);
     }
 
     private List<NewsChannelBean> mList;

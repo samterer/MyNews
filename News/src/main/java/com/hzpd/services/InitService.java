@@ -51,9 +51,7 @@ public class InitService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        httpUtils = new HttpUtils();
-        httpUtils.configTimeout(10000);
-        httpUtils.configSoTimeout(5000);
+        httpUtils = SPUtil.getHttpUtils();
         rootPath = App.getInstance().getJsonFileCacheRootDir();
         String station = SharePreferecesUtils.getParam(this, StationConfig.STATION, "def").toString();
 

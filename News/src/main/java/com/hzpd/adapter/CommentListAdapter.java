@@ -59,12 +59,12 @@ public class CommentListAdapter extends BaseAdapter {
 
     public CommentListAdapter() {
         spu = SPUtil.getInstance();
-        httpUtils = new HttpUtils();
+        httpUtils = SPUtil.getHttpUtils();
     }
 
     public CommentListAdapter(String nid) {
         spu = SPUtil.getInstance();
-        httpUtils = new HttpUtils();
+        httpUtils = SPUtil.getHttpUtils();
         this.nid = nid;
     }
 

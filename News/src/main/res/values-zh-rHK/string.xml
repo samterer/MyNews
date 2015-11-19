@@ -139,7 +139,7 @@
     <string name="prompt_reply">回復</string>
     <string name="prompt_auditing">審核中</string>
     <string name="prompt_long_press_to_adjust">長按上文調整，點擊下文添加</string>
-    <string name="prompt_click_to_add_or_cancel">長按拖動更改頻道</string>
+    <string name="prompt_click_to_add_or_cancel">(拖動頻道可排序)</string>
     <string name="prompt_get_captcha">獲取驗證碼</string>
     <string name="prompt_verify_captcha">驗    證</string>
     <string name="prompt_get">獲   取</string>

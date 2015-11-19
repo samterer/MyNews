@@ -170,13 +170,21 @@
             android:textColor="?zqzx_setting_item_text"
             android:textSize="20sp" />
 
+        <com.hzpd.custorm.switchbutton.SwitchButton
+            android:id="@+id/sb_use_listener"
+            android:layout_alignParentRight="true"
+            style="@style/MaterialDesignStyle"
+            android:visibility="gone"/>
+
         <com.hzpd.custorm.SlideSwitch xmlns:slideswitch="http://schemas.android.com/apk/res-auto"
             android:id="@+id/zqzx_setting_push"
             android:layout_width="60dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
             slideswitch:shape="circle"
-            slideswitch:themeColor="@color/zqzx_green" />
+            slideswitch:themeColor="@color/zqzx_green"
+
+            />
 
     </RelativeLayout>
     <!--微博绑定-->

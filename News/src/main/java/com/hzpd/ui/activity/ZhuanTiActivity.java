@@ -463,7 +463,7 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 		RequestParams params = new RequestParams();
 		params.addBodyParameter("nids", nid);
 
-		HttpUtils httpUtils = new HttpUtils();
+		HttpUtils httpUtils = SPUtil.getHttpUtils();
 		httpUtils.send(HttpMethod.POST
 				, subjectNum_url
 				, params

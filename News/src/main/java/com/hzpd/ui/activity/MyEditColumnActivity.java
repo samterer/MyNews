@@ -19,6 +19,7 @@ import com.hzpd.modle.event.ChangeChannelEvent;
 import com.hzpd.modle.event.ChannelSortedList;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SerializeUtil;
@@ -46,6 +47,11 @@ import de.greenrobot.event.EventBus;
 
 public class MyEditColumnActivity extends MBaseActivity {
 
+    @Override
+    public String getAnalyticPageName() {
+        return AnalyticUtils.SCREEN.edit;
+    }
+
     @ViewInject(R.id.editcolumn_dragGridView)
     private DragGrid editcolumn_dragGridView;
     @ViewInject(R.id.editcolumn_gridview)
@@ -69,11 +75,16 @@ public class MyEditColumnActivity extends MBaseActivity {
     private TextView editcolumn_item_tv;
     @ViewInject(R.id.text_editcolumn)
     private TextView text_editcolumn;
+    @ViewInject(R.id.choose_tab)
+    private TextView choose_tab;
+    @ViewInject(R.id.editcolum_explain)
+    private TextView editcolum_explain;
 
     private ChannelSortedList csl;
 
 
     private boolean isEdit;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,11 +98,13 @@ public class MyEditColumnActivity extends MBaseActivity {
                     if (!isEdit) {
                         isEdit = true;
                         Log.e("isEdit", "isEdit" + true);
+                        editcolum_explain.setVisibility(View.VISIBLE);
                         dragAdapter.isEditItem(isEdit);
                         editcolumn_dragGridView.isEditColumn(isEdit);
                         text_editcolumn.setText(getResources().getString(R.string.editcolumn_ok));
                     } else {
                         isEdit = false;
+                        editcolum_explain.setVisibility(View.GONE);
                         dragAdapter.isEditItem(isEdit);
                         text_editcolumn.setText(getResources().getString(R.string.editcolumn_edit));
                         editcolumn_dragGridView.isEditColumn(isEdit);
@@ -118,7 +131,7 @@ public class MyEditColumnActivity extends MBaseActivity {
         if (channelData == null) {
             return;
         }
-        Log.e("channelData","channelData"+channelData.toString());
+        Log.e("channelData", "channelData" + channelData.toString());
         // 不显示在新闻tab栏的频道列表
         myAllList = new ArrayList<>();
         myAllAdapter = new LastEditColumnAdapter(this);
@@ -283,7 +296,7 @@ public class MyEditColumnActivity extends MBaseActivity {
         myAllList = JSONArray.parseArray(array.toJSONString(), NewsChannelBean.class);
         Collections.sort(myAllList);
         addLocalChannels(myAllList);
-        Log.i(getLogTag(), "Channel count : " + myAllList.size()+"::::"+myAllList.toString());
+        Log.i(getLogTag(), "Channel count : " + myAllList.size() + "::::" + myAllList.toString());
 
         // 将新获取的频道临时保存到map中
         for (NewsChannelBean stb : myAllList) {

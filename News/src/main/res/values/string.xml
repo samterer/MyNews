@@ -116,7 +116,7 @@
     <string name="prompt_share">Berbagi</string>
     
     <string name="prompt_auditing">Memeriksa</string>
-    <string name="prompt_click_to_add_or_cancel">Tekan Untuk Memindahkan Kolom</string>
+    <string name="prompt_click_to_add_or_cancel">(Tarik Untuk Memindahkan Kolom)</string>
     <string name="prompt_get_captcha">Dapatkan captcha</string>
     <string name="prompt_verify_captcha">Verifikasi</string>
     <string name="prompt_register_with_space">Daftar</string>

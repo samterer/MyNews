@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
-import com.hzpd.modle.CommentzqzxBean;
 import com.hzpd.modle.MyCommentListBean;
 import com.hzpd.ui.activity.ZQ_ReplyCommentActivity;
 import com.hzpd.url.InterfaceJsonfile;
@@ -50,7 +49,7 @@ public class MyCommentListAdapter extends BaseAdapter {
 
     public MyCommentListAdapter() {
         spu = SPUtil.getInstance();
-        httpUtils = new HttpUtils();
+        httpUtils = SPUtil.getHttpUtils();
     }
 
     @Override

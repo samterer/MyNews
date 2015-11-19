@@ -3,6 +3,7 @@ package com.hzpd.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -169,6 +170,7 @@ public class ChooseAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder sHolder, int position) {
+
         try {
             int type = getItemViewType(position);
             NewsBean bean = null;
@@ -209,11 +211,12 @@ public class ChooseAdapter extends RecyclerView.Adapter {
                     holder.timeView.setText(CalendarUtil.friendlyTime(bean.getUpdate_time(), context));
 
                     if (readedNewsSet.contains(bean.getNid())) {
-                        holder.textView.setTextColor(App.getInstance()
-                                .getResources().getColor(R.color.grey_font));
-                    } else {
-                        holder.textView.setTextColor(App.getInstance()
-                                .getResources().getColor(R.color.black));
+                        TypedValue typedValue = new TypedValue();
+                        context.getTheme().resolveAttribute(R.attr.item_title_read, typedValue, true);
+                        int color = typedValue.data;
+//                        holder.textView.setTextColor(App.getInstance()
+//                                .getResources().getColor(R.color.grey_font));
+                        holder.textView.setTextColor(color);
                     }
                     holder.imageView.setImageResource(R.drawable.default_bg);
                     SPUtil.displayImage(bean.getImgs()[0], holder.imageView, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));

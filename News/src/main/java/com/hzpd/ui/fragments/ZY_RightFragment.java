@@ -64,14 +64,19 @@ import cn.jpush.android.api.TagAliasCallback;
 
 public class ZY_RightFragment extends BaseFragment {
     @Override
+    public String getAnalyticPageName() {
+        return AnalyticUtils.SCREEN.leftMenu;
+    }
+
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (isVisible != isVisibleToUser) {
-            isVisible = isVisibleToUser;
             if (isVisibleToUser) {
                 AnalyticUtils.sendGaEvent(getActivity(), AnalyticUtils.CATEGORY.slidMenu, AnalyticUtils.ACTION.viewPage, null, 0L);
                 AnalyticUtils.sendUmengEvent(getActivity(), AnalyticUtils.CATEGORY.slidMenu);
             }
         }
+        super.setUserVisibleHint(isVisibleToUser);
     }
 
     public static final String ACTION_USER = "com.hzpd.cms.user";
@@ -410,11 +415,14 @@ public class ZY_RightFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         try {
+            if (profileTracker != null) {
+                profileTracker.stopTracking();
+                profileTracker = null;
+            }
             activity.unregisterReceiver(br);
         } catch (Exception e) {
 
         }
-
         super.onDestroy();
     }
 

@@ -1099,7 +1099,7 @@ public class CalendarUtil {
             int hour = (int) ((cal.getTimeInMillis() - time.getTime()) / 3600000);
             if (hour == 0) {
                 int minite = (int) ((cal.getTimeInMillis() - time.getTime()) / 60000);
-                if (minite < 0) {
+                if (minite < 4) {
                     ftime = c.getResources().getString(R.string.calendarutil_time_1);//" terkini"
                 } else if (minite >= 0 && minite < 4) {
                     ftime = c.getResources().getString(R.string.calendarutil_time_1);//" terkini"

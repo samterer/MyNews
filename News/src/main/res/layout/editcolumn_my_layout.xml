@@ -56,40 +56,56 @@
                     android:layout_height="1px"
                     android:background="#f2e4d3" />
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_weight="1"
+                    <com.hzpd.ui.widget.FontTextView
+                        android:id="@+id/my_channel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:paddingLeft="15dp"
                         android:text="@string/edit_my_colum"
-                        android:textStyle="bold"
                         android:textColor="@color/subscribe_item_text_color_normal"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
-                    <TextView
+                    <com.hzpd.ui.widget.FontTextView
+                        android:id="@+id/editcolum_explain"
+                        android:layout_alignParentBottom="true"
+                        android:layout_width="wrap_content"
+                        android:gravity="center_vertical"
+                        android:layout_toRightOf="@+id/my_channel"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="10dp"
+                        android:text="@string/prompt_click_to_add_or_cancel"
+                        android:textSize="12sp"
+                        android:visibility="gone"
+                        />
+
+                    <com.hzpd.ui.widget.FontTextView
                         android:id="@+id/text_editcolumn"
                         android:layout_width="wrap_content"
+                        android:layout_alignParentBottom="true"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="23dp"
-                        android:text="@string/editcolumn_edit"
-                        android:textSize="12sp"
-                        android:paddingTop="2dp"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/btn_order"
+                        android:gravity="center"
                         android:paddingBottom="2dp"
                         android:paddingLeft="18dp"
                         android:paddingRight="18dp"
-                        android:background="@drawable/btn_order"
-                        android:textColor="@color/ssxinhongse1"
-                        android:gravity="center"/>
+                        android:paddingTop="2dp"
+                        android:text="@string/editcolumn_edit"
+                        android:textColor="#ff7e00"
+                        android:textSize="12sp" />
 
 
-                </LinearLayout>
+                </RelativeLayout>
 
 
                 <View
@@ -103,8 +119,7 @@
                 android:id="@+id/editcolumn_dragGridView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_margin="20dp"
                 android:cacheColorHint="@android:color/transparent"
                 android:gravity="center"
                 android:horizontalSpacing="8dp"
@@ -118,9 +133,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:layout_below="@id/editcolumn_dragGridView"
-                android:layout_marginTop="10dp"
-                android:background="#f6f6f6"
-                android:visibility="gone" />
+                android:background="#e6e6e6" />
 
             <!--推荐频道-->
             <LinearLayout
@@ -133,13 +146,12 @@
 
                 <com.hzpd.ui.widget.FontTextView
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:text="@string/edit_other_colum"
-                    android:textStyle="bold"
                     android:textColor="@color/subscribe_item_text_color_normal"
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -149,13 +161,20 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/choose_tab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="3dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/corners_bg"
+                android:drawableLeft="@drawable/choose_tab_search"
+                android:drawablePadding="3dp"
+                android:padding="5dp"
+                android:paddingLeft="10dp"
                 android:text="输入你感兴趣的任意频道"
-                android:textSize="12sp"
-                android:layout_margin="23dp"
-                android:textColor="@color/pulltorefresh_font"/>
+                android:textColor="@color/pulltorefresh_font"
+                android:textSize="12sp" />
 
             <com.hzpd.custorm.OtherGridView
                 android:id="@+id/editcolumn_gridview"
@@ -163,6 +182,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
                 android:cacheColorHint="@android:color/transparent"
                 android:gravity="center"
                 android:horizontalSpacing="8dp"

@@ -6,49 +6,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/main_title_bar"
-        android:background="@color/toolbar_bg"
-        >
-
-        <ImageView
-            android:id="@+id/stitle_ll_back1"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/main_title_bar"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/background_tab_pressed_selector"
-            android:visibility="gone" />
-
-        <!--返回按钮-->
-        <LinearLayout
-            android:id="@+id/news_detail_bak"
-            android:layout_width="@dimen/main_title_bar"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/stitle_ll_back"
-                android:layout_width="@dimen/main_title_bar"
-                android:layout_height="@dimen/main_title_bar"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/background_tab_pressed_selector" />
-        </LinearLayout>
-
-        <com.hzpd.ui.widget.FontTextView
-            android:id="@+id/stitle_tv_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@+id/news_detail_bak"
-            android:text="@string/prompt_column_subscribe"
-            android:textColor="@color/white"
-            android:textSize="22sp" />
-
-    </RelativeLayout>
+    <include layout="@layout/stitle_layout" />
 
     <LinearLayout
         android:id="@+id/mycomments_title"
@@ -91,8 +49,8 @@
         android:scrollbarThumbVertical="@drawable/base_list_scrollbar_handle"
         android:scrollbarTrackVertical="@color/transparent"
         android:scrollbars="vertical"
-        ptr:ptrDrawable="@drawable/default_ptr_rotate"
         ptr:ptrAnimationStyle="flip"
+        ptr:ptrDrawable="@drawable/default_ptr_rotate"
         ptr:ptrHeaderSubTextColor="@color/grey_font"
         ptr:ptrHeaderTextColor="@color/pulltorefresh_font" />
 

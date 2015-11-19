@@ -14,6 +14,7 @@ import com.hzpd.ui.fragments.ZQ_PersonalInfoFragment;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
+import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.CODE;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
@@ -21,133 +22,143 @@ import com.lidroid.xutils.util.LogUtils;
 
 public class PersonalInfoActivity extends MBaseActivity {
 
-	private ZQ_ModifyPersonalInfoFragment modifyPersonalFm;
-	private ZQ_PersonalInfoFragment personalInfoFm;
-	private ZQ_FindbackpwdFragment findbackpwdFm;
+    @Override
+    public String getAnalyticPageName() {
+        return AnalyticUtils.SCREEN.info;
+    }
 
-	private Fragment currentFm;
-	private FragmentManager fm;
+    private ZQ_ModifyPersonalInfoFragment modifyPersonalFm;
+    private ZQ_PersonalInfoFragment personalInfoFm;
+    private ZQ_FindbackpwdFragment findbackpwdFm;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.zq_personalinfo_layout);
+    private Fragment currentFm;
+    private FragmentManager fm;
 
-		fm = getSupportFragmentManager();
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.zq_personalinfo_layout);
 
-		personalInfoFm = new ZQ_PersonalInfoFragment();
+        fm = getSupportFragmentManager();
+
+        personalInfoFm = new ZQ_PersonalInfoFragment();
 
 //		FragmentTransaction ft = fm.beginTransaction();
 //		ft.replace(R.id.zq_pinfo_fm, personalInfoFm);
 //		ft.commit();
 
 
-		fm.beginTransaction()
-				.replace(R.id.zq_pinfo_fm, personalInfoFm)
-				.commit();
+        fm.beginTransaction()
+                .replace(R.id.zq_pinfo_fm, personalInfoFm)
+                .commit();
 
-		currentFm = personalInfoFm;
-	}
+        currentFm = personalInfoFm;
+    }
 
-	public void toModifyPinfoFm(int type) {
-		String station= SharePreferecesUtils.getParam(PersonalInfoActivity.this, StationConfig.STATION, "def").toString();
-		String PWDTYPE=null;
-		if (station.equals(StationConfig.DEF)){
-			PWDTYPE=InterfaceJsonfile.PWDTYPE;
-		}else if (station.equals(StationConfig.YN)){
-			PWDTYPE= InterfaceJsonfile_YN.PWDTYPE;
-		}else if (station.equals(StationConfig.TW)){
-			PWDTYPE= InterfaceJsonfile_TW.PWDTYPE;
-		}
-		FragmentTransaction ft = fm.beginTransaction();
-		ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right
-				, android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
-		modifyPersonalFm = new ZQ_ModifyPersonalInfoFragment();
-		Bundle args = new Bundle();
-		args.putInt(PWDTYPE, type);
-		modifyPersonalFm.setArguments(args);
-		ft.add(R.id.zq_pinfo_fm, modifyPersonalFm);
-		ft.addToBackStack(null);
-		ft.commit();
-		currentFm = modifyPersonalFm;
+    public void toModifyPinfoFm(int type) {
+        String station = SharePreferecesUtils.getParam(PersonalInfoActivity.this, StationConfig.STATION, "def").toString();
+        String PWDTYPE = null;
+        if (station.equals(StationConfig.DEF)) {
+            PWDTYPE = InterfaceJsonfile.PWDTYPE;
+        } else if (station.equals(StationConfig.YN)) {
+            PWDTYPE = InterfaceJsonfile_YN.PWDTYPE;
+        } else if (station.equals(StationConfig.TW)) {
+            PWDTYPE = InterfaceJsonfile_TW.PWDTYPE;
+        }
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right
+                , android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
-	}
+        modifyPersonalFm = new ZQ_ModifyPersonalInfoFragment();
+        Bundle args = new Bundle();
+        args.putInt(PWDTYPE, type);
+        modifyPersonalFm.setArguments(args);
+        ft.add(R.id.zq_pinfo_fm, modifyPersonalFm);
+        ft.addToBackStack(null);
+        ft.commit();
+        currentFm = modifyPersonalFm;
 
-	public void toFindbackpwdFm() {
-		String station= SharePreferecesUtils.getParam(PersonalInfoActivity.this, StationConfig.STATION, "def").toString();
-		String PWDTYPE=null;
-		if (station.equals(StationConfig.DEF)){
-			PWDTYPE=InterfaceJsonfile.PWDTYPE;
-		}else if (station.equals(StationConfig.YN)){
-			PWDTYPE= InterfaceJsonfile_YN.PWDTYPE;
-		}else if (station.equals(StationConfig.TW)){
-			PWDTYPE= InterfaceJsonfile_TW.PWDTYPE;
-		}
-		FragmentTransaction ft = fm.beginTransaction();
-		ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right
-				, android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
 
-		findbackpwdFm = new ZQ_FindbackpwdFragment();
-		Bundle args = new Bundle();
-		args.putInt(PWDTYPE, 2);
-		findbackpwdFm.setArguments(args);
-		ft.add(R.id.zq_pinfo_fm, findbackpwdFm);
-		ft.addToBackStack(null);
-		ft.commit();
-		currentFm = findbackpwdFm;
-	}
+    public void toFindbackpwdFm() {
+        String station = SharePreferecesUtils.getParam(PersonalInfoActivity.this, StationConfig.STATION, "def").toString();
+        String PWDTYPE = null;
+        if (station.equals(StationConfig.DEF)) {
+            PWDTYPE = InterfaceJsonfile.PWDTYPE;
+        } else if (station.equals(StationConfig.YN)) {
+            PWDTYPE = InterfaceJsonfile_YN.PWDTYPE;
+        } else if (station.equals(StationConfig.TW)) {
+            PWDTYPE = InterfaceJsonfile_TW.PWDTYPE;
+        }
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right
+                , android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
-	public void goBackPinfoFm() {
-		fm.popBackStack();
-		currentFm = personalInfoFm;
-		FragmentTransaction ft = fm.beginTransaction();
-		ft.show(currentFm);
-		ft.commit();
-	}
+        findbackpwdFm = new ZQ_FindbackpwdFragment();
+        Bundle args = new Bundle();
+        args.putInt(PWDTYPE, 2);
+        findbackpwdFm.setArguments(args);
+        ft.add(R.id.zq_pinfo_fm, findbackpwdFm);
+        ft.addToBackStack(null);
+        ft.commit();
+        currentFm = findbackpwdFm;
+    }
 
-	@Override
-	public void onBackPressed() {
-		if (currentFm instanceof ZQ_PersonalInfoFragment) {
-			finish();
-		} else if (currentFm instanceof ZQ_ModifyPersonalInfoFragment) {
-			goBackPinfoFm();
-			personalInfoFm.modify();
-		} else if (currentFm instanceof ZQ_FindbackpwdFragment) {
-			goBackPinfoFm();
-		}
-	}
+    public void goBackPinfoFm() {
+        fm.popBackStack();
+        currentFm = personalInfoFm;
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.show(currentFm);
+        ft.commit();
+    }
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		LogUtils.i("requestCode-->" + requestCode + "  resultCode-->" + resultCode);
-		switch (requestCode) {
-			case CODE.IMAGE_REQUEST_CODE: {
-				if (null != data) {
-					personalInfoFm.startPhotoZoom(data.getData());
-				}
-			}
-			break;
-			case CODE.CAMERA_REQUEST_CODE: {
-				personalInfoFm.startPhotoZoom();
-			}
-			break;
-			case CODE.RESULT_REQUEST_CODE: {
-				if (data != null) {
-					Bundle extras = data.getExtras();
-					if (extras != null) {
-						Bitmap photo = extras.getParcelable("data");
-						personalInfoFm.uploadPhoto(photo);
-						LogUtils.i("setphoto");
-					} else {
-						LogUtils.i("extras null");
-					}
-				}
-			}
-			break;
-		}
+    @Override
+    public void onBackPressed() {
+        if (currentFm instanceof ZQ_PersonalInfoFragment) {
+            finish();
+        } else if (currentFm instanceof ZQ_ModifyPersonalInfoFragment) {
+            goBackPinfoFm();
+            personalInfoFm.modify();
+        } else if (currentFm instanceof ZQ_FindbackpwdFragment) {
+            goBackPinfoFm();
+        }
+    }
 
-		super.onActivityResult(requestCode, resultCode, data);
-	}
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        LogUtils.i("requestCode-->" + requestCode + "  resultCode-->" + resultCode);
+        switch (requestCode) {
+            case CODE.IMAGE_REQUEST_CODE: {
+                if (null != data) {
+                    personalInfoFm.startPhotoZoom(data.getData());
+                }
+            }
+            break;
+            case CODE.CAMERA_REQUEST_CODE: {
+                personalInfoFm.startPhotoZoom();
+            }
+            break;
+            case CODE.RESULT_REQUEST_CODE: {
+                if (data != null) {
+                    Bundle extras = data.getExtras();
+                    if (extras != null) {
+                        Bitmap photo = extras.getParcelable("data");
+                        personalInfoFm.uploadPhoto(photo);
+                        LogUtils.i("setphoto");
+                    } else {
+                        LogUtils.i("extras null");
+                    }
+                }
+            }
+            break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
 }

@@ -51,6 +51,7 @@ import com.hzpd.utils.GetFileSizeUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
@@ -152,7 +153,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
         });
 
 
-        if(false){
+        if (false) {
             mVideoView.setVideoURI(Uri.parse("http://10.80.3.123/cmsv2/Public/Uploads/video/1446794282887.mp4"));
             return;
         }
@@ -791,7 +792,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("type", Constant.TYPE.VideoA.toString());
         params.addBodyParameter("nids", vib.getVid());
-        HttpUtils httpUtils = new HttpUtils();
+        HttpUtils httpUtils = SPUtil.getHttpUtils();
         httpUtils.send(HttpMethod.POST, commentsConts_url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {

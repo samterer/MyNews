@@ -236,7 +236,7 @@ public class  UserCommPostView extends LinearLayout {
 		params.addBodyParameter("type", "News");
 		params.addBodyParameter("siteid", siteid);
 		params.addBodyParameter("cid", comment.getCid());
-		HttpUtils httpUtils = new HttpUtils();
+		HttpUtils httpUtils = SPUtil.getHttpUtils();
 		httpUtils.send(HttpMethod.POST, XF_PRAISECOM_url, params,
 				new RequestCallBack<String>() {
 					@Override

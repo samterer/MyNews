@@ -117,6 +117,11 @@ public class BaseActivity extends SlidingFragmentActivity implements AnalyticCal
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        App.getInstance().getRefWatcher().watch(this);
+    }
 
     @Override
     protected void onPause() {
@@ -145,6 +150,6 @@ public class BaseActivity extends SlidingFragmentActivity implements AnalyticCal
 
     @Override
     public String getAnalyticPageName() {
-        return getClass().getSimpleName();
+        return null;
     }
 }

@@ -155,7 +155,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                     return;
                 }
                 File img = App.getFile(sdPath + File.separator + "adownload_joymeng" + File.separator + System.currentTimeMillis() + ".jpeg");
-                final String imagePath=sdPath + File.separator + "adownload_joymeng"+ File.separator;
+                final String imagePath = sdPath + File.separator + "adownload_joymeng" + File.separator;
                 httpUtils.download(
                         imgUrl
                         , img.getAbsolutePath()
@@ -179,7 +179,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                             @Override
                             public void onSuccess(ResponseInfo<File> responseInfo) {
                                 TUtils.toast(getString(R.string.toast_downloaded_at, responseInfo.result.getAbsolutePath()));
-                                MediaScannerConnection.scanFile(NewsAlbumActivity.this,new String[]{imagePath},null,null);
+                                MediaScannerConnection.scanFile(NewsAlbumActivity.this, new String[]{imagePath}, null, null);
 //						alpha();
                             }
 
@@ -270,6 +270,11 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
             getCommentsCounts();//评论数量
         }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     private void initViewPage() {
@@ -554,7 +559,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                 String smallimg = imgListBean.getSubphoto().get(0).getSubphoto();
                 ReplayBean bean = new ReplayBean(imgListBean.getPid()
                         , imgListBean.getTitle(), "Album", imgListBean.getJson_url()
-                        , smallimg,imgListBean.getComcount());
+                        , smallimg, imgListBean.getComcount());
 
 //				TUtils.toast(imgListBean.getPid() + "" + imgListBean.getTitle() + "" + "Album" + "" + imgListBean.getJson_url() + "" + smallimg);
                 Intent intent = new Intent(NewsAlbumActivity.this, ZQ_ReplyActivity.class);

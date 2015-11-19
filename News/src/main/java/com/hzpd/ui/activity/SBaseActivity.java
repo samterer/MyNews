@@ -39,13 +39,12 @@ public class SBaseActivity extends SwipeBackActivity {
 		activity = this;
 		fm = getSupportFragmentManager();
 
-		httpUtils = new HttpUtils();
-
+		httpUtils = SPUtil.getHttpUtils();
 		spu = SPUtil.getInstance();
 		mImageLoader = ImageLoader.getInstance();
 		startMills = System.currentTimeMillis();
 		analyMap = new HashMap<String, String>();
-		dbHelper = DBHelper.getInstance(this);
+		dbHelper = DBHelper.getInstance(getApplicationContext());
 
 
 	}

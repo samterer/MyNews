@@ -158,14 +158,45 @@
         <attr name="android:orientation" />
     </declare-styleable>
 
+    <declare-styleable name="SwitchButton">
+        <attr name="onDrawable" format="reference" />
+        <attr name="offDrawable" format="reference" />
+        <attr name="thumbDrawable" format="reference" />
+        <attr name="thumb_margin" format="dimension|reference" />
+        <attr name="thumb_marginTop" format="dimension|reference" />
+        <attr name="thumb_marginBottom" format="dimension|reference" />
+        <attr name="thumb_marginLeft" format="dimension|reference" />
+        <attr name="thumb_marginRight" format="dimension|reference" />
+        <attr name="thumb_width" format="dimension|reference" />
+        <attr name="thumb_height" format="dimension|reference" />
+        <attr name="onColor" format="color|reference" />
+        <attr name="offColor" format="color|reference" />
+        <attr name="thumbColor" format="color|reference" />
+        <attr name="thumbPressedColor" format="color|reference" />
+        <attr name="animationVelocity" format="integer" />
+        <attr name="custom_radius" format="integer" />
+        <attr name="measureFactor" format="float" />
+        <attr name="insetLeft" format="dimension|reference" />
+        <attr name="insetRight" format="dimension|reference" />
+        <attr name="insetTop" format="dimension|reference" />
+        <attr name="insetBottom" format="dimension|reference" />
+    </declare-styleable>
+
     <!-- MainActivity-->
     <attr name="title_bar_color" format="reference|color"/>
     <attr name="title_bar_name_color" format="reference|color"/>
     <attr name="m_background_tab_pressed" format="reference|color"/>
+
+    <attr name="item_title" format="reference|color"/>
+    <attr name="item_title_read" format="reference|color"></attr>
+    <attr name="item_tag" format="reference|color"/>
+
     <!--侧滑菜单-->
+    <attr name="left_menu_fb_avatar" format="reference|color"/>
     <attr name="left_menu_fb_name" format="reference|color"/>
     <attr name="left_menu_item_name" format="reference|color"/>
     <attr name="left_menu_version_name" format="reference|color"/>
+    <attr name="left_menu_version_line" format="reference|color"/>
     <!-- newsfragment-->
     <attr name="fragment_main_psts_tabs_background" format="reference|color"/>
     <attr name="fragment_main_psts_tabs_indicator_color" format="reference|color"/>
@@ -173,6 +204,10 @@
     <!-- choosefragment-->
     <attr name="fragment_choose_main_backgroup_color" format="reference|color"/>
     <attr name="fragment_choose_card_backgroup_color" format="reference|color"/>
+    <attr name="fragment_choose_btn_src_color" format="reference|color"/>
+    <!-- newsitemfragment-->
+    <attr name="a" format="reference|color"/>
+
     <!--Setting-->
     <attr name="zqzx_setting_main_color" format="reference|color"/>
     <attr name="zqzx_onclik_setting_item" format="reference|color"/>

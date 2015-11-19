@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.hzpd.hflt.R;
 import com.hzpd.ui.fragments.XF_PersonalInfoFragment;
-
 import com.lidroid.xutils.ViewUtils;
 
 
@@ -35,5 +34,8 @@ public class XF_PInfoActivity extends MBaseActivity {
 
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

@@ -17,21 +17,31 @@
             android:layout_height="33dp"
             android:background="?fragment_main_psts_tabs_background">
 
-            <Button
-                android:id="@+id/news_button"
+            <!-- -->
+            <LinearLayout
+                android:id="@+id/ll_news_button"
                 android:layout_width="45dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/main_channel_selector"
-                android:contentDescription="@null" />
+                android:background="@drawable/edit_tab_btn_selector"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/news_button"
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/main_channel_unselect"
+                    android:contentDescription="@null" />
+            </LinearLayout>
+
 
             <!--顶部频道展示-->
             <com.hzpd.ui.widget.PagerSlidingTabStrip xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/psts_tabs_app"
                 android:layout_width="match_parent"
                 android:layout_height="33dp"
-                android:layout_toLeftOf="@id/news_button"
+                android:layout_toLeftOf="@id/ll_news_button"
                 android:layout_toRightOf="@id/main_title_left_img"
                 android:background="?fragment_main_psts_tabs_background"
                 app:pstsDividerColor="#00ffffff"

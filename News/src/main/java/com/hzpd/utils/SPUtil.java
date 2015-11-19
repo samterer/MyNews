@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.UserBean;
 import com.hzpd.ui.App;
+import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.util.LogUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -69,6 +70,13 @@ public class SPUtil {
             }
         }
         return false;
+    }
+
+    public static HttpUtils getHttpUtils() {
+        HttpUtils httpUtils = new HttpUtils();
+        httpUtils.configSoTimeout(2000);
+        httpUtils.configTimeout(5000);
+        return httpUtils;
     }
 
     // 注入js函数监听

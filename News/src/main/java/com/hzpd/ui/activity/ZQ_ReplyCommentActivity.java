@@ -12,6 +12,7 @@ import android.widget.EditText;
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
@@ -25,12 +26,18 @@ import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+
 public class ZQ_ReplyCommentActivity extends MBaseActivity {
+
+    @Override
+    public String getAnalyticPageName() {
+        return AnalyticUtils.SCREEN.comment;
+    }
 
     @ViewInject(R.id.zq_reply_et_content)
     private EditText zq_reply_et_content;
 
-    private String  bean;
+    private String bean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +48,7 @@ public class ZQ_ReplyCommentActivity extends MBaseActivity {
         Intent intent = getIntent();
         if (null != intent) {
             bean = intent.getStringExtra("USER_UID");
-            Log.e("test","bean-->"+bean);
+            Log.e("test", "bean-->" + bean);
         }
 
     }
@@ -68,13 +75,14 @@ public class ZQ_ReplyCommentActivity extends MBaseActivity {
                 break;
         }
     }
-//7784
+
+    //7784
     // 发表评论
     private void sendComment(String content) {
         if (spu.getUser() == null) {
             return;
         }
-        String uid=spu.getUser().getUid();
+        String uid = spu.getUser().getUid();
 
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("uid", uid);
@@ -114,4 +122,8 @@ public class ZQ_ReplyCommentActivity extends MBaseActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

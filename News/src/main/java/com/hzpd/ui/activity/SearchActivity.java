@@ -22,6 +22,7 @@ import com.hzpd.ui.fragments.SearchKeyFragment;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
+import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
@@ -49,6 +50,11 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
     public static final String TAG_KEY = "key";
 
     private String tagcontext;
+    @Override
+    public String getAnalyticPageName() {
+        return AnalyticUtils.SCREEN.search;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -16,6 +16,7 @@ import com.hzpd.modle.event.UpdateNewsBeanDbEvent;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
+import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.Log;
@@ -39,6 +40,10 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import de.greenrobot.event.EventBus;
 
 public class ZQ_ReplyActivity extends MBaseActivity {
+    @Override
+    public String getAnalyticPageName() {
+        return AnalyticUtils.SCREEN.comment;
+    }
 
     @ViewInject(R.id.zq_reply_et_content)
     private EditText zq_reply_et_content;
@@ -71,6 +76,10 @@ public class ZQ_ReplyActivity extends MBaseActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -123,7 +132,7 @@ public class ZQ_ReplyActivity extends MBaseActivity {
                             Selector.from(NewsBeanDB.class).where("nid", "=", bean.getId()));
                     if (null != nbfc) {
                         com.hzpd.utils.Log.e("NewsBeanDB", "NewsBeanDB--->" + nbfc.getFav() + "::::" + nbfc.getComcount());
-                        if (nbfc.getColumnid()!=null||Integer.parseInt(nbfc.getComcount()) >= Integer.parseInt(comcount)) {
+                        if (nbfc.getColumnid() != null || Integer.parseInt(nbfc.getComcount()) >= Integer.parseInt(comcount)) {
                             comcount = nbfc.getComcount();
                         }
                     } else {

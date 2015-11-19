@@ -19,6 +19,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.custorm.SlideSwitch;
+import com.hzpd.custorm.switchbutton.SwitchButton;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.UpdateBean;
 import com.hzpd.modle.event.FontSizeEvent;
@@ -36,6 +38,7 @@ import com.hzpd.ui.App;
 import com.hzpd.ui.widget.FontTextView;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
+import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CODE;
 import com.hzpd.utils.DataCleanManager;
@@ -68,7 +71,7 @@ import de.greenrobot.event.EventBus;
 public class SettingActivity extends MBaseActivity {
     @Override
     public String getAnalyticPageName() {
-        return "设置页";
+        return AnalyticUtils.SCREEN.setting;
     }
 
     @ViewInject(R.id.stitle_tv_content)
@@ -116,6 +119,8 @@ public class SettingActivity extends MBaseActivity {
     //站点设置
     @ViewInject(R.id.zqzx_setting_rb4)
     private RadioButton zqzx_setting_rb4;
+    @ViewInject(R.id.sb_use_listener)
+    private SwitchButton sb_use_listener;
     private View loadingView;
     private AlertDialog.Builder mDeleteDialog;
 
@@ -144,12 +149,13 @@ public class SettingActivity extends MBaseActivity {
 //
 //            }
 //        });
-        switch (App.getInstance().getThemeName()){
-            case "0":{
+
+        switch (App.getInstance().getThemeName()) {
+            case "0": {
                 setting_chosse_skin.setText("默认");
             }
             break;
-            case "1":{
+            case "1": {
                 setting_chosse_skin.setText("黑夜");
             }
             break;
@@ -203,12 +209,26 @@ public class SettingActivity extends MBaseActivity {
         if (spu.getOffTuiSong()) {
             LogUtils.e("设置");
             zqzx_setting_push.setState(true);
-            zqzx_setting_push.setSelected(true);
+//            zqzx_setting_push.setSelected(true);
+            sb_use_listener.setChecked(true);
         } else {
             zqzx_setting_push.setState(false);
-            zqzx_setting_push.setSelected(false);
-        }
+//            zqzx_setting_push.setSelected(false);
+            sb_use_listener.setChecked(false);
 
+        }
+        sb_use_listener.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                android.util.Log.i("设置", "isChecked--->" + isChecked);
+                if (isChecked) {
+                    pushSwitch(isChecked);
+                } else {
+                    pushSwitch(isChecked);
+                }
+            }
+        });
 //		推送消息
         zqzx_setting_push.setSlideListener(new SlideSwitch.SlideListener() {
                                                @Override
@@ -235,6 +255,11 @@ public class SettingActivity extends MBaseActivity {
         getCacheSize();
 
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     //开关状态
@@ -275,7 +300,7 @@ public class SettingActivity extends MBaseActivity {
         AAnim.ActivityStartAnimation(this);
     }
 
-    private String[] skin = new String[]{"默认","黑夜"};
+    private String[] skin = new String[]{"默认", "黑夜"};
 
     /**
      * 菜单弹出窗口
@@ -285,11 +310,11 @@ public class SettingActivity extends MBaseActivity {
         public void onClick(View v) {
             new AlertDialog.Builder(SettingActivity.this).setTitle("选择皮肤").setItems(skin, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    if (App.getInstance().getThemeName().equals(""+which)){
+                    if (App.getInstance().getThemeName().equals("" + which)) {
                         return;
                     }
                     setting_chosse_skin.setText(skin[which]);
-                    Log.e("which","which"+which);
+                    Log.e("which", "which" + which);
                     App.getInstance().setThemeName("" + which);
                     EventBus.getDefault().post(new SetThemeEvent());
                     recreate();

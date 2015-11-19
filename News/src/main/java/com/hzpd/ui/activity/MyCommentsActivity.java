@@ -1,11 +1,9 @@
 package com.hzpd.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -21,13 +19,11 @@ import com.hzpd.adapter.MycommentsAdapter;
 import com.hzpd.custorm.CircleImageView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.MycommentsBean;
-import com.hzpd.modle.NewsBean;
-import com.hzpd.modle.VideoItemBean;
 import com.hzpd.modle.XF_UserInfoBean;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
-import com.hzpd.utils.AAnim;
+import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
@@ -35,7 +31,6 @@ import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
-import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -45,7 +40,6 @@ import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
-import com.lidroid.xutils.view.annotation.event.OnItemClick;
 
 import java.util.List;
 
@@ -63,7 +57,7 @@ public class MyCommentsActivity extends MBaseActivity {
 
     @Override
     public String getAnalyticPageName() {
-        return "我的评论页";
+        return AnalyticUtils.SCREEN.myComment;
     }
 
 
@@ -152,6 +146,11 @@ public class MyCommentsActivity extends MBaseActivity {
 
         getUserInfoFromServer();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     private XF_UserInfoBean userInfoBean;

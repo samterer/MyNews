@@ -1,11 +1,15 @@
 package com.hzpd.utils;
 
 import android.content.Context;
+import android.text.TextUtils;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.hzpd.hflt.BuildConfig;
 import com.umeng.analytics.MobclickAgent;
 
-import org.common.lib.analytics.AnalyticEventUtils;
+import org.common.lib.analytics.GoogleAnalyticsUtils;
 
 import java.util.Map;
 
@@ -28,17 +32,44 @@ public class AnalyticUtils {
         if (BuildConfig.DEBUG) {
             return;
         }
-        AnalyticEventUtils.sendGaEvent(context, category, action, label, value);
+        HitBuilders.EventBuilder eventBuilder = new HitBuilders.EventBuilder();
+        if (!TextUtils.isEmpty(category)) {
+            eventBuilder.setCategory(category);
+        }
+        if (!TextUtils.isEmpty(action)) {
+            eventBuilder.setAction(action);
+        }
+        if (!TextUtils.isEmpty(label)) {
+            eventBuilder.setLabel(label);
+        }
+        if (value != null) {
+            eventBuilder.setValue(value);
+        }
+        Tracker tracker = GoogleAnalyticsUtils.getInstance().getAppTracker(context);
+        if (tracker != null) {
+            tracker.send(eventBuilder.build());
+        }
     }
 
     /**
-     * 发送谷歌分析的屏幕浏览事件
+     * 发送谷歌分析的屏幕浏览事件,每个频道，每条新闻都是一个屏幕
      */
     public static final void sendGaScreenViewHit(Context context, String screenName) {
         if (BuildConfig.DEBUG) {
             return;
         }
-        AnalyticEventUtils.sendGaScreenViewHit(context, screenName);
+        if (TextUtils.isEmpty(screenName)) {
+            return;
+        }
+        // 谷歌分析
+        Tracker tracker = GoogleAnalyticsUtils.getInstance().getAppTracker(context);
+        if (tracker != null) {
+            tracker.setScreenName(screenName);
+//            tracker.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(1, dimensiion).build());
+            tracker.send(new HitBuilders.ScreenViewBuilder().build());
+            GoogleAnalytics.getInstance(context).dispatchLocalHits();
+            tracker.setScreenName(null);
+        }
     }
 
 
@@ -49,10 +80,10 @@ public class AnalyticUtils {
      * @param eventId 事件名称
      */
     public static final void sendUmengEvent(Context context, String eventId) {
-        if (android.support.v4.BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             return;
         }
-        MobclickAgent.onEvent(context, eventId);
+        //MobclickAgent.onEvent(context, eventId);
     }
 
 
@@ -64,10 +95,10 @@ public class AnalyticUtils {
      * @param param   事件参数
      */
     public static final void sendUmengEvent(Context context, String eventId, String param) {
-        if (android.support.v4.BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             return;
         }
-        MobclickAgent.onEvent(context, eventId, param);
+        //MobclickAgent.onEvent(context, eventId, param);
     }
 
     /**
@@ -78,7 +109,7 @@ public class AnalyticUtils {
      * @param paramMap 当前事件的属性和取值
      */
     public static final void sendUmengEvent(Context context, String eventId, Map<String, String> paramMap) {
-        if (android.support.v4.BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             return;
         }
         MobclickAgent.onEvent(context, eventId, paramMap);
@@ -101,6 +132,21 @@ public class AnalyticUtils {
         String loginIn = "登录";
         String loginOut = "登出";
         String newsItem = "点击新闻item";
+    }
+
+    // 屏幕分类
+    public interface SCREEN {
+        String newsType = "频道";
+        String newsDetail = "详情";
+        String search = "搜索";
+        String welcome = "欢迎";
+        String setting = "设置";
+        String leftMenu = "侧边栏";
+        String edit = "编辑栏目";
+        String feedback = "反馈";
+        String comment = "评论";
+        String info = "用户详情";
+        String myComment = "我的评论";
     }
 
 }
