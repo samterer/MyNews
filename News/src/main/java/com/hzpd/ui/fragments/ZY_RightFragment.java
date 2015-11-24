@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.facebook.CallbackManager;
@@ -23,11 +24,11 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.DefaultAudience;
 import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
-import com.facebook.login.widget.LoginButton;
 import com.hzpd.custorm.CircleImageView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.ThirdLoginBean;
 import com.hzpd.modle.UserBean;
+import com.hzpd.ui.App;
 import com.hzpd.ui.activity.MyCommentsActivity;
 import com.hzpd.ui.activity.MyPMColAvtivity;
 import com.hzpd.ui.activity.SettingActivity;
@@ -95,22 +96,15 @@ public class ZY_RightFragment extends BaseFragment {
     private LoginQuitBR br;
     private boolean isDay = true;
 
-    @ViewInject(R.id.login_button)
-    private LoginButton loginButton;
+
 
     private CallbackManager callbackManager;
 
     private TextView version;
+    @ViewInject(R.id.text_Login)
+    private TextView text_Login;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (spu.getUser() != null) {
-            login_facebook_button.setBackgroundResource(R.drawable.login_out_facebook_button);
-        } else {
-            login_facebook_button.setBackgroundResource(R.drawable.login_facebook_button);
-        }
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -123,10 +117,18 @@ public class ZY_RightFragment extends BaseFragment {
 
         }
 
-        if (spu.getUser() != null) {
-            login_facebook_button.setBackgroundResource(R.drawable.login_out_facebook_button);
+        if (App.getInstance().getThemeName().equals("0")) {
+            if (spu.getUser() != null) {
+                login_facebook_button.setBackgroundResource(R.drawable.login_out_facebook_button);
+            } else {
+                login_facebook_button.setBackgroundResource(R.drawable.login_facebook_button);
+            }
         } else {
-            login_facebook_button.setBackgroundResource(R.drawable.login_facebook_button);
+            if (spu.getUser() != null) {
+                login_facebook_button.setBackgroundResource(R.drawable.login_out_facebook_button_red);
+            } else {
+                login_facebook_button.setBackgroundResource(R.drawable.login_facebook_button_red);
+            }
         }
         return view;
     }
@@ -135,6 +137,9 @@ public class ZY_RightFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+        Login_test=Login_test+"onActivityResult  \n";
+        text_Login.setText(Login_test);
+        Toast.makeText(getActivity(),"onActivityResult---->callbackManager",500).show();
     }
 
     @Override
@@ -160,30 +165,8 @@ public class ZY_RightFragment extends BaseFragment {
             zy_rfrag_tv_login.setText("" + spu.getUser().getNickname());
         }
 
-        loginButton.setFragment(this);
         callbackManager = CallbackManager.Factory.create();
-//        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-//
-//            @Override
-//            public void onSuccess(LoginResult loginResult) {
-//                Log.e("test", "onSuccess ");
-//                String userId = loginResult.getAccessToken().getUserId();
-//                String accessToken = loginResult.getAccessToken().getToken();
-//                String profileImgUrl = "https://graph.facebook.com/" + userId + "/picture?type=large";
-//                Log.e("test", userId + ":" + accessToken + ":" + profileImgUrl);
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//                Log.e("test", "onCancel ");
-//            }
-//
-//            @Override
-//            public void onError(FacebookException error) {
-//                Log.e("test", "onError " + error);
-//            }
-//        });
-        loginButton.setReadPermissions(Arrays.asList("public_profile", "user_friends"));
+        text_Login.setText("onActivityCreated");
     }
 
     public void thirdlogin(ThirdLoginBean tlb) {
@@ -234,7 +217,10 @@ public class ZY_RightFragment extends BaseFragment {
     ProfileTracker profileTracker = new ProfileTracker() {
         @Override
         protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+            Login_test=Login_test+"操作currentProfile  \n";
+            text_Login.setText(Login_test);
             if (currentProfile != null) {
+                Toast.makeText(getActivity(),"currentProfile != null",500).show();
                 android.util.Log.e("test", "currentProfile " + currentProfile.getId());
                 ThirdLoginBean tlb = new ThirdLoginBean();
                 tlb.setUserid(currentProfile.getId());
@@ -247,14 +233,26 @@ public class ZY_RightFragment extends BaseFragment {
                     zy_rfrag_tv_login.setText(currentProfile.getName());
                     SPUtil.displayImage(currentProfile.getProfilePictureUri(200, 200).toString(), zy_rfrag_iv_login
                             , DisplayOptionFactory.getOption(OptionTp.Avatar));
-                    login_facebook_button.setBackgroundResource(R.drawable.login_out_facebook_button);
+                    if (App.getInstance().getThemeName().equals("0")) {
+                        login_facebook_button.setBackgroundResource(R.drawable.login_out_facebook_button);
+                    } else {
+                        login_facebook_button.setBackgroundResource(R.drawable.login_out_facebook_button_red);
+                    }
+                    text_Login.setText(Login_test+"\n");
                     thirdlogin(tlb);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
+                Login_test=Login_test+"操作currentProfile = null  \n";
+                text_Login.setText(Login_test);
                 android.util.Log.e("test", "oldProfile " + oldProfile);
                 spu.setUser(null);
+                if (App.getInstance().getThemeName().equals("0")) {
+                    login_facebook_button.setBackgroundResource(R.drawable.login_facebook_button);
+                } else {
+                    login_facebook_button.setBackgroundResource(R.drawable.login_facebook_button_red);
+                }
                 zy_rfrag_tv_login.setText(R.string.prompt_login_now);
                 zy_rfrag_iv_login.setImageResource(R.drawable.zy_pic_touxiang_new);
             }
@@ -262,6 +260,7 @@ public class ZY_RightFragment extends BaseFragment {
     };
 
     private List<String> permissions = Arrays.asList("public_profile", "user_friends");
+    private String Login_test="";
 
     @OnClick({R.id.zy_rfrag_ll_login, R.id.zy_rfrag_ll_comm, R.id.zy_rfrag_ll_collect, R.id.zy_rfrag_ll_push,
             R.id.zy_rfrag_ll_setting, R.id.login_facebook_button})
@@ -271,9 +270,7 @@ public class ZY_RightFragment extends BaseFragment {
         switch (v.getId()) {
             case R.id.zy_rfrag_ll_login: {
                 if (spu.getUser() != null) {
-//                    mIntent.putExtra("uid", spu.getUser().getUid()); //TODO
-//                    mIntent.setClass(activity, XF_PInfoActivity.class);
-//                    flag = true;
+
                 } else {
                     flag = false;
                 }
@@ -302,17 +299,19 @@ public class ZY_RightFragment extends BaseFragment {
                 flag = true;
             }
             break;
-//            case R.id.slidemeun_login_facebook: {
-//                LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
-//                flag = false;
-//            }
-//            break;
             case R.id.login_facebook_button: {
+                Login_test="";
+                Login_test=Login_test+"开始  \n";
+                text_Login.setText(Login_test);
+                Toast.makeText(getActivity(),"点击了Button",500).show();
                 final LoginManager loginManager = LoginManager.getInstance();
                 if (null == spu.getUser()) {
                     loginManager.setDefaultAudience(DefaultAudience.FRIENDS);
                     loginManager.setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);
                     loginManager.logInWithReadPermissions(this, permissions);
+                    Login_test=Login_test+"未登录 \n";
+                    text_Login.setText(Login_test);
+                    Toast.makeText(getActivity(),"未登录",500).show();
                 } else {
                     String logout = getResources().getString(
                             R.string.com_facebook_loginview_log_out_action);
@@ -334,7 +333,7 @@ public class ZY_RightFragment extends BaseFragment {
                             .setCancelable(true)
                             .setPositiveButton(logout, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    login_facebook_button.setBackgroundResource(R.drawable.login_facebook_button);
+
                                     loginManager.logOut();
                                 }
                             })
