@@ -476,6 +476,10 @@ public class ItemSelectionSupport {
         }
 
         @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean b) {
+        }
+
+        @Override
         boolean performItemClick(RecyclerView parent, View view, int position, long id) {
             final Adapter adapter = mRecyclerView.getAdapter();
             boolean checkedStateChanged = false;

@@ -118,6 +118,11 @@ public class ItemClickSupport {
         }
 
         @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean b) {
+
+        }
+
+        @Override
         boolean performItemClick(RecyclerView parent, View view, int position, long id) {
             if (mItemClickListener != null) {
                 view.playSoundEffect(SoundEffectConstants.CLICK);

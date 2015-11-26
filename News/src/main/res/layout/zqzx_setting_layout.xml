@@ -39,8 +39,8 @@
 
         <ImageView
             android:id="@+id/choose_skin_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="10dp"
+            android:layout_height="15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
@@ -137,8 +137,8 @@
 
         <ImageView
             android:id="@+id/choose_textsize_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="10dp"
+            android:layout_height="15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
@@ -174,7 +174,8 @@
             android:id="@+id/sb_use_listener"
             android:layout_alignParentRight="true"
             style="@style/MaterialDesignStyle"
-            android:visibility="gone"/>
+            android:layout_marginRight="10dp"
+           />
 
         <com.hzpd.custorm.SlideSwitch xmlns:slideswitch="http://schemas.android.com/apk/res-auto"
             android:id="@+id/zqzx_setting_push"
@@ -183,7 +184,7 @@
             android:layout_alignParentRight="true"
             slideswitch:shape="circle"
             slideswitch:themeColor="@color/zqzx_green"
-
+            android:visibility="gone"
             />
 
     </RelativeLayout>
@@ -325,8 +326,8 @@
 
         <ImageView
             android:id="@+id/choose_station_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="10dp"
+            android:layout_height="15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
@@ -352,8 +353,8 @@
             android:textSize="20sp" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="10dp"
+            android:layout_height="15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"

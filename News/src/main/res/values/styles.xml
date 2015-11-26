@@ -1,16 +1,17 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppBaseTheme" parent="android:Theme.Light">
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
         <item name="windowActionBar">false</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
 
     </style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <item name="android:windowIsTranslucent">true</item>
-        <!--<item name="windowNoTitle">true</item>-->
-        <!--<item name="windowContentOverlay">@null</item>-->
     </style>
 
 
@@ -20,24 +21,35 @@
         <item name="title_bar_name_color">@color/white</item>
         <item name="m_background_tab_pressed">@drawable/title_bar_btn_selector_color</item>
 
+        <item name="fragment_main_backgroup">@color/fragment_background</item>
         <item name="item_title">@color/item_title</item>
         <item name="item_title_read">@color/grey_font</item>
         <item name="item_tag">@color/main_tag</item>
 
+
+        <item name="xf_login_bg_drawable">@drawable/xf_login_bg</item>
+
         <!--侧滑菜单-->
         <item name="left_menu_fb_avatar">@drawable/zy_pic_touxiang_new</item>
         <item name="left_menu_fb_name">@color/white</item>
-        <item name="left_menu_item_name">#bfc3e2</item>
-        <item name="left_menu_version_name">#5f7bcb</item>
-        <item name="left_menu_version_line">#5f7bcb</item>
+        <item name="left_menu_item_name">@color/white</item>
+        <item name="left_menu_version_name">@color/white</item>
+        <item name="left_menu_version_line">@color/white</item>
+        <item name="left_menu_login_facebook_button">@drawable/login_facebook_button</item>
         <!-- newsfragment-->
         <item name="fragment_main_psts_tabs_background">@color/white</item>
         <item name="fragment_main_psts_tabs_indicator_color">#ff7e00</item>
         <item name="fragment_main_psts_tabs_text_color">#ababab</item>
         <!-- choosefragment-->
-        <item name="fragment_choose_main_backgroup_color">#f5f5f5</item>
         <item name="fragment_choose_card_backgroup_color">#ffffff</item>
         <item name="fragment_choose_btn_src_color">@drawable/floating_button_selector</item>
+        <!-- newitemfragment-->
+        <item name="fragment_news_item_falsh">@color/white</item>
+        <!-- newitemfragment-->
+        <item name="newsdetail_fontsize_drawable">@drawable/details_font_selector</item>
+        <item name="newsdetail_share_drawable">@drawable/details_share_selector</item>
+        <item name="details_comment_pen_drawable">@drawable/details_comment_pen_selector</item>
+        <item name="button_comment_style_drawable">@drawable/button_comment_style</item>
 
         <!--Setting-->
         <item name="zqzx_setting_main_color">@color/grey_color</item>
@@ -52,30 +64,89 @@
         <item name="zq_feedback_btn_color">@color/white</item>
     </style>
 
-    <style name="ThemeNight" parent="AppTheme">
+    <style name="ThemeRed" parent="AppTheme">
         <!-- MainActivity-->
         <item name="title_bar_color">#eb413d</item>
         <item name="title_bar_name_color">@color/white</item>
         <item name="m_background_tab_pressed">@drawable/title_bar_btn_selector_red_color</item>
 
-        <item name="item_title">@color/red</item>
-        <item name="item_title_read">#ff7e00</item>
-        <item name="item_tag">#ff7e00</item>
+        <item name="fragment_main_backgroup">@color/fragment_background</item>
+        <item name="item_title">@color/item_title</item>
+        <item name="item_title_read">@color/grey_font</item>
+        <item name="item_tag">@color/main_tag</item>
 
+        <item name="xf_login_bg_drawable">@drawable/xf_login_bg_red</item>
         <!--侧滑菜单-->
         <item name="left_menu_fb_avatar">@drawable/zy_pic_main_info_profile_bg</item>
         <item name="left_menu_fb_name">@color/white</item>
         <item name="left_menu_item_name">@color/white</item>
         <item name="left_menu_version_name">@color/white</item>
         <item name="left_menu_version_line">@color/white</item>
+        <item name="left_menu_login_facebook_button">@drawable/login_facebook_button_red</item>
         <!-- newsfragment-->
         <item name="fragment_main_psts_tabs_background">@color/white</item>
         <item name="fragment_main_psts_tabs_indicator_color">#ff7e00</item>
         <item name="fragment_main_psts_tabs_text_color">#ababab</item>
         <!-- choosefragment-->
-        <item name="fragment_choose_main_backgroup_color">#f5f5f5</item>
         <item name="fragment_choose_card_backgroup_color">#ffffff</item>
         <item name="fragment_choose_btn_src_color">@drawable/floating_button_selector_red</item>
+        <!-- newitemfragment-->
+        <item name="fragment_news_item_falsh">@color/white</item>
+
+        <!-- newsdetail-->
+        <item name="newsdetail_fontsize_drawable">@drawable/details_font_selector_red</item>
+        <item name="newsdetail_share_drawable">@drawable/details_share_selector_red</item>
+        <item name="details_comment_pen_drawable">@drawable/details_comment_pen_selector_red</item>
+        <item name="button_comment_style_drawable">@drawable/button_comment_style_red</item>
+
+        <!--Setting-->
+        <item name="zqzx_setting_main_color">@color/grey_color</item>
+        <item name="zqzx_onclik_setting_item">@drawable/setting_item_selector</item>
+        <item name="setting_item_selector_color">@color/zqzx_font_light</item>
+        <item name="zqzx_setting_item_text">@color/zqzx_font_set_title</item>
+        <item name="zqzx_setting_item_right_text">@color/zqzx_font_set_normal</item>
+
+        <!-- FeedBack-->
+        <item name="zq_feedback_color">@color/zqzx_bg_normal</item>
+        <item name="zq_feedback_edit_color">@color/zqzx_font_normal</item>
+        <item name="zq_feedback_btn_color">@color/white</item>
+
+    </style>
+
+    <style name="ThemeNight" parent="AppTheme">
+        <!-- MainActivity-->
+        <item name="title_bar_color">#992a28</item>
+        <item name="title_bar_name_color">@color/white</item>
+        <item name="m_background_tab_pressed">@drawable/title_bar_btn_selector_red_color</item>
+
+        <item name="fragment_main_backgroup">#222222</item>
+        <item name="item_title">@color/item_title</item>
+        <item name="item_title_read">@color/grey_font</item>
+        <item name="item_tag">@color/main_tag</item>
+
+        <item name="xf_login_bg_drawable">@drawable/xf_login_bg_red</item>
+        <!--侧滑菜单-->
+        <item name="left_menu_fb_avatar">@drawable/zy_pic_main_info_profile_bg</item>
+        <item name="left_menu_fb_name">@color/white</item>
+        <item name="left_menu_item_name">@color/white</item>
+        <item name="left_menu_version_name">@color/white</item>
+        <item name="left_menu_version_line">@color/white</item>
+        <item name="left_menu_login_facebook_button">@drawable/login_facebook_button_red</item>
+        <!-- newsfragment-->
+        <item name="fragment_main_psts_tabs_background">#222222</item>
+        <item name="fragment_main_psts_tabs_indicator_color">#b03e31</item>
+        <item name="fragment_main_psts_tabs_text_color">#606060</item>
+        <!-- choosefragment-->
+        <item name="fragment_choose_card_backgroup_color">#ffffff</item>
+        <item name="fragment_choose_btn_src_color">@drawable/floating_button_selector_red</item>
+        <!-- newitemfragment-->
+        <item name="fragment_news_item_falsh">@color/white</item>
+
+        <!-- newsdetail-->
+        <item name="newsdetail_fontsize_drawable">@drawable/details_font_selector_red</item>
+        <item name="newsdetail_share_drawable">@drawable/details_share_selector_red</item>
+        <item name="details_comment_pen_drawable">@drawable/details_comment_pen_selector_red</item>
+        <item name="button_comment_style_drawable">@drawable/button_comment_style_red</item>
 
         <!--Setting-->
         <item name="zqzx_setting_main_color">@color/grey_color</item>
@@ -328,14 +399,15 @@
 
     <style name="MaterialDesignStyle" parent="SwitchButtonStyle">
         <item name="animationVelocity">0</item>
-        <item name="insetBottom">0dp</item><!--设置上下背景-->
+        <item name="insetBottom">0dp</item>
+        <!--设置上下背景-->
         <item name="insetTop">0dp</item>
         <item name="insetLeft">10dp</item>
         <item name="insetRight">10dp</item>
-        <item name="measureFactor">2.4</item>
+        <item name="measureFactor">1.8</item>
         <item name="offDrawable">@drawable/md_back_off</item>
         <item name="onDrawable">@drawable/md_back_on</item>
         <item name="thumbDrawable">@drawable/md_thumb</item>
-        <item name="thumb_margin">-17dp</item>
+        <item name="thumb_margin">-6dp</item>
     </style>
 </resources>

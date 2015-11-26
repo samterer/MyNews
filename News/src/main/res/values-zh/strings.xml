@@ -201,7 +201,7 @@
 
     <string name="pull_to_refresh_pull_label">下拉刷新…</string>
     <string name="pull_to_refresh_from_bottom_pull_label">上拉加载更多</string>
-    <string name="pull_to_refresh_reached_end">已到最后</string>
+    <string name="pull_to_refresh_reached_end">已是最新</string>
 
     <string name="activity_item_start_end_time">开始时间：%1$s\n结束时间：%2$s</string>
 
@@ -316,7 +316,8 @@
     <string name="search_key_head">热门搜索</string>
     <string name="search_name">搜寻</string>
     <string name="search_none">“抱歉,找不到“% 1 $ s“然而”</string>
-    <string name="details_lv_1">本文来自互联网</string>
+    <string name="details_lv_1">(文章内容由搜索引擎自动发现并源于第三方网站，不代表热点资讯的立场和观点，如有版权问题，</string>
+    <string name="details_lv_link">请联系我们</string>
     <string name="about_us">    </string>
     <string name="sgin_time">注册于</string>
     <string name="load_more_loading">加载中...</string>
@@ -337,5 +338,7 @@
     <string name="edit_other_colum">推荐频道</string>
     <string name="click_here_to_refresh">点此刷新</string>
     <string name="delete">删除</string>
-
+    <string name="setting_skin">换肤</string>
+    <string name="skin_style_blue">默认</string>
+    <string name="skin_style_red">红色</string>
 </resources>

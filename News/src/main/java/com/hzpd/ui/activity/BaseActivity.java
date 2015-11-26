@@ -40,6 +40,8 @@ public class BaseActivity extends SlidingFragmentActivity implements AnalyticCal
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (App.getInstance().getThemeName().equals("1")) {
+            setTheme(R.style.ThemeRed);
+        } else if (App.getInstance().getThemeName().equals("2")) {
             setTheme(R.style.ThemeNight);
         } else {
             setTheme(R.style.ThemeDefault);

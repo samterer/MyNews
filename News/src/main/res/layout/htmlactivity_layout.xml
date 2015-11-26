@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:background="@color/white">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/news_detail_layout"
@@ -26,7 +28,7 @@
                 android:layout_marginLeft="15dip"
                 android:background="@drawable/zq_newsdetailback_selector"
                 android:focusable="true"
-                android:focusableInTouchMode="true"/>
+                android:focusableInTouchMode="true" />
         </LinearLayout>
         <!-- news_detail_title_content -->
 
@@ -48,7 +50,7 @@
                 android:layout_marginRight="8dp"
                 android:background="@drawable/zq_commetnum_selector"
                 android:textColor="@color/white"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
         </LinearLayout>
     </RelativeLayout>
     <!-- body -->
@@ -57,7 +59,7 @@
         android:id="@+id/html_wv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <!-- foot -->
 
@@ -68,11 +70,11 @@
         android:background="@color/zqzx_bg_normal"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:visibility="gone"
-        android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
-        android:paddingRight="20dp">
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        android:visibility="gone">
 
         <com.hzpd.ui.widget.FontTextView
             android:id="@+id/newdetail_tv_comm"
@@ -83,16 +85,16 @@
             android:text="@string/prompt_write_comment"
             android:textColor="@color/zqzx_font_light"
             android:textSize="16sp"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/newdetail_fontsize"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="13dp"
-            android:visibility="invisible"
             android:contentDescription="@null"
-            android:src="@drawable/zqzx_fontsize"/>
+            android:src="@drawable/zqzx_fontsize"
+            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/newdetail_share"
@@ -100,7 +102,7 @@
             android:layout_height="30dp"
             android:layout_marginLeft="13dp"
             android:contentDescription="@null"
-            android:src="@drawable/zqzx_bt_share"/>
+            android:src="@drawable/zqzx_bt_share" />
 
         <ImageView
             android:id="@+id/newdetail_collection"
@@ -108,7 +110,7 @@
             android:layout_height="30dp"
             android:layout_marginLeft="13dp"
             android:contentDescription="@null"
-            android:src="@drawable/details_collect_select"/>
+            android:src="@drawable/details_collect_select" />
     </LinearLayout>
 
 </LinearLayout>

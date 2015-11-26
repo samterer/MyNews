@@ -14,6 +14,8 @@ public class NewsBeanDB extends BaseDB implements Comparable<NewsBeanDB> {
     @Unique
     @Column(column = "nid")
     private int nid;
+    @Column(column = "authorname")
+    private String authorname;
     @Column(column = "title")
     private String title;
     @Column(column = "sid")
@@ -57,6 +59,14 @@ public class NewsBeanDB extends BaseDB implements Comparable<NewsBeanDB> {
     @Column(column = "unlike")
     private String unlike;
 
+    public String getAuthorname() {
+        return authorname;
+    }
+
+    public void setAuthorname(String authorname) {
+        this.authorname = authorname;
+    }
+
     public String getLike() {
         return like;
     }
@@ -80,6 +90,7 @@ public class NewsBeanDB extends BaseDB implements Comparable<NewsBeanDB> {
     public NewsBeanDB(NewsBean nb) {
 
         nid = Integer.parseInt(nb.getNid());
+        authorname = nb.getAuthorname();
         title = nb.getTitle();
         sid = nb.getSid();
         tid = nb.getTid();
@@ -117,6 +128,7 @@ public class NewsBeanDB extends BaseDB implements Comparable<NewsBeanDB> {
 
         nb.setNid(nid + "");
         nb.setTid(tid);
+        nb.setAuthorname(authorname);
         nb.setComcount(comcount);
         nb.setComflag(comflag);
         nb.setJson_url(json_url);

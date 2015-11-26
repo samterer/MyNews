@@ -48,7 +48,7 @@ public class DBHelper {
         videoDBUitls.configAllowTransaction(true);
 
         newsListDbUtils = DbUtils.create(context
-                , dbPath, App.newsListDb, 4, new DbUtils.DbUpgradeListener() {
+                , dbPath, App.newsListDb, 5, new DbUtils.DbUpgradeListener() {
             @Override
             public void onUpgrade(DbUtils dbUtils, int i, int i1) {
                 try {

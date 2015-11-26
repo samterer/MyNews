@@ -1,9 +1,14 @@
 package com.hzpd.ui.activity;
 
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
@@ -22,6 +27,7 @@ import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
+import com.hzpd.utils.SystemBarTintManager;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -56,6 +62,7 @@ public class RefreshMainActivity extends MBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_refresh_main);
+        changeStatus();
         mRefreshLayout = (RefreshLayout) findViewById(R.id.swipe_container);
         mListView = (ListView) findViewById(R.id.list);
 
@@ -108,8 +115,37 @@ public class RefreshMainActivity extends MBaseActivity {
                 simulateLoadingData();
             }
         });
+
+    }
+    private void changeStatus() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
+            //透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //透明导航栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
+
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
+        int color = typedValue.data;
+        tintManager.setStatusBarTintColor(color);
     }
 
+    @TargetApi(19)
+    private void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
     /**
      * 模拟一个耗时操作，获取完数据后刷新ListView
      * simulate update ListView and stop refresh after a time-consuming task

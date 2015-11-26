@@ -15,6 +15,7 @@ import com.hzpd.modle.NewsPageListBean;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.ZhuanTiActivity;
 import com.hzpd.utils.AAnim;
+import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.SPUtil;
@@ -97,7 +98,9 @@ public class TopviewpagerAdapter extends RecyclingPagerAdapter {
         iv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+                    return;
+                }
                 Intent in = new Intent();
                 NewsBean nb = new NewsBean();
                 nb.setNid(nplb.getNewid());

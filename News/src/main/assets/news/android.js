@@ -398,7 +398,7 @@ var ClientFun = {
 * 页面初始化入口
 *****************************************************************/
 function initPage(){
-
+alert('initPage');
 	var images = document.getElementsByTagName("img");
 	for(var i=0;i<images.length;i++){
 		images[i].onclick=largeImg;
@@ -440,7 +440,7 @@ function initPage(){
 	location.href = "hotnews://domReady";
 };
 
-//TODO
+// TODO
 document.addEventListener("DOMContentLoaded",initPage,false);
 
 /**

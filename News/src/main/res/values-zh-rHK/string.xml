@@ -201,7 +201,7 @@
 
     <string name="pull_to_refresh_pull_label">下拉刷新…</string>
     <string name="pull_to_refresh_from_bottom_pull_label">上拉載入更多</string>
-    <string name="pull_to_refresh_reached_end">已到最後</string>
+    <string name="pull_to_refresh_reached_end">已是最新</string>
 
     <string name="activity_item_start_end_time">開始時間：%1$s\n結束時間：%2$s</string>
 
@@ -317,7 +317,8 @@
     <string name="search_name">搜尋</string>
     <string name="search_none">“抱歉,找不到“% 1 $ s“然而”</string>
     <string name="search_key_head">熱門搜索</string>
-    <string name="details_lv_1">本文來自互聯網</string>
+    <string name="details_lv_1">(文章內容由搜索引擎自動發現并源於第三方網站,不代表熱點資訊的立場和觀點，如有版權問題,</string>
+    <string name="details_lv_link">請聯繫我們</string>
     <string name="sgin_time">註冊于：</string>
 
     <string name="toast_email_cannot_be_error">郵箱格式不正確</string>
@@ -335,4 +336,7 @@
     <string name="edit_other_colum">推薦頻道</string>
     <string name="click_here_to_refresh">點此刷新</string>
     <string name="delete">刪除</string>
+    <string name="setting_skin">換膚</string>
+    <string name="skin_style_blue">默認</string>
+    <string name="skin_style_red">紅色</string>
 </resources>

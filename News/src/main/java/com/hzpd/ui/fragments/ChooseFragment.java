@@ -64,6 +64,7 @@ import java.util.List;
  * 推荐频道
  */
 public class ChooseFragment extends BaseFragment implements View.OnClickListener {
+    public final static String PREFIX = "C:";
 
     private NewsChannelBean channelbean;//本频道
     private NewsListDbTask newsListDbTask; //新闻列表数据库
@@ -81,6 +82,11 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
     private View floatingView;
     private Animation animation;
     private ImageView background_empty;
+
+    @Override
+    public String getAnalyticPageName() {
+        return PREFIX + "REKOMENDASI";
+    }
 
     private Handler handler = new Handler() {
 
@@ -150,9 +156,12 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-        mSwipeRefreshWidget.setColorScheme(R.color.google_blue, R.color.google_tool);
+        TypedValue typedValue1 = new TypedValue();
+        getActivity().getTheme().resolveAttribute(R.attr.title_bar_color, typedValue1, true);
+        int color = typedValue1.data;
+        mSwipeRefreshWidget.setColorSchemeColors(color);
+//        mSwipeRefreshWidget.setColorScheme(R.color.google_blue);
+//        mSwipeRefreshWidget.setColorSchemeResources(R.color.google_blue);
         mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -303,7 +312,9 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                     isRefresh = false;
                     List<NewsBean> nbList = new ArrayList<NewsBean>();
                     for (NewsBeanDB nbdb : list) {
-                        nbList.add(nbdb.getNewsBean());
+                        NewsBean newsBean = nbdb.getNewsBean();
+                        newsBean.setCnname(channelbean.getCnname());
+                        nbList.add(newsBean);
                     }
                     for (NewsBean newsBean : nbList) {
                         if (newsBean.getType().equals("99")) {
@@ -362,6 +373,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                     if (list != null) {
                         for (NewsBean bean : list) {
                             bean.setTid("" + NewsChannelBean.TYPE_RECOMMEND);
+                            bean.setCnname("REKOMENDASI");
                         }
                     }
                     if (null != list) {
@@ -476,6 +488,10 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                     if (!TextUtils.isEmpty(obj.getString("newTime"))) {
                         adapter.addTop(list);
                     } else if (!TextUtils.isEmpty(obj.getString("oldTime"))) {
+                        adapter.addBottom(list);
+                    } else if (pageIndex == 1) {
+                        adapter.addTop(list);
+                    } else {
                         adapter.addBottom(list);
                     }
                     background_empty.setVisibility(View.GONE);

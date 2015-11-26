@@ -1,8 +1,13 @@
 package com.hzpd.ui.activity;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -23,6 +28,7 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
+import com.hzpd.utils.SystemBarTintManager;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
@@ -69,13 +75,42 @@ public class ZQ_ReplyActivity extends MBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zq_reply_layout);
         ViewUtils.inject(this);
+        changeStatus();
         stitle_tv_content.setText(R.string.comment);
         Intent intent = getIntent();
         if (null != intent) {
             bean = (ReplayBean) intent.getSerializableExtra("replay");
         }
     }
+    private void changeStatus() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
+            //透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //透明导航栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
 
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
+        int color = typedValue.data;
+        tintManager.setStatusBarTintColor(color);
+    }
+
+    @TargetApi(19)
+    private void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -114,7 +149,6 @@ public class ZQ_ReplyActivity extends MBaseActivity {
                 } else {
                     iv_reply_share.setImageResource(R.drawable.iv_reply_share_unselect);
                     isShare = false;
-
                 }
             }
             break;
@@ -175,7 +209,7 @@ public class ZQ_ReplyActivity extends MBaseActivity {
             PUBLISHCOMMENT_url = InterfaceJsonfile_TW.PUBLISHCOMMENT;
         }
         RequestParams params = RequestParamsUtils.getParamsWithU();
-//        params.addBodyParameter("uid", spu.getUser().getUid());
+        params.addBodyParameter("uid", spu.getUser().getUid());
 //        params.addBodyParameter("uid","53");
         params.addBodyParameter("title", bean.getTitle());
         params.addBodyParameter("type", bean.getType());//"News"
@@ -190,7 +224,6 @@ public class ZQ_ReplyActivity extends MBaseActivity {
                 , params, new RequestCallBack<String>() {
             @Override
             public void onFailure(HttpException arg0, String arg1) {
-                LogUtils.i("arg1-->" + arg1);
                 Log.i("msg", arg1);
                 TUtils.toast(getString(R.string.toast_server_no_response));
             }

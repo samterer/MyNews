@@ -6,20 +6,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@drawable/news_item_selector"
-        >
+        android:orientation="vertical">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/news_3_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/news_item_selector"
             android:orientation="vertical"
             android:paddingBottom="@dimen/list_item_padding_tb"
-            android:paddingTop="@dimen/list_item_padding_tb"
             android:paddingLeft="@dimen/list_item_padding"
-            android:paddingRight="@dimen/list_item_padding">
+            android:paddingRight="@dimen/list_item_padding"
+            android:paddingTop="@dimen/list_item_padding_tb">
             <!--标题-->
             <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/newsitem_title"
@@ -71,8 +69,8 @@
                         android:layout_width="32dp"
                         android:layout_height="18dp"
                         android:layout_alignParentBottom="true"
-                        android:gravity="center_vertical"
                         android:layout_marginRight="5dp"
+                        android:gravity="center_vertical"
                         android:visibility="gone" />
                     <!--来源source-->
                     <com.hzpd.ui.widget.FontRobotoTextView
@@ -145,8 +143,7 @@
             android:layout_height="@dimen/item_height"
             android:layout_marginLeft="@dimen/list_item_padding"
             android:layout_marginRight="@dimen/list_item_padding"
-            android:background="#fff5f5f5"
-            />
+            android:background="#fff5f5f5" />
     </LinearLayout>
 
 

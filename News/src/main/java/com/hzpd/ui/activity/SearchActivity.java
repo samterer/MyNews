@@ -1,12 +1,17 @@
 package com.hzpd.ui.activity;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -27,6 +32,7 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
+import com.hzpd.utils.SystemBarTintManager;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -59,11 +65,40 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        changeStatus();
         handleIntent();
         addView();
         getKeys();
     }
+    private void changeStatus() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
+            //透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //透明导航栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
 
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
+        int color = typedValue.data;
+        tintManager.setStatusBarTintColor(color);
+    }
+
+    @TargetApi(19)
+    private void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);

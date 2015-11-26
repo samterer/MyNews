@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <include layout="@layout/stitle_layout"/>
+    <include layout="@layout/stitle_layout" />
 
-    <com.handmark.pulltorefresh.library.PullToRefreshScrollView
-        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    <com.handmark.pulltorefresh.library.PullToRefreshScrollView xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/zhuanti_item_sv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,7 +35,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/default_bg"/>
+                    android:src="@drawable/default_bg" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -53,7 +54,7 @@
                         android:gravity="center_vertical"
                         android:textColor="@color/zqzx_font_normal"
                         android:textSize="18sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <com.hzpd.ui.widget.FontTextView
                         android:id="@+id/zhuanti_tv_con"
@@ -65,7 +66,7 @@
                         android:maxLines="1"
                         android:textColor="@color/zqzx_font_light"
                         android:textSize="14sp"
-                        android:visibility="invisible"/>
+                        android:visibility="invisible" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -85,14 +86,14 @@
                 android:scrollbarThumbVertical="@drawable/base_list_scrollbar_handle"
                 android:scrollbarTrackVertical="@color/transparent"
                 android:scrollbars="vertical"
-                android:smoothScrollbar="true"/>
+                android:smoothScrollbar="true" />
 
             <ImageView
                 android:id="@+id/zhuanti_item_iv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@null"
-                android:padding="@dimen/nonetworkpadding"/>
+                android:padding="@dimen/nonetworkpadding" />
         </LinearLayout>
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 

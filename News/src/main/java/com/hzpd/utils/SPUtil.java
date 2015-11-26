@@ -1,11 +1,25 @@
 package com.hzpd.utils;
 
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Build;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
@@ -17,6 +31,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.UserBean;
 import com.hzpd.ui.App;
+import com.joy.update.Utils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.util.LogUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -74,9 +89,63 @@ public class SPUtil {
 
     public static HttpUtils getHttpUtils() {
         HttpUtils httpUtils = new HttpUtils();
-        httpUtils.configSoTimeout(2000);
-        httpUtils.configTimeout(5000);
+        //httpUtils.configSoTimeout(2000);
+        //httpUtils.configTimeout(5000);
         return httpUtils;
+    }
+
+    /**
+     * 在状态栏显示通知
+     */
+    public static void showNotification(String description, Context context) {
+        NotificationManager notificationManager = (NotificationManager)
+                context.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
+        Notification notification = new Notification(R.drawable.logo,
+                context.getString(R.string.app_name), System.currentTimeMillis());
+//        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+        notification.defaults = Notification.DEFAULT_LIGHTS;
+        notification.ledARGB = Color.BLUE;
+        notification.ledOnMS = 5000; //闪光时间，毫秒
+        CharSequence contentTitle = context.getString(R.string.app_name); // 通知栏标题
+        CharSequence contentText = description; // 通知栏内容
+        Intent notificationIntent = getIntent(context);
+        PendingIntent contentItent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+        notification.setLatestEventInfo(context, contentTitle, contentText, contentItent);
+        notificationManager.notify(0, notification);
+    }
+
+    public static void updateDialog(String description, final Context context) {
+        AlertDialog mUpdateDialog = new AlertDialog.Builder(context)
+                .setTitle(R.string.update_version)
+                .setMessage(description)
+                .setNegativeButton(android.R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                Intent notificationIntent = SPUtil.getIntent(context);
+                                context.startActivity(notificationIntent);
+                            }
+                        })
+                .setPositiveButton(android.R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).create();
+        mUpdateDialog.show();
+    }
+
+    public static Intent getIntent(Context context) {
+        final String appPackageName = context.getPackageName();
+        Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)); // 点击该通知后要跳转的Activity
+        if (Utils.isAppInstall(context, Utils.GOOGLE_PLAY_PACKAGE_NAME)) {
+            notificationIntent.setPackage(Utils.GOOGLE_PLAY_PACKAGE_NAME);
+        }
+        return notificationIntent;
     }
 
     // 注入js函数监听
@@ -120,7 +189,6 @@ public class SPUtil {
     static ImageLoadingListener mLoadingListener = new ImageLoadingListener() {
         @Override
         public void onLoadingStarted(String imageUri, View view) {
-            Log.w("ImageLoadingListener", imageUri);
         }
 
         @Override
@@ -134,7 +202,6 @@ public class SPUtil {
 
         @Override
         public void onLoadingCancelled(String imageUri, View view) {
-            Log.e("ImageLoadingListener", imageUri);
         }
     };
 

@@ -46,6 +46,7 @@ import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.GetFileSizeUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.SystemBarTintManager;
@@ -124,6 +125,7 @@ public class SettingActivity extends MBaseActivity {
     private View loadingView;
     private AlertDialog.Builder mDeleteDialog;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,6 +136,9 @@ public class SettingActivity extends MBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        changeStatus();
+//        tintManager.setStatusBarTintResource(R.color.toolbar_bg);
         //测试用
 //        rl_test.setVisibility(View.VISIBLE);
 //        rl_test.setOnClickListener(new View.OnClickListener() {
@@ -149,22 +154,27 @@ public class SettingActivity extends MBaseActivity {
 //
 //            }
 //        });
+        textSize = new String[]{this.getResources().getString(R.string.settings_option_font_large), this.getResources().getString(R.string.settings_option_font_medium), this.getResources().getString(R.string.settings_option_font_small)};//"Besar", "Sedang", "Kecil"
+        skin = new String[]{this.getResources().getString(R.string.skin_style_blue), this.getResources().getString(R.string.skin_style_red),};//"黑夜"
 
         switch (App.getInstance().getThemeName()) {
             case "0": {
-                setting_chosse_skin.setText("默认");
+                setting_chosse_skin.setText(this.getResources().getString(R.string.skin_style_blue));
             }
             break;
             case "1": {
+                setting_chosse_skin.setText(this.getResources().getString(R.string.skin_style_red));
+            }
+            break;
+            case "2": {
+//                setting_chosse_skin.setText(this.getResources().getString(R.string.skin_style_red));
                 setting_chosse_skin.setText("黑夜");
             }
             break;
-
         }
 
         zqzx_setting_skin.setOnClickListener(new ChooseSkinClickListener());
 
-        textSize = new String[]{this.getResources().getString(R.string.settings_option_font_large), this.getResources().getString(R.string.settings_option_font_medium), this.getResources().getString(R.string.settings_option_font_small)};//"Besar", "Sedang", "Kecil"
         loadingView = findViewById(R.id.app_progress_bar);
         stitle_tv_content.setText(R.string.title_settings);
 
@@ -257,6 +267,37 @@ public class SettingActivity extends MBaseActivity {
 
     }
 
+    private void changeStatus() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
+            //透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //透明导航栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
+
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
+        int color = typedValue.data;
+        tintManager.setStatusBarTintColor(color);
+    }
+
+
+    @TargetApi(19)
+    private void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -300,7 +341,7 @@ public class SettingActivity extends MBaseActivity {
         AAnim.ActivityStartAnimation(this);
     }
 
-    private String[] skin = new String[]{"默认", "黑夜"};
+    private String[] skin;
 
     /**
      * 菜单弹出窗口
@@ -308,7 +349,8 @@ public class SettingActivity extends MBaseActivity {
     class ChooseSkinClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            new AlertDialog.Builder(SettingActivity.this).setTitle("选择皮肤").setItems(skin, new DialogInterface.OnClickListener() {
+//            @string/setting_skin
+            new AlertDialog.Builder(SettingActivity.this).setTitle(getResources().getString(R.string.setting_skin)).setItems(skin, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     if (App.getInstance().getThemeName().equals("" + which)) {
                         return;
@@ -316,8 +358,20 @@ public class SettingActivity extends MBaseActivity {
                     setting_chosse_skin.setText(skin[which]);
                     Log.e("which", "which" + which);
                     App.getInstance().setThemeName("" + which);
+//                    if (App.getInstance().getThemeName().equals("1") && which != 1) {
+//                        App.getInstance().setThemeName("3");
+//                    } else if (App.getInstance().getThemeName().equals("1") && which != 2) {
+//                        App.getInstance().setThemeName("4");
+//                    } else {
+//                        App.getInstance().setThemeName("" + which);
+//                    }
                     EventBus.getDefault().post(new SetThemeEvent());
-                    recreate();
+                    stitle_tv_content.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    }, 300);
                 }
             }).show();
         }
@@ -535,11 +589,9 @@ public class SettingActivity extends MBaseActivity {
                 if (obj == null) {
                     return;
                 }
-                Log.e("onSuccess", "onSuccess" + obj.toString());
                 if (200 == obj.getIntValue("code")) {
                     UpdateBean mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), UpdateBean.class);
-                    updateDialog(mBean.getDescription());
-                    showNotification(mBean.getDescription());
+                    SPUtil.updateDialog(mBean.getDescription(), SettingActivity.this);
                 } else {
                     Toast.makeText(SettingActivity.this, getString(R.string.update_no_version), Toast.LENGTH_SHORT).show();
                 }
@@ -551,32 +603,6 @@ public class SettingActivity extends MBaseActivity {
                 Toast.makeText(SettingActivity.this, getString(R.string.toast_cannot_connect_to_server), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private AlertDialog.Builder mUpdateDialog;
-
-    private void updateDialog(String description) {
-        mUpdateDialog = new AlertDialog.Builder(this);
-        mUpdateDialog.setTitle(R.string.update_version);
-        mUpdateDialog.setMessage(description);
-        mUpdateDialog.setNegativeButton(android.R.string.ok,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        final String appPackageName = getPackageName();
-                        Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)); // 点击该通知后要跳转的Activity
-                        startActivity(notificationIntent);
-                    }
-                });
-        mUpdateDialog.setPositiveButton(android.R.string.cancel,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        mUpdateDialog.show();
     }
 
     /**

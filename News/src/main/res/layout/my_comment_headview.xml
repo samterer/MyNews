@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@drawable/xf_login_bg">
+        android:background="?xf_login_bg_drawable">
 
         <ImageView
             android:id="@+id/xf_pinfo_iv_back"

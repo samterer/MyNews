@@ -139,7 +139,7 @@ public class ZY_RightFragment extends BaseFragment {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         Login_test=Login_test+"onActivityResult  \n";
         text_Login.setText(Login_test);
-        Toast.makeText(getActivity(),"onActivityResult---->callbackManager",500).show();
+//        Toast.makeText(getActivity(),"onActivityResult---->callbackManager",500).show();
     }
 
     @Override
@@ -220,7 +220,7 @@ public class ZY_RightFragment extends BaseFragment {
             Login_test=Login_test+"操作currentProfile  \n";
             text_Login.setText(Login_test);
             if (currentProfile != null) {
-                Toast.makeText(getActivity(),"currentProfile != null",500).show();
+//                Toast.makeText(getActivity(),"currentProfile != null",500).show();
                 android.util.Log.e("test", "currentProfile " + currentProfile.getId());
                 ThirdLoginBean tlb = new ThirdLoginBean();
                 tlb.setUserid(currentProfile.getId());
@@ -303,7 +303,7 @@ public class ZY_RightFragment extends BaseFragment {
                 Login_test="";
                 Login_test=Login_test+"开始  \n";
                 text_Login.setText(Login_test);
-                Toast.makeText(getActivity(),"点击了Button",500).show();
+//                Toast.makeText(getActivity(),"点击了Button",500).show();
                 final LoginManager loginManager = LoginManager.getInstance();
                 if (null == spu.getUser()) {
                     loginManager.setDefaultAudience(DefaultAudience.FRIENDS);
@@ -311,7 +311,7 @@ public class ZY_RightFragment extends BaseFragment {
                     loginManager.logInWithReadPermissions(this, permissions);
                     Login_test=Login_test+"未登录 \n";
                     text_Login.setText(Login_test);
-                    Toast.makeText(getActivity(),"未登录",500).show();
+//                    Toast.makeText(getActivity(),"未登录",500).show();
                 } else {
                     String logout = getResources().getString(
                             R.string.com_facebook_loginview_log_out_action);

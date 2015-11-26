@@ -9,59 +9,34 @@
     <LinearLayout
         android:id="@+id/news_detail_other_title_root"
         android:layout_width="match_parent"
-        android:layout_height="45dip"
+        android:layout_height="wrap_content"
         android:clickable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="15dp"
         android:paddingRight="15dp">
-        <!--右边圆点-->
-        <ImageView
-            android:id="@+id/other_detail_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dip"
-            android:background="@drawable/other_news"
-            android:visibility="gone" />
 
         <!-- 标题展示-->
         <com.hzpd.ui.widget.FontTextView
             android:id="@+id/news_detail_other_title_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="0.3"
+            android:background="@drawable/news_item_selector"
             android:ellipsize="end"
+            android:padding="8dp"
             android:gravity="center_vertical"
             android:maxLines="1"
             android:singleLine="true"
-            android:text="@string/app_name"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
-        <!-- 左侧箭头-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bbs_modle_jt" />
-        </LinearLayout>
     </LinearLayout>
 
     <View
-        android:id="@+id/view_line"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/details_lv_dotted_line"
-        android:visibility="gone"/>
+        android:layout_height="@dimen/item_height"
+        android:layout_marginLeft="23dp"
+        android:layout_marginRight="23dp"
+        android:background="#fff5f5f5" />
 
 
 </LinearLayout>

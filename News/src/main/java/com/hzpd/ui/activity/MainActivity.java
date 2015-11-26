@@ -1,18 +1,12 @@
 package com.hzpd.ui.activity;
 
 
-import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
@@ -42,7 +36,6 @@ import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
-import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
@@ -55,6 +48,12 @@ import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import cn.jpush.android.api.CustomPushNotificationBuilder;
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.PushBuilder;
 import de.greenrobot.event.EventBus;
 
 
@@ -84,6 +83,10 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
         long start = System.currentTimeMillis();
         setContentView(R.layout.app_main);
         ViewUtils.inject(this);
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date curDate = new Date(System.currentTimeMillis());//获取当前时间
+        String date = sDateFormat.format(curDate);
+        Log.e("date", "onActivityResult  date--->" + date);
         checkVersion();
         Thread.setDefaultUncaughtExceptionHandler(App.uncaughtExceptionHandler);
         FragmentTransaction ft = fm.beginTransaction();
@@ -100,6 +103,14 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
         Intent intent = new Intent(this, InitService.class);
         intent.setAction(InitService.UserLogAction);
         startService(intent);
+
+        LayoutInflater infla = LayoutInflater.from(this);
+
+        CustomPushNotificationBuilder builder = new CustomPushNotificationBuilder(MainActivity.this,
+                R.layout.customer_notitfication_layout, R.id.icon, R.id.title, R.id.text);  // 指定定制的 Notification Layout
+        builder.statusBarDrawable = R.drawable.details_related_news;      // 指定最顶层状态栏小图标
+        builder.layoutIconDrawable = R.drawable.logo;   // 指定下拉状态栏时显示的通知图标
+        JPushInterface.setPushNotificationBuilder(2, new PushBuilder(this));
 
     }
 
@@ -240,8 +251,8 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
                 }
                 if (200 == obj.getIntValue("code")) {
                     UpdateBean mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), UpdateBean.class);
-                    showNotification(mBean.getDescription());
-                    updateDialog(mBean.getDescription());
+                    SPUtil.showNotification(mBean.getDescription(), getApplicationContext());
+                    SPUtil.updateDialog(mBean.getDescription(), MainActivity.this);
                 } else {
                 }
 
@@ -252,57 +263,6 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
                 Log.e("test", "onFailure");
             }
         });
-    }
-
-    private AlertDialog.Builder mUpdateDialog;
-
-    private void updateDialog(String description) {
-        mUpdateDialog = new AlertDialog.Builder(this);
-        mUpdateDialog.setTitle(R.string.update_version);
-        mUpdateDialog.setMessage(description);
-        mUpdateDialog.setNegativeButton(android.R.string.ok,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        final String appPackageName = getPackageName();
-                        Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)); // 点击该通知后要跳转的Activity
-                        startActivity(notificationIntent);
-                    }
-                });
-        mUpdateDialog.setPositiveButton(android.R.string.cancel,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        mUpdateDialog.show();
-    }
-
-
-    /**
-     * 在状态栏显示通知
-     */
-    private void showNotification(String description) {
-        NotificationManager notificationManager = (NotificationManager)
-                this.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification(R.drawable.logo,
-                getString(R.string.app_name), System.currentTimeMillis());
-//        notification.flags |= Notification.FLAG_ONGOING_EVENT;
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-        notification.defaults = Notification.DEFAULT_LIGHTS;
-        notification.ledARGB = Color.BLUE;
-        notification.ledOnMS = 5000; //闪光时间，毫秒
-        CharSequence contentTitle = getString(R.string.app_name); // 通知栏标题
-        CharSequence contentText = description; // 通知栏内容
-        final String appPackageName = getPackageName();
-        Log.e("test", "test" + appPackageName);
-        Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)); // 点击该通知后要跳转的Activity
-        PendingIntent contentItent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        notification.setLatestEventInfo(this, contentTitle, contentText, contentItent);
-        notificationManager.notify(0, notification);
     }
 
     @Override
@@ -319,7 +279,6 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
         recreate();
 //        finish();
     }
-
 
 
     private void restartApplication() {

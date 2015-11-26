@@ -25,6 +25,7 @@ import com.hzpd.ui.activity.ZQ_ReplyCommentActivity;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
+import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
@@ -168,7 +169,9 @@ public class CommentListAdapter extends BaseAdapter {
             holder.comment_text.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    if (AvoidOnClickFastUtils.isFastDoubleClick()){
+                        return;
+                    }
                     ArrayList<String> titles = new ArrayList<String>();
                     titles.add(parent.getContext().getResources().getString(R.string.reply_comment));
 //                titles.add("删除");
@@ -229,6 +232,7 @@ public class CommentListAdapter extends BaseAdapter {
                         if (null == spu.getUser()) {
                             return;
                         }
+                        Log.e("test","点赞"+item.getCid());
                         Log.i(getLogTag(), "uid-" + spu.getUser().getUid() + "  mType-News" + " nid-" + item.getCid());
                         String station = SharePreferecesUtils.getParam(parent.getContext(), StationConfig.STATION, "def").toString();
                         String siteid = null;
@@ -265,7 +269,7 @@ public class CommentListAdapter extends BaseAdapter {
                                 JSONObject obj = JSONObject.parseObject(arg0.result);
 
                                 if (200 == obj.getInteger("code")) {
-                                    LogUtils.i("m---->" + item.getPraise());
+                                    Log.e("","m---->" + item.getPraise());
                                     SharePreferecesUtils.setParam(parent.getContext(), "" + item.getCid(), "1");
                                     if (TextUtils.isDigitsOnly(item.getPraise())) {
                                         holder.up_icon.setImageResource(R.drawable.details_icon_likeit);

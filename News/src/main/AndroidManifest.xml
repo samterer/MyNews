@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.hzpd.hflt"
     android:versionCode="1"
     android:versionName="1.0">
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="22" />
+        android:targetSdkVersion="22"
+        tools:overrideLibrary="com.facebook" />
 
     <!-- 极光推送自定义权限 -->
     <permission
@@ -46,8 +48,8 @@
 
         <activity
             android:name="com.hzpd.ui.activity.WelcomeActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -66,8 +68,7 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.hzpd.ui.activity.NewsDetailActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
 
         <activity
@@ -199,7 +200,7 @@
 
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="@string/jpush_key" />
+            android:value="de1d2a800d272841495b67b3" />
         <!-- <<< 极光推送组件声明 @string/jpush_key de1d2a800d272841495b67b3-->
 
         <service android:name="com.hzpd.services.InitService"></service>

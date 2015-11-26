@@ -40,15 +40,22 @@ import com.lidroid.xutils.view.annotation.ViewInject;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
 public class NewsItemListViewAdapter extends RecyclerView.Adapter {
+
+    public static final String AD_KEY = "1902056863352757_1942167249341718"; // "1902056863352757_1922349784656798";
+    public static final int STEP = 10;
+    public static final int MAX_POSITION = 50;
 
     public interface CallBack {
         void loadMore();
     }
 
+    final Random random = new Random();
     public CallBack callBack;
     Context context;
     LayoutInflater inflater;
@@ -74,25 +81,31 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
     private View.OnClickListener onClickListener;
     TopviewpagerAdapter topviewAdapter;
-    NativeAd nativeAd;
-    int positionAD = 2;
-    NewsBean newsBeanAD;
+    private HashMap<String, NativeAd> ads;
+    int nextAdPosition = STEP;
 
-    public void setNativeAd(final NativeAd nativeAd, int position) {
-        this.nativeAd = nativeAd;
-        this.positionAD = position;
+    public void setAds(HashMap<String, NativeAd> ads) {
+        this.ads = ads;
+    }
+
+    public void setNativeAd(final NativeAd nativeAd) {
+        Log.e("test", "nextAdPosition->" + nextAdPosition + ": " + nativeAd);
+        ads.put("" + nextAdPosition, nativeAd);
+        final int adPos = nextAdPosition;
         nativeAd.setAdListener(new AdListener() {
             @Override
             public void onError(Ad ad, AdError adError) {
+                Log.e("test", "onError->" + nextAdPosition + ": " + adError);
             }
 
             @Override
             public void onAdLoaded(Ad ad) {
+                Log.e("test", "onAdLoaded->" + nextAdPosition + ": " + nativeAd);
                 try {
                     if (!isAdd) {
                         return;
                     }
-                    newsBeanAD = new NewsBean();
+                    NewsBean newsBeanAD = new NewsBean();
                     newsBeanAD.setType("ad");
                     String titleForAd = nativeAd.getAdTitle();
                     NativeAd.Image coverImage = nativeAd.getAdCoverImage();
@@ -107,8 +120,11 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     String[] images = new String[1];
                     images[0] = coverImage.getUrl();
                     newsBeanAD.setImgs(images);
-                    int position = list.size() > positionAD ? positionAD : list.size();
-                    list.add(position, newsBeanAD);
+                    int position = adPos;
+                    if (list.size() < adPos) {
+                        return;
+                    }
+                    list.add(adPos, newsBeanAD);
                     if (viewPagelist.size() > 0) {
                         ++position;
                     }
@@ -122,6 +138,11 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             public void onAdClicked(Ad ad) {
             }
         });
+        nativeAd.loadAd();
+        nextAdPosition += STEP + random.nextInt(STEP);
+        if (MAX_POSITION < nextAdPosition) {
+            nextAdPosition = Integer.MAX_VALUE;
+        }
     }
 
 
@@ -171,13 +192,14 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             appendoldlist = data;
         }
         if (isClearOld) {
-            if (newsBeanAD != null) {
-                int position = list.size() > positionAD ? positionAD : list.size();
-                list.add(position, newsBeanAD);
-            }
             notifyDataSetChanged();
         } else {
             notifyItemRangeInserted(index, data.size());
+        }
+
+        while (list.size() > nextAdPosition) {
+            NativeAd nativeAd = new NativeAd(context, AD_KEY);
+            setNativeAd(nativeAd);
         }
     }
 
@@ -300,7 +322,6 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             }
             switch (type) {
                 case TYPE_LOADING:
-                    Log.e("test", " TYPE_LOADING ");
                     if (showLoading && callBack != null) {
                         callBack.loadMore();
                     }
@@ -430,7 +451,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     if (readedNewsSet.contains(bean.getNid())) {
                         vhLeftPic.newsitem_title.setTextColor(App.getInstance()
                                 .getResources().getColor(R.color.grey_font));
-                    } 
+                    }
                     if (!TextUtils.isEmpty(bean.getAttname())) {
                         String attname = bean.getAttname();
                         if (attname.equals("a")) {
@@ -562,7 +583,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     adHolder.newsitem_content.setText(bean.getCopyfrom());
                     SPUtil.displayImage(bean.getImgs()[0], adHolder.newsitem_img,
                             DisplayOptionFactory.getOption(OptionTp.Small));
-                    nativeAd.registerViewForInteraction(holder.itemView);
+                    ads.get("" + position).registerViewForInteraction(holder.itemView);
                     break;
                 case TYPE_BIGPIC:
                     bean = list.get(position);

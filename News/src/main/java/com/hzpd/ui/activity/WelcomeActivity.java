@@ -69,7 +69,7 @@ public class WelcomeActivity extends MWBaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
-        Log.e("test", "  WelcomeActivity ");
+        Log.e("test", "  WelcomeActivity " + getResources().getBoolean(R.bool.isRom));
         exists = false;
         setContentView(R.layout.frame_welcome);
         welcome_top_view = findViewById(R.id.welcome_top_view);

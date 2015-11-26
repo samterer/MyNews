@@ -11,6 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:paddingBottom="20dp"
         android:text="@string/details_lv_1"
         android:textColor="#aeaeae"
@@ -30,7 +32,7 @@
         android:text="@string/details_lv_4"
         android:textColor="#aeaeae"
         android:textSize="18sp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -54,10 +56,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/text_dal_praise"
                 android:gravity="center"
                 android:text="+1"
-                android:layout_marginLeft="5dp"
                 android:textColor="#f1b159"
                 android:textSize="14dip"
                 android:visibility="gone" />
@@ -89,13 +91,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/text_undal_praise"
                 android:gravity="center"
                 android:text="+1"
-                android:layout_marginLeft="5dp"
                 android:textColor="#ccc"
                 android:textSize="14dip"
                 android:visibility="gone" />
+
             <TextView
                 android:id="@+id/text_undal_praise"
                 android:layout_width="wrap_content"
@@ -119,13 +122,21 @@
         android:visibility="gone">
 
         <View
-            android:id="@+id/view_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            android:background="#5369e3" />
+            android:background="#e6e6e6" />
+
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:background="#f5f5f5" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#e6e6e6" />
 
         <LinearLayout
             android:layout_width="match_parent"

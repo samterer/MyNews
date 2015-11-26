@@ -3,7 +3,6 @@ package com.hzpd.modle;
 import android.text.Html;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 
 public class NewsBean implements Serializable {
@@ -13,6 +12,8 @@ public class NewsBean implements Serializable {
     private String title;
     private String sid;
     private String tid;//频道
+    private String cnname;//频道
+    private String authorname;//频道
     private String outline;//子标题
     private String type;//item样式  4三联图  其他图文
     private String update_time;
@@ -31,31 +32,20 @@ public class NewsBean implements Serializable {
     private String like;
     private String unlike;
 
-    @Override
-    public String toString() {
-        return "NewsBean{" +
-                "nid='" + nid + '\'' +
-                ", title='" + title + '\'' +
-                ", sid='" + sid + '\'' +
-                ", tid='" + tid + '\'' +
-                ", outline='" + outline + '\'' +
-                ", type='" + type + '\'' +
-                ", update_time='" + update_time + '\'' +
-                ", json_url='" + json_url + '\'' +
-                ", imgs=" + Arrays.toString(imgs) +
-                ", rtype='" + rtype + '\'' +
-                ", comcount='" + comcount + '\'' +
-                ", sort_order='" + sort_order + '\'' +
-                ", status='" + status + '\'' +
-                ", comflag='" + comflag + '\'' +
-                ", subjectsort='" + subjectsort + '\'' +
-                ", columnid='" + columnid + '\'' +
-                ", copyfrom='" + copyfrom + '\'' +
-                ", fav='" + fav + '\'' +
-                ", attname='" + attname + '\'' +
-                ", like='" + like + '\'' +
-                ", unlike='" + unlike + '\'' +
-                '}';
+    public String getCnname() {
+        return cnname;
+    }
+
+    public void setCnname(String cnname) {
+        this.cnname = cnname;
+    }
+
+    public String getAuthorname() {
+        return authorname;
+    }
+
+    public void setAuthorname(String authorname) {
+        this.authorname = authorname;
     }
 
     public String getLike() {

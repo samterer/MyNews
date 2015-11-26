@@ -11,7 +11,6 @@ import com.hzpd.ui.fragments.NewsAlbumFragment;
 import com.hzpd.ui.fragments.NewsItemFragment;
 import com.hzpd.ui.fragments.VideoListFragment;
 import com.hzpd.ui.fragments.ZhuantiFragment;
-import com.hzpd.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +35,6 @@ public class NewsFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public BaseFragment getItem(int position) {
-        Log.e("test", " ---------- " + position);
         return getChannelFragment(saveTitleList.get(position));
     }
 
@@ -71,7 +69,6 @@ public class NewsFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public void setPrimaryItem(ViewGroup container, int position, Object object) {
-        Log.e("test", " ---------- " + position);
         super.setPrimaryItem(container, position, object);
         if (changed) {
             changed = false;

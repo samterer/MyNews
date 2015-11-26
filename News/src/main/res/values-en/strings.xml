@@ -227,7 +227,8 @@
     <string name="recommend">recommend</string>
     <string name="language">Language</string>
     <string name="comment_ok">Comment Successful</string>
-    <string name="details_lv_1">(From the Internet)</string>
+    <string name="details_lv_1">(Article content is automatically discovered by the search engines and from the third-party websites, does not presentating Hot News positions and point of views, if you have copyright issues,</string>
+    <string name="details_lv_link">please contact us</string>
     <string name="details_lv_2">Related news</string>
     <string name="details_lv_3">Related Comments</string>
     <string name="details_lv_4">Source</string>
@@ -265,5 +266,7 @@
     <string name="click_here_to_refresh">Press for Refresh</string>
 
     <string name="delete">Delete</string>
-
+    <string name="setting_skin">Theme Color</string>
+    <string name="skin_style_blue">Blue</string>
+    <string name="skin_style_red">Red</string>
 </resources>

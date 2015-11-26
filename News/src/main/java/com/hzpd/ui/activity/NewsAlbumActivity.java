@@ -1,15 +1,18 @@
 package com.hzpd.ui.activity;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,6 +20,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -57,6 +62,7 @@ import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
+import com.hzpd.utils.SystemBarTintManager;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
@@ -132,6 +138,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.news_detail_img_main_layout);
         ViewUtils.inject(this);
 
@@ -191,9 +198,40 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                         });
             }
         });
-
+        changeStatus();
         init();
 
+    }
+
+
+    private void changeStatus() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
+            //透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //透明导航栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
+
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
+        int color = typedValue.data;
+        tintManager.setStatusBarTintColor(color);
+    }
+
+    @TargetApi(19)
+    private void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
     }
 
     private void init() {

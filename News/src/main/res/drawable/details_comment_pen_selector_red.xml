@@ -2,8 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_pressed="true"
-        android:drawable="@drawable/zq_reply_send_iv_unselect"/>
+        android:drawable="@drawable/details_comment_pen_unselect_red"/>
 
-    <item android:drawable="@drawable/zq_reply_send_iv_select"/>
+    <item android:drawable="@drawable/details_comment_pen_select"/>
 
 </selector>

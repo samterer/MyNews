@@ -25,21 +25,21 @@
                 android:id="@+id/news_detail_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/main_title_bar"
-                android:background="?title_bar_color">
+                android:background="#f5f5f5">
                 <!--返回按钮-->
 
                 <RelativeLayout
                     android:id="@+id/news_detail_bak"
                     android:layout_width="@dimen/main_title_bar"
                     android:layout_height="@dimen/main_title_bar"
-                    android:background="?m_background_tab_pressed">
+                    android:background="@drawable/title_bar_details_btn_selector_color">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/background_tab_pressed_select_back" />
+                        android:src="@drawable/background_tab_pressed_select_back_details" />
 
                 </RelativeLayout>
 
@@ -76,20 +76,26 @@
                         android:visibility="gone" />
                 </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/details_iv_comment"
-                android:layout_width="@dimen/main_title_bar"
-                android:layout_height="@dimen/main_title_bar"
-                android:layout_alignParentRight="true"
-                android:background="?m_background_tab_pressed">
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
+                <RelativeLayout
+                    android:id="@+id/details_iv_comment"
+                    android:layout_width="@dimen/main_title_bar"
+                    android:layout_height="@dimen/main_title_bar"
                     android:layout_alignParentRight="true"
-                    android:background="@drawable/details_nocomment_selector" />
+                    android:background="@drawable/title_bar_details_btn_selector_color">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/newsdetails_no_comment_select_details" />
+
+                </RelativeLayout>
             </RelativeLayout>
-            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/background_tab_details_pressed_color"/>
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -181,7 +187,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/details_bottom_line" />
+        android:background="@color/background_tab_details_pressed_color" />
 
     <!-- 底部菜单 -->
     <LinearLayout
@@ -205,13 +211,13 @@
                 android:id="@+id/newdetail_tv_comm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:drawableLeft="@drawable/details_comment_pen_selector"
+                android:drawableLeft="?details_comment_pen_drawable"
                 android:drawablePadding="3dp"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:singleLine="true"
+                android:layout_marginLeft="5dp"
                 android:text="@string/prompt_write_comment"
-                android:textColor="@drawable/button_comment_style"
+                android:textColor="?button_comment_style_drawable"
                 android:textSize="16sp" />
 
             <ImageView
@@ -219,6 +225,7 @@
                 android:layout_height="30dp"
                 android:layout_toRightOf="@+id/newdetail_tv_comm"
                 android:background="@drawable/details_comment_pen"
+                android:layout_marginLeft="5dp"
                 android:gravity="center"
                 android:visibility="gone" />
         </RelativeLayout>
@@ -239,7 +246,7 @@
             android:layout_height="35dp"
             android:layout_marginLeft="16dp"
             android:contentDescription="@null"
-            android:src="@drawable/details_share_selector" />
+            android:src="?newsdetail_share_drawable" />
 
         <!-- 字体大小-->
         <ImageView
@@ -248,7 +255,7 @@
             android:layout_height="35dp"
             android:layout_marginLeft="16dp"
             android:contentDescription="@null"
-            android:src="@drawable/details_font_selector" />
+            android:src="?newsdetail_fontsize_drawable" />
 
 
         <ImageView

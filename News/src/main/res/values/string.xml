@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_fbid">1902056863352757</string>
     <string name="icon_name">BeritaKini</string>
     <!-- 翻译 -->
     <string name="recommend">REKOMENDASI</string>
@@ -163,7 +162,7 @@
 
     <string name="pull_to_refresh_pull_label">Tarik kebawah untuk refresh…</string>
     <string name="pull_to_refresh_from_bottom_pull_label">Dorong keatas untuk memperbarui</string>
-    <string name="pull_to_refresh_reached_end">Belum Ada Artikel Terbaru</string>
+    <string name="pull_to_refresh_reached_end">Artikel Terbaru Ditampilkan</string>
 
     <string name="activity_item_start_end_time">Waktu mulai: %1$s\n Waktu akhir: %2$s</string>
 
@@ -252,7 +251,8 @@
     <string name="calendarutil_time_4">1Kemarin</string>
     <string name="calendarutil_time_5">2Hari Lalu</string>
     <string name="calendarutil_time_6">hari lalu</string>
-    <string name="details_lv_1">(Diambil dari berbagai sumber)</string>
+    <string name="details_lv_1">(Konten artikel didapat dari sumber pihak ketiga,tidak mewakili pandangan apapun dari Berita Terkini,Jika ada masalah pada legalisasi konten,</string>
+    <string name="details_lv_link">silahkan menghubungi kami</string>
     <string name="details_lv_2">Berita Terkait</string>
     <string name="details_lv_3">Komentar Terkait</string>
     <string name="details_lv_4">lihat sumber</string>
@@ -276,5 +276,7 @@
     <string name="click_here_to_refresh">Tekan untuk Perbaharui</string>
     <!--发现%1$d条更新-->
     <string name="delete">Hapus</string>
-    <string name="setting_skin">Skin</string>
+    <string name="setting_skin">Warna Tema</string>
+    <string name="skin_style_blue">Biru</string>
+    <string name="skin_style_red">Merah</string>
 </resources>

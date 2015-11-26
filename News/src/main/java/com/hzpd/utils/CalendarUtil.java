@@ -1090,7 +1090,6 @@ public class CalendarUtil {
         }
         String ftime = "";
         Calendar cal = Calendar.getInstance();
-
         // 判断是否是同一天
         String curDate = dateFormater2.get().format(cal.getTime());
         String paramDate = dateFormater2.get().format(time);
@@ -1156,7 +1155,6 @@ public class CalendarUtil {
         if (time == null) {
             return sdate;
         }
-        Log.e("time", "time-->" + time);
         String ftime = "";
         Calendar cal = Calendar.getInstance();
 

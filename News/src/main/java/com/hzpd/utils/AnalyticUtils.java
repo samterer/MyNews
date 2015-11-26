@@ -72,6 +72,33 @@ public class AnalyticUtils {
         }
     }
 
+    /**
+     * 发送谷歌分析的屏幕浏览事件,每个频道，每条新闻都是一个屏幕
+     */
+    public static final void sendGaScreenViewHit(Context context, String screenName, String channel, String author) {
+        if (BuildConfig.DEBUG) {
+            return;
+        }
+        if (TextUtils.isEmpty(screenName)) {
+            return;
+        }
+        // 谷歌分析
+        Tracker tracker = GoogleAnalyticsUtils.getInstance().getAppTracker(context);
+        if (tracker != null) {
+            tracker.setScreenName(screenName);
+            HitBuilders.ScreenViewBuilder builder = new HitBuilders.ScreenViewBuilder();
+            if (!TextUtils.isEmpty(channel)) {
+                builder.setCustomDimension(1, channel);
+            }
+            if (!TextUtils.isEmpty(author)) {
+                builder.setCustomDimension(2, author);
+            }
+            tracker.send(builder.build());
+            GoogleAnalytics.getInstance(context).dispatchLocalHits();
+            tracker.setScreenName(null);
+        }
+    }
+
 
     /**
      * 发送友盟统计事件

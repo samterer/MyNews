@@ -1,9 +1,14 @@
 package com.hzpd.ui.activity;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -31,6 +36,7 @@ import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
+import com.hzpd.utils.SystemBarTintManager;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -90,6 +96,7 @@ public class MyCommentsActivity extends MBaseActivity {
 //        } else {
 //            title.setVisibility(View.VISIBLE);
 //        }
+        changeStatus();
         stitle_tv_content.setText(R.string.comment_mine);
         pushmsg_lv.setEmptyView(pushmsg_tv_empty);
         adapter = new MycommentsAdapter(this);
@@ -146,6 +153,36 @@ public class MyCommentsActivity extends MBaseActivity {
 
         getUserInfoFromServer();
 
+    }
+
+    private void changeStatus() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
+            //透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //透明导航栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
+
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
+        int color = typedValue.data;
+        tintManager.setStatusBarTintColor(color);
+    }
+
+    @TargetApi(19)
+    private void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
     }
 
     @Override

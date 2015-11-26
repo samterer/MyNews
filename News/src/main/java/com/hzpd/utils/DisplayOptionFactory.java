@@ -81,9 +81,9 @@ public class DisplayOptionFactory {
                 option = new DisplayImageOptions.Builder()
                         .bitmapConfig(Config.RGB_565)
                         .imageScaleType(ImageScaleType.EXACTLY)
-                        .showImageOnFail(R.drawable.zy_pic_touxiang_new)
-                        .showImageForEmptyUri(R.drawable.zy_pic_touxiang_new)
-                        .showImageOnLoading(R.drawable.zy_pic_touxiang_new)
+                        .showImageOnFail(R.drawable.zy_pic_main_info_profile_bg)
+                        .showImageForEmptyUri(R.drawable.zy_pic_main_info_profile_bg)
+                        .showImageOnLoading(R.drawable.zy_pic_main_info_profile_bg)
                         .displayer(new FadeInBitmapDisplayer(300))
                         .cacheInMemory(true).cacheOnDisk(true)
                         .build();

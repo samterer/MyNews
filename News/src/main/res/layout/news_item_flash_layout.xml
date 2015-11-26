@@ -43,7 +43,7 @@
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:paddingLeft="3dp"
-                    android:textColor="@color/white"
+                    android:textColor="?fragment_news_item_falsh"
                     android:paddingBottom="2dp"
                     android:textSize="18sp"
                     android:textStyle="bold" />

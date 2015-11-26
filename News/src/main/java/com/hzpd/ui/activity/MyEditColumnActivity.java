@@ -1,7 +1,12 @@
 package com.hzpd.ui.activity;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
@@ -24,6 +29,7 @@ import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SerializeUtil;
 import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.SystemBarTintManager;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -119,6 +125,37 @@ public class MyEditColumnActivity extends MBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        changeStatus();
+    }
+
+    private void changeStatus() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
+            //透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //透明导航栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
+
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
+        int color = typedValue.data;
+        tintManager.setStatusBarTintColor(color);
+    }
+
+    @TargetApi(19)
+    private void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
     }
 
     private void init() {

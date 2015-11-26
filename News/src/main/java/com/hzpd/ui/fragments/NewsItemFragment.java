@@ -7,7 +7,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.facebook.ads.NativeAd;
 import com.hzpd.adapter.NewsItemListViewAdapter;
 import com.hzpd.hflt.R;
-import com.hzpd.modle.Adbean;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.modle.NewsPageListBean;
@@ -52,6 +50,7 @@ import com.lidroid.xutils.util.LogUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -93,7 +92,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     private boolean isRefresh = true;//是否首次加载
     private boolean isNeedRefresh = true;
     private int position = -1;
-    private NativeAd nativeAd;
+    private HashMap<String, NativeAd> ads = new HashMap<>();
     private TextView update_counts;
 
     private SwipeRefreshLayout mSwipeRefreshWidget;
@@ -201,17 +200,11 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        nativeAd = null;
-        Adbean adbean = App.getInstance().channelADMap.get(channelbean.getTid());
-        if (adbean != null && !TextUtils.isEmpty(adbean.getFacebookid())) {
-            nativeAd = new NativeAd(getActivity().getApplicationContext(), adbean.getFacebookid());
-            adapter.setNativeAd(nativeAd, adbean.getPosition());
-        }
-
+        //TODO Adbean adbean = App.getInstance().channelADMap.get(channelbean.getTid());
+        adapter.setAds(ads);
         page = 1;
         mFlagRefresh = true;
         firstLoading = false;
-        Log.e("test", "===" + getTitle());
     }
 
     @Override
@@ -227,7 +220,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     boolean firstLoading = false;
 
     public void loadData() {
-        Log.e("test", firstLoading + "===" + getTitle() + mRecyclerView);
         if (firstLoading) {
             return;
         }
@@ -247,7 +239,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     //新闻列表
     @Override
     public void getDbList() {
-        Log.e("test", "getDbList ");
         newsListDbTask.findList(channelbean.getTid(), page, pageSize, new I_SetList<NewsBeanDB>() {
 
             @Override
@@ -261,7 +252,9 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                     List<NewsBean> nbList = new ArrayList<NewsBean>();
                     for (NewsBeanDB nbdb : list) {
                         sb.append(nbdb.getNid() + ",");
-                        nbList.add(nbdb.getNewsBean());
+                        NewsBean newsBean = nbdb.getNewsBean();
+                        newsBean.setCnname(channelbean.getCnname());
+                        nbList.add(newsBean);
                     }
                     addLoading = true;
                     adapter.appendData(nbList, mFlagRefresh, true);
@@ -339,10 +332,11 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         switch (obj.getIntValue("code")) {
             case 200: {
                 List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
+                if (null != list && list.size() > 0) {
 
-                if (null != list && list.size() > 5) {
-                    Log.e("newBean", "newBean--->" + list.toString());
-
+                    for (NewsBean bean : list) {
+                        bean.setCnname(channelbean.getCnname());
+                    }
                     if (isRefreshCounts) {
                         update_counts.setVisibility(View.VISIBLE);
                         update_counts.setText(String.format(getString(R.string.update_counts), list.size()));
@@ -358,10 +352,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                     if (page == 1) {
                         adapter.removeOld();
                     }
-                    StringBuilder builder = new StringBuilder();
-                    for (NewsBean bean : list) {
-                        builder.append(bean.getNid() + ",");
-                    }
                     if (list.size() == pageSize) {
                         adapter.showLoading = true;
                     }
@@ -371,12 +361,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                         App.getInstance().newTimeMap.put(channelbean.getTid(), obj.getString("newTime"));
                     }
                     if (loadad) {
-                        try {
-                            nativeAd.loadAd();
-                            loadad = false;
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                     }
                     newsListDbTask.saveList(list, null);
                 }
@@ -431,7 +415,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                         if (200 == obj.getIntValue("code")) {
                             JSONObject object = obj.getJSONObject("data");
                             mViewPagelist = FjsonUtil.parseArray(object.getString("flash"), NewsPageListBean.class);
-                            Log.e("", "" + mViewPagelist);
                             if (mRecyclerView.getScrollY() < 10) {
                                 mRecyclerView.scrollToPosition(0);
                             }
@@ -453,12 +436,14 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        if (nativeAd != null) {
-            nativeAd.unregisterView();
-            nativeAd.setAdListener(null);
-            nativeAd.destroy();
-            nativeAd = null;
+        for (NativeAd nativeAd : ads.values()) {
+            if (nativeAd != null) {
+                nativeAd.unregisterView();
+                nativeAd.setAdListener(null);
+                nativeAd.destroy();
+            }
         }
+        ads.clear();
         super.onDestroy();
     }
 
@@ -468,9 +453,9 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
     public void onEventMainThread(UpdateNewsBeanDbEvent event) {
         String msg = event.getmMsg();
-        Log.e("NewsItemFragment", "msg--->" + msg);
+        Log.d("NewsItemFragment", "msg--->" + msg);
         if (msg.equals("Update_OK")) {
-            Log.e("NewsItemFragment", "msg--->数据更新");
+            Log.d("NewsItemFragment", "msg--->数据更新");
 //            getDbList();
         }
     }

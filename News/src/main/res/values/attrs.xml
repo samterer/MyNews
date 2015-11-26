@@ -119,39 +119,39 @@
     </declare-styleable>
 
     <declare-styleable name="MaterialRippleLayout">
-        <attr name="rippleColor" format="color"/>
-        <attr name="rippleDimension" format="dimension"/>
-        <attr name="rippleOverlay" format="boolean"/>
-        <attr name="rippleAlpha" format="float"/>
-        <attr name="rippleDuration" format="integer"/>
-        <attr name="rippleFadeDuration" format="integer"/>
-        <attr name="rippleHover" format="boolean"/>
-        <attr name="rippleBackground" format="color"/>
-        <attr name="rippleDelayClick" format="boolean"/>
-        <attr name="ripplePersistent" format="boolean"/>
-        <attr name="rippleInAdapter" format="boolean"/>
+        <attr name="rippleColor" format="color" />
+        <attr name="rippleDimension" format="dimension" />
+        <attr name="rippleOverlay" format="boolean" />
+        <attr name="rippleAlpha" format="float" />
+        <attr name="rippleDuration" format="integer" />
+        <attr name="rippleFadeDuration" format="integer" />
+        <attr name="rippleHover" format="boolean" />
+        <attr name="rippleBackground" format="color" />
+        <attr name="rippleDelayClick" format="boolean" />
+        <attr name="ripplePersistent" format="boolean" />
+        <attr name="rippleInAdapter" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="CircleIndicator">
-        <attr name="ci_width" format="dimension"/>
-        <attr name="ci_height" format="dimension"/>
-        <attr name="ci_margin" format="dimension"/>
-        <attr name="ci_animator" format="reference"/>
-        <attr name="ci_animator_reverse" format="reference"/>
-        <attr name="ci_drawable" format="reference"/>
-        <attr name="ci_drawable_unselected" format="reference"/>
+        <attr name="ci_width" format="dimension" />
+        <attr name="ci_height" format="dimension" />
+        <attr name="ci_margin" format="dimension" />
+        <attr name="ci_animator" format="reference" />
+        <attr name="ci_animator_reverse" format="reference" />
+        <attr name="ci_drawable" format="reference" />
+        <attr name="ci_drawable_unselected" format="reference" />
     </declare-styleable>
 
     <!--  -->
     <declare-styleable name="StarRatingbar">
-        <attr name="starNum" format="integer"/>
-        <attr name="totalNum" format="integer"/>
+        <attr name="starNum" format="integer" />
+        <attr name="totalNum" format="integer" />
     </declare-styleable>
 
     <!-- 虚线 -->
     <declare-styleable name="DotView">
-        <attr name="linecolor" format="integer"/>
-        <attr name="dashed" format="integer"/>
+        <attr name="linecolor" format="integer" />
+        <attr name="dashed" format="integer" />
     </declare-styleable>
     <!-- 垂直滚动viewpager -->
     <declare-styleable name="DirectionalViewPager">
@@ -183,42 +183,50 @@
     </declare-styleable>
 
     <!-- MainActivity-->
-    <attr name="title_bar_color" format="reference|color"/>
-    <attr name="title_bar_name_color" format="reference|color"/>
-    <attr name="m_background_tab_pressed" format="reference|color"/>
+    <attr name="title_bar_color" format="reference|color" />
+    <attr name="title_bar_name_color" format="reference|color" />
+    <attr name="m_background_tab_pressed" format="reference|color" />
 
-    <attr name="item_title" format="reference|color"/>
+    <attr name="fragment_main_backgroup" format="reference|color" />
+    <attr name="item_title" format="reference|color" />
     <attr name="item_title_read" format="reference|color"></attr>
-    <attr name="item_tag" format="reference|color"/>
+    <attr name="item_tag" format="reference|color" />
+
+    <attr name="xf_login_bg_drawable" format="reference|color" />
 
     <!--侧滑菜单-->
-    <attr name="left_menu_fb_avatar" format="reference|color"/>
-    <attr name="left_menu_fb_name" format="reference|color"/>
-    <attr name="left_menu_item_name" format="reference|color"/>
-    <attr name="left_menu_version_name" format="reference|color"/>
-    <attr name="left_menu_version_line" format="reference|color"/>
+    <attr name="left_menu_fb_avatar" format="reference|color" />
+    <attr name="left_menu_fb_name" format="reference|color" />
+    <attr name="left_menu_item_name" format="reference|color" />
+    <attr name="left_menu_version_name" format="reference|color" />
+    <attr name="left_menu_version_line" format="reference|color" />
+    <attr name="left_menu_login_facebook_button" format="reference|color" />
     <!-- newsfragment-->
-    <attr name="fragment_main_psts_tabs_background" format="reference|color"/>
-    <attr name="fragment_main_psts_tabs_indicator_color" format="reference|color"/>
-    <attr name="fragment_main_psts_tabs_text_color" format="reference|color"/>
+    <attr name="fragment_main_psts_tabs_background" format="reference|color" />
+    <attr name="fragment_main_psts_tabs_indicator_color" format="reference|color" />
+    <attr name="fragment_main_psts_tabs_text_color" format="reference|color" />
     <!-- choosefragment-->
-    <attr name="fragment_choose_main_backgroup_color" format="reference|color"/>
-    <attr name="fragment_choose_card_backgroup_color" format="reference|color"/>
-    <attr name="fragment_choose_btn_src_color" format="reference|color"/>
+    <attr name="fragment_choose_card_backgroup_color" format="reference|color" />
+    <attr name="fragment_choose_btn_src_color" format="reference|color" />
     <!-- newsitemfragment-->
-    <attr name="a" format="reference|color"/>
+    <attr name="fragment_news_item_falsh" format="reference|color" />
+    <!-- newsdetails-->
+    <attr name="newsdetail_fontsize_drawable" format="reference|color" />
+    <attr name="newsdetail_share_drawable" format="reference|color" />
+    <attr name="details_comment_pen_drawable" format="reference|color" />
+    <attr name="button_comment_style_drawable" format="reference|color" />
 
     <!--Setting-->
-    <attr name="zqzx_setting_main_color" format="reference|color"/>
-    <attr name="zqzx_onclik_setting_item" format="reference|color"/>
-    <attr name="setting_item_selector_color" format="reference"/>
-    <attr name="zqzx_setting_item_text" format="reference|color"/>
-    <attr name="zqzx_setting_item_right_text" format="reference|color"/>
+    <attr name="zqzx_setting_main_color" format="reference|color" />
+    <attr name="zqzx_onclik_setting_item" format="reference|color" />
+    <attr name="setting_item_selector_color" format="reference" />
+    <attr name="zqzx_setting_item_text" format="reference|color" />
+    <attr name="zqzx_setting_item_right_text" format="reference|color" />
 
     <!-- FeedBack-->
-    <attr name="zq_feedback_color" format="reference|color"/>
-    <attr name="zq_feedback_edit_color" format="reference|color"/>
-    <attr name="zq_feedback_btn_color" format="reference|color"/>
+    <attr name="zq_feedback_color" format="reference|color" />
+    <attr name="zq_feedback_edit_color" format="reference|color" />
+    <attr name="zq_feedback_btn_color" format="reference|color" />
 
 
 </resources>

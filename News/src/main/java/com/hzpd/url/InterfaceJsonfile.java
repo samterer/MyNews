@@ -16,7 +16,8 @@ public class InterfaceJsonfile {
 //    private static final String host2 = "http://ec2-52-76-26-225.ap-southeast-1.compute.amazonaws.com/1tcms";
 //印尼
     public static final String host1 = "http://ec2-52-76-26-225.ap-southeast-1.compute.amazonaws.com/ltcms";
-//    public static final String host1 = "http://10.80.3.123/cmsv2";
+    //    public static final String host1 = "http://10.80.3.123/cmsv2";
+
     // ========================================
     public static final String PATH_ROOT = host1 + "/api.php?s=";
     public static final String ROOT = host1 + "/";
@@ -47,8 +48,8 @@ public class InterfaceJsonfile {
 
     // 频道列表
     public static final String CHANNELLIST = ROOT + "cms_json/" + SITE + "/common/type/";// +{$type}(News,Lohas,Album)";
-    // 开屏图片
-    public static final String mAdPic = PATH_ROOT + "/Version/getAdNew";
+    // 广告
+    public static final String mAdPic = PATH_ROOT + "/Version/getAd"; //TODO getAdNew
     // 缓存
     public static final String CACHE = PATH_ROOT + "/News/getAppCache";
     // 幻灯

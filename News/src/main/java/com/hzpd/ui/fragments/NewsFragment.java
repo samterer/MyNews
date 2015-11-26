@@ -25,7 +25,6 @@ import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
-import com.hzpd.utils.Log;
 import com.hzpd.utils.SerializeUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
@@ -153,7 +152,6 @@ public class NewsFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(final int position) {
-                Log.e("test", " position [[[[[[[[  " + position);
                 adapter.setSelectedPosition(position);
             }
 
@@ -175,7 +173,6 @@ public class NewsFragment extends BaseFragment {
     }
 
     public void getChannelJson() {
-        Log.e("test", "test--->getChannelJson");
         final String channelCachePath = App.getInstance().getAllDiskCacheDir()
                 + File.separator
                 + App.mTitle;

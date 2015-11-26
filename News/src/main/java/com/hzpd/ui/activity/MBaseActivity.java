@@ -18,7 +18,6 @@ import com.hzpd.ui.App;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.SPUtil;
-import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.SystemBarTintManager;
 import com.lidroid.xutils.HttpUtils;
 
@@ -50,24 +49,28 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
 
     boolean isResume = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
-//        initSystemBar();
         action.onCreate(this);
         if (App.getInstance().getThemeName().equals("1")) {
+            setTheme(R.style.ThemeRed);
+        } else if (App.getInstance().getThemeName().equals("2")) {
             setTheme(R.style.ThemeNight);
         } else {
             setTheme(R.style.ThemeDefault);
         }
-        setTheme(android.R.style.Theme_Translucent_NoTitleBar);//不能删
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        // setTheme(android.R.style.Theme_Translucent_NoTitleBar);//不能删
 
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 //            setTranslucentStatus(true);
 //            //透明状态栏
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            //透明导航栏
+////            //透明导航栏
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 //        }
 //
@@ -77,20 +80,41 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
 //        TypedValue typedValue = new TypedValue();
 //        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
 //        int color = typedValue.data;
+//        tintManager.setStatusBarTintResource(R.color.transparent);
+//        tintManager.setStatusBarTintResource(R.color.red);
 //        tintManager.setStatusBarTintColor(color);
-////        tintManager.setStatusBarTintColor(R.color.toolbar_bg);
+//        tintManager.setStatusBarTintColor(R.color.toolbar_bg);
 
         layout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
                 R.layout.base, null);
         layout.attachToActivity(this);
         activity = this;
         fm = getSupportFragmentManager();
-
+//        changeStatusBar();
         httpUtils = SPUtil.getHttpUtils();
         spu = SPUtil.getInstance();
         startMills = System.currentTimeMillis();
         analyMap = new HashMap<String, String>();
         dbHelper = DBHelper.getInstance(getApplicationContext());
+    }
+
+    public void changeStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
+            //透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            //透明导航栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
+        int color = typedValue.data;
+        tintManager.setStatusBarTintResource(R.color.transparent);
+        tintManager.setStatusBarTintResource(R.color.red);
+        tintManager.setStatusBarTintColor(color);
+        tintManager.setStatusBarTintColor(R.color.toolbar_bg);
     }
 
     @TargetApi(19)
