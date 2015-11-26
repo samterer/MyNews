@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="icon_name">BeritaKini</string>
+    <string name="feedback_hint_suggestion">Bantu kami untuk lebih baik !</string>
+    <string name="feedback_rating">Nilai</string>
     <!-- 翻译 -->
     <string name="recommend">REKOMENDASI</string>
     <string name="comment_ok">komen berhasil</string>

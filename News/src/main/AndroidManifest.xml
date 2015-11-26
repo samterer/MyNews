@@ -200,8 +200,8 @@
 
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="de1d2a800d272841495b67b3" />
-        <!-- <<< 极光推送组件声明 @string/jpush_key de1d2a800d272841495b67b3-->
+            android:value="@string/jpush_key" />
+        <!-- <<< 极光推送组件声明 @string/jpush_key    测试key：de1d2a800d272841495b67b3-->
 
         <service android:name="com.hzpd.services.InitService"></service>
         <service android:name="com.hzpd.services.ClearCacheService"></service>

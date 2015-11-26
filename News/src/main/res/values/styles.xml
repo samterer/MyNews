@@ -410,4 +410,17 @@
         <item name="thumbDrawable">@drawable/md_thumb</item>
         <item name="thumb_margin">-6dp</item>
     </style>
+
+
+    <style name="NotificationText">
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+    <style name="NotificationTitle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="NotificationDate">
+        <item name="android:textColor">?android:textColorSecondary</item>
+    </style>
 </resources>

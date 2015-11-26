@@ -49,7 +49,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
     public static final String AD_KEY = "1902056863352757_1942167249341718"; // "1902056863352757_1922349784656798";
     public static final int STEP = 10;
-    public static final int MAX_POSITION = 50;
+    public static final int MAX_POSITION = 80;
 
     public interface CallBack {
         void loadMore();

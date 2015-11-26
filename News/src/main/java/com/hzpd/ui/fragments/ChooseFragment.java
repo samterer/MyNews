@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,6 +52,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.LogUtils;
+import com.melnykov.fab.FloatingActionButton;
 import com.nineoldandroids.view.ViewHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -82,6 +84,8 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
     private View floatingView;
     private Animation animation;
     private ImageView background_empty;
+    private FloatingActionButton mFloatBtn;
+    private RecyclerView.OnScrollListener onScrollListener;
 
     @Override
     public String getAnalyticPageName() {
@@ -127,7 +131,30 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.choose_fragment, container, false);
+        onScrollListener = new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                //解决RecyclerView和SwipeRefreshLayout共用存在的bug
+                int topRowVerticalPosition =
+                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+                mSwipeRefreshWidget.setEnabled(topRowVerticalPosition >= 0);
+                if (addLoading && !adapter.showLoading) {
+                    addLoading = false;
+                    mRecyclerView.scrollToPosition(0);
+                    mRecyclerView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            int count = adapter.getItemCount();
+                            adapter.showLoading = true;
+                            adapter.notifyDataSetChanged();
+                        }
+                    }, 300);
+                }
+            }
+
+        };
+        FrameLayout view = (FrameLayout) inflater.inflate(R.layout.choose_fragment, container, false);
         TypedValue typedValue = new TypedValue();
         getActivity().getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
         color = typedValue.data;
@@ -158,8 +185,8 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         }
         TypedValue typedValue1 = new TypedValue();
         getActivity().getTheme().resolveAttribute(R.attr.title_bar_color, typedValue1, true);
-        int color = typedValue1.data;
-        mSwipeRefreshWidget.setColorSchemeColors(color);
+        int color1 = typedValue1.data;
+        mSwipeRefreshWidget.setColorSchemeColors(color1);
 //        mSwipeRefreshWidget.setColorScheme(R.color.google_blue);
 //        mSwipeRefreshWidget.setColorSchemeResources(R.color.google_blue);
         mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -187,34 +214,12 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         });
 
 
-        mRecyclerView.setHasFixedSize(true);
+//        mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         final StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(getActivity());
         layoutManager.setOrientation(StaggeredGridLayoutManager.Orientation.VERTICAL);
         layoutManager.setNumColumns(ChooseAdapter.COUNT_COLUMS);
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                //解决RecyclerView和SwipeRefreshLayout共用存在的bug
-                int topRowVerticalPosition =
-                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
-                mSwipeRefreshWidget.setEnabled(topRowVerticalPosition >= 0);
-                if (addLoading && !adapter.showLoading) {
-                    addLoading = false;
-                    mRecyclerView.scrollToPosition(0);
-                    mRecyclerView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            int count = adapter.getItemCount();
-                            adapter.showLoading = true;
-                            adapter.notifyDataSetChanged();
-                        }
-                    }, 300);
-                }
-            }
-
-        });
+        mRecyclerView.setOnScrollListener(onScrollListener);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         adapter = new ChooseAdapter(getActivity(), this);
@@ -234,6 +239,8 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
             }
         };
         adapter.callBack = callBack;
+
+        mFloatBtn = (FloatingActionButton) view.findViewById(R.id.float_feedback_btn);
         return view;
     }
 
@@ -286,10 +293,30 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mFloatBtn.attachToRecyclerView(mRecyclerView, null, onScrollListener);
+        mFloatBtn.setOnClickListener(mFloatBtnClickListener);
+        mFloatBtn.setVisibility(View.VISIBLE);
         loading = false;
         page = 1;
         getDbList();
     }
+
+
+    public void showFeedback() {
+        if (FeedbackTagFragment.shown) {
+            return;
+        }
+        FeedbackTagFragment fragment = new FeedbackTagFragment();
+        fragment.show(getActivity().getSupportFragmentManager(), FeedbackTagFragment.TAG);
+    }
+
+    private View.OnClickListener mFloatBtnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            // 显示反馈对话框
+            showFeedback();
+        }
+    };
 
     @Override
     public void onDestroy() {

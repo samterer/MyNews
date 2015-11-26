@@ -8,17 +8,17 @@
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipe_refresh_widget"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:scrollbars="none"
-        android:layout_height="match_parent">
+        android:scrollbars="none">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recylerlist"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:cacheColorHint="@null"
             android:background="?fragment_main_backgroup"
+            android:cacheColorHint="@null"
             android:scrollbars="none" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -37,8 +37,7 @@
         android:background="#778c9eff"
         android:gravity="center"
         android:padding="5dp"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/floating_button"
@@ -49,4 +48,15 @@
         android:layout_marginLeft="16dp"
         android:clickable="true"
         android:src="?fragment_choose_btn_src_color" />
+
+    <com.melnykov.fab.FloatingActionButton xmlns:fab="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/float_feedback_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:src="@drawable/float_feedback_btn"
+        fab:fab_colorNormal="#9dc02e"
+        fab:fab_colorPressed="#7db143"
+        fab:fab_colorRipple="#7db143" />
 </FrameLayout>

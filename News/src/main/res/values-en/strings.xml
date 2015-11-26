@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="feedback_hint_suggestion">help us to be better !</string>
+    <string name="feedback_rating">Rate</string>
     <string name="VideoView_error_text_unknown">Sorry,this video is unable to play.</string>
     <string name="VideoView_error_text_invalid_progressive_playback">Sorry, this video is not valid for streaming to this device.</string>
     <string name="VideoView_error_button">OK</string>

@@ -198,7 +198,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                         });
             }
         });
-        changeStatus();
+//        changeStatus();
         init();
 
     }

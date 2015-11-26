@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
@@ -51,7 +50,6 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import cn.jpush.android.api.CustomPushNotificationBuilder;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.PushBuilder;
 import de.greenrobot.event.EventBus;
@@ -83,10 +81,6 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
         long start = System.currentTimeMillis();
         setContentView(R.layout.app_main);
         ViewUtils.inject(this);
-        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date curDate = new Date(System.currentTimeMillis());//获取当前时间
-        String date = sDateFormat.format(curDate);
-        Log.e("date", "onActivityResult  date--->" + date);
         checkVersion();
         Thread.setDefaultUncaughtExceptionHandler(App.uncaughtExceptionHandler);
         FragmentTransaction ft = fm.beginTransaction();
@@ -104,14 +98,22 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
         intent.setAction(InitService.UserLogAction);
         startService(intent);
 
-        LayoutInflater infla = LayoutInflater.from(this);
+        setStyleCustom();
 
-        CustomPushNotificationBuilder builder = new CustomPushNotificationBuilder(MainActivity.this,
-                R.layout.customer_notitfication_layout, R.id.icon, R.id.title, R.id.text);  // 指定定制的 Notification Layout
-        builder.statusBarDrawable = R.drawable.details_related_news;      // 指定最顶层状态栏小图标
-        builder.layoutIconDrawable = R.drawable.logo;   // 指定下拉状态栏时显示的通知图标
-        JPushInterface.setPushNotificationBuilder(2, new PushBuilder(this));
+    }
 
+    private void setStyleCustom() {
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("HH:mm");
+        Date curDate = new Date(System.currentTimeMillis());//获取当前时间
+        String date = sDateFormat.format(curDate);
+//        CustomPushNotificationBuilder builder = new CustomPushNotificationBuilder(MainActivity.this,
+//                R.layout.customer_notitfication_layout, R.id.icon, R.id.title, R.id.text);  // 指定定制的 Notification Layout
+//        builder.statusBarDrawable = R.drawable.details_related_news;      // 指定最顶层状态栏小图标
+//        builder.layoutIconDrawable = R.drawable.logo;   // 指定下拉状态栏时显示的通知图标
+        PushBuilder builder1 = new PushBuilder(MainActivity.this,
+                R.layout.customer_notitfication_layout, R.id.icon, R.id.title, R.id.text, R.id.time, "" + date);
+        builder1.layoutIconDrawable = R.drawable.logo;   // 指定下拉状态栏时显示的通知图标
+        JPushInterface.setPushNotificationBuilder(1, builder1);
     }
 
     @OnClick({R.id.main_title_left, R.id.main_title_right})
