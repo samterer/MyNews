@@ -336,6 +336,8 @@ public class SettingActivity extends MBaseActivity {
     //	关于我们
     @OnClick(R.id.zqzx_setting_aboutus)
     private void aboutus(View v) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick())
+            return;
         Intent mIntent = new Intent(this, AboutUsActivity.class);
         startActivity(mIntent);
         AAnim.ActivityStartAnimation(this);
@@ -552,6 +554,8 @@ public class SettingActivity extends MBaseActivity {
 
     @OnClick(R.id.zqzx_setting_feedback)
     private void feedBack(View v) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick())
+            return;
         Intent intent = new Intent(this, ZQ_FeedBackActivity.class);
         startActivity(intent);
         AAnim.ActivityStartAnimation(this);

@@ -313,6 +313,8 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
     private View.OnClickListener mFloatBtnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            if (AvoidOnClickFastUtils.isFastDoubleClick())
+                return;
             // 显示反馈对话框
             showFeedback();
         }
@@ -551,9 +553,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
-            return;
-        }
+
         TextView title = (TextView) v.findViewById(R.id.newsitem_title);
         if (null != title) {
             title.setTextColor(getResources().getColor(R.color.grey_font));
@@ -561,6 +561,9 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
 //        NewsBean nb=(NewsBean)v.getTag();
 //        adapter.setReadedId(nb.getNid());
         Log.e("isRefresh", "isRefresh--->" + isRefresh);
+        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+            return;
+        }
         try {
             if (!isRefresh && v == floatingView) {
                 mRecyclerView.scrollToPosition(0);
@@ -590,6 +593,62 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
 
     }
 
+//    @Override
+//    public void onClick(View v) {
+//        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+//            return;
+//        }
+//        switch (v.getId()) {
+//            case R.id.floating_button:
+//                if (!isRefresh) {
+//                    mRecyclerView.scrollToPosition(0);
+//                    mSwipeRefreshWidget.setRefreshing(true);
+//                    pageIndex = 1;
+//                    ++tagIndex;
+//                    page = 1;
+//                    getServerList("");
+//                    v.setAnimation(animation);
+//                    v.startAnimation(animation);
+//                    return;
+//                }
+//        }
+//
+//        TextView title = (TextView) v.findViewById(R.id.newsitem_title);
+//        if (null != title) {
+//            title.setTextColor(getResources().getColor(R.color.grey_font));
+//        }
+//        Log.e("isRefresh", "isRefresh--->" + isRefresh);
+//        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+//            return;
+//        }
+//        try {
+//            if (!isRefresh && v == floatingView) {
+//                mRecyclerView.scrollToPosition(0);
+//                mSwipeRefreshWidget.setRefreshing(true);
+//                pageIndex = 1;
+//                ++tagIndex;
+//                page = 1;
+//                getServerList("");
+//                v.setAnimation(animation);
+//                v.startAnimation(animation);
+//                return;
+//            }
+//            if (v.getTag() instanceof NewsBean) {
+//                NewsBean nb = (NewsBean) v.getTag();
+//                Intent mIntent = new Intent();
+//                mIntent.putExtra("newbean", nb);
+//                mIntent.putExtra("from", "chooseItem");
+//                adapter.setReadedId(nb.getNid());
+//                //1新闻
+//                mIntent.setClass(v.getContext(), NewsDetailActivity.class);
+//                v.getContext().startActivity(mIntent);
+//                AAnim.ActivityStartAnimation(getActivity());
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     public void onEventMainThread(FontSizeEvent event) {
         adapter.setFontSize(event.getFontSize());

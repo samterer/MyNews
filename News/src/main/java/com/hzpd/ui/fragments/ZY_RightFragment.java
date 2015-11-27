@@ -37,6 +37,7 @@ import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
+import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.FjsonUtil;
@@ -265,6 +266,8 @@ public class ZY_RightFragment extends BaseFragment {
     @OnClick({R.id.zy_rfrag_ll_login, R.id.zy_rfrag_ll_comm, R.id.zy_rfrag_ll_collect, R.id.zy_rfrag_ll_push,
             R.id.zy_rfrag_ll_setting, R.id.login_facebook_button})
     private void rightClick(View v) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick())
+            return;
         boolean flag = false;
         Intent mIntent = new Intent();
         switch (v.getId()) {

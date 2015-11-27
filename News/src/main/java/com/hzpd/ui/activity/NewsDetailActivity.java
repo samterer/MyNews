@@ -1365,7 +1365,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         }, 500);
                         String data = App.getFileContext(responseInfo.result);
                         if (TextUtils.isEmpty(data)) {
-                            //                    TUtils.toast(getString(R.string.toast_request_failed));
+                            //TODO 考虑 没有获取内容 或者 内容为空的情况 服务器满
+
                             return;
                         }
                         JSONObject obj = FjsonUtil.parseObject(data);

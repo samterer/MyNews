@@ -91,6 +91,7 @@ public class MWBaseActivity extends FragmentActivity implements AnalyticCallback
     @Override
     protected void onDestroy() {
         super.onDestroy();
+//        httpUtils
         App.getInstance().getRefWatcher().watch(this);
     }
 

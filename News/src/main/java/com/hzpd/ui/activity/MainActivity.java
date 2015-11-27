@@ -111,7 +111,7 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
 //        builder.statusBarDrawable = R.drawable.details_related_news;      // 指定最顶层状态栏小图标
 //        builder.layoutIconDrawable = R.drawable.logo;   // 指定下拉状态栏时显示的通知图标
         PushBuilder builder1 = new PushBuilder(MainActivity.this,
-                R.layout.customer_notitfication_layout, R.id.icon, R.id.title, R.id.text, R.id.time, "" + date);
+                R.layout.customer_notitfication_layout, R.id.icon, R.id.title, R.id.text, R.id.time);
         builder1.layoutIconDrawable = R.drawable.logo;   // 指定下拉状态栏时显示的通知图标
         JPushInterface.setPushNotificationBuilder(1, builder1);
     }

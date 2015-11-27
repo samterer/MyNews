@@ -469,6 +469,7 @@ public class MyPMColAvtivity extends MBaseActivity {
     //获取数据
     private void getCollectionInfoFromServer() {
         if (null != spu.getUser()) { //登录
+            Log.e("","getUid"+spu.getUser().getUid());
             String station = SharePreferecesUtils.getParam(MyPMColAvtivity.this, StationConfig.STATION, "def").toString();
             String siteid = null;
             String COLLECTIONLIST_url = null;
@@ -483,6 +484,7 @@ public class MyPMColAvtivity extends MBaseActivity {
                 COLLECTIONLIST_url = InterfaceJsonfile_TW.COLLECTIONLIST;
             }
             RequestParams params = RequestParamsUtils.getParamsWithU();
+            params.addBodyParameter("id", spu.getUser().getUid() + "");
             params.addBodyParameter("page", Page + "");
             params.addBodyParameter("pagesize", PageSize + "");
             params.addBodyParameter("siteid", siteid);
