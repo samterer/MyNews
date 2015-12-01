@@ -191,6 +191,8 @@
     <attr name="item_title" format="reference|color" />
     <attr name="item_title_read" format="reference|color"></attr>
     <attr name="item_tag" format="reference|color" />
+    <attr name="news_item_btn_selector" format="reference|color"/>
+    <attr name="news_item_line_color" format="reference|color"/>
 
     <attr name="xf_login_bg_drawable" format="reference|color" />
 
@@ -227,6 +229,25 @@
     <attr name="zq_feedback_color" format="reference|color" />
     <attr name="zq_feedback_edit_color" format="reference|color" />
     <attr name="zq_feedback_btn_color" format="reference|color" />
+    <attr name="zq_feedback_btn_submit" format="reference|color" />
+
+    <attr name="main_activity_color" format="reference|color" />
+
+    <attr name="search_key_head_text_color" format="reference|color" />
+    <attr name="search_content_background_color" format="reference|color" />
+
+    <attr name="fragment_search_background_color" format="reference|color" />
+    <attr name="search_history_item_color" format="reference|color" />
+
+    <attr name="my_comment_news_selector" format="reference|color" />
+    <attr name="my_comment_news_title" format="reference|color" />
+    <attr name="my_comment_nickname" format="reference|color" />
+    <attr name="my_comment_top_nickname" format="reference|color" />
+    <attr name="my_comment_top_regtime" format="reference|color" />
+    <attr name="my_comment_time" format="reference|color" />
+
+
+    <attr name="news_detail_rel_item_title" format="reference|color" />
 
 
 </resources>

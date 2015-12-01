@@ -24,6 +24,7 @@
     <color name="grey_divider">#c9c9c9</color>
     <color name="grey_font">#8d8d8d</color>
     <color name="grey_item">#eeeeee</color>
+    <color name="grey_item_night">#222222</color>
 
     <color name="yellow_font">#0033ee</color>
     <color name="bottom_tab_bg">#f7f7f7</color>
@@ -79,7 +80,7 @@
     <color name="toolbar_bg">#ff3f51b5</color>
     <color name="grey_color">#F6F6F6</color>
 
-    <color name="tag_select">#8495f5</color>
+    <color name="tag_select">#ececec</color>
     <color name="tag_unselect">#f5f5f5</color>
 
     <!-- 搜索页面 -->

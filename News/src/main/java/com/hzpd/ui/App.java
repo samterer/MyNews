@@ -23,7 +23,6 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.Adbean;
 import com.hzpd.modle.Menu_Item_Bean;
 import com.hzpd.modle.db.UserLog;
-import com.hzpd.utils.CODE;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
@@ -115,11 +114,9 @@ public class App extends Application {
         px_150dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
         String str = SharePreferecesUtils.getParam(this, "STATION", "def").toString();
 
-        LogUtils.i("启动日志" + str);
-
         com.hzpd.utils.Log.e("App", "App 1here " + (System.currentTimeMillis() - start));
         init();
-        com.hzpd.utils.Log.e("App", "App 2here " + (System.currentTimeMillis() - start));
+        com.hzpd.utils.Log.e("App", "App Success here " + (System.currentTimeMillis() - start));
     }
 
     private RefWatcher refWatcher;
@@ -132,7 +129,6 @@ public class App extends Application {
 
     private void init() {
         initAds();
-
         // 获取应用当前版本号
         PackageManager localPackageManager = this.getPackageManager();
         try {
@@ -142,23 +138,27 @@ public class App extends Application {
 
             if (localPackageInfo != null)
                 versionName = localPackageInfo.versionName;
-        } catch (PackageManager.NameNotFoundException localNameNotFoundException) {
-            localNameNotFoundException.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        // 初始化UniversalImageLoader
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration
-                .Builder(getApplicationContext())
-                .memoryCacheExtraOptions(720, 1280) // max width, max height，即保存的每个缓存文件的最大长宽
-                .defaultDisplayImageOptions(DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Big))
-                .diskCacheFileNameGenerator(new Md5FileNameGenerator())
-                .tasksProcessingOrder(QueueProcessingType.FIFO)
-                .memoryCacheSize(IMAGE_LOAD_SIZE)// 缓存大小
-                .memoryCache(new LruMemoryCache(IMAGE_LOAD_SIZE))
-                .threadPoolSize(5)
-                .build();
-        ImageLoader.getInstance().init(config);
-        L.writeDebugLogs(false);
-        L.writeLogs(false);
+        try {
+            // 初始化UniversalImageLoader
+            ImageLoaderConfiguration config = new ImageLoaderConfiguration
+                    .Builder(getApplicationContext())
+                    .memoryCacheExtraOptions(720, 1280) // max width, max height，即保存的每个缓存文件的最大长宽
+                    .defaultDisplayImageOptions(DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Big))
+                    .diskCacheFileNameGenerator(new Md5FileNameGenerator())
+                    .tasksProcessingOrder(QueueProcessingType.FIFO)
+                    .memoryCacheSize(IMAGE_LOAD_SIZE)// 缓存大小
+                    .memoryCache(new LruMemoryCache(IMAGE_LOAD_SIZE))
+                    .threadPoolSize(5)
+                    .build();
+            ImageLoader.getInstance().init(config);
+            L.writeDebugLogs(false);
+            L.writeLogs(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // xUtils日志控制
         LogUtils.allowD = debug;
@@ -167,33 +167,17 @@ public class App extends Application {
         LogUtils.allowV = debug;
         LogUtils.allowW = debug;
         LogUtils.allowWtf = debug;
-
         try {
             // 极光推送
             JPushInterface.setDebugMode(debug);    // 设置开启日志,发布时请关闭日志
+            com.hzpd.utils.Log.e("App", "App JPushInterface 4here ");
             JPushInterface.init(this);
-        } catch (Exception e) {
+            com.hzpd.utils.Log.e("App", "App JPushInterface  5here ");
+            setStyleCustom();
+        } catch (Throwable e) {
             e.printStackTrace();
         }
-
-
-        menuList = new SparseArray<>(40);
-
-        Menu_Item_Bean lfbean0 = new Menu_Item_Bean(CODE.MENU_NEWS, R.drawable.zy_icon_xinwenfabu, getString(R.string.menu_news));
-        Menu_Item_Bean lfbean1 = new Menu_Item_Bean(CODE.MENU_ALBUM, R.drawable.zy_icon_shuzibao, getString(R.string.menu_album));
-        Menu_Item_Bean lfbean2 = new Menu_Item_Bean(CODE.MENU_VIDEO_RECORDING, R.drawable.zy_icon_xinwenfabu, getString(R.string.menu_video));
-        Menu_Item_Bean lfbean5 = new Menu_Item_Bean(CODE.MENU_SPECIAL, R.drawable.zy_icon_zhuanti, getString(R.string.menu_subject));
-        Menu_Item_Bean lfbean19 = new Menu_Item_Bean(CODE.MENU_SEARCH, R.drawable.zy_icon_xinwenfabu, getString(R.string.menu_search));
-        Menu_Item_Bean lfbean21 = new Menu_Item_Bean(CODE.MENU_ACTION, R.drawable.zy_icon_xinwenfabu, getString(R.string.menu_activity));
-
-        menuList.put(lfbean0.getId(), lfbean0);
-        menuList.put(lfbean1.getId(), lfbean1);
-        menuList.put(lfbean2.getId(), lfbean2);
-        menuList.put(lfbean5.getId(), lfbean5);
-        menuList.put(lfbean19.getId(), lfbean19);
-        menuList.put(lfbean21.getId(), lfbean21);
-
-
+        com.hzpd.utils.Log.e("App", "App 9here ");
     }
 
     public static Thread.UncaughtExceptionHandler uncaughtExceptionHandler = new Thread.UncaughtExceptionHandler() {
@@ -208,6 +192,10 @@ public class App extends Application {
             }
         }
     };
+
+
+    private void setStyleCustom() {
+    }
 
     public void initAds() {
         // 初始化广告容器

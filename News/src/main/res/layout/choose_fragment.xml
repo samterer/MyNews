@@ -59,4 +59,15 @@
         fab:fab_colorNormal="#9dc02e"
         fab:fab_colorPressed="#7db143"
         fab:fab_colorRipple="#7db143" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#45000000" />
+    </FrameLayout>
 </FrameLayout>

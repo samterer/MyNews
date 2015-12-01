@@ -1,7 +1,7 @@
 @charset "utf-8";
 /*此css适用于APP4.9+版本*/
-/*reset;*/
-html, body {margin: 2px;padding: 0;border: 0}
+/*reset*/
+html, body {margin: 2px;padding: 0;border: 0;color:#ff0000;background:#222222}
 
 body {font-family: 'kievit';line-height:150%;overflow-x: hidden; padding: 10px; }
 

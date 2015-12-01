@@ -9,18 +9,23 @@ import android.support.v4.app.FragmentManager;
 import com.hzpd.ui.App;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.DBHelper;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.http.HttpHandler;
 
 import org.common.lib.analytics.ActivityLifecycleAction;
 import org.common.lib.analytics.AnalyticCallback;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import cn.jpush.android.api.JPushInterface;
-
 public class MWBaseActivity extends FragmentActivity implements AnalyticCallback {
+    public MWBaseActivity() {
+        Log.e("test", "MWBaseActivity new ");
+    }
 
     private ActivityLifecycleAction action = new ActivityLifecycleAction(this);
     protected HttpUtils httpUtils;
@@ -34,20 +39,19 @@ public class MWBaseActivity extends FragmentActivity implements AnalyticCallback
     protected FragmentManager fm;
     protected Fragment currentFm;
     boolean isResume = false;
+    List<HttpHandler> handlerList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
-//        initSystemBar();
         action.onCreate(this);
-//        setTheme(android.R.style.Theme_Translucent_NoTitleBar);
         activity = this;
         fm = getSupportFragmentManager();
 
         httpUtils = SPUtil.getHttpUtils();
         spu = SPUtil.getInstance();
         startMills = System.currentTimeMillis();
-        analyMap = new HashMap<String, String>();
+        analyMap = new HashMap<>();
         dbHelper = DBHelper.getInstance(getApplicationContext());
     }
 
@@ -56,7 +60,6 @@ public class MWBaseActivity extends FragmentActivity implements AnalyticCallback
         super.onResume();
         isResume = true;
         action.onResume(this);
-        JPushInterface.onResume(this);
     }
 
     @Override
@@ -69,6 +72,7 @@ public class MWBaseActivity extends FragmentActivity implements AnalyticCallback
 
     @Override
     protected void onStop() {
+        Log.e("exit", "onStop");
         super.onStop();
         isResume = false;
         action.onStop(this);
@@ -79,7 +83,6 @@ public class MWBaseActivity extends FragmentActivity implements AnalyticCallback
         isResume = false;
         super.onPause();
         action.onPause(this);
-        JPushInterface.onPause(this);
     }
 
     @Override
@@ -91,7 +94,15 @@ public class MWBaseActivity extends FragmentActivity implements AnalyticCallback
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        httpUtils
+        for (HttpHandler httpHandler : handlerList) {
+            if (httpHandler.getState() == HttpHandler.State.LOADING || httpHandler.getState() == HttpHandler.State.STARTED) {
+                httpHandler.setRequestCallBack(null);
+                httpHandler.cancel();
+            }
+        }
+        handlerList.clear();
+        httpUtils = null;
+        Log.e("exit", "onDestroy 2");
         App.getInstance().getRefWatcher().watch(this);
     }
 

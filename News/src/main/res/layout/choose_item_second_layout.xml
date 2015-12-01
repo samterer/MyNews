@@ -30,6 +30,7 @@
                 android:id="@+id/news_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="?fragment_main_backgroup"
                 android:orientation="vertical">
 
                 <!--图片展示-->

@@ -37,7 +37,6 @@ import com.hzpd.utils.db.NewsListDbTask;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.view.annotation.ViewInject;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,7 +60,6 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
     LayoutInflater inflater;
     List<NewsBean> list = null;
     List<NewsPageListBean> viewPagelist = new ArrayList<>();
-    ImageLoader mImageLoader;
     DBHelper dbHelper;
     List<NewsBean> appendoldlist = null;
 
@@ -88,9 +86,16 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         this.ads = ads;
     }
 
-    public void setNativeAd(final NativeAd nativeAd) {
-        Log.e("test", "nextAdPosition->" + nextAdPosition + ": " + nativeAd);
-        ads.put("" + nextAdPosition, nativeAd);
+    public void setNativeAd() {
+        NativeAd temp;
+        if (ads.get("" + nextAdPosition) == null) {
+            temp = new NativeAd(context.getApplicationContext(), AD_KEY);
+        } else {
+            temp = ads.get("" + nextAdPosition);
+            temp.setAdListener(null);
+            temp.unregisterView();
+        }
+        final NativeAd nativeAd = temp;
         final int adPos = nextAdPosition;
         nativeAd.setAdListener(new AdListener() {
             @Override
@@ -193,13 +198,12 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         }
         if (isClearOld) {
             notifyDataSetChanged();
+            nextAdPosition = STEP;
         } else {
             notifyItemRangeInserted(index, data.size());
         }
-
         while (list.size() > nextAdPosition) {
-            NativeAd nativeAd = new NativeAd(context, AD_KEY);
-            setNativeAd(nativeAd);
+            setNativeAd();
         }
     }
 
@@ -273,17 +277,17 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         RecyclerView.ViewHolder viewHolder = null;
         View convertView;
         switch (viewType) {
-            case TYPE_FLASH:
+            case TYPE_FLASH://幻灯
                 convertView = inflater.inflate(
                         R.layout.news_item_flash_layout, parent, false);
                 viewHolder = new FlashHolder(convertView);
                 break;
-            case TYPE_THREEPIC:
+            case TYPE_THREEPIC://三张连图
                 convertView = inflater.inflate(
                         R.layout.news_3_item_layout, parent, false);
                 viewHolder = new VHThree(convertView);
                 break;
-            case TYPE_LEFTPIC:
+            case TYPE_LEFTPIC://普通
                 convertView = inflater.inflate(
                         R.layout.news_list_item_layout, parent, false);
                 viewHolder = new VHLeftPic(convertView);
@@ -293,17 +297,17 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                         R.layout.news_big_item_layout, parent, false);
                 viewHolder = new VHBigPic(convertView);
                 break;
-            case TYPE_LARGE:
+            case TYPE_LARGE://大图
                 convertView = inflater.inflate(
                         R.layout.news_large_item_layout, parent, false);
                 viewHolder = new VHLargePic(convertView);
                 break;
-            case TYPE_AD:
+            case TYPE_AD://广告
                 convertView = inflater.inflate(
                         R.layout.news_list_ad_layout, parent, false);
                 viewHolder = new AdHolder(convertView);
                 break;
-            case TYPE_LOADING:
+            case TYPE_LOADING://加载
                 convertView = inflater.inflate(
                         R.layout.list_load_more_layout, parent, false);
                 viewHolder = new LoadingHolder(convertView);
@@ -583,6 +587,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     adHolder.newsitem_content.setText(bean.getCopyfrom());
                     SPUtil.displayImage(bean.getImgs()[0], adHolder.newsitem_img,
                             DisplayOptionFactory.getOption(OptionTp.Small));
+                    ads.get("" + position).unregisterView();
                     ads.get("" + position).registerViewForInteraction(holder.itemView);
                     break;
                 case TYPE_BIGPIC:

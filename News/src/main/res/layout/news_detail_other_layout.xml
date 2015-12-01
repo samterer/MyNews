@@ -3,7 +3,7 @@
     android:id="@+id/detail_ref"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?main_activity_color"
     android:orientation="vertical">
 
     <LinearLayout
@@ -21,11 +21,12 @@
             android:id="@+id/news_detail_other_title_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/news_item_selector"
+            android:background="?news_item_btn_selector"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:lines="1"
             android:maxLines="1"
+            android:textColor="?news_detail_rel_item_title"
             android:padding="8dp"
             android:textSize="16sp" />
 

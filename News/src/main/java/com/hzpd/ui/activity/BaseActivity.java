@@ -13,7 +13,6 @@ import android.view.animation.Interpolator;
 import com.hzpd.hflt.R;
 import com.hzpd.ui.App;
 import com.hzpd.ui.fragments.ZY_RightFragment;
-import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.SystemBarTintManager;
 import com.shangc.slidingmenu.lib.SlidingMenu;
 import com.shangc.slidingmenu.lib.app.SlidingFragmentActivity;
@@ -45,6 +44,7 @@ public class BaseActivity extends SlidingFragmentActivity implements AnalyticCal
             setTheme(R.style.ThemeNight);
         } else {
             setTheme(R.style.ThemeDefault);
+//            setTheme(R.style.ThemeNight);
         }
         super.onCreate(null);
         action.onCreate(this);

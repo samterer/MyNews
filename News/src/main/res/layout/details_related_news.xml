@@ -3,7 +3,7 @@
     android:id="@+id/details_more"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?main_activity_color"
     android:orientation="vertical">
 
     <com.hzpd.ui.widget.FontTextView
@@ -11,8 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:paddingBottom="20dp"
         android:text="@string/details_lv_1"
         android:textColor="#aeaeae"
@@ -119,7 +119,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        >
 
         <View
             android:layout_width="match_parent"
@@ -179,6 +179,7 @@
             android:id="@+id/llayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#222222"
             android:layout_below="@+id/ll_tag"
             android:orientation="vertical"></LinearLayout>
 

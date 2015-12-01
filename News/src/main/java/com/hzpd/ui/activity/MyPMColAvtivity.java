@@ -6,8 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +37,7 @@ import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsItemBeanForCollection;
 import com.hzpd.modle.PushmsgBean;
 import com.hzpd.modle.VideoItemBean;
+import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
@@ -98,6 +97,8 @@ public class MyPMColAvtivity extends MBaseActivity {
     private CollectionAdapter colladAdapter;
 
     private String type;
+    @ViewInject(R.id.transparent_layout_id)
+    private View transparent_layout_id;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,6 +113,11 @@ public class MyPMColAvtivity extends MBaseActivity {
 //            super.changeStatusBar();
             setContentView(R.layout.mypushmsg_layout);
             ViewUtils.inject(this);
+            if (App.getInstance().getThemeName().equals("3")) {
+                transparent_layout_id.setVisibility(View.VISIBLE);
+            } else {
+                transparent_layout_id.setVisibility(View.GONE);
+            }
             findViewById(R.id.mycomments_title).setVisibility(View.GONE);
             init();
         } catch (Exception e) {
@@ -399,51 +405,41 @@ public class MyPMColAvtivity extends MBaseActivity {
 
     }
 
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            pushmsg_lv.onRefreshComplete();
-
-            if (1 == msg.what) {
-                List<CollectionJsonBean> list = (List<CollectionJsonBean>) msg.obj;
-                colladAdapter.appendData(list, mFlagRefresh);
-                colladAdapter.notifyDataSetChanged();
-                if (list.size() >= PageSize) {
-                    pushmsg_lv.setMode(Mode.BOTH);
-                } else {
-                    pushmsg_lv.setMode(Mode.PULL_FROM_START);
-                }
-            }
-            mFlagRefresh = false;
-        }
-    };
-
-
     private void getDbCache() {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+                    if (!isResume) {
+                        return;
+                    }
                     List<NewsItemBeanForCollection> list = dbHelper.getCollectionDBUitls().findAll(Selector
                             .from(NewsItemBeanForCollection.class)
                             .where("id", "!=", null)
                             .orderBy("id", true)
                             .limit(PageSize)
                             .offset((Page - 1) * PageSize));
-
+                    if (!isResume) {
+                        return;
+                    }
                     if (null != list && list.size() > 0) {
                         LogUtils.i("list.size-->" + list.toString());
-                        ArrayList<CollectionJsonBean> mlist = new ArrayList<CollectionJsonBean>();
+                        final ArrayList<CollectionJsonBean> mlist = new ArrayList<CollectionJsonBean>();
                         for (NewsItemBeanForCollection nifc : list) {
                             mlist.add(nifc.getCollectionJsonBean());
                         }
-                        Message msg = handler.obtainMessage();
-                        msg.what = 1;
-                        msg.obj = mlist;
-                        handler.sendMessage(msg);
+                        if (!isResume) {
+                            return;
+                        }
                         pushmsg_lv.post(new Runnable() {
                             @Override
                             public void run() {
+                                if (!isResume) {
+                                    return;
+                                }
+                                colladAdapter.appendData(mlist, mFlagRefresh);
+                                colladAdapter.notifyDataSetChanged();
+                                mFlagRefresh = false;
                                 pushmsg_lv.onRefreshComplete();
                                 pushmsg_lv.setMode(Mode.BOTH);
                             }
@@ -453,13 +449,15 @@ public class MyPMColAvtivity extends MBaseActivity {
                         pushmsg_lv.post(new Runnable() {
                             @Override
                             public void run() {
+                                if (!isResume) {
+                                    return;
+                                }
                                 getCollectionInfoFromServer();
                             }
                         });
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    handler.sendEmptyMessage(500);
                 }
 
             }
@@ -653,7 +651,6 @@ public class MyPMColAvtivity extends MBaseActivity {
 
     @Override
     protected void onDestroy() {
-        handler.removeCallbacks(null);
         super.onDestroy();
     }
 }

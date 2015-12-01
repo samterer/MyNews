@@ -20,14 +20,15 @@ import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SystemBarTintManager;
 import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.http.HttpHandler;
 
 import org.common.lib.analytics.ActivityLifecycleAction;
 import org.common.lib.analytics.AnalyticCallback;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import cn.jpush.android.api.JPushInterface;
 
 public class MBaseActivity extends FragmentActivity implements AnalyticCallback {
 
@@ -48,11 +49,11 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
 
 
     boolean isResume = false;
-
+    List<HttpHandler> handlerList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(null);
+        super.onCreate(savedInstanceState);
         action.onCreate(this);
         if (App.getInstance().getThemeName().equals("1")) {
             setTheme(R.style.ThemeRed);
@@ -60,6 +61,7 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
             setTheme(R.style.ThemeNight);
         } else {
             setTheme(R.style.ThemeDefault);
+//            setTheme(R.style.ThemeNight);
         }
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -114,7 +116,6 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
         tintManager.setStatusBarTintResource(R.color.transparent);
         tintManager.setStatusBarTintResource(R.color.red);
         tintManager.setStatusBarTintColor(color);
-        tintManager.setStatusBarTintColor(R.color.toolbar_bg);
     }
 
     @TargetApi(19)
@@ -133,6 +134,14 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        for (HttpHandler httpHandler : handlerList) {
+            if (httpHandler.getState() == HttpHandler.State.LOADING || httpHandler.getState() == HttpHandler.State.STARTED) {
+                httpHandler.setRequestCallBack(null);
+                httpHandler.cancel();
+            }
+        }
+        handlerList.clear();
+        httpUtils = null;
         App.getInstance().getRefWatcher().watch(this);
     }
 
@@ -141,7 +150,6 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
         super.onResume();
         isResume = true;
         action.onResume(this);
-        JPushInterface.onResume(this);
     }
 
     @Override
@@ -164,7 +172,6 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
         isResume = false;
         super.onPause();
         action.onPause(this);
-        JPushInterface.onPause(this);
     }
 
     @Override

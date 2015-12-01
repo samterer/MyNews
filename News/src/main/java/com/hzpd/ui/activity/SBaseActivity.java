@@ -14,7 +14,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.jpush.android.api.JPushInterface;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 public class SBaseActivity extends SwipeBackActivity {
@@ -52,13 +51,11 @@ public class SBaseActivity extends SwipeBackActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		JPushInterface.onResume(this);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		JPushInterface.onPause(this);
 	}
 
 	@Override

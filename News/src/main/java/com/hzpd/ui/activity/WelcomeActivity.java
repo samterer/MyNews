@@ -39,6 +39,7 @@ import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.db.NewsListDbTask;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
@@ -58,6 +59,10 @@ public class WelcomeActivity extends MWBaseActivity {
     @Override
     public String getAnalyticPageName() {
         return AnalyticUtils.SCREEN.welcome;
+    }
+
+    public WelcomeActivity() {
+        Log.e("test", "WelcomeActivity new ");
     }
 
     private volatile int done;
@@ -142,7 +147,7 @@ public class WelcomeActivity extends MWBaseActivity {
         }
         String urlChannelList = CHANNELLIST_url + "News";
 //			下载信息并保存
-        httpUtils.download(urlChannelList,
+        HttpHandler httpHandler = httpUtils.download(urlChannelList,
                 target.getAbsolutePath(),
                 new RequestCallBack<File>() {
                     @Override
@@ -228,6 +233,7 @@ public class WelcomeActivity extends MWBaseActivity {
                         }
                     }
                 });
+        handlerList.add(httpHandler);
     }
 
     public void jump(String url) {
@@ -249,7 +255,7 @@ public class WelcomeActivity extends MWBaseActivity {
             params.addBodyParameter("tagIndex", "1");
             params.addBodyParameter("pageIndex", "1");
         }
-        httpUtils.send(HttpRequest.HttpMethod.POST
+        HttpHandler httpHandler = httpUtils.send(HttpRequest.HttpMethod.POST
                 , InterfaceJsonfile.CHANNEL_RECOMMEND
                 , params
                 , new RequestCallBack<String>() {
@@ -293,6 +299,7 @@ public class WelcomeActivity extends MWBaseActivity {
                 loadMainUI();
             }
         });
+        handlerList.add(httpHandler);
     }
 
     //	直接添加本地频道

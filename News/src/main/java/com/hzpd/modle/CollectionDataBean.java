@@ -1,5 +1,7 @@
 package com.hzpd.modle;
 
+import android.text.Html;
+
 import java.util.Arrays;
 
 public class CollectionDataBean {
@@ -116,7 +118,7 @@ public class CollectionDataBean {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = Html.fromHtml(title).toString();;
     }
 
     public String getCopyfrom() {

@@ -1,75 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?fragment_main_backgroup"
     android:clipToPadding="true"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
-
-    <include layout="@layout/stitle_layout" />
+    android:fitsSystemWindows="true">
 
     <LinearLayout
-        android:id="@+id/mycomments_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:visibility="gone">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <com.hzpd.ui.widget.FontTextView
-            android:id="@+id/mycoms_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:padding="10dp"
-            android:text="我的评论数"
-            android:textSize="16sp" />
+        <include layout="@layout/stitle_layout" />
 
-        <View
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="0.1px"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/light_color_line" />
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/mycomments_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:visibility="gone">
+
+                    <com.hzpd.ui.widget.FontTextView
+                        android:id="@+id/mycoms_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:padding="10dp"
+                        android:text="我的评论数"
+                        android:textSize="16sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.1px"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/light_color_line" />
+                </LinearLayout>
+
+
+                <!--android:divider="@color/zqzx_bg_dark"
+                        android:dividerHeight="1px"-->
+                <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/pushmsg_lv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:descendantFocusability="blocksDescendants"
+                    android:divider="@color/zqzx_bg_dark"
+                    android:dividerHeight="0dp"
+                    android:fastScrollEnabled="false"
+                    android:listSelector="@android:color/transparent"
+                    android:scrollbarThumbVertical="@drawable/base_list_scrollbar_handle"
+                    android:scrollbarTrackVertical="@color/transparent"
+                    android:scrollbars="vertical"
+                    ptr:ptrAnimationStyle="flip"
+                    ptr:ptrDrawable="@drawable/default_ptr_rotate"
+                    ptr:ptrHeaderSubTextColor="@color/grey_font"
+                    ptr:ptrHeaderTextColor="@color/pulltorefresh_font" />
+
+                <ImageView
+                    android:id="@+id/pushmsg_tv_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/zqzx_nonetwork" />
+
+                <com.mingle.widget.LoadingView
+                    android:id="@+id/loadView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    app:loadingText="@string/load_more_loading" />
+            </LinearLayout>
+
+            <include layout="@layout/transparent_layout" />
+        </FrameLayout>
     </LinearLayout>
 
 
-    <!--android:divider="@color/zqzx_bg_dark"
-            android:dividerHeight="1px"-->
-    <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/pushmsg_lv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:cacheColorHint="@android:color/transparent"
-        android:descendantFocusability="blocksDescendants"
-        android:divider="@color/zqzx_bg_dark"
-        android:dividerHeight="0dp"
-        android:fastScrollEnabled="false"
-        android:listSelector="@android:color/transparent"
-        android:scrollbarThumbVertical="@drawable/base_list_scrollbar_handle"
-        android:scrollbarTrackVertical="@color/transparent"
-        android:scrollbars="vertical"
-        ptr:ptrAnimationStyle="flip"
-        ptr:ptrDrawable="@drawable/default_ptr_rotate"
-        ptr:ptrHeaderSubTextColor="@color/grey_font"
-        ptr:ptrHeaderTextColor="@color/pulltorefresh_font" />
-
-    <ImageView
-        android:id="@+id/pushmsg_tv_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@drawable/zqzx_nonetwork" />
-
-
-    <com.mingle.widget.LoadingView
-        android:id="@+id/loadView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        app:loadingText="@string/load_more_loading" />
-
-</LinearLayout>
+</FrameLayout>

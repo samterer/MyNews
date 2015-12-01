@@ -1,236 +1,243 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?title_bar_color"
-    android:orientation="vertical"
     android:splitMotionEvents="false">
 
-
-    <!--登录栏-->
-    <LinearLayout
-        android:id="@+id/zy_rfrag_ll_login"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:layout_weight="3"
-        android:clickable="true"
-        android:gravity="center"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingBottom="10dp">
-
-        <com.hzpd.custorm.CircleImageView
-            android:id="@+id/zy_rfrag_iv_login"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:contentDescription="@null"
-            android:src="?left_menu_fb_avatar"
-            app:border_color="@color/white" />
-
-        <com.hzpd.ui.widget.FontTextView
-            android:id="@+id/zy_rfrag_tv_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
-            android:text="@string/prompt_login_now"
-            android:textColor="?left_menu_fb_name"
-            android:textSize="18dp" />
-
-        <RelativeLayout
-            android:id="@+id/slidemeun_third_login"
+        android:splitMotionEvents="false">
+        <!--登录栏-->
+        <LinearLayout
+            android:id="@+id/zy_rfrag_ll_login"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="3"
+            android:clickable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="10dp">
 
-            <Button
-                android:id="@+id/login_facebook_button"
-                android:layout_width="wrap_content"
-                android:layout_height="38dp"
+            <com.hzpd.custorm.CircleImageView
+                android:id="@+id/zy_rfrag_iv_login"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="20dp"
-                android:background="?left_menu_login_facebook_button" />
+                android:layout_marginTop="20dp"
+                android:contentDescription="@null"
+                android:src="?left_menu_fb_avatar"
+                app:border_color="@color/white" />
+
+            <com.hzpd.ui.widget.FontTextView
+                android:id="@+id/zy_rfrag_tv_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:text="@string/prompt_login_now"
+                android:textColor="?left_menu_fb_name"
+                android:textSize="18dp" />
+
+            <RelativeLayout
+                android:id="@+id/slidemeun_third_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/login_facebook_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="20dp"
+                    android:background="?left_menu_login_facebook_button" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+        <!--展示框-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal">
+                    <!--评论-->
+                    <RelativeLayout
+                        android:id="@+id/zy_rfrag_ll_comm"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp">
+
+                        <ImageView
+                            android:id="@+id/slidemeun_conmment_iv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/zy_pinglunimg_selector" />
+
+                        <com.hzpd.ui.widget.FontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/slidemeun_conmment_iv"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="5dp"
+                            android:text="@string/comment_mine"
+                            android:textColor="?left_menu_item_name"
+                            android:textSize="16sp" />
+                    </RelativeLayout>
+                    <!-- 收藏-->
+                    <RelativeLayout
+                        android:id="@+id/zy_rfrag_ll_collect"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp">
+
+                        <ImageView
+                            android:id="@+id/slidemeun_collection_iv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginLeft="20dp"
+                            android:src="@drawable/zy_shouchangimg_selector" />
+
+                        <com.hzpd.ui.widget.FontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/slidemeun_collection_iv"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="5dp"
+                            android:text="@string/prompt_collect"
+                            android:textColor="?left_menu_item_name"
+                            android:textSize="16sp" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="30dp"
+                    android:orientation="horizontal">
+                    <!--推送-->
+                    <RelativeLayout
+                        android:id="@+id/zy_rfrag_ll_push"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="1"
+                        android:padding="8dp">
+
+                        <ImageView
+                            android:id="@+id/slidemeun_push_iv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginLeft="20dp"
+                            android:src="@drawable/zy_tuisongimg_selector" />
+
+                        <com.hzpd.ui.widget.FontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/slidemeun_push_iv"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="5dp"
+                            android:text="@string/prompt_my_msg"
+                            android:textColor="?left_menu_item_name"
+                            android:textSize="16sp" />
+                    </RelativeLayout>
+                    <!--设置-->
+                    <RelativeLayout
+                        android:id="@+id/zy_rfrag_ll_setting"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp">
+
+                        <ImageView
+                            android:id="@+id/slidemeun_setting_iv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginLeft="20dp"
+                            android:src="@drawable/zy_settingimg_selector" />
+
+                        <com.hzpd.ui.widget.FontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/slidemeun_setting_iv"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="5dp"
+                            android:text="@string/title_settings"
+                            android:textColor="?left_menu_item_name"
+                            android:textSize="16sp" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/text_Login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="123123"
+                    android:visibility="gone" />
+
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/slidemenu_version_line"
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_above="@+id/zy_version"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="?left_menu_version_line" />
+
+            <com.hzpd.ui.widget.FontTextView
+                android:id="@+id/zy_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="14dp"
+                android:layout_marginLeft="30dp"
+                android:layout_weight="2"
+                android:gravity="bottom"
+                android:text="@string/app_name"
+                android:textColor="?left_menu_version_name"
+                android:textSize="14sp" />
 
         </RelativeLayout>
 
     </LinearLayout>
 
 
-    <!--展示框-->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:paddingTop="8dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:orientation="horizontal">
-                <!--评论-->
-                <RelativeLayout
-                    android:id="@+id/zy_rfrag_ll_comm"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:id="@+id/slidemeun_conmment_iv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/zy_pinglunimg_selector" />
-
-                    <com.hzpd.ui.widget.FontTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/slidemeun_conmment_iv"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="5dp"
-                        android:text="@string/comment_mine"
-                        android:textColor="?left_menu_item_name"
-                        android:textSize="16sp" />
-                </RelativeLayout>
-                <!-- 收藏-->
-                <RelativeLayout
-                    android:id="@+id/zy_rfrag_ll_collect"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:id="@+id/slidemeun_collection_iv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginLeft="20dp"
-                        android:src="@drawable/zy_shouchangimg_selector" />
-
-                    <com.hzpd.ui.widget.FontTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/slidemeun_collection_iv"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="5dp"
-                        android:text="@string/prompt_collect"
-                        android:textColor="?left_menu_item_name"
-                        android:textSize="16sp" />
-                </RelativeLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="30dp"
-                android:orientation="horizontal">
-                <!--推送-->
-                <RelativeLayout
-                    android:id="@+id/zy_rfrag_ll_push"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:layout_weight="1"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:id="@+id/slidemeun_push_iv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginLeft="20dp"
-                        android:src="@drawable/zy_tuisongimg_selector" />
-
-                    <com.hzpd.ui.widget.FontTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/slidemeun_push_iv"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="5dp"
-                        android:text="@string/prompt_my_msg"
-                        android:textColor="?left_menu_item_name"
-                        android:textSize="16sp" />
-                </RelativeLayout>
-                <!--设置-->
-                <RelativeLayout
-                    android:id="@+id/zy_rfrag_ll_setting"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:id="@+id/slidemeun_setting_iv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginLeft="20dp"
-                        android:src="@drawable/zy_settingimg_selector" />
-
-                    <com.hzpd.ui.widget.FontTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/slidemeun_setting_iv"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="5dp"
-                        android:text="@string/title_settings"
-                        android:textColor="?left_menu_item_name"
-                        android:textSize="16sp" />
-                </RelativeLayout>
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/text_Login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="123123"
-                android:visibility="gone"/>
-
-
-        </LinearLayout>
-
-        <View
-            android:id="@+id/slidemenu_version_line"
-            android:layout_width="match_parent"
-            android:layout_height="0.1dp"
-            android:layout_above="@+id/zy_version"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:background="?left_menu_version_line" />
-
-        <com.hzpd.ui.widget.FontTextView
-            android:id="@+id/zy_version"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="30dp"
-            android:layout_weight="2"
-            android:gravity="bottom"
-            android:text="@string/app_name"
-            android:textColor="?left_menu_version_name"
-            android:textSize="14sp" />
-
-    </RelativeLayout>
-
-</LinearLayout>
+</FrameLayout>

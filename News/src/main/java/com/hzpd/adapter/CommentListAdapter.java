@@ -219,6 +219,7 @@ public class CommentListAdapter extends BaseAdapter {
 
             if (SharePreferecesUtils.getParam(parent.getContext(), "" + item.getCid(), "0").toString().equals("1")) {
                 holder.up_icon.setImageResource(R.drawable.details_icon_likeit);
+                holder.up_icon.setEnabled(false);
             }
 
             // 点赞数
@@ -228,6 +229,7 @@ public class CommentListAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     try {
+                        holder.up_icon.setEnabled(false);
                         Log.e("holder.digNum", "holder.digNum");
                         if (null == spu.getUser()) {
                             return;
@@ -261,6 +263,7 @@ public class CommentListAdapter extends BaseAdapter {
                             public void onFailure(HttpException arg0, String arg1) {
                                 Log.e(getLogTag(), "赞failed!");
                                 TUtils.toast(parent.getContext().getString(R.string.toast_server_no_response));
+                                holder.up_icon.setEnabled(true);
                             }
 
                             @Override
@@ -279,9 +282,10 @@ public class CommentListAdapter extends BaseAdapter {
                                         holder.comment_up_num.setText(i + "");
                                         item.setPraise(i + "");
                                         notifyDataSetChanged();
+                                        holder.up_icon.setEnabled(false);
                                     }
                                 } else {
-
+                                    holder.up_icon.setEnabled(true);
                                 }
                             }
                         });

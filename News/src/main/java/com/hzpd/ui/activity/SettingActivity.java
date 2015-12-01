@@ -154,8 +154,7 @@ public class SettingActivity extends MBaseActivity {
 //
 //            }
 //        });
-        textSize = new String[]{this.getResources().getString(R.string.settings_option_font_large), this.getResources().getString(R.string.settings_option_font_medium), this.getResources().getString(R.string.settings_option_font_small)};//"Besar", "Sedang", "Kecil"
-        skin = new String[]{this.getResources().getString(R.string.skin_style_blue), this.getResources().getString(R.string.skin_style_red),};//"黑夜"
+        skin = new String[]{this.getResources().getString(R.string.skin_style_blue), this.getResources().getString(R.string.skin_style_red),"黑夜"};//"黑夜"
 
         switch (App.getInstance().getThemeName()) {
             case "0": {
@@ -168,11 +167,11 @@ public class SettingActivity extends MBaseActivity {
             break;
             case "2": {
 //                setting_chosse_skin.setText(this.getResources().getString(R.string.skin_style_red));
-                setting_chosse_skin.setText("黑夜");
+                setting_chosse_skin.setText("护眼模式");
             }
             break;
         }
-
+        textSize = new String[]{this.getResources().getString(R.string.settings_option_font_large), this.getResources().getString(R.string.settings_option_font_medium), this.getResources().getString(R.string.settings_option_font_small)};//"Besar", "Sedang", "Kecil"
         zqzx_setting_skin.setOnClickListener(new ChooseSkinClickListener());
 
         loadingView = findViewById(R.id.app_progress_bar);
@@ -554,8 +553,10 @@ public class SettingActivity extends MBaseActivity {
 
     @OnClick(R.id.zqzx_setting_feedback)
     private void feedBack(View v) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick())
+        if (AvoidOnClickFastUtils.isFastDoubleClick()){
             return;
+        }
+
         Intent intent = new Intent(this, ZQ_FeedBackActivity.class);
         startActivity(intent);
         AAnim.ActivityStartAnimation(this);

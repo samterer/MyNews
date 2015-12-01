@@ -12,17 +12,23 @@ import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.http.HttpHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.common.lib.analytics.AnalyticCallback;
 import org.common.lib.analytics.FragmentLifecycleAction;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseFragment extends Fragment implements AnalyticCallback {
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (!isAdded()) {
+            return;
+        }
         if (TextUtils.isEmpty(getAnalyticPageName())) {
             return;
         }
@@ -61,6 +67,8 @@ public class BaseFragment extends Fragment implements AnalyticCallback {
         spu = SPUtil.getInstance();
         mImageLoader = ImageLoader.getInstance();
     }
+
+    List<HttpHandler> handlerList = new ArrayList<>();
 
     @Override
     public void onAttach(Activity activity) {
@@ -129,6 +137,14 @@ public class BaseFragment extends Fragment implements AnalyticCallback {
 
     @Override
     public void onDestroy() {
+        for (HttpHandler httpHandler : handlerList) {
+            if (httpHandler.getState() == HttpHandler.State.LOADING || httpHandler.getState() == HttpHandler.State.STARTED) {
+                httpHandler.setRequestCallBack(null);
+                httpHandler.cancel();
+            }
+        }
+        handlerList.clear();
+        httpUtils = null;
         super.onDestroy();
         App.getInstance().getRefWatcher().watch(this);
     }

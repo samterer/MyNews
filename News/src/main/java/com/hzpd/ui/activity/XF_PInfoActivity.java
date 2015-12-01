@@ -25,7 +25,7 @@ public class XF_PInfoActivity extends MBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.xf_pinfo_layout);
         ViewUtils.inject(this);
-        changeStatus();
+//        changeStatus();
         Intent intent = getIntent();
         String uid = intent.getStringExtra("uid");
         personalInfoFm = new XF_PersonalInfoFragment();

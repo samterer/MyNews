@@ -17,18 +17,11 @@ import com.hzpd.modle.event.RestartEvent;
 import com.hzpd.modle.event.SetThemeEvent;
 import com.hzpd.services.InitService;
 import com.hzpd.ui.App;
-import com.hzpd.ui.fragments.MySearchFragment;
-import com.hzpd.ui.fragments.NewsAlbumFragment;
 import com.hzpd.ui.fragments.NewsFragment;
-import com.hzpd.ui.fragments.VideoListFragment;
 import com.hzpd.ui.fragments.WebviewFragment;
-import com.hzpd.ui.fragments.ZhuantiFragment;
-import com.hzpd.ui.fragments.action.ActionListFragment;
-import com.hzpd.ui.interfaces.I_ChangeFm;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
-import com.hzpd.utils.CODE;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.ExitApplication;
 import com.hzpd.utils.FjsonUtil;
@@ -39,6 +32,7 @@ import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
@@ -47,15 +41,19 @@ import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
-import cn.jpush.android.api.JPushInterface;
-import cn.jpush.android.api.PushBuilder;
 import de.greenrobot.event.EventBus;
 
 
-public class MainActivity extends BaseActivity implements I_ChangeFm {
+public class MainActivity extends BaseActivity {
+
+    public final static String TAG = "NEWS";
+
+    public MainActivity() {
+        super();
+    }
 
     public static final int REQUEST_IMAGE = 2;
     private int itemSelectPositon = 0;
@@ -68,6 +66,8 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
     private float offset;
     private boolean flipped;
 
+    List<HttpHandler> handlerList = new ArrayList<>();
+
     @Override
     public void finish() {
         App.isStartApp = false;
@@ -77,6 +77,7 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
+
         EventBus.getDefault().register(this);
         long start = System.currentTimeMillis();
         setContentView(R.layout.app_main);
@@ -85,7 +86,7 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
         Thread.setDefaultUncaughtExceptionHandler(App.uncaughtExceptionHandler);
         FragmentTransaction ft = fm.beginTransaction();
         currentFrag = new NewsFragment();
-        ft.add(R.id.root, currentFrag, App.menuList.get(CODE.MENU_NEWS).getName());
+        ft.add(R.id.root, currentFrag, TAG);
         ft.commit();
         setTitleText(getString(R.string.app_name));
 //        setTitleText(App.menuList.get(CODE.MENU_NEWS).getName());
@@ -97,23 +98,6 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
         Intent intent = new Intent(this, InitService.class);
         intent.setAction(InitService.UserLogAction);
         startService(intent);
-
-        setStyleCustom();
-
-    }
-
-    private void setStyleCustom() {
-        SimpleDateFormat sDateFormat = new SimpleDateFormat("HH:mm");
-        Date curDate = new Date(System.currentTimeMillis());//获取当前时间
-        String date = sDateFormat.format(curDate);
-//        CustomPushNotificationBuilder builder = new CustomPushNotificationBuilder(MainActivity.this,
-//                R.layout.customer_notitfication_layout, R.id.icon, R.id.title, R.id.text);  // 指定定制的 Notification Layout
-//        builder.statusBarDrawable = R.drawable.details_related_news;      // 指定最顶层状态栏小图标
-//        builder.layoutIconDrawable = R.drawable.logo;   // 指定下拉状态栏时显示的通知图标
-        PushBuilder builder1 = new PushBuilder(MainActivity.this,
-                R.layout.customer_notitfication_layout, R.id.icon, R.id.title, R.id.text, R.id.time);
-        builder1.layoutIconDrawable = R.drawable.logo;   // 指定下拉状态栏时显示的通知图标
-        JPushInterface.setPushNotificationBuilder(1, builder1);
     }
 
     @OnClick({R.id.main_title_left, R.id.main_title_right})
@@ -162,59 +146,6 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
     }
 
     @Override
-    public void changeFm(int position) {
-
-        if (itemSelectPositon == position) {
-            getSlidingMenu().toggle(true);
-            return;
-        }
-
-        itemSelectPositon = position;
-        Fragment fragment = null;
-        setTitleText(App.menuList.get(position).getName());
-
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.hide(currentFrag);
-        fragment = fm.findFragmentByTag(App.menuList.get(position).getName());
-        if (null == fragment) {
-            switch (position) {
-                case CODE.MENU_NEWS:// 新闻
-                    fragment = new NewsFragment();
-                    break;
-                case CODE.MENU_ALBUM:// 图集
-                    fragment = new NewsAlbumFragment();
-                    break;
-                case CODE.MENU_VIDEO_RECORDING:// 视频
-                    fragment = new VideoListFragment();
-                    break;
-                case CODE.MENU_SPECIAL: { // 专题(专题报道)
-                    fragment = new ZhuantiFragment();
-                }
-                break;
-                case CODE.MENU_ACTION: {// 活动
-                    fragment = new ActionListFragment();
-                }
-                break;
-                case CODE.MENU_SEARCH: {// 搜索
-                    fragment = new MySearchFragment();
-                }
-                break;
-                default: {
-
-                }
-                break;
-            }
-            ft.add(R.id.root, fragment, App.menuList.get(position).getName());
-        } else {
-            ft.show(fragment);
-        }
-        ft.commit();
-        currentFrag = fragment;
-        getSlidingMenu().toggle(true);
-
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (2 == requestCode) {
@@ -230,7 +161,9 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
     protected HttpUtils httpUtils;
 
     private void checkVersion() {
-        httpUtils = SPUtil.getHttpUtils();
+        if (httpUtils == null) {
+            httpUtils = SPUtil.getHttpUtils();
+        }
         int version = 0;
         try {
             version = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode;
@@ -240,12 +173,15 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("plat", "Android");
         params.addBodyParameter("version", "" + version);
-        httpUtils.send(HttpRequest.HttpMethod.POST
+        HttpHandler httpHandler = httpUtils.send(HttpRequest.HttpMethod.POST
                 , InterfaceJsonfile.GET_VERSION
                 , params
                 , new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                if (responseInfo==null){
+                    return;
+                }
                 JSONObject obj = FjsonUtil
                         .parseObject(responseInfo.result);
                 if (obj == null) {
@@ -256,6 +192,7 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
                     SPUtil.showNotification(mBean.getDescription(), getApplicationContext());
                     SPUtil.updateDialog(mBean.getDescription(), MainActivity.this);
                 } else {
+
                 }
 
             }
@@ -265,12 +202,21 @@ public class MainActivity extends BaseActivity implements I_ChangeFm {
                 Log.e("test", "onFailure");
             }
         });
+        handlerList.add(httpHandler);
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         EventBus.getDefault().unregister(this);
+        for (HttpHandler httpHandler : handlerList) {
+            if (httpHandler.getState() == HttpHandler.State.LOADING || httpHandler.getState() == HttpHandler.State.STARTED) {
+                httpHandler.setRequestCallBack(null);
+                httpHandler.cancel();
+            }
+        }
+        handlerList.clear();
+        httpUtils = null;
+        super.onDestroy();
     }
 
     public void onEventMainThread(RestartEvent event) {

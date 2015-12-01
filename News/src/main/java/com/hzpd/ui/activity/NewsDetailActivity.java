@@ -71,6 +71,7 @@ import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
+import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CODE;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.Constant;
@@ -91,6 +92,7 @@ import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
@@ -114,7 +116,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     public String getAnalyticPageName() {
         return null;
     }
-
 
     //    private  String BASEURL = InterfaceJsonfile.ROOT + "index.php?s=/Public/newsview/nid/";
     private String BASEURL = "index.php?s=/Public/newsview/nid/";
@@ -209,14 +210,29 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     };
 
     private View details_iv_comment;
+    private boolean isTheme;
+    private View transparent_layout_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getThisIntent();
+        Log.e("test", "qqqqqq onCreate " + hashCode());
         super.onCreate(savedInstanceState);
+
+        if (App.getInstance().getThemeName().equals("3")) {
+            isTheme = true;
+        } else {
+            isTheme = false;
+        }
+
         App.getInstance().setProfileTracker(callback);
         setContentView(R.layout.news_details_layout);
-
+        transparent_layout_id=findViewById(R.id.transparent_layout_id);
+        if (App.getInstance().getThemeName().equals("3")) {
+            transparent_layout_id.setVisibility(View.VISIBLE);
+        } else {
+            transparent_layout_id.setVisibility(View.GONE);
+        }
         try {
             load_progress_bar = (ProgressBar) findViewById(R.id.load_progress_bar);
             details_iv_comment = (View) findViewById(R.id.details_iv_comment);
@@ -229,6 +245,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             details_iv_comment.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (AvoidOnClickFastUtils.isFastDoubleClick())
+                        return;
                     if (skipComment()) return;
                 }
             });
@@ -391,6 +409,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     @Override
     protected void onDestroy() {
         callback = null;
+        loading = true;
+        runnable = null;
         App.getInstance().setProfileTracker(null);
         super.onDestroy();
         nb = null;
@@ -423,7 +443,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         View headView = infla.inflate(R.layout.details_related_news, null);
 
         details_explain = (FontTextView) headView.findViewById(R.id.details_explain);
-        String link=getResources().getString(R.string.details_lv_link);
+        String link = getResources().getString(R.string.details_lv_link);
         SpannableString spanttt = new SpannableString(link);
         ClickableSpan clickttt = new ShuoMClickableSpan(link, this);
         spanttt.setSpan(clickttt, 0, link.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -689,7 +709,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         params.addBodyParameter("num", "" + num);
         //like unlike
 
-        httpUtils.send(HttpMethod.POST, ADDCOLLECTION_url// InterfaceApi.addcollection
+        HttpHandler httpHandler = httpUtils.send(HttpMethod.POST, ADDCOLLECTION_url// InterfaceApi.addcollection
                 , params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -699,6 +719,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             public void onFailure(HttpException error, String msg) {
             }
         });
+        handlerList.add(httpHandler);
     }
 
     private void initCommentListView() {
@@ -743,6 +764,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     @Override
     public void onClick(View v) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick())
+            return;
         try {
             switch (v.getId()) {
                 case R.id.news_textsize_big_id:
@@ -901,11 +924,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         params.addBodyParameter("photo", tlb.getPhoto());
         params.addBodyParameter("third", tlb.getThird());
         params.addBodyParameter("is_ucenter", "0");
-        httpUtils.send(HttpRequest.HttpMethod.POST, thirdLogin_url, params,
+        HttpHandler httpHandler = httpUtils.send(HttpRequest.HttpMethod.POST, thirdLogin_url, params,
                 new RequestCallBack<String>() {
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {
-                        LogUtils.i("result-->" + responseInfo.result);
                         JSONObject obj = FjsonUtil
                                 .parseObject(responseInfo.result);
                         if (null == obj) {
@@ -936,6 +958,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         LogUtils.e("test login failed");
                     }
                 });
+        httpHandler.setRequestCallBack(null);
+        handlerList.add(httpHandler);
     }
 
     private ArrayList<CommentzqzxBean> latestList;
@@ -1063,6 +1087,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
+            if (!isResume) {
+                return;
+            }
             if (loading) {
                 if (wProgress < MIDDLE_PROGRESS && progress < MIDDLE_PROGRESS) {
                     progress += 1;
@@ -1115,7 +1142,11 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         stringBuilder.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n");
         stringBuilder.append("<style>@font-face {font-family: 'kievit';src: url('file:///android_asset/fonts/KievitPro-Regular.otf');}</style>");
         stringBuilder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
+//        if (isTheme) {
         stringBuilder.append("android.css");
+//        } else {
+//            stringBuilder.append("androidnight.css");
+//        }
         stringBuilder.append("\" />\n");
         stringBuilder.append("</head><body>");
 //        stringBuilder.append("<a class='image loading 'style=\"width:500px;height:300px;\" ></a>");
@@ -1226,7 +1257,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         params.addBodyParameter("type", "News");
         params.addBodyParameter("siteid", siteid);
         String url = mLatestComm_url;
-        httpUtils.send(HttpMethod.POST
+        HttpHandler httpHandler = httpUtils.send(HttpMethod.POST
                 , url
                 , params
                 , new RequestCallBack<String>() {
@@ -1249,6 +1280,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 mLoadMoreContainer.loadMoreFinish(true, false);
             }
         });
+        handlerList.add(httpHandler);
     }
 
     private void parseCommentJson(String json) {
@@ -1347,7 +1379,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 return;
             }
 
-            httpUtils.download(nb.getJson_url(), detailPathRoot + "detail_" + nb.getNid(), new RequestCallBack<File>() {
+            HttpHandler httpHandler = httpUtils.download(nb.getJson_url(), detailPathRoot + "detail_" + nb.getNid(), new RequestCallBack<File>() {
                 @Override
                 public void onStart() {
                     super.onStart();
@@ -1410,6 +1442,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     }
                 }
             });
+            handlerList.add(httpHandler);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1429,6 +1462,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 text.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        if (AvoidOnClickFastUtils.isFastDoubleClick())
+                            return;
                         Intent mIntent = new Intent();
                         mIntent.putExtra("newbean", bean);
                         mIntent.putExtra("from", "newsitem");
@@ -1443,7 +1478,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     //获取相关tag
     private void addRelatedTagView() {
-        if (mBean != null && mBean.getTag() != null ) {
+        if (mBean != null && mBean.getTag() != null) {
             Log.e("tag", "addRelatedTagView tag--->" + mBean.getTag());
             if (mBean.getTag().length > 3) {
                 for (int i = 0; i < 3; i++) {
@@ -1477,6 +1512,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
         @Override
         public void onClick(View v) {
+            if (AvoidOnClickFastUtils.isFastDoubleClick())
+                return;
             Intent intent = new Intent();
             intent.putExtra("TAGCONNENT", tag);
             intent.setClass(NewsDetailActivity.this, SearchActivity.class);
@@ -1638,7 +1675,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
             LogUtils.i("params-->" + params.toString());
 
-            httpUtils.send(HttpMethod.POST, ADDCOLLECTION_url// InterfaceApi.addcollection
+            HttpHandler httpHandler = httpUtils.send(HttpMethod.POST, ADDCOLLECTION_url// InterfaceApi.addcollection
                     , params, new RequestCallBack<String>() {
                 @Override
                 public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -1648,6 +1685,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 public void onFailure(HttpException error, String msg) {
                 }
             });
+            handlerList.add(httpHandler);
         }
 
     }
@@ -1668,7 +1706,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             params.addBodyParameter("typeid", nb.getNid());
             params.addBodyParameter("type", "1");
 
-            httpUtils.send(HttpMethod.POST, ISCELLECTION_url, params, new RequestCallBack<String>() {
+            HttpHandler httpHandler = httpUtils.send(HttpMethod.POST, ISCELLECTION_url, params, new RequestCallBack<String>() {
                 @Override
                 public void onSuccess(ResponseInfo<String> responseInfo) {
                     LogUtils.i("isCollection result-->" + responseInfo.result);
@@ -1696,6 +1734,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     LogUtils.i("isCollection failed");
                 }
             });
+            handlerList.add(httpHandler);
         } else {
             try {
                 NewsItemBeanForCollection nbfc = dbHelper.getCollectionDBUitls()
@@ -1721,19 +1760,15 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         super.onPause();
         long totalTile = System.currentTimeMillis() - enterTime;
         totalTile = totalTile / 1000;
-        AnalyticUtils.sendGaEvent(this, AnalyticUtils.CATEGORY.newsDetail, AnalyticUtils.ACTION.viewPage, nb.getNid() + "@" + nb.getTitle(), totalTile);
+        AnalyticUtils.sendGaEvent(this, AnalyticUtils.CATEGORY.newsDetail, AnalyticUtils.ACTION.viewPage, PREFIX + nb.getTid() + "#" + nb.getNid(), totalTile);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         enterTime = System.currentTimeMillis();
-        String title = nb.getTitle();
-        if (title.length() > MAX_SIZE) {
-            title = title.substring(0, MAX_SIZE);
-        }
         AnalyticUtils.sendUmengEvent(this, AnalyticUtils.CATEGORY.newsDetail, nb.getTid() + "#" + nb.getNid() + "@" + title);
-        AnalyticUtils.sendGaScreenViewHit(this, PREFIX + nb.getTid() + "#" + nb.getNid() + "@" + title, nb.getCnname(), nb.getAuthorname());
+        AnalyticUtils.sendGaScreenViewHit(this, PREFIX + nb.getTid() + "#" + nb.getNid(), nb.getCnname(), nb.getAuthorname());
     }
 
     private long enterTime = 0;

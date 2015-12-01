@@ -34,6 +34,7 @@ import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.SystemBarTintManager;
 import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
@@ -48,14 +49,12 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-/**
- * Created by liuqing on 2015/8/10.
- */
 public class SearchActivity extends MBaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
     public static final String TAG_NONE = "none";
     public static final String TAG_KEY = "key";
 
     private String tagcontext;
+
     @Override
     public String getAnalyticPageName() {
         return AnalyticUtils.SCREEN.search;
@@ -70,6 +69,7 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
         addView();
         getKeys();
     }
+
     private void changeStatus() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTranslucentStatus(true);
@@ -99,6 +99,7 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
         }
         win.setAttributes(winParams);
     }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -124,7 +125,7 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
             }
             RequestParams requestParams = new RequestParams();
             requestParams.addQueryStringParameter("Pagesize", "10");
-            httpUtils.download(keys_url,
+            HttpHandler httpHandler = httpUtils.download(keys_url,
                     target.getAbsolutePath(),
                     new RequestCallBack<File>() {
                         @Override
@@ -154,6 +155,7 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
                         }
                     }
             );
+            handlerList.add(httpHandler);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -271,10 +273,11 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
     public void searchApp() {
         try {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            View target = SearchActivity.this.getCurrentFocus();
-            inputMethodManager.hideSoftInputFromWindow(target.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            View target = getCurrentFocus();
+            if (target != null) {
+                inputMethodManager.hideSoftInputFromWindow(target.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
         }
         String text = editText.getText().toString();
         if (text != null && !TextUtils.isEmpty(text)) {
@@ -335,6 +338,12 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
+        editText.setOnClickListener(null);
+        editText.setOnItemClickListener(null);
+        editText.setOnKeyListener(null);
+        editText.setAdapter(null);
+        editText = null;
+        adapter = null;
         super.onDestroy();
     }
 

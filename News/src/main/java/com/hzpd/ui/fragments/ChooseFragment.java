@@ -173,6 +173,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         floatingView.setOnClickListener(this);
         ViewHelper.setAlpha(floatingView, 0.7f);
         mSwipeRefreshWidget = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
+//        mSwipeRefreshWidget.setLayoutMode();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recylerlist);
 
         try {

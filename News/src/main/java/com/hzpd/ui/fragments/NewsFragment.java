@@ -66,6 +66,8 @@ public class NewsFragment extends BaseFragment {
     private View main_no_news;
     @ViewInject(R.id.app_progress_bar)
     private View app_progress_bar;
+    @ViewInject(R.id.transparent_layout_id)
+    private View transparent_layout_id;
 
     private NewsFragmentPagerAdapter adapter;
 
@@ -73,12 +75,18 @@ public class NewsFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.news_fragment_main, container, false);
         ViewUtils.inject(this, view);
+        if (App.getInstance().getThemeName().equals("3")) {
+            transparent_layout_id.setVisibility(View.VISIBLE);
+        } else {
+            transparent_layout_id.setVisibility(View.GONE);
+        }
         return view;
     }
 

@@ -1,17 +1,11 @@
 package com.hzpd.ui.activity;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -20,50 +14,18 @@ import android.widget.ProgressBar;
 
 import com.hzpd.hflt.R;
 import com.hzpd.ui.App;
-import com.hzpd.utils.SystemBarTintManager;
 
 /**
  * WevView third url
  */
-public class WebActivity extends Activity {
+public class WebActivity extends MBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.web_activity_layout);
-        changeStatus();
         checkIntent();
     }
 
-
-    private void changeStatus() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true);
-            //透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //透明导航栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
-
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(true);
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
-        int color = typedValue.data;
-        tintManager.setStatusBarTintColor(color);
-    }
-
-    @TargetApi(19)
-    private void setTranslucentStatus(boolean on) {
-        Window win = getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
-    }
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -79,7 +41,6 @@ public class WebActivity extends Activity {
         }
         initViews();
     }
-
 
     @Override
     protected void onDestroy() {
@@ -98,7 +59,7 @@ public class WebActivity extends Activity {
         webView = (WebView) findViewById(R.id.webview);
         load_progress_bar = (ProgressBar) findViewById(R.id.load_progress_bar);
         background_empty = findViewById(R.id.background_empty);
-        backView = findViewById(R.id.btn_back);
+        backView = findViewById(R.id.news_detail_bak);
         backView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

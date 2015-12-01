@@ -130,4 +130,7 @@
     </FrameLayout>
 
 
+    <include layout="@layout/transparent_layout"/>
+
+
 </FrameLayout>

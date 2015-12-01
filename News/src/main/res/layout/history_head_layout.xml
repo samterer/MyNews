@@ -3,7 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:background="@color/search_content_background"
+	android:background="?search_content_background_color"
 	android:gravity="left|center_vertical"
 	android:padding="@dimen/search_padding_middle"
 	android:orientation="horizontal">
@@ -17,7 +17,7 @@
 
 		android:paddingLeft="@dimen/detail_margin_left"
 		android:text="@string/search_history_head"
-		android:textColor="@color/search_key_head_text"
+		android:textColor="?search_key_head_text_color"
 		android:textSize="@dimen/search_title_size"/>
 
 	<com.hzpd.ui.widget.FontTextView
@@ -29,7 +29,7 @@
 		android:gravity="center"
 		android:padding="@dimen/search_padding_low"
 		android:text="@string/search_history_clear"
-		android:textColor="@color/search_key_head_text"
+		android:textColor="?search_key_head_text_color"
 		android:textSize="@dimen/search_clear_size"/>
 
 </LinearLayout>

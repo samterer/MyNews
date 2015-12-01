@@ -25,6 +25,7 @@ import com.hzpd.custorm.CircleImageView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.MycommentsBean;
 import com.hzpd.modle.XF_UserInfoBean;
+import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
@@ -84,13 +85,19 @@ public class MyCommentsActivity extends MBaseActivity {
     private static final int PageSize = 15;
     private boolean mFlagRefresh;
     private MycommentsAdapter adapter;
-
+    @ViewInject(R.id.transparent_layout_id)
+    private View transparent_layout_id;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mycomment_layout);
         ViewUtils.inject(this);
+        if (App.getInstance().getThemeName().equals("3")) {
+            transparent_layout_id.setVisibility(View.VISIBLE);
+        } else {
+            transparent_layout_id.setVisibility(View.GONE);
+        }
 //        if (spu.getUser() != null) {
 //            title.setVisibility(View.GONE);
 //        } else {

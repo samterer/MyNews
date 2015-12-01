@@ -14,17 +14,19 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
-
     <style name="ThemeDefault" parent="AppTheme">
         <!-- MainActivity-->
         <item name="title_bar_color">@color/toolbar_bg</item>
         <item name="title_bar_name_color">@color/white</item>
         <item name="m_background_tab_pressed">@drawable/title_bar_btn_selector_color</item>
 
+        <item name="main_activity_color">@color/white</item>
         <item name="fragment_main_backgroup">@color/fragment_background</item>
         <item name="item_title">@color/item_title</item>
         <item name="item_title_read">@color/grey_font</item>
         <item name="item_tag">@color/main_tag</item>
+        <item name="news_item_btn_selector">@drawable/news_item_selector</item>
+        <item name="news_item_line_color">@color/subscribe_item_drag_bg</item>
 
 
         <item name="xf_login_bg_drawable">@drawable/xf_login_bg</item>
@@ -62,6 +64,19 @@
         <item name="zq_feedback_color">@color/zqzx_bg_normal</item>
         <item name="zq_feedback_edit_color">@color/zqzx_font_normal</item>
         <item name="zq_feedback_btn_color">@color/white</item>
+        <item name="zq_feedback_btn_submit">@drawable/zq_feedback_btn_selector</item>
+
+        <item name="fragment_search_background_color">@color/white</item>
+        <item name="search_content_background_color">@color/search_content_background</item>
+        <item name="search_key_head_text_color">@color/search_key_head_text</item>
+        <item name="search_history_item_color">@color/white</item>
+        <item name="my_comment_top_nickname">@color/white</item>
+        <item name="my_comment_top_regtime">#d0d7ff</item>
+        <item name="my_comment_news_title">#333</item>
+        <item name="my_comment_nickname">#8d8d8d</item>
+        <item name="my_comment_time">@color/time_color</item>
+        <item name="my_comment_news_selector">@drawable/my_comment_news_selector</item>
+        <item name="news_detail_rel_item_title">@color/black</item>
     </style>
 
     <style name="ThemeRed" parent="AppTheme">
@@ -70,10 +85,13 @@
         <item name="title_bar_name_color">@color/white</item>
         <item name="m_background_tab_pressed">@drawable/title_bar_btn_selector_red_color</item>
 
+        <item name="main_activity_color">@color/white</item>
         <item name="fragment_main_backgroup">@color/fragment_background</item>
         <item name="item_title">@color/item_title</item>
         <item name="item_title_read">@color/grey_font</item>
         <item name="item_tag">@color/main_tag</item>
+        <item name="news_item_btn_selector">@drawable/news_item_selector</item>
+        <item name="news_item_line_color">@color/subscribe_item_drag_bg</item>
 
         <item name="xf_login_bg_drawable">@drawable/xf_login_bg_red</item>
         <!--侧滑菜单-->
@@ -110,55 +128,85 @@
         <item name="zq_feedback_color">@color/zqzx_bg_normal</item>
         <item name="zq_feedback_edit_color">@color/zqzx_font_normal</item>
         <item name="zq_feedback_btn_color">@color/white</item>
+        <item name="zq_feedback_btn_submit">@drawable/zq_feedback_btn_selector_red</item>
+
+        <item name="fragment_search_background_color">@color/white</item>
+        <item name="search_content_background_color">@color/search_content_background</item>
+        <item name="search_key_head_text_color">@color/search_key_head_text</item>
+        <item name="search_history_item_color">@color/white</item>
+        <item name="my_comment_top_nickname">@color/white</item>
+        <item name="my_comment_top_regtime">#d0d7ff</item>
+        <item name="my_comment_news_title">#333</item>
+        <item name="my_comment_nickname">#8d8d8d</item>
+        <item name="my_comment_time">@color/time_color</item>
+        <item name="my_comment_news_selector">@drawable/my_comment_news_selector</item>
+        <item name="news_detail_rel_item_title">@color/black</item>
 
     </style>
 
     <style name="ThemeNight" parent="AppTheme">
         <!-- MainActivity-->
-        <item name="title_bar_color">#992a28</item>
+        <item name="title_bar_color">#2e3b84</item>
         <item name="title_bar_name_color">@color/white</item>
-        <item name="m_background_tab_pressed">@drawable/title_bar_btn_selector_red_color</item>
+        <item name="m_background_tab_pressed">@drawable/title_bar_btn_selector_color</item>
 
+        <item name="main_activity_color">#222222</item>
         <item name="fragment_main_backgroup">#222222</item>
-        <item name="item_title">@color/item_title</item>
-        <item name="item_title_read">@color/grey_font</item>
+        <item name="item_title">@color/white</item>
+        <item name="item_title_read">#656565</item>
         <item name="item_tag">@color/main_tag</item>
+        <item name="news_item_btn_selector">@drawable/news_item_selector_night</item>
+        <item name="news_item_line_color">#e6e6e6</item>
 
-        <item name="xf_login_bg_drawable">@drawable/xf_login_bg_red</item>
+
+        <item name="xf_login_bg_drawable">@drawable/xf_login_bg</item>
         <!--侧滑菜单-->
         <item name="left_menu_fb_avatar">@drawable/zy_pic_main_info_profile_bg</item>
         <item name="left_menu_fb_name">@color/white</item>
         <item name="left_menu_item_name">@color/white</item>
         <item name="left_menu_version_name">@color/white</item>
         <item name="left_menu_version_line">@color/white</item>
-        <item name="left_menu_login_facebook_button">@drawable/login_facebook_button_red</item>
+        <item name="left_menu_login_facebook_button">@drawable/login_facebook_button</item>
         <!-- newsfragment-->
         <item name="fragment_main_psts_tabs_background">#222222</item>
         <item name="fragment_main_psts_tabs_indicator_color">#b03e31</item>
         <item name="fragment_main_psts_tabs_text_color">#606060</item>
         <!-- choosefragment-->
         <item name="fragment_choose_card_backgroup_color">#ffffff</item>
-        <item name="fragment_choose_btn_src_color">@drawable/floating_button_selector_red</item>
+        <item name="fragment_choose_btn_src_color">@drawable/floating_button_selector</item>
         <!-- newitemfragment-->
         <item name="fragment_news_item_falsh">@color/white</item>
 
         <!-- newsdetail-->
-        <item name="newsdetail_fontsize_drawable">@drawable/details_font_selector_red</item>
-        <item name="newsdetail_share_drawable">@drawable/details_share_selector_red</item>
-        <item name="details_comment_pen_drawable">@drawable/details_comment_pen_selector_red</item>
-        <item name="button_comment_style_drawable">@drawable/button_comment_style_red</item>
+        <item name="newsdetail_fontsize_drawable">@drawable/details_font_selector</item>
+        <item name="newsdetail_share_drawable">@drawable/details_share_selector</item>
+        <item name="details_comment_pen_drawable">@drawable/details_comment_pen_selector</item>
+        <item name="button_comment_style_drawable">@drawable/button_comment_style</item>
 
         <!--Setting-->
-        <item name="zqzx_setting_main_color">@color/grey_color</item>
-        <item name="zqzx_onclik_setting_item">@drawable/setting_item_selector</item>
-        <item name="setting_item_selector_color">@color/zqzx_font_light</item>
-        <item name="zqzx_setting_item_text">@color/zqzx_font_set_title</item>
-        <item name="zqzx_setting_item_right_text">@color/zqzx_font_set_normal</item>
+        <item name="zqzx_setting_main_color">#222222</item>
+        <item name="zqzx_onclik_setting_item">@drawable/setting_item_selector_night</item>
+        <item name="setting_item_selector_color">@color/white</item>
+        <item name="zqzx_setting_item_text">@color/white</item>
+        <item name="zqzx_setting_item_right_text">@color/white</item>
 
         <!-- FeedBack-->
-        <item name="zq_feedback_color">@color/zqzx_bg_normal</item>
+        <item name="zq_feedback_color">#222222</item>
         <item name="zq_feedback_edit_color">@color/zqzx_font_normal</item>
         <item name="zq_feedback_btn_color">@color/white</item>
+        <item name="zq_feedback_btn_submit">@drawable/zq_feedback_btn_selector</item>
+
+        <item name="fragment_search_background_color">#222222</item>
+        <item name="search_content_background_color">@color/black</item>
+        <item name="search_key_head_text_color">@color/white</item>
+        <item name="search_history_item_color">#222222</item>
+        <item name="my_comment_news_title">@color/white</item>
+        <item name="my_comment_top_nickname">@color/white</item>
+        <item name="my_comment_top_regtime">@color/white</item>
+        <item name="my_comment_nickname">@color/white</item>
+        <item name="my_comment_time">@color/white</item>
+        <item name="my_comment_news_selector">@drawable/my_comment_news_selector_night</item>
+        <item name="news_detail_rel_item_title">@color/white</item>
 
     </style>
 
@@ -235,7 +283,6 @@
         <item name="vpiTitlePageIndicatorStyle">@style/CustomTitlePageIndicator</item>
         <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
         <item name="vpiUnderlinePageIndicatorStyle">@style/CustomUnderlinePageIndicator</item>
-
 
     </style>
 
@@ -378,7 +425,6 @@
         <item name="android:windowExitAnimation">@anim/anim_popupwindow_hide</item>
     </style>
 
-
     <style name="edit_order_btn">
         <item name="android:textSize">14.0sp</item>
         <item name="android:textColor">@color/ssxinhongse1</item>
@@ -411,10 +457,10 @@
         <item name="thumb_margin">-6dp</item>
     </style>
 
-
     <style name="NotificationText">
         <item name="android:textColor">?android:textColorPrimary</item>
     </style>
+
     <style name="NotificationTitle">
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">?android:textColorPrimary</item>

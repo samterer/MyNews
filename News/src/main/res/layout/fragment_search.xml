@@ -24,7 +24,7 @@
             android:id="@+id/recyclerview_serch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ffffff"/>
+            android:background="?fragment_search_background_color"/>
     </FrameLayout>
 
 </LinearLayout>

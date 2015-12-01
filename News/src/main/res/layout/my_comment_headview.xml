@@ -33,7 +33,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:text="@string/prompt_login_now"
-            android:textColor="@color/white"
+            android:textColor="?my_comment_top_nickname"
             android:textSize="20sp" />
 
         <ImageView
@@ -110,7 +110,8 @@
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="16dp"
-            android:textColor="#d0d7ff"
+            android:textColor="?my_comment_top_regtime"
+            android:text=""
             android:textSize="12sp" />
 
         <com.hzpd.ui.widget.FontTextView

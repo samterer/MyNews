@@ -2,20 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?fragment_main_backgroup"
     android:clipToPadding="true"
-    android:fitsSystemWindows="true"
-    android:background="#fafafa">
+    android:fitsSystemWindows="true">
 
 
     <include
         android:id="@+id/editcolum_include"
         layout="@layout/stitle_layout" />
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/editcolum_include"
+        android:layout_below="@+id/editcolum_include"
         android:layout_marginBottom="10dp">
 
         <LinearLayout
@@ -53,11 +52,6 @@
                 android:layout_below="@id/editcolumn_remind_ll"
                 android:orientation="vertical">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="#f2e4d3" />
-
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -76,26 +70,25 @@
 
                     <com.hzpd.ui.widget.FontTextView
                         android:id="@+id/editcolum_explain"
-                        android:layout_alignParentBottom="true"
                         android:layout_width="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_toRightOf="@+id/my_channel"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_toRightOf="@+id/my_channel"
                         android:layout_weight="1"
+                        android:gravity="center_vertical"
                         android:paddingLeft="10dp"
                         android:text="@string/prompt_click_to_add_or_cancel"
                         android:textSize="12sp"
-                        android:visibility="gone"
-                        />
+                        android:visibility="gone" />
 
                     <com.hzpd.ui.widget.FontTextView
                         android:id="@+id/text_editcolumn"
                         android:layout_width="wrap_content"
-                        android:layout_alignParentBottom="true"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="23dp"
-                        android:layout_alignParentRight="true"
                         android:background="@drawable/btn_order"
                         android:gravity="center"
                         android:paddingBottom="2dp"
@@ -176,7 +169,8 @@
                 android:paddingLeft="10dp"
                 android:text="输入你感兴趣的任意频道"
                 android:textColor="@color/pulltorefresh_font"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:visibility="gone" />
 
             <com.hzpd.custorm.OtherGridView
                 android:id="@+id/editcolumn_gridview"

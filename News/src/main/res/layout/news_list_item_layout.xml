@@ -7,7 +7,7 @@
         android:id="@+id/newsitem_ll2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/news_item_selector">
+        android:background="?news_item_btn_selector">
 
         <LinearLayout
             android:layout_width="match_parent"

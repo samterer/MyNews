@@ -341,6 +341,6 @@
     <string name="click_here_to_refresh">点此刷新</string>
     <string name="delete">删除</string>
     <string name="setting_skin">换肤</string>
-    <string name="skin_style_blue">默认</string>
+    <string name="skin_style_blue">蓝色</string>
     <string name="skin_style_red">红色</string>
 </resources>

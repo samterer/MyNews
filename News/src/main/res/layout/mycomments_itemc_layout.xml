@@ -41,7 +41,7 @@
                 android:drawablePadding="5dp"
                 android:paddingTop="4dp"
                 android:text="@string/prompt_i_has_comment"
-                android:textColor="#8d8d8d"
+                android:textColor="?my_comment_nickname"
                 android:textSize="16sp" />
 
             <com.hzpd.ui.widget.FontRobotoTextView
@@ -51,8 +51,8 @@
                 android:layout_marginTop="5dp"
                 android:drawablePadding="3dp"
                 android:gravity="center_vertical"
-                android:text="09-27 "
-                android:textColor="@color/time_color"
+                android:text="09-27"
+                android:textColor="?my_comment_time"
                 android:textSize="12sp" />
 
             <com.hzpd.ui.widget.FontTextView
@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:textColor="#333"
+                android:textColor="?my_comment_news_title"
                 android:textSize="18sp" />
 
 

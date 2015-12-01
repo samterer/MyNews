@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.hzpd.hflt.R;
 import com.hzpd.ui.activity.ZQ_FeedBackActivity;
+import com.hzpd.utils.AvoidOnClickFastUtils;
 
 public class ShuoMClickableSpan extends ClickableSpan {
 
@@ -29,11 +30,11 @@ public class ShuoMClickableSpan extends ClickableSpan {
 
     @Override
     public void onClick(View widget) {
-        Intent intent
-                = new Intent();
+        if (AvoidOnClickFastUtils.isFastDoubleClick())
+            return;
+        Intent intent = new Intent();
         intent.setClass(context, ZQ_FeedBackActivity.class);
         context.startActivity(intent);
-
     }
 
 }

@@ -7,6 +7,7 @@ public class AvoidOnClickFastUtils {
 
     private static long lastClickTime;
 
+    /**防止过快点击*/
     public static boolean isFastDoubleClick() {
         long time = System.currentTimeMillis();
         long timeD = time - lastClickTime;

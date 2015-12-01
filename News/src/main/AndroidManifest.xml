@@ -65,7 +65,8 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.hzpd.ui.activity.WebActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"></activity>
         <activity
             android:name="com.hzpd.ui.activity.NewsDetailActivity"
             android:screenOrientation="portrait"></activity>
@@ -100,8 +101,7 @@
             android:name="com.hzpd.ui.activity.VideoPlayerActivity"
             android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:hardwareAccelerated="true"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -200,7 +200,7 @@
 
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="de1d2a800d272841495b67b3" />
+            android:value="@string/jpush_key" />
         <!-- <<< 极光推送组件声明 @string/jpush_key    测试key：de1d2a800d272841495b67b3-->
 
         <service android:name="com.hzpd.services.InitService"></service>

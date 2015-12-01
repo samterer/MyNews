@@ -35,6 +35,6 @@
         android:background="@color/toolbar_bg"
         android:gravity="center"
         android:padding="5dp"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
+
 </FrameLayout>

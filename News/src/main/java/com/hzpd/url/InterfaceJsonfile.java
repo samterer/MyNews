@@ -15,7 +15,7 @@ public class InterfaceJsonfile {
     //    public static final String host1 = "http://ec2-52-76-26-225.ap-southeast-1.compute.amazonaws.com/1tcms";
 //    private static final String host2 = "http://ec2-52-76-26-225.ap-southeast-1.compute.amazonaws.com/1tcms";
 //印尼
-    public static final String host1 = "http://ec2-52-76-26-225.ap-southeast-1.compute.amazonaws.com/ltcms";
+    public static final String host1 = "http://www.nutnote.com/ltcms";
     //    public static final String host1 = "http://10.80.3.123/cmsv2";
 
     // ========================================

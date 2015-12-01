@@ -37,6 +37,7 @@ import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
@@ -121,7 +122,7 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
         adapter = new NewsItemListViewAdapter(activity, this);
         recyclerView = search_listview_id.getRefreshableView();
         recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(itemDecoration);
+//        recyclerView.addItemDecoration(itemDecoration);
         padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
         search_listview_id.setOnRefreshListener(new OnRefreshListener2<RecyclerView>() {
             @Override
@@ -175,13 +176,13 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
         params.addBodyParameter("Page", "" + page);
         params.addBodyParameter("PageSize", "" + pageSize);
 
-        httpUtils.send(HttpMethod.POST
+        HttpHandler httpHandler = httpUtils.send(HttpMethod.POST
                 , SEARCH_url
                 , params
                 , new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                if(!isAdded()){
+                if (!isAdded()) {
                     return;
                 }
                 search_listview_id.onRefreshComplete();
@@ -224,7 +225,7 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
 
             @Override
             public void onFailure(HttpException error, String msg) {
-                if(!isAdded()){
+                if (!isAdded()) {
                     return;
                 }
                 TUtils.toast(getString(R.string.toast_server_no_response));
@@ -236,6 +237,7 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
                 search_listview_id.setMode(Mode.PULL_FROM_START);
             }
         });
+        handlerList.add(httpHandler);
     }
 
 

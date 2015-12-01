@@ -3,18 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fragment_background">
+    android:background="?fragment_main_backgroup">
 
 
     <com.handmark.pulltorefresh.library.PullToRefreshRecyclerView
         android:id="@+id/search_listview_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
         android:divider="@color/fragment_background"
-        android:dividerPadding="5dp"
         app:ptrDrawable="@drawable/default_ptr_rotate"
         app:ptrHeaderSubTextColor="@color/zqzx_font_light"
         app:ptrHeaderTextColor="@color/pulltorefresh_font" />

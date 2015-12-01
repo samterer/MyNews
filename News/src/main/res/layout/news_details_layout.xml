@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -8,265 +8,278 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/news_detail_root"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/news_detail_main_root_id"
+            android:id="@+id/news_detail_root"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:orientation="vertical">
 
-            <!--标题-->
-            <RelativeLayout
-                android:id="@+id/news_detail_layout"
+            <LinearLayout
+                android:id="@+id/news_detail_main_root_id"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/main_title_bar"
-                android:background="#f5f5f5">
-                <!--返回按钮-->
+                android:layout_height="match_parent"
 
+                android:orientation="vertical">
+
+                <!--标题-->
                 <RelativeLayout
-                    android:id="@+id/news_detail_bak"
-                    android:layout_width="@dimen/main_title_bar"
-                    android:layout_height="@dimen/main_title_bar"
-                    android:background="@drawable/title_bar_details_btn_selector_color">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/background_tab_pressed_select_back_details" />
-
-                </RelativeLayout>
-
-                <ImageView
-                    android:layout_width="@dimen/main_title_bar"
-                    android:layout_height="@dimen/main_title_bar"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/background_tab_pressed_selector"
-                    android:visibility="gone" />
-                <!-- 顶部显示评论数-->
-                <LinearLayout
-                    android:id="@+id/newsdetails_title_comment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:id="@+id/newsdetails_title_num"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="12dp"
-                        android:background="@drawable/details_comment_counts_selector"
-                        android:gravity="center"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="5dp"
-                        android:text="1"
-                        android:textColor="@drawable/button_font_style"
-                        android:textSize="18sp"
-                        android:visibility="gone" />
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:id="@+id/details_iv_comment"
-                    android:layout_width="@dimen/main_title_bar"
-                    android:layout_height="@dimen/main_title_bar"
-                    android:layout_alignParentRight="true"
-                    android:background="@drawable/title_bar_details_btn_selector_color">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/newsdetails_no_comment_select_details" />
-
-                </RelativeLayout>
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/background_tab_details_pressed_color"/>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <com.hzpd.custorm.CustomScrollView
-                    android:id="@+id/news_detail_root_id"
+                    android:id="@+id/news_detail_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="@dimen/main_title_bar"
+                    android:background="#f5f5f5">
+                    <!--返回按钮-->
 
+                    <RelativeLayout
+                        android:id="@+id/news_detail_bak"
+                        android:layout_width="@dimen/main_title_bar"
+                        android:layout_height="@dimen/main_title_bar"
+                        android:background="@drawable/title_bar_details_btn_selector_color">
 
-                    <com.hzpd.custorm.CustomWebView
-                        android:id="@+id/webview"
-                        android:layout_width="match_parent"
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/background_tab_pressed_select_back_details" />
+
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="@dimen/main_title_bar"
+                        android:layout_height="@dimen/main_title_bar"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/background_tab_pressed_selector"
+                        android:visibility="gone" />
+                    <!-- 顶部显示评论数-->
+                    <LinearLayout
+                        android:id="@+id/newsdetails_title_comment"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@color/zqzx_bg_light"
-                        android:layerType="software"
-                        android:overScrollMode="never"
-                        android:scrollbarStyle="outsideOverlay" />
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
-                    <!--详情页面评论列表-->
-                    <com.avatarqing.loadmore.lib.LoadMoreListViewContainer
-                        android:id="@+id/load_more_list_view_container"
+                        <TextView
+                            android:id="@+id/newsdetails_title_num"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="12dp"
+                            android:background="@drawable/details_comment_counts_selector"
+                            android:gravity="center"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="5dp"
+                            android:text="1"
+                            android:textColor="@drawable/button_font_style"
+                            android:textSize="18sp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/details_iv_comment"
+                        android:layout_width="@dimen/main_title_bar"
+                        android:layout_height="@dimen/main_title_bar"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/title_bar_details_btn_selector_color">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/newsdetails_no_comment_select_details" />
+
+                    </RelativeLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/background_tab_details_pressed_color" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.hzpd.custorm.CustomScrollView
+                        android:id="@+id/news_detail_root_id"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white">
+                        android:layout_height="wrap_content">
 
-                        <com.hzpd.ui.widget.FixedListView
-                            android:id="@+id/comment_listview"
+
+                        <com.hzpd.custorm.CustomWebView
+                            android:id="@+id/webview"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:divider="#40444444"
-                            android:dividerHeight="0dp"
-                            android:fadeScrollbars="true"
-                            android:fadingEdge="none"
-                            android:headerDividersEnabled="false"
-                            android:scrollingCache="false" />
+                            android:layerType="software"
+                            android:overScrollMode="never"
+                            android:scrollbarStyle="outsideOverlay" />
 
-                    </com.avatarqing.loadmore.lib.LoadMoreListViewContainer>
-                </com.hzpd.custorm.CustomScrollView>
+                        <!--详情页面评论列表-->
+                        <com.avatarqing.loadmore.lib.LoadMoreListViewContainer
+                            android:id="@+id/load_more_list_view_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white">
 
+                            <com.hzpd.ui.widget.FixedListView
+                                android:id="@+id/comment_listview"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:divider="#40444444"
+                                android:dividerHeight="0dp"
+                                android:fadeScrollbars="true"
+                                android:fadingEdge="none"
+                                android:headerDividersEnabled="false"
+                                android:scrollingCache="false" />
 
-                <ProgressBar
-                    android:id="@+id/load_progress_bar"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dp"
-                    android:indeterminateOnly="false"
-                    android:max="100"
-                    android:progressDrawable="@drawable/progressbar_drawable"
-                    android:visibility="visible" />
+                        </com.avatarqing.loadmore.lib.LoadMoreListViewContainer>
+                    </com.hzpd.custorm.CustomScrollView>
 
-                <FrameLayout
-                    android:id="@+id/app_progress_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="3dp"
-                    android:background="@color/white">
+                    <!--<include layout="@layout/transparent_layout"/>-->
 
+                    <!-- 进度条-->
                     <ProgressBar
-                        style="@style/loadingProgressBar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
+                        android:id="@+id/load_progress_bar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="2dp"
+                        android:indeterminateOnly="false"
+                        android:max="100"
+                        android:progressDrawable="@drawable/progressbar_drawable"
+                        android:visibility="visible" />
+
+                    <!-- 加载Loading-->
+                    <FrameLayout
+                        android:id="@+id/app_progress_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/white"
+                        android:visibility="gone">
+
+                        <ProgressBar
+                            style="@style/loadingProgressBar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+
+                    </FrameLayout>
+
+                    <!-- 没有数据-->
+                    <FrameLayout
+                        android:id="@+id/news_detail_nonetwork"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#ffffff"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/zqzx_nonetwork" />
+                    </FrameLayout>
 
                 </FrameLayout>
-
-                <FrameLayout
-                    android:id="@+id/news_detail_nonetwork"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#ffffff"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/zqzx_nonetwork" />
-                </FrameLayout>
-
-            </FrameLayout>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <!--分割线-->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/background_tab_details_pressed_color" />
+        <!--分割线-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/background_tab_details_pressed_color" />
 
-    <!-- 底部菜单 -->
-    <LinearLayout
-        android:id="@+id/news_detail_ll_bottom1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="5dp"
-        android:paddingRight="20dp"
-        android:paddingTop="5dp">
-
-        <RelativeLayout
-            android:id="@+id/comment_box"
-            android:layout_width="0dp"
+        <!-- 底部菜单 -->
+        <LinearLayout
+            android:id="@+id/news_detail_ll_bottom1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingRight="20dp"
+            android:paddingTop="5dp">
 
-            <com.hzpd.ui.widget.FontTextView
-                android:id="@+id/newdetail_tv_comm"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/comment_box"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:drawableLeft="?details_comment_pen_drawable"
-                android:drawablePadding="3dp"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:layout_marginLeft="5dp"
-                android:text="@string/prompt_write_comment"
-                android:textColor="?button_comment_style_drawable"
-                android:textSize="16sp" />
+                android:layout_weight="1">
+
+                <com.hzpd.ui.widget.FontTextView
+                    android:id="@+id/newdetail_tv_comm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:drawableLeft="?details_comment_pen_drawable"
+                    android:drawablePadding="3dp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="@string/prompt_write_comment"
+                    android:textColor="?button_comment_style_drawable"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/newdetail_tv_comm"
+                    android:background="@drawable/details_comment_pen"
+                    android:gravity="center"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <!--收藏-->
+            <ImageView
+                android:id="@+id/newdetail_collection"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="16dp"
+                android:contentDescription="@null"
+                android:src="@drawable/details_collect_select" />
+
+            <!--分享-->
+            <ImageView
+                android:id="@+id/newdetail_share"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="16dp"
+                android:contentDescription="@null"
+                android:src="?newsdetail_share_drawable" />
+
+            <!-- 字体大小-->
+            <ImageView
+                android:id="@+id/newdetail_fontsize"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="16dp"
+                android:contentDescription="@null"
+                android:src="?newsdetail_fontsize_drawable" />
+
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_toRightOf="@+id/newdetail_tv_comm"
-                android:background="@drawable/details_comment_pen"
-                android:layout_marginLeft="5dp"
-                android:gravity="center"
+                android:id="@+id/newdetail_more"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="13dp"
+                android:contentDescription="@null"
+                android:src="@drawable/details_more_menu_selector"
                 android:visibility="gone" />
-        </RelativeLayout>
-
-        <!--收藏-->
-        <ImageView
-            android:id="@+id/newdetail_collection"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginLeft="16dp"
-            android:contentDescription="@null"
-            android:src="@drawable/details_collect_select" />
-
-        <!--分享-->
-        <ImageView
-            android:id="@+id/newdetail_share"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginLeft="16dp"
-            android:contentDescription="@null"
-            android:src="?newsdetail_share_drawable" />
-
-        <!-- 字体大小-->
-        <ImageView
-            android:id="@+id/newdetail_fontsize"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginLeft="16dp"
-            android:contentDescription="@null"
-            android:src="?newsdetail_fontsize_drawable" />
+        </LinearLayout>
 
 
-        <ImageView
-            android:id="@+id/newdetail_more"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginLeft="13dp"
-            android:contentDescription="@null"
-            android:src="@drawable/details_more_menu_selector"
-            android:visibility="gone" />
     </LinearLayout>
 
-
-</LinearLayout>
+    <include layout="@layout/transparent_layout" />
+</FrameLayout>

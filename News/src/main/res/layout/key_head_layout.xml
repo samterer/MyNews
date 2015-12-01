@@ -4,18 +4,18 @@
     android:layout_height="wrap_content"
     android:gravity="left|center_vertical"
     android:padding="@dimen/search_padding_middle"
-    android:background="@color/search_content_background"
+    android:background="?search_content_background_color"
     android:orientation="horizontal"
  >
 
     <com.hzpd.ui.widget.FontTextView
         android:id="@+id/key_head_title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="left|center_vertical"
         android:paddingLeft="@dimen/detail_margin_left"
         android:text="@string/search_key_head"
-        android:textColor="@color/search_key_head_text"
+        android:textColor="?search_key_head_text_color"
         android:textSize="@dimen/search_title_size" />
 
 </LinearLayout>

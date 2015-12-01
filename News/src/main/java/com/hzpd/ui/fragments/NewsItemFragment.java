@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.db.NewsListDbTask;
 import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
@@ -150,7 +152,10 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         });
         mSwipeRefreshWidget = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recylerlist);
-        mSwipeRefreshWidget.setColorScheme(R.color.google_blue, R.color.google_tool);
+        TypedValue typedValue1 = new TypedValue();
+        getActivity().getTheme().resolveAttribute(R.attr.title_bar_color, typedValue1, true);
+        int color1 = typedValue1.data;
+        mSwipeRefreshWidget.setColorSchemeColors(color1);
         mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -162,7 +167,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 isRefreshCounts = false; //TODO hide
             }
         });
-
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -284,7 +288,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             params.addBodyParameter("newTime", newTimew);
         }
 
-        httpUtils.send(HttpMethod.POST
+        HttpHandler httpHandler = httpUtils.send(HttpMethod.POST
                 , InterfaceJsonfile.NEWSLIST
                 , params
                 , new RequestCallBack<String>() {
@@ -318,6 +322,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 TUtils.toast(getString(R.string.toast_cannot_connect_network));
             }
         });
+        handlerList.add(httpHandler);
     }
 
     boolean loadad = true;
@@ -397,7 +402,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 + File.separator + "flash");
         String path = InterfaceJsonfile.FLASH + channelbean.getTid();
 
-        httpUtils.download(
+        HttpHandler httpHandler = httpUtils.download(
                 path
                 , pageFile.getAbsolutePath()
                 , new RequestCallBack<File>() {
@@ -415,7 +420,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                         if (200 == obj.getIntValue("code")) {
                             JSONObject object = obj.getJSONObject("data");
                             mViewPagelist = FjsonUtil.parseArray(object.getString("flash"), NewsPageListBean.class);
-                            if (mRecyclerView.getScrollY() < 10) {
+                            if (mRecyclerView.computeVerticalScrollOffset() < 10) {
                                 mRecyclerView.scrollToPosition(0);
                             }
                         }
@@ -430,6 +435,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                         LogUtils.i("getFlash-failed");
                     }
                 });
+        handlerList.add(httpHandler);
     }
 
 

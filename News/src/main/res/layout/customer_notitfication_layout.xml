@@ -2,21 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="5dp">
 
     <ImageView
-        android:padding="10dp"
         android:id="@+id/icon"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:src="@drawable/logo" />
+        android:src="@drawable/logo_alert" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dip"
-        android:layout_marginTop="6dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -31,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="NotificationText"
-                android:textSize="16sp" />
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/time"
@@ -39,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="15dp"
-                android:text="NotificationDate"
+                android:text="11:11"
                 android:textSize="13sp" />
 
         </LinearLayout>
@@ -47,13 +46,14 @@
         <TextView
             android:id="@+id/text"
             style="@style/NotificationDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginRight="10dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="2"
             android:text="sdfgf dafgdag df dsf adsf asdf  sdfgf dafgdag df dsf adsf asdf sdfgf dafgdag df dsf adsf asdf"
-            android:textSize="13sp" />
+            android:textSize="11sp" />
     </LinearLayout>
 
 

@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:orientation="vertical">
 
 
@@ -22,7 +21,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:orientation="horizontal">
 
             <com.hzpd.custorm.CircleImageView
@@ -43,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:background="@drawable/my_comment_news_selector"
+                android:background="?my_comment_news_selector"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -62,7 +60,7 @@
                     android:lineSpacingMultiplier="0.9"
                     android:maxLines="2"
                     android:paddingLeft="10dp"
-                    android:textColor="#333"
+                    android:textColor="?my_comment_news_title"
                     android:textSize="16sp" />
 
             </LinearLayout>

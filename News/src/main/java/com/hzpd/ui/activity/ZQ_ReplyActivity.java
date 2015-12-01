@@ -18,6 +18,7 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.ReplayBean;
 import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.event.UpdateNewsBeanDbEvent;
+import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
@@ -70,11 +71,19 @@ public class ZQ_ReplyActivity extends MBaseActivity {
 
     private ReplayBean bean;
 
+    @ViewInject(R.id.transparent_layout_id)
+    private View transparent_layout_id;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zq_reply_layout);
         ViewUtils.inject(this);
+        if (App.getInstance().getThemeName().equals("3")) {
+            transparent_layout_id.setVisibility(View.VISIBLE);
+        } else {
+            transparent_layout_id.setVisibility(View.GONE);
+        }
         changeStatus();
         stitle_tv_content.setText(R.string.comment);
         Intent intent = getIntent();
@@ -133,6 +142,9 @@ public class ZQ_ReplyActivity extends MBaseActivity {
 
     @OnClick({R.id.zq_reply_tv_cancle, R.id.zq_reply_tv_send, R.id.zq_reply_share_iv, R.id.zq_reply_share_iv1, R.id.stitle_ll_back, R.id.rl_share1})
     private void click(View view) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick()){
+            return;
+        }
         switch (view.getId()) {
             case R.id.stitle_ll_back:
                 finish();
@@ -158,25 +170,25 @@ public class ZQ_ReplyActivity extends MBaseActivity {
             break;
             case R.id.zq_reply_tv_send: {
                 String comcount = bean.getComcount();
-                if (AvoidOnClickFastUtils.isFastDoubleClick()) {
-                    return;//防止过快点击
-                }
-                try {
-                    NewsBeanDB nbfc = dbHelper.getNewsListDbUtils().findFirst(
-                            Selector.from(NewsBeanDB.class).where("nid", "=", bean.getId()));
-                    if (null != nbfc) {
-                        com.hzpd.utils.Log.e("NewsBeanDB", "NewsBeanDB--->" + nbfc.getFav() + "::::" + nbfc.getComcount());
-                        if (nbfc.getColumnid() != null || Integer.parseInt(nbfc.getComcount()) >= Integer.parseInt(comcount)) {
-                            comcount = nbfc.getComcount();
-                        }
-                    } else {
-                        com.hzpd.utils.Log.e("NewsBeanDB", "NewsBeanDB--->null");
-                    }
-
-                } catch (DbException e) {
-                    e.printStackTrace();
-                    com.hzpd.utils.Log.e("DbException", "NewsBeanDB--->" + e);
-                }
+//                if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+//                    return;//防止过快点击
+//                }
+//                try {
+//                    NewsBeanDB nbfc = dbHelper.getNewsListDbUtils().findFirst(
+//                            Selector.from(NewsBeanDB.class).where("nid", "=", bean.getId()));
+//                    if (null != nbfc) {
+//                        com.hzpd.utils.Log.e("NewsBeanDB", "NewsBeanDB--->" + nbfc.getFav() + "::::" + nbfc.getComcount());
+//                        if (nbfc.getColumnid() != null || Integer.parseInt(nbfc.getComcount()) >= Integer.parseInt(comcount)) {
+//                            comcount = nbfc.getComcount();
+//                        }
+//                    } else {
+//                        com.hzpd.utils.Log.e("NewsBeanDB", "NewsBeanDB--->null");
+//                    }
+//
+//                } catch (DbException e) {
+//                    e.printStackTrace();
+//                    com.hzpd.utils.Log.e("DbException", "NewsBeanDB--->" + e);
+//                }
                 String comment = zq_reply_et_content.getText().toString();
                 if (null == comment || "".equals(comment)) {
                     TUtils.toast(getString(R.string.toast_input_cannot_be_empty));
