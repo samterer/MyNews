@@ -292,6 +292,7 @@ public class ZY_RightFragment extends BaseFragment {
             }
             break;
             case R.id.zy_rfrag_ll_push: {
+                Log.i("", "shoucang--push");
                 mIntent.setClass(activity, MyPMColAvtivity.class);
                 mIntent.putExtra("type", "pushmsg");
                 flag = true;

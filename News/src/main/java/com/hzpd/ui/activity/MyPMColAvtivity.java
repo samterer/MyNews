@@ -1,17 +1,14 @@
 package com.hzpd.ui.activity;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.TypedValue;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -37,7 +34,6 @@ import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsItemBeanForCollection;
 import com.hzpd.modle.PushmsgBean;
 import com.hzpd.modle.VideoItemBean;
-import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
@@ -47,7 +43,6 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
-import com.hzpd.utils.SystemBarTintManager;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
@@ -97,8 +92,6 @@ public class MyPMColAvtivity extends MBaseActivity {
     private CollectionAdapter colladAdapter;
 
     private String type;
-    @ViewInject(R.id.transparent_layout_id)
-    private View transparent_layout_id;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,24 +99,16 @@ public class MyPMColAvtivity extends MBaseActivity {
         if (null == intent) {
             return;
         }
-
         try {
             type = intent.getStringExtra("type");
             super.onCreate(savedInstanceState);
-//            super.changeStatusBar();
             setContentView(R.layout.mypushmsg_layout);
             ViewUtils.inject(this);
-            if (App.getInstance().getThemeName().equals("3")) {
-                transparent_layout_id.setVisibility(View.VISIBLE);
-            } else {
-                transparent_layout_id.setVisibility(View.GONE);
-            }
             findViewById(R.id.mycomments_title).setVisibility(View.GONE);
             init();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        changeStatus();
     }
 
 
@@ -137,36 +122,6 @@ public class MyPMColAvtivity extends MBaseActivity {
         }
     };
 
-    private void changeStatus() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true);
-            //透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //透明导航栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
-
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(true);
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
-        int color = typedValue.data;
-        tintManager.setStatusBarTintColor(color);
-    }
-
-
-    @TargetApi(19)
-    private void setTranslucentStatus(boolean on) {
-        Window win = getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
-    }
 
     private void init() {
         Intent intent = getIntent();
@@ -405,41 +360,51 @@ public class MyPMColAvtivity extends MBaseActivity {
 
     }
 
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            pushmsg_lv.onRefreshComplete();
+
+            if (1 == msg.what) {
+                List<CollectionJsonBean> list = (List<CollectionJsonBean>) msg.obj;
+                colladAdapter.appendData(list, mFlagRefresh);
+                colladAdapter.notifyDataSetChanged();
+                if (list.size() >= PageSize) {
+                    pushmsg_lv.setMode(Mode.BOTH);
+                } else {
+                    pushmsg_lv.setMode(Mode.PULL_FROM_START);
+                }
+            }
+            mFlagRefresh = false;
+        }
+    };
+
+
     private void getDbCache() {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    if (!isResume) {
-                        return;
-                    }
                     List<NewsItemBeanForCollection> list = dbHelper.getCollectionDBUitls().findAll(Selector
                             .from(NewsItemBeanForCollection.class)
                             .where("id", "!=", null)
                             .orderBy("id", true)
                             .limit(PageSize)
                             .offset((Page - 1) * PageSize));
-                    if (!isResume) {
-                        return;
-                    }
+
                     if (null != list && list.size() > 0) {
                         LogUtils.i("list.size-->" + list.toString());
-                        final ArrayList<CollectionJsonBean> mlist = new ArrayList<CollectionJsonBean>();
+                        ArrayList<CollectionJsonBean> mlist = new ArrayList<CollectionJsonBean>();
                         for (NewsItemBeanForCollection nifc : list) {
                             mlist.add(nifc.getCollectionJsonBean());
                         }
-                        if (!isResume) {
-                            return;
-                        }
+                        Message msg = handler.obtainMessage();
+                        msg.what = 1;
+                        msg.obj = mlist;
+                        handler.sendMessage(msg);
                         pushmsg_lv.post(new Runnable() {
                             @Override
                             public void run() {
-                                if (!isResume) {
-                                    return;
-                                }
-                                colladAdapter.appendData(mlist, mFlagRefresh);
-                                colladAdapter.notifyDataSetChanged();
-                                mFlagRefresh = false;
                                 pushmsg_lv.onRefreshComplete();
                                 pushmsg_lv.setMode(Mode.BOTH);
                             }
@@ -449,15 +414,13 @@ public class MyPMColAvtivity extends MBaseActivity {
                         pushmsg_lv.post(new Runnable() {
                             @Override
                             public void run() {
-                                if (!isResume) {
-                                    return;
-                                }
                                 getCollectionInfoFromServer();
                             }
                         });
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    handler.sendEmptyMessage(500);
                 }
 
             }
@@ -467,7 +430,6 @@ public class MyPMColAvtivity extends MBaseActivity {
     //获取数据
     private void getCollectionInfoFromServer() {
         if (null != spu.getUser()) { //登录
-            Log.e("","getUid"+spu.getUser().getUid());
             String station = SharePreferecesUtils.getParam(MyPMColAvtivity.this, StationConfig.STATION, "def").toString();
             String siteid = null;
             String COLLECTIONLIST_url = null;
@@ -482,7 +444,6 @@ public class MyPMColAvtivity extends MBaseActivity {
                 COLLECTIONLIST_url = InterfaceJsonfile_TW.COLLECTIONLIST;
             }
             RequestParams params = RequestParamsUtils.getParamsWithU();
-            params.addBodyParameter("id", spu.getUser().getUid() + "");
             params.addBodyParameter("page", Page + "");
             params.addBodyParameter("pagesize", PageSize + "");
             params.addBodyParameter("siteid", siteid);
@@ -561,9 +522,9 @@ public class MyPMColAvtivity extends MBaseActivity {
                     //本地数据库获取
                     try {
                         List<NewsItemBeanForCollection> nibfc = dbHelper.getCollectionDBUitls().findAll(NewsItemBeanForCollection.class);
-                        if (nibfc != null && nibfc.size() > 0) {
+                        if (nibfc != null&&nibfc.size()>0) {
 
-                            Log.e("", "");
+                            Log.e("","");
 
                             if ("2".equals(cb.getType())) {
                                 dbHelper.getCollectionDBUitls().delete(Jsonbean.class, WhereBuilder.b("fid", "=", cb.getId()));
@@ -651,6 +612,7 @@ public class MyPMColAvtivity extends MBaseActivity {
 
     @Override
     protected void onDestroy() {
+        handler.removeCallbacks(null);
         super.onDestroy();
     }
 }

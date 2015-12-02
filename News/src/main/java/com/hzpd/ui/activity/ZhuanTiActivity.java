@@ -38,6 +38,7 @@ import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.DataCleanManager;
 import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
@@ -238,37 +239,32 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 
     //专题栏目列表
     public void getColumns() {
-        String station = SharePreferecesUtils.getParam(ZhuanTiActivity.this, StationConfig.STATION, "def").toString();
-        String SUBJECTCOLUMNSLIST_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            SUBJECTCOLUMNSLIST_url = InterfaceJsonfile.SUBJECTCOLUMNSLIST;
-        } else if (station.equals(StationConfig.YN)) {
-            SUBJECTCOLUMNSLIST_url = InterfaceJsonfile_YN.SUBJECTCOLUMNSLIST;
-        } else if (station.equals(StationConfig.TW)) {
-            SUBJECTCOLUMNSLIST_url = InterfaceJsonfile_TW.SUBJECTCOLUMNSLIST;
-        }
+//        String SUBJECTCOLUMNSLIST_url =   InterfaceJsonfile.SUBJECTCOLUMNSLIST;
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("sid", nb.getNid());
         params.addBodyParameter("page", "" + page);
         params.addBodyParameter("pagesize", "" + pageSize);
 
         httpUtils.send(HttpMethod.POST
-                , SUBJECTCOLUMNSLIST_url
+                , InterfaceJsonfile.SUBJECTCOLUMNSLIST
                 , params
                 , new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 String json = responseInfo.result;
-                LogUtils.i("getColumns-->" + json);
+                Log.i("", "getColumns-->" + json);
                 zhuanti_item_sv.onRefreshComplete();
                 JSONObject obj = FjsonUtil
                         .parseObject(responseInfo.result);
                 if (null != obj) {
+                    Log.i("", "getColumns  obj-->" + obj);
                     if (200 == obj.getIntValue("code")) {
                         JSONArray array = obj.getJSONArray("data");
+                        Log.i("", "getColumns  array-->" + array);
                         columnList = FjsonUtil.parseArray(array.toJSONString(), SubjectItemColumnsBean.class);
 
                         if (null != columnList && columnList.size() > 0) {
+                            Log.i("", "getColumns  columnList-->" + columnList.toString());
                             spu.setSubjectColumnList(array);
                         } else {
                             JSONArray oldarray = spu.getSubjectColumnList();
@@ -277,6 +273,7 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 
                         if (null != columnList && columnList.size() > 0) {
                             for (SubjectItemColumnsBean sicb : columnList) {
+                                Log.i("", "getColumns  sicb-->" + sicb.toString());
                                 getDbList(sicb);
                             }
                         }
@@ -328,10 +325,13 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
 
     //专题子分类列表
     public void getDbList(final SubjectItemColumnsBean columnid) {
-        LogUtils.i("page-->" + page + "  pageSize-->" + pageSize);
+        Log.i("","getDbList begin");
+
+        Log.i("","page-->" + page + "  pageSize-->" + pageSize + "  columnid.getCid()-->" + columnid.getCid());
         newsListDbTask.findList(columnid.getCid(), page, pageSize, new I_SetList<NewsBeanDB>() {
             @Override
             public void setList(List<NewsBeanDB> list) {
+                Log.i("","getDbList setList");
                 String nids = "";
                 if (null != list) {
                     StringBuilder sb = new StringBuilder();
@@ -351,18 +351,21 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
                 getServerList(columnid, nids);
             }
         });
+//        getServerList(columnid, nids);
+        Log.i("", "getDbList end");
     }
 
     //获取新闻list
     @Override
     public void getServerList(String nids) {
-
+        Log.i("","getServerList begin1");
     }
 
 
     //获取专题子分类list
     public void getServerList(final SubjectItemColumnsBean columnid, String nids) {
-        LogUtils.i("nids-->" + nids);
+        Log.i("","getServerList begin");
+        Log.i("","nids-->" + nids);
         String station = SharePreferecesUtils.getParam(ZhuanTiActivity.this, StationConfig.STATION, "def").toString();
         String siteid = null;
         String NEWSLIST_url = null;
@@ -390,17 +393,20 @@ public class ZhuanTiActivity extends MBaseActivity implements I_Control {
                 , new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                LogUtils.i("getServerList-->" + responseInfo.result);
+                Log.i("","getServerList-->" + responseInfo.result);
                 zhuanti_item_sv.onRefreshComplete();
 
                 final JSONObject obj = FjsonUtil
                         .parseObject(responseInfo.result);
                 if (null != obj) {
                     //缓存更新
+                    Log.i("","getServerList  obj-->" + obj);
                     JSONObject cache = obj.getJSONObject("cachetime");
                     if (null != cache) {
+                        Log.i("","getServerList  cache-->" + cache);
                         spu.setCacheUpdatetime(cache.getString("update_time"));
                         List<CacheBean> cacheList = FjsonUtil.parseArray(cache.getString("data"), CacheBean.class);
+                        Log.i("","getServerList  cacheList-->" + cacheList.toString());
                         DataCleanManager dcm = new DataCleanManager();
                         dcm.deleteDb(cacheList, activity, new I_Result() {
                             @Override

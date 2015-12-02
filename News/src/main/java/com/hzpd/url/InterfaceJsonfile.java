@@ -7,16 +7,16 @@ package com.hzpd.url;
  */
 public class InterfaceJsonfile {
 
-    //本地测试
-//http://10.80.3.123/cmsv2
+
     //默认
-//    public static final String host1 = "http://10.80.3.123/99cms";
-//    private static final String host2 = "http://10.80.3.123/99cms_jhxt";
-    //    public static final String host1 = "http://ec2-52-76-26-225.ap-southeast-1.compute.amazonaws.com/1tcms";
-//    private static final String host2 = "http://ec2-52-76-26-225.ap-southeast-1.compute.amazonaws.com/1tcms";
-//印尼
+    //public static final String host1 = "http://10.80.3.123/99cms";
+    //private static final String host2 = "http://10.80.3.123/99cms_jhxt";
+    //public static final String host1 = "http://ec2-52-76-26-225.ap-southeast-1.compute.amazonaws.com/1tcms";
+    //private static final String host2 = "http://ec2-52-76-26-225.ap-southeast-1.compute.amazonaws.com/1tcms";
+    //印尼
     public static final String host1 = "http://www.nutnote.com/ltcms";
-    //    public static final String host1 = "http://10.80.3.123/cmsv2";
+    //本地测试
+    //public static final String host1 = "http://10.80.3.123/cmsv2";
 
     // ========================================
     public static final String PATH_ROOT = host1 + "/api.php?s=";
@@ -62,7 +62,6 @@ public class InterfaceJsonfile {
     public static final String ALBUMLIST = PATH_ROOT + "/Album/getAlbumLastList";
     //
     public static final String VIDEOLIST = PATH_ROOT + "/Video/getVideoLastList";
-    //
     // 登陆
     public static final String LOGIN = PATH_ROOT + "/User/ucenterLogin";
     // 注册
@@ -119,7 +118,6 @@ public class InterfaceJsonfile {
     // 搜索关键词
     public static final String SEARCH_KEY = PATH_ROOT + "/Search/tag";
 
-    //
     // 查看最新评论
     public static final String mLatestComm = PATH_ROOT + "/Comment/latestComment";
     // 查看最热评论

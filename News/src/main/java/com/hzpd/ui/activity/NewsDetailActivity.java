@@ -2,6 +2,7 @@ package com.hzpd.ui.activity;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -444,13 +445,17 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
         details_explain = (FontTextView) headView.findViewById(R.id.details_explain);
         String link = getResources().getString(R.string.details_lv_link);
-        SpannableString spanttt = new SpannableString(link);
-        ClickableSpan clickttt = new ShuoMClickableSpan(link, this);
-        spanttt.setSpan(clickttt, 0, link.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        details_explain.setText(getResources().getString(R.string.details_lv_1));
-        details_explain.append(spanttt);
-        details_explain.append(" )");
-        details_explain.setMovementMethod(LinkMovementMethod.getInstance());
+        try {
+            SpannableString spanttt = new SpannableString(link);
+            ClickableSpan clickttt = new ShuoMClickableSpan(link, this);
+            spanttt.setSpan(clickttt, 0, link.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            details_explain.setText(getResources().getString(R.string.details_lv_1));
+            details_explain.append(spanttt);
+            details_explain.append(" )");
+            details_explain.setMovementMethod(LinkMovementMethod.getInstance());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         details_more_check = (FontTextView) headView.findViewById(R.id.details_more_check);
         rl_related = (LinearLayout) headView.findViewById(R.id.rl_related);

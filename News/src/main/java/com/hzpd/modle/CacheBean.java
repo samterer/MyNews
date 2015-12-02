@@ -76,4 +76,17 @@ public class CacheBean {
 		this.id = id;
 	}
 
+	@Override
+	public String toString() {
+		return "CacheBean{" +
+				"cacheid='" + cacheid + '\'' +
+				", update_time='" + update_time + '\'' +
+				", module='" + module + '\'' +
+				", tid='" + tid + '\'' +
+				", download='" + download + '\'' +
+				", act='" + act + '\'' +
+				", option='" + option + '\'' +
+				", id='" + id + '\'' +
+				'}';
+	}
 }
