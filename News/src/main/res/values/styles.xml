@@ -40,8 +40,8 @@
         <item name="left_menu_login_facebook_button">@drawable/login_facebook_button</item>
         <!-- newsfragment-->
         <item name="fragment_main_psts_tabs_background">@color/white</item>
-        <item name="fragment_main_psts_tabs_indicator_color">#ff7e00</item>
-        <item name="fragment_main_psts_tabs_text_color">#ababab</item>
+        <item name="fragment_main_psts_tabs_indicator_color">@color/pager_sliding_tab_text_selected_color</item>
+        <item name="fragment_main_psts_tabs_text_color">@color/pager_sliding_tab_text_color</item>
         <!-- choosefragment-->
         <item name="fragment_choose_card_backgroup_color">#ffffff</item>
         <item name="fragment_choose_btn_src_color">@drawable/floating_button_selector</item>
@@ -103,8 +103,8 @@
         <item name="left_menu_login_facebook_button">@drawable/login_facebook_button_red</item>
         <!-- newsfragment-->
         <item name="fragment_main_psts_tabs_background">@color/white</item>
-        <item name="fragment_main_psts_tabs_indicator_color">#ff7e00</item>
-        <item name="fragment_main_psts_tabs_text_color">#ababab</item>
+        <item name="fragment_main_psts_tabs_indicator_color">@color/pager_sliding_tab_text_selected_color</item>
+        <item name="fragment_main_psts_tabs_text_color">@color/pager_sliding_tab_text_color</item>
         <!-- choosefragment-->
         <item name="fragment_choose_card_backgroup_color">#ffffff</item>
         <item name="fragment_choose_btn_src_color">@drawable/floating_button_selector_red</item>
@@ -468,5 +468,21 @@
 
     <style name="NotificationDate">
         <item name="android:textColor">?android:textColorSecondary</item>
+    </style>
+
+    <style name="line_v">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.1dip</item>
+        <item name="android:background">#c8c8c8</item>
+    </style>
+
+    <style name="main_tab_item2">
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/main_menu_text</item>
+        <item name="android:background">@null</item>
     </style>
 </resources>

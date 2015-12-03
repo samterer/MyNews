@@ -152,10 +152,12 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         });
         mSwipeRefreshWidget = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recylerlist);
+
         TypedValue typedValue1 = new TypedValue();
         getActivity().getTheme().resolveAttribute(R.attr.title_bar_color, typedValue1, true);
         int color1 = typedValue1.data;
         mSwipeRefreshWidget.setColorSchemeColors(color1);
+
         mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

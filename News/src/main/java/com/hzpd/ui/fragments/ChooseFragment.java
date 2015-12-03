@@ -242,6 +242,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         adapter.callBack = callBack;
 
         mFloatBtn = (FloatingActionButton) view.findViewById(R.id.float_feedback_btn);
+
         return view;
     }
 
@@ -294,6 +295,8 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+//        mFloatBtn.setMaxWidth(100);
+//        mFloatBtn.setMaxHeight(100);
         mFloatBtn.attachToRecyclerView(mRecyclerView, null, onScrollListener);
         mFloatBtn.setOnClickListener(mFloatBtnClickListener);
         mFloatBtn.setVisibility(View.VISIBLE);
@@ -316,6 +319,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         public void onClick(View v) {
             if (AvoidOnClickFastUtils.isFastDoubleClick())
                 return;
+            Log.i("","mFloatBtn.getWidth()--->"+mFloatBtn.getWidth()+":::mFloatBtn.getHeight()--->"+mFloatBtn.getHeight());
             // 显示反馈对话框
             showFeedback();
         }

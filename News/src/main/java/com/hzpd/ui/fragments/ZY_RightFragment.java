@@ -88,22 +88,16 @@ public class ZY_RightFragment extends BaseFragment {
     private LinearLayout zy_rfrag_ll_login;
     @ViewInject(R.id.zy_rfrag_tv_login)
     private TextView zy_rfrag_tv_login;
-    @ViewInject(R.id.login_facebook_button)
-    private Button login_facebook_button;
     @ViewInject(R.id.zy_rfrag_iv_login)
     private CircleImageView zy_rfrag_iv_login;
-
 
     private LoginQuitBR br;
     private boolean isDay = true;
 
-
-
     private CallbackManager callbackManager;
 
     private TextView version;
-    @ViewInject(R.id.text_Login)
-    private TextView text_Login;
+
 
 
 
@@ -118,19 +112,6 @@ public class ZY_RightFragment extends BaseFragment {
 
         }
 
-        if (App.getInstance().getThemeName().equals("0")) {
-            if (spu.getUser() != null) {
-                login_facebook_button.setBackgroundResource(R.drawable.login_out_facebook_button);
-            } else {
-                login_facebook_button.setBackgroundResource(R.drawable.login_facebook_button);
-            }
-        } else {
-            if (spu.getUser() != null) {
-                login_facebook_button.setBackgroundResource(R.drawable.login_out_facebook_button_red);
-            } else {
-                login_facebook_button.setBackgroundResource(R.drawable.login_facebook_button_red);
-            }
-        }
         return view;
     }
 
@@ -138,9 +119,6 @@ public class ZY_RightFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
-        Login_test=Login_test+"onActivityResult  \n";
-        text_Login.setText(Login_test);
-//        Toast.makeText(getActivity(),"onActivityResult---->callbackManager",500).show();
     }
 
     @Override
@@ -167,7 +145,6 @@ public class ZY_RightFragment extends BaseFragment {
         }
 
         callbackManager = CallbackManager.Factory.create();
-        text_Login.setText("onActivityCreated");
     }
 
     public void thirdlogin(ThirdLoginBean tlb) {
@@ -218,10 +195,7 @@ public class ZY_RightFragment extends BaseFragment {
     ProfileTracker profileTracker = new ProfileTracker() {
         @Override
         protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-            Login_test=Login_test+"操作currentProfile  \n";
-            text_Login.setText(Login_test);
             if (currentProfile != null) {
-//                Toast.makeText(getActivity(),"currentProfile != null",500).show();
                 android.util.Log.e("test", "currentProfile " + currentProfile.getId());
                 ThirdLoginBean tlb = new ThirdLoginBean();
                 tlb.setUserid(currentProfile.getId());
@@ -234,26 +208,14 @@ public class ZY_RightFragment extends BaseFragment {
                     zy_rfrag_tv_login.setText(currentProfile.getName());
                     SPUtil.displayImage(currentProfile.getProfilePictureUri(200, 200).toString(), zy_rfrag_iv_login
                             , DisplayOptionFactory.getOption(OptionTp.Avatar));
-                    if (App.getInstance().getThemeName().equals("0")) {
-                        login_facebook_button.setBackgroundResource(R.drawable.login_out_facebook_button);
-                    } else {
-                        login_facebook_button.setBackgroundResource(R.drawable.login_out_facebook_button_red);
-                    }
-                    text_Login.setText(Login_test+"\n");
                     thirdlogin(tlb);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
-                Login_test=Login_test+"操作currentProfile = null  \n";
-                text_Login.setText(Login_test);
                 android.util.Log.e("test", "oldProfile " + oldProfile);
                 spu.setUser(null);
-                if (App.getInstance().getThemeName().equals("0")) {
-                    login_facebook_button.setBackgroundResource(R.drawable.login_facebook_button);
-                } else {
-                    login_facebook_button.setBackgroundResource(R.drawable.login_facebook_button_red);
-                }
+
                 zy_rfrag_tv_login.setText(R.string.prompt_login_now);
                 zy_rfrag_iv_login.setImageResource(R.drawable.zy_pic_touxiang_new);
             }
@@ -261,24 +223,23 @@ public class ZY_RightFragment extends BaseFragment {
     };
 
     private List<String> permissions = Arrays.asList("public_profile", "user_friends");
-    private String Login_test="";
 
     @OnClick({R.id.zy_rfrag_ll_login, R.id.zy_rfrag_ll_comm, R.id.zy_rfrag_ll_collect, R.id.zy_rfrag_ll_push,
-            R.id.zy_rfrag_ll_setting, R.id.login_facebook_button})
+            R.id.zy_rfrag_ll_setting, })
     private void rightClick(View v) {
         if (AvoidOnClickFastUtils.isFastDoubleClick())
             return;
         boolean flag = false;
         Intent mIntent = new Intent();
         switch (v.getId()) {
-            case R.id.zy_rfrag_ll_login: {
-                if (spu.getUser() != null) {
-
-                } else {
-                    flag = false;
-                }
-            }
-            break;
+//            case R.id.zy_rfrag_ll_login: {
+//                if (spu.getUser() != null) {
+//
+//                } else {
+//                    flag = false;
+//                }
+//            }
+//            break;
             case R.id.zy_rfrag_ll_comm: {
                 mIntent.setClass(activity, MyCommentsActivity.class);
                 flag = true;
@@ -303,19 +264,12 @@ public class ZY_RightFragment extends BaseFragment {
                 flag = true;
             }
             break;
-            case R.id.login_facebook_button: {
-                Login_test="";
-                Login_test=Login_test+"开始  \n";
-                text_Login.setText(Login_test);
-//                Toast.makeText(getActivity(),"点击了Button",500).show();
+            case R.id.zy_rfrag_ll_login: {
                 final LoginManager loginManager = LoginManager.getInstance();
                 if (null == spu.getUser()) {
                     loginManager.setDefaultAudience(DefaultAudience.FRIENDS);
                     loginManager.setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);
                     loginManager.logInWithReadPermissions(this, permissions);
-                    Login_test=Login_test+"未登录 \n";
-                    text_Login.setText(Login_test);
-//                    Toast.makeText(getActivity(),"未登录",500).show();
                 } else {
                     String logout = getResources().getString(
                             R.string.com_facebook_loginview_log_out_action);

@@ -10,15 +10,20 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hzpd.adapter.MainPagerAdapter;
 import com.hzpd.custorm.DrawerArrowDrawable;
+import com.hzpd.custorm.MyViewPager;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.UpdateBean;
 import com.hzpd.modle.event.RestartEvent;
 import com.hzpd.modle.event.SetThemeEvent;
 import com.hzpd.services.InitService;
 import com.hzpd.ui.App;
+import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.ui.fragments.NewsFragment;
 import com.hzpd.ui.fragments.WebviewFragment;
+import com.hzpd.ui.fragments.ZY_FindFragment;
+import com.hzpd.ui.fragments.ZY_RightFragment;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
@@ -68,6 +73,12 @@ public class MainActivity extends BaseActivity {
 
     List<HttpHandler> handlerList = new ArrayList<>();
 
+
+    private MyViewPager viewPager;
+    private MainPagerAdapter adapter;
+    private TextView[] tv_menu;
+    private BaseFragment[] fragments;
+
     @Override
     public void finish() {
         App.isStartApp = false;
@@ -77,27 +88,62 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
-
         EventBus.getDefault().register(this);
         long start = System.currentTimeMillis();
         setContentView(R.layout.app_main);
         ViewUtils.inject(this);
+        viewPager = (MyViewPager) findViewById(R.id.main_pager);
+        adapter = new MainPagerAdapter(getSupportFragmentManager());
+        fragments = new BaseFragment[3];
+        tv_menu = new TextView[3];
+        tv_menu[0] = (TextView) findViewById(R.id.tv_tab_menu0);
+        tv_menu[1] = (TextView) findViewById(R.id.tv_tab_menu1);
+        tv_menu[2] = (TextView) findViewById(R.id.tv_tab_menu2);
+        for (int i = 0; i < tv_menu.length; i++) {
+            final int cur = i;
+            tv_menu[i].setOnClickListener(new View.OnClickListener() {
+                public void onClick(View arg0) {
+                    onClickIndex(cur);
+                }
+            });
+        }
+        fragments[0] = new NewsFragment();
+        fragments[1] = new ZY_FindFragment();
+        fragments[2] = new ZY_RightFragment();
+        adapter.add(fragments[0]);
+        adapter.add(fragments[1]);
+        adapter.add(fragments[2]);
+        viewPager.setOffscreenPageLimit(adapter.getCount());
+        viewPager.setAdapter(adapter);
+        onClickIndex(0);
+
         checkVersion();
+
         Thread.setDefaultUncaughtExceptionHandler(App.uncaughtExceptionHandler);
-        FragmentTransaction ft = fm.beginTransaction();
-        currentFrag = new NewsFragment();
-        ft.add(R.id.root, currentFrag, TAG);
-        ft.commit();
+
         setTitleText(getString(R.string.app_name));
-//        setTitleText(App.menuList.get(CODE.MENU_NEWS).getName());
         Log.e("MainActivity", System.currentTimeMillis() - start);
         App.isStartApp = true;
         EventUtils.sendStart(this);
         Log.e("MainActivity", System.currentTimeMillis() - start);
-
         Intent intent = new Intent(this, InitService.class);
         intent.setAction(InitService.UserLogAction);
         startService(intent);
+    }
+
+    public void onClickIndex(int index) {
+        // TODO Auto-generated method stub
+//        fragments[index].OnSelected();
+        viewPager.setCurrentItem(index, false);
+
+        for (int i = 0; i < tv_menu.length; i++) {
+
+            if (index == i) {
+                tv_menu[i].setSelected(true);
+            } else {
+                tv_menu[i].setSelected(false);
+            }
+        }
     }
 
     @OnClick({R.id.main_title_left, R.id.main_title_right})
@@ -107,7 +153,6 @@ public class MainActivity extends BaseActivity {
         }
         switch (view.getId()) {
             case R.id.main_title_left: {
-                slidingMenu.showMenu();
             }
             break;
             case R.id.main_title_right: {
@@ -126,10 +171,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (getSlidingMenu().isMenuShowing() || getSlidingMenu().isSecondaryMenuShowing()) {
-            getSlidingMenu().toggle(true);
-            return;
-        }
         if (currentFrag instanceof WebviewFragment) {
             if (((WebviewFragment) currentFrag).canback()) {
                 return;
@@ -179,7 +220,7 @@ public class MainActivity extends BaseActivity {
                 , new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                if (responseInfo==null){
+                if (responseInfo == null) {
                     return;
                 }
                 JSONObject obj = FjsonUtil
@@ -225,9 +266,7 @@ public class MainActivity extends BaseActivity {
 
     public void onEventMainThread(SetThemeEvent event) {
         recreate();
-//        finish();
     }
-
 
     private void restartApplication() {
         final Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());

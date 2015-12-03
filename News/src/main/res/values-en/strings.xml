@@ -270,4 +270,9 @@
     <string name="setting_skin">Theme Color</string>
     <string name="skin_style_blue">Blue</string>
     <string name="skin_style_red">Red</string>
+
+    <!-- main menu -->
+    <string name="main_menu0_text">Home</string>
+    <string name="main_menu1_text">Explore</string>
+    <string name="main_menu2_text">Me</string>
 </resources>

@@ -9,25 +9,26 @@
     <dimen name="nonetworkpadding">130dp</dimen>
     <dimen name="item_height">1dp</dimen>
     <dimen name="detail_margin_left">5dp</dimen>
-
     <dimen name="main_title_bar">40dp</dimen>
     <!--  -->
-   <dimen name="image_size">110dp</dimen>
+    <dimen name="image_size">110dp</dimen>
     <dimen name="space_size">4dp</dimen>
     <dimen name="folder_cover_size">72dp</dimen>
     <!--  -->
     <dimen name="text_size_16">16sp</dimen>
-
     <!-- 搜索页面 -->
     <dimen name="search_title_size">16sp</dimen>
     <dimen name="search_key_size">14sp</dimen>
     <dimen name="search_clear_size">14sp</dimen>
     <dimen name="search_padding_low">5dp</dimen>
     <dimen name="search_padding_middle">10dp</dimen>
- 
-     <dimen name="tag">10sp</dimen>
-
+    <dimen name="tag">10sp</dimen>
     <dimen name="main_image_item_layout">75dp</dimen>
-
     <dimen name="category_item_corner">24.0dip</dimen>
+
+    <dimen name="tabmenu_with">42.5dp</dimen>
+
+    <dimen name="line_height">0.1dp</dimen>
+    <dimen name="zy_right_margin_left">15dp</dimen>
+
 </resources>

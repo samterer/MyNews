@@ -281,4 +281,10 @@
     <string name="setting_skin">Warna Tema</string>
     <string name="skin_style_blue">Biru</string>
     <string name="skin_style_red">Merah</string>
+
+    <!-- main menu -->
+    <string name="main_menu0_text">Beranda</string>
+    <string name="main_menu1_text">Temukan</string>
+    <string name="main_menu2_text">Saya</string>
+
 </resources>

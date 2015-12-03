@@ -452,6 +452,12 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             details_explain.setText(getResources().getString(R.string.details_lv_1));
             details_explain.append(spanttt);
             details_explain.append(" )");
+            details_explain.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    return true;
+                }
+            });
             details_explain.setMovementMethod(LinkMovementMethod.getInstance());
         } catch (Exception e) {
             e.printStackTrace();

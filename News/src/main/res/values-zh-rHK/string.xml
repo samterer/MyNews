@@ -339,4 +339,9 @@
     <string name="setting_skin">換膚</string>
     <string name="skin_style_blue">蓝色</string>
     <string name="skin_style_red">紅色</string>
+
+    <!-- main menu -->
+    <string name="main_menu0_text">首頁</string>
+    <string name="main_menu1_text">發現</string>
+    <string name="main_menu2_text">我</string>
 </resources>

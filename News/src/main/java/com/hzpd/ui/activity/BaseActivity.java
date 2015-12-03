@@ -3,6 +3,7 @@ package com.hzpd.ui.activity;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.TypedValue;
 import android.view.MenuItem;
@@ -20,15 +21,12 @@ import com.shangc.slidingmenu.lib.app.SlidingFragmentActivity;
 import org.common.lib.analytics.ActivityLifecycleAction;
 import org.common.lib.analytics.AnalyticCallback;
 
-public class BaseActivity extends SlidingFragmentActivity implements AnalyticCallback {
+public class BaseActivity extends FragmentActivity implements AnalyticCallback {
 
     private ActivityLifecycleAction action = new ActivityLifecycleAction(this);
 
-    //	protected LeftFragment_zqzx mLeftFragment;
-//	protected ZY_LeftFragment mLeftFragment;
     protected ZY_RightFragment mRightFragment;
 
-    protected SlidingMenu slidingMenu;
     protected FragmentManager fm;
 
 
@@ -65,27 +63,7 @@ public class BaseActivity extends SlidingFragmentActivity implements AnalyticCal
         int color = typedValue.data;
         tintManager.setStatusBarTintColor(color);
 
-
-        slidingMenu = getSlidingMenu();
-
         fm = getSupportFragmentManager();
-
-        setBehindContentView(R.layout.menu_left_frame);// 左边布局
-        mRightFragment = new ZY_RightFragment();
-        fm.beginTransaction()
-                .replace(R.id.menu_left_frame, mRightFragment)
-                .commit();
-
-        // customize the SlidingMenu
-        slidingMenu.setMode(SlidingMenu.LEFT);
-        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-        slidingMenu.setFadeEnabled(false);//是否有渐变
-        slidingMenu.setBehindScrollScale(1.0f);
-        slidingMenu.setTouchmodeMarginThreshold(30);
-
-        slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
-        slidingMenu.setShadowDrawable(R.drawable.shadow);
-        slidingMenu.setBehindWidthRes(R.dimen.left_menu_width);
     }
 
     private Interpolator interp = new Interpolator() {
@@ -113,7 +91,6 @@ public class BaseActivity extends SlidingFragmentActivity implements AnalyticCal
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                toggle();
                 return true;
         }
         return super.onOptionsItemSelected(item);

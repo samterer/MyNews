@@ -53,7 +53,6 @@ public class NewsFragment extends BaseFragment {
 
     @ViewInject(R.id.news_pager)
     private ViewPager pager;
-
     @ViewInject(R.id.ll_news_button)
     private View ll_news_button;
     @ViewInject(R.id.psts_tabs_app)
@@ -82,11 +81,11 @@ public class NewsFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.news_fragment_main, container, false);
         ViewUtils.inject(this, view);
-        if (App.getInstance().getThemeName().equals("3")) {
-            transparent_layout_id.setVisibility(View.VISIBLE);
-        } else {
-            transparent_layout_id.setVisibility(View.GONE);
-        }
+//        if (App.getInstance().getThemeName().equals("3")) {
+//            transparent_layout_id.setVisibility(View.VISIBLE);
+//        } else {
+//            transparent_layout_id.setVisibility(View.GONE);
+//        }
         return view;
     }
 

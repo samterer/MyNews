@@ -12,9 +12,6 @@
 -keep class com.alibaba.fastjson.**{
     *;
 }
--keep class com.amazonaws.**{
-    *;
-}
 
 -keep public class com.funnygame.twozero.R$*{
     public static final int *;
@@ -35,9 +32,8 @@
 -keepclassmembers class me.nereo.** {
 }
 
--keep class cn.jpush.**{
-    public *;
-}
+-dontwarn cn.jpush.**
+-keep class cn.jpush.** { *; }
 
 -keep class cn.sharesdk.**{*;}
 -keep class com.sina.**{*;}
@@ -70,7 +66,7 @@
 -keepclassmembers class * {
    public <init>(org.json.JSONObject);
 }
--keep public class com.joy.tl.news.R$*{
+-keep public class com.funnygame.twozero.R$*{
     public static final int *;
 }
 -keepclassmembers enum * {
@@ -78,7 +74,6 @@
     public static ** valueOf(java.lang.String);
 }
 # <<<
-
 
 # >>> 谷歌分析混淆配置
 -keep public class com.google.android.gms.analytics.** {

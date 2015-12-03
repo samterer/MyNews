@@ -343,4 +343,9 @@
     <string name="setting_skin">换肤</string>
     <string name="skin_style_blue">蓝色</string>
     <string name="skin_style_red">红色</string>
+
+    <!-- main menu -->
+    <string name="main_menu0_text">首页</string>
+    <string name="main_menu1_text">发现</string>
+    <string name="main_menu2_text">我</string>
 </resources>

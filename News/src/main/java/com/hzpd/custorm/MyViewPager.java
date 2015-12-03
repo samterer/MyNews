@@ -19,9 +19,25 @@ public class MyViewPager extends ViewPager {
 		super(context, attrs);
 	}
 
+//	@Override
+//	public boolean dispatchTouchEvent(MotionEvent ev) {
+//		getParent().requestDisallowInterceptTouchEvent(true); // 只需这句话，让父类不拦截触摸事件就可以了。
+//		return super.dispatchTouchEvent(ev);
+//	}
+
 	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		getParent().requestDisallowInterceptTouchEvent(true); // 只需这句话，让父类不拦截触摸事件就可以了。
-		return super.dispatchTouchEvent(ev);
+	public boolean onInterceptTouchEvent(MotionEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
 }
