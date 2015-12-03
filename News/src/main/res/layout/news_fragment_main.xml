@@ -12,44 +12,7 @@
         android:orientation="vertical">
 
         <!--标题栏-->
-        <LinearLayout
-            android:id="@+id/title_layout"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:background="#0177d9"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center">
-
-                <ImageView
-                    android:id="@+id/main_title_left_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:contentDescription="@null"
-                    android:src="@drawable/icon" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/choose_tab"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/corners_bg"
-                android:drawableLeft="@drawable/search_searchagain_icon"
-                android:drawablePadding="3dp"
-                android:padding="6dp"
-                android:text="输入你感兴趣的任意频道"
-                android:textColor="#7ed1f9"
-                android:textSize="12sp" />
-        </LinearLayout>
+        <include layout="@layout/main_top_layout" />
 
         <RelativeLayout
             android:id="@+id/news_indicator_root"

@@ -30,6 +30,7 @@ import com.hzpd.modle.UserBean;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.MyCommentsActivity;
 import com.hzpd.ui.activity.MyPMColAvtivity;
+import com.hzpd.ui.activity.SearchActivity;
 import com.hzpd.ui.activity.SettingActivity;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
@@ -71,12 +72,25 @@ public class ZY_FindFragment extends BaseFragment {
     }
 
 
+    private View main_top_search;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = null;
         try {
             view = inflater.inflate(R.layout.zy_findfragment, container, false);
-
+            main_top_search = view.findViewById(R.id.main_top_search);
+            main_top_search.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (AvoidOnClickFastUtils.isFastDoubleClick())
+                        return;
+                    Intent mIntent = new Intent();
+                    mIntent.setClass(getActivity(), SearchActivity.class);
+                    startActivity(mIntent);
+                    AAnim.ActivityStartAnimation(getActivity());
+                }
+            });
         } catch (Exception e) {
 
         }

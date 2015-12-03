@@ -182,10 +182,8 @@
                         android:src="@drawable/personal_icon_offline" />
 
                     <com.hzpd.ui.widget.FontTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/title_settings"
-                        android:textSize="16sp" />
+                        style="@style/personal_item_text"
+                        android:text="@string/title_settings" />
                 </LinearLayout>
                 <!--模式-->
                 <LinearLayout
@@ -202,10 +200,8 @@
                         android:src="@drawable/personal_icon_night" />
 
                     <com.hzpd.ui.widget.FontTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/title_settings"
-                        android:textSize="16sp" />
+                        style="@style/personal_item_text"
+                        android:text="@string/title_settings" />
                 </LinearLayout>
                 <!--设置-->
                 <LinearLayout
@@ -222,10 +218,8 @@
                         android:src="@drawable/personal_icon_feedback" />
 
                     <com.hzpd.ui.widget.FontTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/title_settings"
-                        android:textSize="16sp" />
+                        style="@style/personal_item_text"
+                        android:text="@string/title_settings" />
                 </LinearLayout>
                 <!--设置-->
                 <LinearLayout
@@ -244,10 +238,8 @@
                         android:src="@drawable/personal_icon_setting" />
 
                     <com.hzpd.ui.widget.FontTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/title_settings"
-                        android:textSize="16sp" />
+                        style="@style/personal_item_text"
+                        android:text="@string/title_settings" />
                 </LinearLayout>
             </LinearLayout>
 

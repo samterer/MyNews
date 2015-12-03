@@ -18,6 +18,7 @@ import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.modle.event.ChangeChannelEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.MyEditColumnActivity;
+import com.hzpd.ui.activity.SearchActivity;
 import com.hzpd.ui.widget.PagerSlidingTabStrip;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
@@ -77,10 +78,24 @@ public class NewsFragment extends BaseFragment {
 
     }
 
+    private View main_top_search;
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.news_fragment_main, container, false);
         ViewUtils.inject(this, view);
+        main_top_search=view.findViewById(R.id.main_top_search);
+        main_top_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (AvoidOnClickFastUtils.isFastDoubleClick())
+                    return;
+                Intent mIntent = new Intent();
+                mIntent.setClass(getActivity(), SearchActivity.class);
+                startActivity(mIntent);
+                AAnim.ActivityStartAnimation(getActivity());
+            }
+        });
 //        if (App.getInstance().getThemeName().equals("3")) {
 //            transparent_layout_id.setVisibility(View.VISIBLE);
 //        } else {

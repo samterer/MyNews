@@ -47,6 +47,11 @@ public class BaseActivity extends FragmentActivity implements AnalyticCallback {
         super.onCreate(null);
         action.onCreate(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        changeStatus();
+        fm = getSupportFragmentManager();
+    }
+
+    private void changeStatus() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTranslucentStatus(true);
             //透明状态栏
@@ -62,8 +67,6 @@ public class BaseActivity extends FragmentActivity implements AnalyticCallback {
         getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
         int color = typedValue.data;
         tintManager.setStatusBarTintColor(color);
-
-        fm = getSupportFragmentManager();
     }
 
     private Interpolator interp = new Interpolator() {

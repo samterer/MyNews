@@ -37,7 +37,6 @@
         <item name="left_menu_item_name">@color/white</item>
         <item name="left_menu_version_name">@color/white</item>
         <item name="left_menu_version_line">@color/white</item>
-        <item name="left_menu_login_facebook_button">@drawable/login_facebook_button</item>
         <!-- newsfragment-->
         <item name="fragment_main_psts_tabs_background">@color/white</item>
         <item name="fragment_main_psts_tabs_indicator_color">@color/pager_sliding_tab_text_selected_color</item>
@@ -100,7 +99,6 @@
         <item name="left_menu_item_name">@color/white</item>
         <item name="left_menu_version_name">@color/white</item>
         <item name="left_menu_version_line">@color/white</item>
-        <item name="left_menu_login_facebook_button">@drawable/login_facebook_button_red</item>
         <!-- newsfragment-->
         <item name="fragment_main_psts_tabs_background">@color/white</item>
         <item name="fragment_main_psts_tabs_indicator_color">@color/pager_sliding_tab_text_selected_color</item>
@@ -166,7 +164,6 @@
         <item name="left_menu_item_name">@color/white</item>
         <item name="left_menu_version_name">@color/white</item>
         <item name="left_menu_version_line">@color/white</item>
-        <item name="left_menu_login_facebook_button">@drawable/login_facebook_button</item>
         <!-- newsfragment-->
         <item name="fragment_main_psts_tabs_background">#222222</item>
         <item name="fragment_main_psts_tabs_indicator_color">#b03e31</item>
@@ -483,6 +480,15 @@
         <item name="android:textSize">10sp</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/main_menu_text</item>
+        <item name="android:drawablePadding">2dp</item>
         <item name="android:background">@null</item>
+    </style>
+
+
+    <style name="personal_item_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 </resources>

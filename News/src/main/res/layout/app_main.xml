@@ -83,16 +83,16 @@
         <LinearLayout
             android:id="@+id/lv_tab_menu"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/tabmenu_with"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="#fafafa"
             android:gravity="center"
+            android:padding="3dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tv_tab_menu0"
                 style="@style/main_tab_item2"
-                android:drawablePadding="0dp"
                 android:drawableTop="@drawable/tabmenu_recommend"
                 android:text="@string/main_menu0_text" />
 
@@ -110,11 +110,6 @@
                 android:text="@string/main_menu2_text" />
         </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/root"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
     </LinearLayout>
 
 
