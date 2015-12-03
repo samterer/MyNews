@@ -2,7 +2,6 @@ package com.hzpd.ui.activity;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -115,6 +114,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     @Override
     public String getAnalyticPageName() {
+        if (nb != null) {
+            return PREFIX + nb.getTid() + "#" + nb.getNid();
+        }
         return null;
     }
 
@@ -228,7 +230,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
         App.getInstance().setProfileTracker(callback);
         setContentView(R.layout.news_details_layout);
-        transparent_layout_id=findViewById(R.id.transparent_layout_id);
+        transparent_layout_id = findViewById(R.id.transparent_layout_id);
         if (App.getInstance().getThemeName().equals("3")) {
             transparent_layout_id.setVisibility(View.VISIBLE);
         } else {
@@ -410,7 +412,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     @Override
     protected void onDestroy() {
         callback = null;
-        loading = true;
+        loading = false;
+        load_progress_bar.setVisibility(View.GONE);
         runnable = null;
         App.getInstance().setProfileTracker(null);
         super.onDestroy();
@@ -444,7 +447,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         View headView = infla.inflate(R.layout.details_related_news, null);
 
         details_explain = (FontTextView) headView.findViewById(R.id.details_explain);
-        String link = getResources().getString(R.string.details_lv_link);
+        String link = "  "+getResources().getString(R.string.details_lv_link);
         try {
             SpannableString spanttt = new SpannableString(link);
             ClickableSpan clickttt = new ShuoMClickableSpan(link, this);
@@ -997,7 +1000,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-//                super.onReceivedSslError(view, handler, error);
                 handler.proceed();
             }
 
@@ -1008,12 +1010,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 }
                 if (!url.startsWith(HOT_NEWS) && !SPUtil.isImageUri(url)) {
                     try {
-                        Log.e("webview", "startActivity shouldOverrideUrlLoading " + url);
                         Intent intent = new Intent(NewsDetailActivity.this, WebActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra(WebActivity.KEY_URL, url);
                         startActivity(intent);
-                        Log.e("webview", "startActivity shouldOverrideUrlLoading " + url);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1025,7 +1025,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
             @Override
             public void onLoadResource(WebView view, String url) {
-                Log.e("test", "url " + url);
                 super.onLoadResource(view, url);
                 if (SPUtil.isImageUri(url)) {
                     wProgress = 100;
@@ -1034,13 +1033,14 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                Log.e("webview", "onPageStarted");
                 super.onPageStarted(view, url, favicon);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                Log.e("webview", "onPageFinished ");
+                if (!isResume) {
+                    return;
+                }
                 try {
                     wProgress = 100;
                     mCommentListView.setVisibility(View.VISIBLE);
@@ -1059,6 +1059,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         @Override
                         public void run() {
                             try {
+                                if (!isResume) {
+                                    return;
+                                }
                                 mLayoutRoot.updateUI();
                                 int realY = mWebView.getContentHeight();
                                 mWebView.scrollTo(0, realY < y ? realY : y);
@@ -1099,6 +1102,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         @Override
         public void run() {
             if (!isResume) {
+                loading = false;
+                load_progress_bar.setVisibility(View.GONE);
                 return;
             }
             if (loading) {
@@ -1106,7 +1111,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     progress += 1;
                 } else if (wProgress > MIDDLE_PROGRESS) {
                     progress += 5;
-                    if (progress > 100) {
+                    if (progress >= 100) {
                         progress = 100;
                         wProgress = 101;
                     }
@@ -1118,6 +1123,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 }
                 load_progress_bar.setProgress(progress);
                 load_progress_bar.postDelayed(runnable, 20);
+            } else {
+                load_progress_bar.setVisibility(View.GONE);
             }
         }
     };
@@ -1447,6 +1454,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     wProgress = 100;
                     progress = 0;
                     loadingView.setVisibility(View.GONE);
+                    load_progress_bar.setVisibility(View.GONE);
                     news_detail_nonetwork.setVisibility(View.VISIBLE);
                     if (isResume) {
                         TUtils.toast(getString(R.string.toast_cannot_connect_network));
@@ -1778,7 +1786,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     protected void onResume() {
         super.onResume();
         enterTime = System.currentTimeMillis();
-        AnalyticUtils.sendUmengEvent(this, AnalyticUtils.CATEGORY.newsDetail, nb.getTid() + "#" + nb.getNid() + "@" + title);
+        AnalyticUtils.sendUmengEvent(this, PREFIX + nb.getTid() + "#" + nb.getNid(), nb.getAuthorname());
         AnalyticUtils.sendGaScreenViewHit(this, PREFIX + nb.getTid() + "#" + nb.getNid(), nb.getCnname(), nb.getAuthorname());
     }
 
