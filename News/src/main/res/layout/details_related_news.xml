@@ -18,7 +18,6 @@
         android:textColor="#aeaeae"
         android:textSize="14sp" />
 
-
     <com.hzpd.ui.widget.FontTextView
         android:id="@+id/details_more_check"
         android:layout_width="match_parent"
@@ -119,7 +118,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        >
+        android:visibility="gone">
 
         <View
             android:layout_width="match_parent"
@@ -179,8 +178,8 @@
             android:id="@+id/llayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#222222"
             android:layout_below="@+id/ll_tag"
+            android:background="#222222"
             android:orientation="vertical"></LinearLayout>
 
         <!-- 点击查看更多-->

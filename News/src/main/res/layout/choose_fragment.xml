@@ -54,9 +54,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginRight="16dp"
         android:src="@drawable/float_feedback_btn"
-
+        fab:fab_type="mini"
         fab:fab_colorNormal="#99d22b"
         fab:fab_colorPressed="#7db143"
         fab:fab_colorRipple="#7db143" />
