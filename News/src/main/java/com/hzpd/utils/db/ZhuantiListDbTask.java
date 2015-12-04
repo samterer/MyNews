@@ -29,17 +29,17 @@ public class ZhuantiListDbTask {
 			, I_SetList<NewsBeanDB> callBack) {
 
 		NewsFindTask newsFindTask = new NewsFindTask(page, pageSize, callBack);
-		newsFindTask.execute("");
+		newsFindTask.executeOnExecutor(App.executorService);
 	}
 
 	public void saveList(List<NewsBean> nbList, I_Result callBack) {
 		NewsSaveTask newsSaveTask = new NewsSaveTask(nbList, callBack);
-		newsSaveTask.execute("");
+		newsSaveTask.executeOnExecutor(App.executorService);
 	}
 
 	public void deleteList(List<String> nbList, I_Result callBack) {
 		NewsDeleteTask newsDeleteTask = new NewsDeleteTask(nbList, callBack);
-		newsDeleteTask.execute("");
+		newsDeleteTask.executeOnExecutor(App.executorService);
 	}
 
 	public void asyncDeleteList(List<String> nbList) {
@@ -56,12 +56,12 @@ public class ZhuantiListDbTask {
 
 	public void isRead(String nid, I_Result callBack) {
 		NewsIsReadedTask newsIsReadTask = new NewsIsReadedTask(nid, callBack);
-		newsIsReadTask.execute("");
+		newsIsReadTask.executeOnExecutor(App.executorService);
 	}
 
 	public void dropTable(I_Result callBack) {
 		NewsClearTableTask newsDropTable = new NewsClearTableTask(callBack);
-		newsDropTable.execute("");
+		newsDropTable.executeOnExecutor(App.executorService);
 	}
 
 	public void asyncDropTable() {

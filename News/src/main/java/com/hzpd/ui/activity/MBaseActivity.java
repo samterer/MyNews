@@ -67,26 +67,6 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
 
         // setTheme(android.R.style.Theme_Translucent_NoTitleBar);//不能删
 
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            setTranslucentStatus(true);
-//            //透明状态栏
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-////            //透明导航栏
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-//        }
-//
-//
-//        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-//        tintManager.setStatusBarTintEnabled(true);
-//        TypedValue typedValue = new TypedValue();
-//        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
-//        int color = typedValue.data;
-//        tintManager.setStatusBarTintResource(R.color.transparent);
-//        tintManager.setStatusBarTintResource(R.color.red);
-//        tintManager.setStatusBarTintColor(color);
-//        tintManager.setStatusBarTintColor(R.color.toolbar_bg);
-
         layout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
                 R.layout.base, null);
         layout.attachToActivity(this);

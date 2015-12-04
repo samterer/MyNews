@@ -1477,6 +1477,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 View line = view.findViewById(R.id.view_line);
                 text.setText(bean.getTitle());
 
+
                 Log.e("addRelatedNewsView", "addRelatedNewsView-->" + bean.getTitle());
                 text.setOnClickListener(new OnClickListener() {
                     @Override

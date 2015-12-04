@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import com.hzpd.modle.ImgListBean;
 import com.hzpd.modle.db.AlbumBeanDB;
+import com.hzpd.ui.App;
 import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.utils.DBHelper;
@@ -30,17 +31,17 @@ public class AlbumListDbTask {
 			, I_SetList<AlbumBeanDB> callBack) {
 
 		AlbumFindTask albumFindTask = new AlbumFindTask(page, pageSize, callBack);
-		albumFindTask.execute("");
+		albumFindTask.executeOnExecutor(App.executorService);
 	}
 
 	public void saveList(List<ImgListBean> list, I_Result i_AlbumListDbSave) {
 		AlbumSaveTask albumSaveTask = new AlbumSaveTask(list, i_AlbumListDbSave);
-		albumSaveTask.execute("");
+		albumSaveTask.executeOnExecutor(App.executorService);
 	}
 
 	public void deleteList(List<String> abList, I_Result callBack) {
 		AlbumDeleteTask albumDeleteTask = new AlbumDeleteTask(abList, callBack);
-		albumDeleteTask.execute("");
+		albumDeleteTask.executeOnExecutor(App.executorService);
 	}
 
 	public void asyncDeleteList(List<String> abList) {
@@ -56,7 +57,7 @@ public class AlbumListDbTask {
 
 	public void clearList(I_Result callBack) {
 		AlbumClearTableTask albumClearTableTask = new AlbumClearTableTask(callBack);
-		albumClearTableTask.execute("");
+		albumClearTableTask.executeOnExecutor(App.executorService);
 	}
 
 	public void asyncDropTable() {

@@ -2,9 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root_layout"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="fill_parent"
     android:background="@color/white"
     android:orientation="vertical">
+
+
+
 
     <RelativeLayout
         android:id="@+id/secondary_layout"
@@ -13,8 +16,16 @@
         android:layout_marginLeft="7.0dip"
         android:layout_marginRight="7.0dip"
         android:clipToPadding="false"
+        android:paddingBottom="15dp"
         android:paddingLeft="10.0dip"
         android:paddingRight="10.0dip">
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="fill_parent"
+            android:layout_height="0.1dip"
+            android:background="#ffc8cbcc"
+            />
 
         <com.hzpd.custorm.CircleImageView
             android:id="@+id/comment_user_icon"
@@ -135,28 +146,26 @@
             android:text="comment_distince"
             android:textColor="#ff777777"
             android:textSize="14.0sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <RelativeLayout
             android:id="@+id/rl_comment_text"
             android:layout_width="match_parent"
-            android:layout_toRightOf="@+id/comment_user_icon"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/comment_user_icon"
             android:layout_marginLeft="12.0dip"
             android:layout_marginTop="8.0dip"
-            android:layout_height="wrap_content">
+            android:layout_toRightOf="@+id/comment_user_icon">
 
             <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/comment_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="comment_text"
                 android:textColor="#dd000000"
-                android:textSize="18.0sp"
-                android:text="comment_text" />
-
+                android:textSize="18.0sp" />
 
         </RelativeLayout>
-
 
 
         <LinearLayout
@@ -196,7 +205,6 @@
             </LinearLayout>
 
 
-
             <TextView
                 android:id="@+id/article_title"
                 android:layout_width="fill_parent"
@@ -213,17 +221,17 @@
                 android:text="article_title"
                 android:textColor="#ff999999"
                 android:textSize="14.0sp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <ImageView
-                android:id="@+id/message_line"
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dip"
                 android:layout_marginBottom="0.0dip"
                 android:layout_marginTop="7.0dip"
                 android:contentDescription="@null"
                 android:scaleType="fitXY"
-                android:src="#ffc8cbcc" />
+                android:src="#ffc8cbcc"
+                android:visibility="gone"/>
         </LinearLayout>
     </RelativeLayout>
 

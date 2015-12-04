@@ -65,8 +65,7 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.hzpd.ui.activity.WebActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"></activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.hzpd.ui.activity.NewsDetailActivity"
             android:screenOrientation="portrait"></activity>

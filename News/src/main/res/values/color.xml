@@ -77,7 +77,7 @@
     <color name="nav_title_unselected_new">#DC9990</color>
 
     <!-- color -->
-    <color name="toolbar_bg">#ff3f51b5</color>
+    <color name="toolbar_bg">#ff0177d9</color>
     <color name="grey_color">#F6F6F6</color>
 
     <color name="tag_select">#ececec</color>

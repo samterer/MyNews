@@ -126,12 +126,16 @@ public class CommentListAdapter extends BaseAdapter {
                 holder.up_icon = (ImageView) convertView.findViewById(R.id.up_icon);
                 holder.comment_up_num = (TextView) convertView.findViewById(R.id.comment_up_num);
                 holder.rl_comment_text=convertView.findViewById(R.id.rl_comment_text);
+                holder.line=convertView.findViewById(R.id.line);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
             final CommentzqzxBean item = getItem(position);
+            if (position==1){
+                holder.line.setVisibility(View.GONE);
+            }
 
 //            Log.e("test","test"+item.toString());
             holder.userId = item.getUid();
@@ -401,6 +405,7 @@ public class CommentListAdapter extends BaseAdapter {
         public ImageView up_icon;
         private TextView comment_up_num;
         private View rl_comment_text;
+        private View line;
 
     }
 }

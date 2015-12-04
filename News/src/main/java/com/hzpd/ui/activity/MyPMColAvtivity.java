@@ -109,6 +109,7 @@ public class MyPMColAvtivity extends MBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        super.changeStatusBar();
     }
 
 
@@ -364,7 +365,9 @@ public class MyPMColAvtivity extends MBaseActivity {
         @Override
         public void handleMessage(Message msg) {
             pushmsg_lv.onRefreshComplete();
-
+            if (!isResume) {
+                return;
+            }
             if (1 == msg.what) {
                 List<CollectionJsonBean> list = (List<CollectionJsonBean>) msg.obj;
                 colladAdapter.appendData(list, mFlagRefresh);
@@ -391,7 +394,9 @@ public class MyPMColAvtivity extends MBaseActivity {
                             .orderBy("id", true)
                             .limit(PageSize)
                             .offset((Page - 1) * PageSize));
-
+                    if (!isResume) {
+                        return;
+                    }
                     if (null != list && list.size() > 0) {
                         LogUtils.i("list.size-->" + list.toString());
                         ArrayList<CollectionJsonBean> mlist = new ArrayList<CollectionJsonBean>();
@@ -405,6 +410,9 @@ public class MyPMColAvtivity extends MBaseActivity {
                         pushmsg_lv.post(new Runnable() {
                             @Override
                             public void run() {
+                                if (!isResume) {
+                                    return;
+                                }
                                 pushmsg_lv.onRefreshComplete();
                                 pushmsg_lv.setMode(Mode.BOTH);
                             }
@@ -414,6 +422,9 @@ public class MyPMColAvtivity extends MBaseActivity {
                         pushmsg_lv.post(new Runnable() {
                             @Override
                             public void run() {
+                                if (!isResume) {
+                                    return;
+                                }
                                 getCollectionInfoFromServer();
                             }
                         });
@@ -522,9 +533,9 @@ public class MyPMColAvtivity extends MBaseActivity {
                     //本地数据库获取
                     try {
                         List<NewsItemBeanForCollection> nibfc = dbHelper.getCollectionDBUitls().findAll(NewsItemBeanForCollection.class);
-                        if (nibfc != null&&nibfc.size()>0) {
+                        if (nibfc != null && nibfc.size() > 0) {
 
-                            Log.e("","");
+                            Log.e("", "");
 
                             if ("2".equals(cb.getType())) {
                                 dbHelper.getCollectionDBUitls().delete(Jsonbean.class, WhereBuilder.b("fid", "=", cb.getId()));

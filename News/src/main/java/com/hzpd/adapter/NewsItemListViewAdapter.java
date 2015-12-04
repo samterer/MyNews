@@ -19,6 +19,7 @@ import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.NativeAd;
+import com.facebook.ads.NativeAdView;
 import com.hzpd.custorm.TopPicViewPager;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
@@ -87,6 +88,9 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
     }
 
     public void setNativeAd() {
+        if (ads == null) {
+            return;
+        }
         NativeAd temp;
         if (ads.get("" + nextAdPosition) == null) {
             temp = new NativeAd(context.getApplicationContext(), AD_KEY);
@@ -95,6 +99,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             temp.setAdListener(null);
             temp.unregisterView();
         }
+        Log.e("test", "nextAdPosition " + nextAdPosition);
         final NativeAd nativeAd = temp;
         final int adPos = nextAdPosition;
         nativeAd.setAdListener(new AdListener() {
@@ -142,6 +147,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             @Override
             public void onAdClicked(Ad ad) {
             }
+
         });
         nativeAd.loadAd();
         nextAdPosition += STEP + random.nextInt(STEP);
@@ -203,6 +209,9 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             notifyItemRangeInserted(index, data.size());
         }
         while (list.size() > nextAdPosition) {
+            if (ads == null) {
+                return;
+            }
             setNativeAd();
         }
     }
@@ -408,7 +417,11 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                         } else if (attname.equals("s")) {
                             vhThree.item_type_iv.setVisibility(View.VISIBLE);
                             vhThree.item_type_iv.setImageResource(R.drawable.zq_subscript_video);
+                        } else {
+                            vhThree.item_type_iv.setVisibility(View.GONE);
                         }
+                    } else {
+                        vhThree.item_type_iv.setVisibility(View.GONE);
                     }
                     vhThree.tv3.setText(CalendarUtil.friendlyTime(bean.getUpdate_time(), context));
 
@@ -482,7 +495,11 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                         } else if (attname.equals("s")) {
                             vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
                             vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_video);
+                        }else{
+                            vhLeftPic.item_type_iv.setVisibility(View.GONE);
                         }
+                    }else{
+                        vhLeftPic.item_type_iv.setVisibility(View.GONE);
                     }
 
                     fav = bean.getFav();
@@ -583,12 +600,11 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     bean = list.get(position);
                     holder.itemView.setTag(bean);
                     AdHolder adHolder = (AdHolder) holder;
-                    adHolder.newsitem_title.setText(bean.getTitle());
-                    adHolder.newsitem_content.setText(bean.getCopyfrom());
-                    SPUtil.displayImage(bean.getImgs()[0], adHolder.newsitem_img,
-                            DisplayOptionFactory.getOption(OptionTp.Small));
-                    ads.get("" + position).unregisterView();
-                    ads.get("" + position).registerViewForInteraction(holder.itemView);
+                    NativeAd nativeAd = ads.get("" + position);
+                    nativeAd.unregisterView();
+                    View view = NativeAdView.render(context, nativeAd, NativeAdView.Type.HEIGHT_120);
+                    adHolder.viewGroup.addView(view);
+                    //ads.get("" + position).registerViewForInteraction(holder.itemView);
                     break;
                 case TYPE_BIGPIC:
                     bean = list.get(position);
@@ -634,7 +650,11 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                         } else if (attname.equals("s")) {
                             vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
                             vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_video);
+                        }else{
+                            vhLargePic.item_type_iv.setVisibility(View.GONE);
                         }
+                    }else{
+                        vhLargePic.item_type_iv.setVisibility(View.GONE);
                     }
 
                     fav = bean.getFav();
@@ -765,16 +785,11 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
     }
 
     private class AdHolder extends RecyclerView.ViewHolder {
-        @ViewInject(R.id.newsitem_title)
-        private TextView newsitem_title;
-        @ViewInject(R.id.newsitem_source)
-        private TextView newsitem_content;
-        @ViewInject(R.id.newsitem_img)
-        private ImageView newsitem_img;
+        ViewGroup viewGroup;
 
         public AdHolder(View itemView) {
             super(itemView);
-            ViewUtils.inject(this, itemView);
+            viewGroup = (ViewGroup) itemView;
         }
 
     }

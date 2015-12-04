@@ -137,24 +137,9 @@ public class SettingActivity extends MBaseActivity {
             e.printStackTrace();
         }
 
-        changeStatus();
-//        tintManager.setStatusBarTintResource(R.color.toolbar_bg);
-        //测试用
-//        rl_test.setVisibility(View.VISIBLE);
-//        rl_test.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (App.getInstance().getThemeName().equals("1")) {
-//                    App.getInstance().setThemeName("0");
-//                } else {
-//                    App.getInstance().setThemeName("1");
-//                }
-//                EventBus.getDefault().post(new SetThemeEvent());
-//                recreate();
-//
-//            }
-//        });
-        skin = new String[]{this.getResources().getString(R.string.skin_style_blue), this.getResources().getString(R.string.skin_style_red),"黑夜"};//"黑夜"
+        super.changeStatusBar();
+
+        skin = new String[]{this.getResources().getString(R.string.skin_style_blue), this.getResources().getString(R.string.skin_style_red), "黑夜"};//"黑夜"
 
         switch (App.getInstance().getThemeName()) {
             case "0": {
@@ -257,44 +242,11 @@ public class SettingActivity extends MBaseActivity {
 
         zqzx_setting_tv_version.setText(App.getInstance().
 
-                        getVersionName()
+                getVersionName()
 
         );
 
         getCacheSize();
-
-
-    }
-
-    private void changeStatus() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true);
-            //透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //透明导航栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
-
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(true);
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
-        int color = typedValue.data;
-        tintManager.setStatusBarTintColor(color);
-    }
-
-
-    @TargetApi(19)
-    private void setTranslucentStatus(boolean on) {
-        Window win = getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
     }
 
     @Override
@@ -553,7 +505,7 @@ public class SettingActivity extends MBaseActivity {
 
     @OnClick(R.id.zqzx_setting_feedback)
     private void feedBack(View v) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick()){
+        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
             return;
         }
 
@@ -587,27 +539,27 @@ public class SettingActivity extends MBaseActivity {
                 , InterfaceJsonfile.GET_VERSION
                 , params
                 , new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                JSONObject obj = FjsonUtil
-                        .parseObject(responseInfo.result);
-                if (obj == null) {
-                    return;
-                }
-                if (200 == obj.getIntValue("code")) {
-                    UpdateBean mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), UpdateBean.class);
-                    SPUtil.updateDialog(mBean.getDescription(), SettingActivity.this);
-                } else {
-                    Toast.makeText(SettingActivity.this, getString(R.string.update_no_version), Toast.LENGTH_SHORT).show();
-                }
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        JSONObject obj = FjsonUtil
+                                .parseObject(responseInfo.result);
+                        if (obj == null) {
+                            return;
+                        }
+                        if (200 == obj.getIntValue("code")) {
+                            UpdateBean mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), UpdateBean.class);
+                            SPUtil.updateDialog(mBean.getDescription(), SettingActivity.this);
+                        } else {
+                            Toast.makeText(SettingActivity.this, getString(R.string.update_no_version), Toast.LENGTH_SHORT).show();
+                        }
 
-            }
+                    }
 
-            @Override
-            public void onFailure(HttpException error, String msg) {
-                Toast.makeText(SettingActivity.this, getString(R.string.toast_cannot_connect_to_server), Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        Toast.makeText(SettingActivity.this, getString(R.string.toast_cannot_connect_to_server), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     /**

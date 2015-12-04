@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import com.hzpd.modle.VideoItemBean;
 import com.hzpd.modle.db.VideoItemBeanDb;
+import com.hzpd.ui.App;
 import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.utils.DBHelper;
@@ -30,17 +31,17 @@ public class VideoListDbTask {
 			, I_SetList<VideoItemBeanDb> callBack) {
 
 		VideoFindTask albumFindTask = new VideoFindTask(page, pageSize, callBack);
-		albumFindTask.execute("");
+		albumFindTask.executeOnExecutor(App.executorService);
 	}
 
 	public void saveList(List<VideoItemBean> list, I_Result i_VideoListDbSave) {
 		VideoSaveTask albumSaveTask = new VideoSaveTask(list, i_VideoListDbSave);
-		albumSaveTask.execute("");
+		albumSaveTask.executeOnExecutor(App.executorService);
 	}
 
 	public void deleteList(List<String> vbList, I_Result callBack) {
 		VideoDeleteTask albumDeleteTask = new VideoDeleteTask(vbList, callBack);
-		albumDeleteTask.execute("");
+		albumDeleteTask.executeOnExecutor(App.executorService);
 	}
 
 	public void asyncDeleteList(List<String> vbList) {
@@ -66,7 +67,7 @@ public class VideoListDbTask {
 
 	public void clearList(I_Result callBack) {
 		VideoClearTableTask videoClearTableTask = new VideoClearTableTask(callBack);
-		videoClearTableTask.execute("");
+		videoClearTableTask.executeOnExecutor(App.executorService);
 	}
 
 	class VideoFindTask extends AsyncTask<String, String, List<VideoItemBeanDb>> {

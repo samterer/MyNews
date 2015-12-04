@@ -26,6 +26,7 @@
             android:gravity="center_vertical"
             android:lines="1"
             android:maxLines="1"
+            android:text="@string/app_name"
             android:textColor="?news_detail_rel_item_title"
             android:padding="8dp"
             android:textSize="16sp" />

@@ -191,6 +191,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         layoutManager = new LinearLayoutManager(activity);
         mRecyclerView.setLayoutManager(layoutManager);
         adapter = new NewsItemListViewAdapter(activity, this);
+        adapter.setAds(ads);
         mRecyclerView.setAdapter(adapter);
         callBack = new NewsItemListViewAdapter.CallBack() {
             @Override
@@ -207,7 +208,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //TODO Adbean adbean = App.getInstance().channelADMap.get(channelbean.getTid());
-        adapter.setAds(ads);
         page = 1;
         mFlagRefresh = true;
         firstLoading = false;
@@ -357,7 +357,9 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                     }
 
                     if (page == 1) {
+                        if(list.size()>7){
                         adapter.removeOld();
+                        }
                     }
                     if (list.size() == pageSize) {
                         adapter.showLoading = true;
@@ -366,8 +368,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                     background_empty.setVisibility(View.GONE);
                     if (page == 1) {
                         App.getInstance().newTimeMap.put(channelbean.getTid(), obj.getString("newTime"));
-                    }
-                    if (loadad) {
                     }
                     newsListDbTask.saveList(list, null);
                 }

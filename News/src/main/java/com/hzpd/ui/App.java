@@ -169,7 +169,7 @@ public class App extends Application {
         LogUtils.allowWtf = debug;
         try {
             // 极光推送
-            JPushInterface.setDebugMode(debug);    // 设置开启日志,发布时请关闭日志
+            JPushInterface.setDebugMode(false);    // 设置开启日志,发布时请关闭日志
             com.hzpd.utils.Log.e("App", "App JPushInterface 4here ");
             JPushInterface.init(this);
             com.hzpd.utils.Log.e("App", "App JPushInterface  5here ");
@@ -178,6 +178,7 @@ public class App extends Application {
             e.printStackTrace();
         }
         com.hzpd.utils.Log.e("App", "App 9here ");
+        //AdSettings.addTestDevice();
     }
 
     public static Thread.UncaughtExceptionHandler uncaughtExceptionHandler = new Thread.UncaughtExceptionHandler() {

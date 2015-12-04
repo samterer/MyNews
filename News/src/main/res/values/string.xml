@@ -70,7 +70,7 @@
     <string name="title_activity_vote">Aktivitas Voting</string>
     <string name="title_activity_award">Hadiah Aktivitas</string>
     <string name="title_activity_detail">Detil Aktivitas</string>
-    <string name="title_settings">Setting</string>
+    <string name="title_settings">Settings</string>
     <string name="title_login">Login</string>
     <string name="title_about_us">>Tentang Kami</string>
     <string name="login">Login</string>
@@ -253,7 +253,7 @@
     <string name="calendarutil_time_4">1Kemarin</string>
     <string name="calendarutil_time_5">2Hari Lalu</string>
     <string name="calendarutil_time_6">hari lalu</string>
-    <string name="details_lv_1">(Konten artikel didapat dari sumber pihak ketiga,tidak mewakili pandangan apapun dari Berita Terkini,Jika ada masalah pada legalisasi konten,</string>
+    <string name="details_lv_1">(Konten artikel didapat dari sumber pihak ketiga,tidak mewakili pandangan apapun dari Berita Terkini,Jika ada masalah pada legalisasi konten,&#160;&#160;</string>
     <string name="details_lv_link">silahkan menghubungi kami</string>
     <string name="details_lv_2">Berita Terkait</string>
     <string name="details_lv_3">Komentar Terkait</string>

@@ -9,11 +9,11 @@ import com.hzpd.ui.App;
 import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.utils.DBHelper;
+import com.hzpd.utils.Log;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
-import com.lidroid.xutils.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,18 +27,19 @@ public class ZhuantiDetailListDbTask {
 
 	public void findList(String columnid, int page, int pageSize
 			, I_SetList<NewsBeanDB> callBack) {
+		Log.e("test","NewsFindTask");
 		NewsFindTask newsFindTask = new NewsFindTask(page, pageSize, columnid, callBack);
-		newsFindTask.execute("");
+		newsFindTask.executeOnExecutor(App.executorService);
 	}
 
 	public void saveList(List<NewsBean> nbList, I_Result callBack) {
 		NewsSaveTask newsSaveTask = new NewsSaveTask(nbList, callBack);
-		newsSaveTask.execute("");
+		newsSaveTask.executeOnExecutor(App.executorService);
 	}
 
 	public void deleteList(List<String> nbList, I_Result callBack) {
 		NewsDeleteTask newsDeleteTask = new NewsDeleteTask(nbList, callBack);
-		newsDeleteTask.execute("");
+		newsDeleteTask.executeOnExecutor(App.executorService);
 	}
 
 	public void asyncDeleteList(List<String> nbList) {
@@ -55,12 +56,12 @@ public class ZhuantiDetailListDbTask {
 
 	public void isRead(String nid, I_Result callBack) {
 		NewsIsReadedTask newsIsReadTask = new NewsIsReadedTask(nid, callBack);
-		newsIsReadTask.execute("");
+		newsIsReadTask.executeOnExecutor(App.executorService);
 	}
 
 	public void dropTable(I_Result callBack) {
 		NewsClearTableTask newsDropTable = new NewsClearTableTask(callBack);
-		newsDropTable.execute("");
+		newsDropTable.executeOnExecutor(App.executorService);
 	}
 
 	public void asyncDropTable() {
@@ -93,6 +94,7 @@ public class ZhuantiDetailListDbTask {
 		@Override
 		protected List<NewsBeanDB> doInBackground(String... params) {
 			List<NewsBeanDB> list = null;
+			Log.e("test","NewsFindTask doInBackground");
 			try {
 				Selector selector = Selector.from(NewsBeanDB.class);
 
@@ -107,23 +109,12 @@ public class ZhuantiDetailListDbTask {
 				e.printStackTrace();
 			}
 
-			if (App.debug) {
-				if (null != list) {
-					String ids = "";
-					String nids = "";
-					for (NewsBeanDB nb : list) {
-						ids += nb.getId() + ",";
-						nids += nb.getNid() + ",";
-					}
-					LogUtils.i("ids-->" + ids + "   nids-->" + nids);
-				}
-			}
-
 			return list;
 		}
 
 		@Override
 		protected void onPostExecute(List<NewsBeanDB> result) {
+			Log.e("test","NewsFindTask onPostExecute");
 			if (null != callBack) {
 				callBack.setList(result);
 			}

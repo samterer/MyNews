@@ -56,7 +56,7 @@ public class AnalyticUtils {
      */
     public static final void sendGaScreenViewHit(Context context, String screenName) {
         if (BuildConfig.DEBUG) {
-          //  return;
+            return;
         }
         if (TextUtils.isEmpty(screenName)) {
             return;
@@ -77,7 +77,7 @@ public class AnalyticUtils {
      */
     public static final void sendGaScreenViewHit(Context context, String screenName, String channel, String author) {
         if (BuildConfig.DEBUG) {
-         //   return;
+            return;
         }
         if (TextUtils.isEmpty(screenName)) {
             return;
@@ -110,7 +110,7 @@ public class AnalyticUtils {
         if (BuildConfig.DEBUG) {
             return;
         }
-        //MobclickAgent.onEvent(context, eventId);
+        MobclickAgent.onEvent(context, eventId);
     }
 
 
@@ -125,7 +125,7 @@ public class AnalyticUtils {
         if (BuildConfig.DEBUG) {
             return;
         }
-        //MobclickAgent.onEvent(context, eventId, param);
+        MobclickAgent.onEvent(context, eventId, param);
     }
 
     /**

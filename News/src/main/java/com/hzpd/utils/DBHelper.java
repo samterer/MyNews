@@ -3,11 +3,8 @@ package com.hzpd.utils;
 import android.app.Activity;
 import android.content.Context;
 
-import com.hzpd.modle.NewsItemBeanForCollection;
-import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.ui.App;
 import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.exception.DbException;
 
 public class DBHelper {
     private DbUtils collectionDBUitls;//本地收藏数据库
@@ -27,19 +24,10 @@ public class DBHelper {
 
     private DBHelper(Context mContext) {
         this.context = mContext;
-//		dbPath= mContext.getCacheDir().getAbsolutePath();
+        Log.e("test", "DBHelper collectionDBUitls ");
         dbPath = this.context.getDatabasePath("hzpd").getAbsolutePath();
         collectionDBUitls = DbUtils.create(context
-                , dbPath, App.collectiondbname, 4, new DbUtils.DbUpgradeListener() {
-            @Override
-            public void onUpgrade(DbUtils dbUtils, int i, int i1) {
-                try {
-                    dbUtils.dropTable(NewsItemBeanForCollection.class);
-                } catch (DbException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+                , dbPath, App.collectiondbname);
         albumDBUitls = DbUtils.create(context
                 , dbPath, App.albumListDb);
         albumDBUitls.configAllowTransaction(true);
@@ -48,16 +36,7 @@ public class DBHelper {
         videoDBUitls.configAllowTransaction(true);
 
         newsListDbUtils = DbUtils.create(context
-                , dbPath, App.newsListDb, 5, new DbUtils.DbUpgradeListener() {
-            @Override
-            public void onUpgrade(DbUtils dbUtils, int i, int i1) {
-                try {
-                    dbUtils.dropTable(NewsBeanDB.class);
-                } catch (DbException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+                , dbPath, App.newsListDb);
         bianminListDbUtils = DbUtils.create(context
                 , dbPath, App.bianminListDb);
         zhuantiListDbUtils = DbUtils.create(context
