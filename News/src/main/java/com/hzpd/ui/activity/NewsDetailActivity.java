@@ -9,6 +9,7 @@ import android.net.http.SslError;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -34,6 +35,7 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -77,6 +79,7 @@ import com.hzpd.utils.CODE;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.Constant;
 import com.hzpd.utils.DBHelper;
+import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.GetFileSizeUtil;
@@ -89,6 +92,7 @@ import com.hzpd.utils.TUtils;
 import com.hzpd.utils.showwebview.MyJavascriptInterface;
 import com.joy.update.Utils;
 import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
@@ -100,6 +104,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
+import com.lidroid.xutils.view.annotation.ViewInject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -1470,35 +1475,384 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         if (mBean.getRef() != null && mBean.getRef().size() > 0) {
             for (int i = 0; i < mBean.getRef().size(); i++) {
                 final NewsBean bean = mBean.getRef().get(i);
-                View view=null;
-                Log.i("test","addRelatedNewsView--->"+bean.getType());
+                Log.i("test", "addRelatedNewsView--->" + bean.toString());
+                View view = null;
+                Log.i("test", "addRelatedNewsView--->" + bean.getType() + "\n:::" + bean.getImgs().length);
                 if ("4".equals(bean.getType())) {
-                    view = LayoutInflater.from(this).inflate(R.layout.news_detail_other_layout, null);
+                    view = LayoutInflater.from(this).inflate(R.layout.news_3_item_layout, null);
+                    setThreePic(bean, view);
                 } else if ("99".equals(bean.getType())) {
-                    view = LayoutInflater.from(this).inflate(R.layout.news_detail_other_layout, null);
+                    view = LayoutInflater.from(this).inflate(R.layout.news_large_item_layout, null);
+                    setLargePic(bean, view);
                 } else {
-                    view = LayoutInflater.from(this).inflate(R.layout.news_detail_other_layout, null);
-                    TextView text = (TextView) view.findViewById(R.id.news_detail_other_title_id);
-                    View line = view.findViewById(R.id.view_line);
-                    text.setText(bean.getTitle());
-                    Log.e("addRelatedNewsView", "addRelatedNewsView-->" + bean.getTitle());
-                    text.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (AvoidOnClickFastUtils.isFastDoubleClick())
-                                return;
-                            Intent mIntent = new Intent();
-                            mIntent.putExtra("newbean", bean);
-                            mIntent.putExtra("from", "newsitem");
-                            mIntent.setClass(NewsDetailActivity.this, NewsDetailActivity.class);
-                            startActivity(mIntent);
-                        }
-                    });
+                    view = LayoutInflater.from(this).inflate(R.layout.news_list_item_layout, null);
+                    setLeftPic(bean, view);
                 }
 //                View view = LayoutInflater.from(this).inflate(R.layout.news_detail_other_layout, null);
+                view.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (AvoidOnClickFastUtils.isFastDoubleClick())
+                            return;
+                        Intent mIntent = new Intent();
+                        mIntent.putExtra("newbean", bean);
+                        mIntent.putExtra("from", "newsitem");
+                        mIntent.setClass(NewsDetailActivity.this, NewsDetailActivity.class);
+                        startActivity(mIntent);
+                    }
+                });
 
                 llayout.addView(view);
             }
+        }
+    }
+
+
+    //左边图片，右title，评论，时间，脚标
+    private class VHLeftPic {
+        TextView newsitem_title;
+        private ImageView nli_foot;
+        //来源
+        private TextView newsitem_source;
+        //收藏数
+        private TextView newsitem_collectcount;
+        //评论数
+        private TextView newsitem_commentcount;
+        private TextView newsitem_time;
+        private ImageView newsitem_img;
+        private ImageView newsitem_unlike;
+        private ImageView item_type_iv;
+        private LinearLayout ll_tag;
+    }
+
+    private void setLeftPic(NewsBean bean, View view) {
+        VHLeftPic vhLeftPic = new VHLeftPic();
+        vhLeftPic.newsitem_title = (TextView) view.findViewById(R.id.newsitem_title);
+        vhLeftPic.newsitem_title.setText(bean.getTitle());
+        vhLeftPic.item_type_iv = (ImageView) view.findViewById(R.id.item_type_iv);
+        if (!TextUtils.isEmpty(bean.getAttname())) {
+            String attname = bean.getAttname();
+            if (attname.equals("a")) {
+                vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
+                vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_hot);
+            } else if (attname.equals("b")) {
+                vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
+                vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_rekom);
+            } else if (attname.equals("c")) {
+                vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
+                vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_kolom);
+            } else if (attname.equals("f")) {
+                vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
+                vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_fokus);
+            } else if (attname.equals("h")) {
+                vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
+                vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_xtend);
+            } else if (attname.equals("j")) {
+                vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
+                vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_issue);
+            } else if (attname.equals("p")) {
+                vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
+                vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_album);
+            } else if (attname.equals("s")) {
+                vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
+                vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_video);
+            } else {
+                vhLeftPic.item_type_iv.setVisibility(View.GONE);
+            }
+        } else {
+            vhLeftPic.item_type_iv.setVisibility(View.GONE);
+        }
+
+
+        vhLeftPic.newsitem_collectcount = (TextView) view.findViewById(R.id.newsitem_collectcount);
+        String fav = bean.getFav();
+        if (!TextUtils.isEmpty(fav)) {
+
+            int fav_counts = Integer.parseInt(fav);
+            if (fav_counts > 0) {
+                vhLeftPic.newsitem_collectcount.setVisibility(View.VISIBLE);
+                vhLeftPic.newsitem_collectcount.setText(fav_counts + "");
+            } else {
+                vhLeftPic.newsitem_collectcount.setVisibility(View.GONE);
+            }
+        } else {
+            vhLeftPic.newsitem_collectcount.setVisibility(View.GONE);
+        }
+        vhLeftPic.newsitem_source = (TextView) view.findViewById(R.id.newsitem_source);
+        String from = bean.getCopyfrom();
+        if (!TextUtils.isEmpty(from)) {
+            vhLeftPic.newsitem_source.setVisibility(View.VISIBLE);
+            vhLeftPic.newsitem_source.setText(from);
+        } else {
+            vhLeftPic.newsitem_source.setVisibility(View.GONE);
+        }
+        vhLeftPic.newsitem_commentcount = (TextView) view.findViewById(R.id.newsitem_commentcount);
+        String comcount = bean.getComcount();
+        if (!TextUtils.isEmpty(comcount)) {
+            int counts = Integer.parseInt(comcount);
+            if (counts > 0) {
+                vhLeftPic.newsitem_commentcount.setVisibility(View.VISIBLE);
+                bean.setComcount(counts + "");
+                vhLeftPic.newsitem_commentcount.setText(counts + "");
+            } else {
+                vhLeftPic.newsitem_commentcount.setVisibility(View.GONE);
+            }
+        } else {
+            vhLeftPic.newsitem_commentcount.setVisibility(View.GONE);
+        }
+        vhLeftPic.newsitem_time = (TextView) view.findViewById(R.id.newsitem_time);
+        if (CalendarUtil.friendlyTime(bean.getUpdate_time(), this) == null) {
+            vhLeftPic.newsitem_time.setText("");
+        } else {
+            vhLeftPic.newsitem_time.setText(CalendarUtil.friendlyTime(bean.getUpdate_time(), this));
+        }
+
+        vhLeftPic.ll_tag = (LinearLayout) view.findViewById(R.id.ll_tag);
+        vhLeftPic.newsitem_img = (ImageView) view.findViewById(R.id.newsitem_img);
+        vhLeftPic.newsitem_img.setVisibility(View.VISIBLE);
+        if ("1".equals(bean.getType())) {
+            vhLeftPic.newsitem_img.setVisibility(View.GONE);
+        }
+        vhLeftPic.newsitem_img.setImageResource(R.drawable.default_bg);
+        if (vhLeftPic.newsitem_img.getVisibility() == View.VISIBLE
+                && null != bean.getImgs()
+                && bean.getImgs().length > 0) {
+            Log.i("test", "addRelatedNewsView---> vhLeftPic.newsitem_img.setVisibility(View.VISIBLE);");
+            vhLeftPic.newsitem_title.setPadding(App.px_15dp, 0, 0, 0);
+            vhLeftPic.ll_tag.setPadding(App.px_15dp, 0, 0, 0);
+            SPUtil.displayImage(bean.getImgs()[0], vhLeftPic.newsitem_img,
+                    DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+        } else {
+            Log.i("test", "addRelatedNewsView---> vhLeftPic.newsitem_img.setVisibility(View.GONE);");
+            vhLeftPic.newsitem_img.setVisibility(View.GONE);
+            vhLeftPic.newsitem_title.setPadding(0, 0, 0, App.px_15dp);
+            vhLeftPic.ll_tag.setPadding(0, 0, 0, 0);
+        }
+    }
+
+    //三联图
+    private class VHThree {
+        private TextView newsitem_title;
+        private TextView news_3_tv_time;
+        private ImageView img0;
+        private ImageView img1;
+        private ImageView img2;
+        private TextView newsitem_comments;
+        private TextView newsitem_source;
+        private TextView newsitem_collectcount;
+        private ImageView item_type_iv;
+    }
+
+    private void setThreePic(NewsBean bean, View view) {
+        VHThree vhThree = new VHThree();
+        vhThree.newsitem_title = (TextView) view.findViewById(R.id.newsitem_title);
+        vhThree.newsitem_title.setText(bean.getTitle());
+
+        vhThree.newsitem_source = (TextView) view.findViewById(R.id.newsitem_source);
+        String from = bean.getCopyfrom();
+        if (!TextUtils.isEmpty(from)) {
+            vhThree.newsitem_source.setVisibility(View.VISIBLE);
+            vhThree.newsitem_source.setText(from);
+        } else {
+            vhThree.newsitem_source.setVisibility(View.GONE);
+        }
+
+        vhThree.newsitem_collectcount = (TextView) view.findViewById(R.id.newsitem_collectcount);
+        String fav = bean.getFav();
+        if (!TextUtils.isEmpty(fav)) {
+            int fav_counts = Integer.parseInt(fav);
+            if (fav_counts > 0) {
+                vhThree.newsitem_collectcount.setVisibility(View.VISIBLE);
+                vhThree.newsitem_collectcount.setText(fav_counts + "");
+            } else {
+                vhThree.newsitem_collectcount.setVisibility(View.GONE);
+            }
+        } else {
+            vhThree.newsitem_collectcount.setVisibility(View.GONE);
+        }
+
+        vhThree.newsitem_comments = (TextView) view.findViewById(R.id.newsitem_commentcount);
+        String comcount = bean.getComcount();
+        if (!TextUtils.isEmpty(comcount)) {
+            int counts = Integer.parseInt(comcount);
+            if (counts > 0) {
+                vhThree.newsitem_comments.setVisibility(View.VISIBLE);
+                bean.setComcount(counts + "");
+                vhThree.newsitem_comments.setText(counts + "");
+            } else {
+                vhThree.newsitem_comments.setVisibility(View.GONE);
+            }
+        } else {
+            vhThree.newsitem_comments.setVisibility(View.GONE);
+        }
+
+        vhThree.item_type_iv = (ImageView) view.findViewById(R.id.item_type_iv);
+        if (!TextUtils.isEmpty(bean.getAttname())) {
+            String attname = bean.getAttname();
+            if (attname.equals("a")) {
+                vhThree.item_type_iv.setVisibility(View.VISIBLE);
+                vhThree.item_type_iv.setImageResource(R.drawable.zq_subscript_hot);
+            } else if (attname.equals("b")) {
+                vhThree.item_type_iv.setVisibility(View.VISIBLE);
+                vhThree.item_type_iv.setImageResource(R.drawable.zq_subscript_rekom);
+            } else if (attname.equals("c")) {
+                vhThree.item_type_iv.setVisibility(View.VISIBLE);
+                vhThree.item_type_iv.setImageResource(R.drawable.zq_subscript_kolom);
+            } else if (attname.equals("f")) {
+                vhThree.item_type_iv.setVisibility(View.VISIBLE);
+                vhThree.item_type_iv.setImageResource(R.drawable.zq_subscript_fokus);
+            } else if (attname.equals("h")) {
+                vhThree.item_type_iv.setVisibility(View.VISIBLE);
+                vhThree.item_type_iv.setImageResource(R.drawable.zq_subscript_xtend);
+            } else if (attname.equals("j")) {
+                vhThree.item_type_iv.setVisibility(View.VISIBLE);
+                vhThree.item_type_iv.setImageResource(R.drawable.zq_subscript_issue);
+            } else if (attname.equals("p")) {
+                vhThree.item_type_iv.setVisibility(View.VISIBLE);
+                vhThree.item_type_iv.setImageResource(R.drawable.zq_subscript_album);
+            } else if (attname.equals("s")) {
+                vhThree.item_type_iv.setVisibility(View.VISIBLE);
+                vhThree.item_type_iv.setImageResource(R.drawable.zq_subscript_video);
+            } else {
+                vhThree.item_type_iv.setVisibility(View.GONE);
+            }
+        } else {
+            vhThree.item_type_iv.setVisibility(View.GONE);
+        }
+
+        vhThree.news_3_tv_time = (TextView) view.findViewById(R.id.news_3_tv_time);
+        vhThree.news_3_tv_time.setText(CalendarUtil.friendlyTime(bean.getUpdate_time(), this));
+
+        vhThree.img0 = (ImageView) view.findViewById(R.id.news_3_item1);
+        vhThree.img1 = (ImageView) view.findViewById(R.id.news_3_item2);
+        vhThree.img2 = (ImageView) view.findViewById(R.id.news_3_item3);
+        vhThree.img0.setImageResource(R.drawable.default_bg);
+        vhThree.img1.setImageResource(R.drawable.default_bg);
+        vhThree.img2.setImageResource(R.drawable.default_bg);
+        String s[] = bean.getImgs();
+        if (s.length == 1) {
+            SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+            SPUtil.displayImage("", vhThree.img1, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+            SPUtil.displayImage("", vhThree.img2, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+        } else if (s.length == 2) {
+            SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+            SPUtil.displayImage(s[1], vhThree.img1, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+            SPUtil.displayImage("", vhThree.img2, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+        } else if (s.length > 2) {
+            SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+            SPUtil.displayImage(s[1], vhThree.img1, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+            SPUtil.displayImage(s[2], vhThree.img2, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+        }
+    }
+
+    //大图
+    private class VHLargePic {
+        private TextView newsitem_title;
+        //来源
+        private TextView newsitem_source;
+        //收藏数
+        private TextView newsitem_collectcount;
+        //评论数
+        private TextView newsitem_commentcount;
+        private TextView newsitem_time;
+        private ImageView newsitem_img;
+        private ImageView item_type_iv;
+    }
+
+    private void setLargePic(NewsBean bean, View view) {
+        VHLargePic vhLargePic = new VHLargePic();
+
+        vhLargePic.newsitem_title = (TextView) view.findViewById(R.id.newsitem_title);
+        vhLargePic.newsitem_title.setText(bean.getTitle());
+
+        vhLargePic.item_type_iv = (ImageView) view.findViewById(R.id.item_type_iv);
+        if (bean.getAttname() != null) {
+            String attname = bean.getAttname();
+            if (attname.equals("a")) {
+                vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
+                vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_hot);
+            } else if (attname.equals("b")) {
+                vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
+                vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_rekom);
+            } else if (attname.equals("c")) {
+                vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
+                vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_kolom);
+            } else if (attname.equals("f")) {
+                vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
+                vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_fokus);
+            } else if (attname.equals("h")) {
+                vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
+                vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_xtend);
+            } else if (attname.equals("j")) {
+                vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
+                vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_issue);
+            } else if (attname.equals("p")) {
+                vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
+                vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_album);
+            } else if (attname.equals("s")) {
+                vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
+                vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_video);
+            } else {
+                vhLargePic.item_type_iv.setVisibility(View.GONE);
+            }
+        } else {
+            vhLargePic.item_type_iv.setVisibility(View.GONE);
+        }
+
+        vhLargePic.newsitem_collectcount = (TextView) view.findViewById(R.id.newsitem_collectcount);
+        String fav = bean.getFav();
+        if (!TextUtils.isEmpty(fav)) {
+            int fav_counts = Integer.parseInt(fav);
+            if (fav_counts > 0) {
+                vhLargePic.newsitem_collectcount.setVisibility(View.VISIBLE);
+                vhLargePic.newsitem_collectcount.setText(fav_counts + "");
+            } else {
+                vhLargePic.newsitem_collectcount.setVisibility(View.GONE);
+            }
+        } else {
+            vhLargePic.newsitem_collectcount.setVisibility(View.GONE);
+        }
+
+        vhLargePic.newsitem_source = (TextView) view.findViewById(R.id.newsitem_source);
+        String from = bean.getCopyfrom();
+        if (!TextUtils.isEmpty(from)) {
+            vhLargePic.newsitem_source.setVisibility(View.GONE);
+        } else {
+            vhLargePic.newsitem_source.setText(from);
+            vhLargePic.newsitem_source.setVisibility(View.VISIBLE);
+        }
+
+        vhLargePic.newsitem_commentcount = (TextView) view.findViewById(R.id.newsitem_commentcount);
+        String comcount = bean.getComcount();
+        if (!TextUtils.isEmpty(comcount)) {
+            int counts = Integer.parseInt(comcount);
+            if (counts > 0) {
+                vhLargePic.newsitem_commentcount.setVisibility(View.VISIBLE);
+                bean.setComcount(counts + "");
+                vhLargePic.newsitem_commentcount.setText(counts + "");
+            } else {
+                vhLargePic.newsitem_commentcount.setVisibility(View.GONE);
+            }
+        } else {
+            vhLargePic.newsitem_commentcount.setVisibility(View.GONE);
+        }
+
+        vhLargePic.newsitem_time = (TextView) view.findViewById(R.id.newsitem_time);
+        if (CalendarUtil.friendlyTime(bean.getUpdate_time(), this) == null) {
+            vhLargePic.newsitem_time.setText("");
+        } else {
+            vhLargePic.newsitem_time.setText(CalendarUtil.friendlyTime(bean.getUpdate_time(), this));
+        }
+        vhLargePic.newsitem_img = (ImageView) view.findViewById(R.id.newsitem_img);
+        vhLargePic.newsitem_img.setVisibility(View.VISIBLE);
+        if (vhLargePic.newsitem_img.getVisibility() == View.VISIBLE
+                && null != bean.getImgs()
+                && bean.getImgs().length > 0) {
+            SPUtil.displayImage(bean.getImgs()[0], vhLargePic.newsitem_img,
+                    DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+        } else {
+            SPUtil.displayImage("", vhLargePic.newsitem_img,
+                    DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
         }
     }
 
@@ -1553,6 +1907,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     public void onAdClicked(Ad ad) {
         return;
     }
+
 
     private class MyOnClickListener implements OnClickListener {
         private String tag;
