@@ -81,7 +81,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
     private View.OnClickListener onClickListener;
     TopviewpagerAdapter topviewAdapter;
     private HashMap<String, NativeAd> ads;
-    int nextAdPosition = STEP;
+    int nextAdPosition = 6;
 
     public void setAds(HashMap<String, NativeAd> ads) {
         this.ads = ads;
@@ -91,16 +91,8 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         if (ads == null) {
             return;
         }
-        NativeAd temp;
-        if (ads.get("" + nextAdPosition) == null) {
-            temp = new NativeAd(context.getApplicationContext(), AD_KEY);
-        } else {
-            temp = ads.get("" + nextAdPosition);
-            temp.setAdListener(null);
-            temp.unregisterView();
-        }
         Log.e("test", "nextAdPosition " + nextAdPosition);
-        final NativeAd nativeAd = temp;
+        final NativeAd nativeAd = new NativeAd(context.getApplicationContext(), AD_KEY);
         final int adPos = nextAdPosition;
         nativeAd.setAdListener(new AdListener() {
             @Override
@@ -196,6 +188,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         }
         if (isClearOld) {
             list.clear();
+            SPUtil.clearAds(ads);
         }
         list.addAll(data);
         getReaded(data);
@@ -204,7 +197,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         }
         if (isClearOld) {
             notifyDataSetChanged();
-            nextAdPosition = STEP;
+            nextAdPosition = 6;
         } else {
             notifyItemRangeInserted(index, data.size());
         }
@@ -495,10 +488,10 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                         } else if (attname.equals("s")) {
                             vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
                             vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_video);
-                        }else{
+                        } else {
                             vhLeftPic.item_type_iv.setVisibility(View.GONE);
                         }
-                    }else{
+                    } else {
                         vhLeftPic.item_type_iv.setVisibility(View.GONE);
                     }
 
@@ -650,10 +643,10 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                         } else if (attname.equals("s")) {
                             vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
                             vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_video);
-                        }else{
+                        } else {
                             vhLargePic.item_type_iv.setVisibility(View.GONE);
                         }
-                    }else{
+                    } else {
                         vhLargePic.item_type_iv.setVisibility(View.GONE);
                     }
 

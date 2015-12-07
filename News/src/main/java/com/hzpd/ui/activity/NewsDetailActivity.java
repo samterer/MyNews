@@ -1,13 +1,11 @@
 package com.hzpd.ui.activity;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.http.SslError;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,12 +14,10 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
@@ -46,6 +42,11 @@ import com.avatarqing.loadmore.lib.LoadMoreHandler;
 import com.avatarqing.loadmore.lib.LoadMoreListViewContainer;
 import com.facebook.CallbackManager;
 import com.facebook.Profile;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.NativeAd;
+import com.facebook.ads.NativeAdView;
 import com.facebook.login.DefaultAudience;
 import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
@@ -84,9 +85,9 @@ import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
-import com.hzpd.utils.SystemBarTintManager;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.showwebview.MyJavascriptInterface;
+import com.joy.update.Utils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
@@ -108,9 +109,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class NewsDetailActivity extends MBaseActivity implements OnClickListener {
+public class NewsDetailActivity extends MBaseActivity implements OnClickListener, AdListener {
     private CallbackManager callbackManager;
     public final static String PREFIX = "P:";
+    ViewGroup ad_layout;
+    ViewGroup ad_view;
+    private NativeAd nativeAd;
+    public static final String AD_KEY = "1902056863352757_1922349784656798";
 
     @Override
     public String getAnalyticPageName() {
@@ -219,9 +224,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getThisIntent();
-        Log.e("test", "qqqqqq onCreate " + hashCode());
         super.onCreate(savedInstanceState);
-
+        nativeAd = new NativeAd(this, AD_KEY);
+        nativeAd.setAdListener(this);
         if (App.getInstance().getThemeName().equals("3")) {
             isTheme = true;
         } else {
@@ -281,37 +286,11 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-//        changeStatus();
-    }
-
-    private void changeStatus() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true);
-            //透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //透明导航栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        try {
+            nativeAd.loadAd();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(true);
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
-        int color = typedValue.data;
-        tintManager.setStatusBarTintResource(R.color.fragment_background);
-    }
-
-    @TargetApi(19)
-    private void setTranslucentStatus(boolean on) {
-        Window win = getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
     }
 
     @Override
@@ -411,6 +390,12 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     @Override
     protected void onDestroy() {
+        if (nativeAd != null) {
+            nativeAd.setAdListener(null);
+            nativeAd.unregisterView();
+            nativeAd.destroy();
+            nativeAd = null;
+        }
         callback = null;
         loading = false;
         load_progress_bar.setVisibility(View.GONE);
@@ -445,9 +430,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
         LayoutInflater infla = LayoutInflater.from(this);
         View headView = infla.inflate(R.layout.details_related_news, null);
-
+        ad_layout = (ViewGroup) headView.findViewById(R.id.ad_layout);
+        ad_view = (ViewGroup) headView.findViewById(R.id.ad_view);
         details_explain = (FontTextView) headView.findViewById(R.id.details_explain);
-        String link = "  "+getResources().getString(R.string.details_lv_link);
+        String link = "  " + getResources().getString(R.string.details_lv_link);
         try {
             SpannableString spanttt = new SpannableString(link);
             ClickableSpan clickttt = new ShuoMClickableSpan(link, this);
@@ -1397,6 +1383,12 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 return;
             }
 
+            if (!Utils.isNetworkConnected(this)) {
+                showEmpty();
+                if (isResume) {
+                    TUtils.toast(getString(R.string.toast_check_network));
+                }
+            }
             HttpHandler httpHandler = httpUtils.download(nb.getJson_url(), detailPathRoot + "detail_" + nb.getNid(), new RequestCallBack<File>() {
                 @Override
                 public void onStart() {
@@ -1450,14 +1442,11 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
                 @Override
                 public void onFailure(HttpException error, String msg) {
-                    loading = false;
-                    wProgress = 100;
-                    progress = 0;
-                    loadingView.setVisibility(View.GONE);
-                    load_progress_bar.setVisibility(View.GONE);
-                    news_detail_nonetwork.setVisibility(View.VISIBLE);
+                    showEmpty();
                     if (isResume) {
                         TUtils.toast(getString(R.string.toast_cannot_connect_network));
+                        AnalyticUtils.sendGaEvent(getApplicationContext(), AnalyticUtils.ACTION.networkErrorOnDetail, null, null, 0L);
+                        AnalyticUtils.sendUmengEvent(getApplicationContext(), AnalyticUtils.ACTION.networkErrorOnDetail);
                     }
                 }
             });
@@ -1467,30 +1456,47 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         }
     }
 
+    private void showEmpty() {
+        loading = false;
+        wProgress = 100;
+        progress = 0;
+        loadingView.setVisibility(View.GONE);
+        load_progress_bar.setVisibility(View.GONE);
+        news_detail_nonetwork.setVisibility(View.VISIBLE);
+    }
+
     //获取相关新闻
     private void addRelatedNewsView() {
         if (mBean.getRef() != null && mBean.getRef().size() > 0) {
             for (int i = 0; i < mBean.getRef().size(); i++) {
                 final NewsBean bean = mBean.getRef().get(i);
-                View view = LayoutInflater.from(this).inflate(R.layout.news_detail_other_layout, null);
-                TextView text = (TextView) view.findViewById(R.id.news_detail_other_title_id);
-                View line = view.findViewById(R.id.view_line);
-                text.setText(bean.getTitle());
+                View view=null;
+                Log.i("test","addRelatedNewsView--->"+bean.getType());
+                if ("4".equals(bean.getType())) {
+                    view = LayoutInflater.from(this).inflate(R.layout.news_detail_other_layout, null);
+                } else if ("99".equals(bean.getType())) {
+                    view = LayoutInflater.from(this).inflate(R.layout.news_detail_other_layout, null);
+                } else {
+                    view = LayoutInflater.from(this).inflate(R.layout.news_detail_other_layout, null);
+                    TextView text = (TextView) view.findViewById(R.id.news_detail_other_title_id);
+                    View line = view.findViewById(R.id.view_line);
+                    text.setText(bean.getTitle());
+                    Log.e("addRelatedNewsView", "addRelatedNewsView-->" + bean.getTitle());
+                    text.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (AvoidOnClickFastUtils.isFastDoubleClick())
+                                return;
+                            Intent mIntent = new Intent();
+                            mIntent.putExtra("newbean", bean);
+                            mIntent.putExtra("from", "newsitem");
+                            mIntent.setClass(NewsDetailActivity.this, NewsDetailActivity.class);
+                            startActivity(mIntent);
+                        }
+                    });
+                }
+//                View view = LayoutInflater.from(this).inflate(R.layout.news_detail_other_layout, null);
 
-
-                Log.e("addRelatedNewsView", "addRelatedNewsView-->" + bean.getTitle());
-                text.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (AvoidOnClickFastUtils.isFastDoubleClick())
-                            return;
-                        Intent mIntent = new Intent();
-                        mIntent.putExtra("newbean", bean);
-                        mIntent.putExtra("from", "newsitem");
-                        mIntent.setClass(NewsDetailActivity.this, NewsDetailActivity.class);
-                        startActivity(mIntent);
-                    }
-                });
                 llayout.addView(view);
             }
         }
@@ -1521,6 +1527,31 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             }
 
         }
+    }
+
+    @Override
+    public void onError(Ad ad, AdError adError) {
+        Log.e("test", "Ad onError");
+    }
+
+    @Override
+    public void onAdLoaded(Ad ad) {
+        addAdView();
+    }
+
+    private void addAdView() {
+        try {
+            View view = NativeAdView.render(this, nativeAd, NativeAdView.Type.HEIGHT_120);
+            ad_view.addView(view);
+            ad_layout.setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onAdClicked(Ad ad) {
+        return;
     }
 
     private class MyOnClickListener implements OnClickListener {

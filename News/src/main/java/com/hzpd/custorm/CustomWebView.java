@@ -34,6 +34,12 @@ public class CustomWebView extends WebView {
     float lastX = 0;
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        //heightMeasureSpec = MeasureSpec.makeMeasureSpec(getContentHeight(), MeasureSpec.EXACTLY);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getActionMasked();
         switch (action) {

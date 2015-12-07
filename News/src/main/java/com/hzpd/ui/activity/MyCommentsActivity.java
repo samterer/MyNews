@@ -98,12 +98,7 @@ public class MyCommentsActivity extends MBaseActivity {
         } else {
             transparent_layout_id.setVisibility(View.GONE);
         }
-//        if (spu.getUser() != null) {
-//            title.setVisibility(View.GONE);
-//        } else {
-//            title.setVisibility(View.VISIBLE);
-//        }
-        changeStatus();
+        super.changeStatusBar();
         stitle_tv_content.setText(R.string.comment_mine);
         pushmsg_lv.setEmptyView(pushmsg_tv_empty);
         adapter = new MycommentsAdapter(this);
@@ -160,36 +155,6 @@ public class MyCommentsActivity extends MBaseActivity {
 
         getUserInfoFromServer();
 
-    }
-
-    private void changeStatus() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true);
-            //透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //透明导航栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
-
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(true);
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
-        int color = typedValue.data;
-        tintManager.setStatusBarTintColor(color);
-    }
-
-    @TargetApi(19)
-    private void setTranslucentStatus(boolean on) {
-        Window win = getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
     }
 
     @Override

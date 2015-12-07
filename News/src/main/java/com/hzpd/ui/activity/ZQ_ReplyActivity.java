@@ -84,42 +84,15 @@ public class ZQ_ReplyActivity extends MBaseActivity {
         } else {
             transparent_layout_id.setVisibility(View.GONE);
         }
-        changeStatus();
+
         stitle_tv_content.setText(R.string.comment);
         Intent intent = getIntent();
         if (null != intent) {
             bean = (ReplayBean) intent.getSerializableExtra("replay");
         }
-    }
-    private void changeStatus() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true);
-            //透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //透明导航栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
-
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(true);
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
-        int color = typedValue.data;
-        tintManager.setStatusBarTintColor(color);
+        super.changeStatusBar();
     }
 
-    @TargetApi(19)
-    private void setTranslucentStatus(boolean on) {
-        Window win = getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
-    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -142,7 +115,7 @@ public class ZQ_ReplyActivity extends MBaseActivity {
 
     @OnClick({R.id.zq_reply_tv_cancle, R.id.zq_reply_tv_send, R.id.zq_reply_share_iv, R.id.zq_reply_share_iv1, R.id.stitle_ll_back, R.id.rl_share1})
     private void click(View view) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick()){
+        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
             return;
         }
         switch (view.getId()) {
@@ -234,41 +207,41 @@ public class ZQ_ReplyActivity extends MBaseActivity {
         httpUtils.send(HttpMethod.POST
                 , PUBLISHCOMMENT_url// InterfaceApi.mSendComment
                 , params, new RequestCallBack<String>() {
-            @Override
-            public void onFailure(HttpException arg0, String arg1) {
-                Log.i("msg", arg1);
-                TUtils.toast(getString(R.string.toast_server_no_response));
-            }
+                    @Override
+                    public void onFailure(HttpException arg0, String arg1) {
+                        Log.i("msg", arg1);
+                        TUtils.toast(getString(R.string.toast_server_no_response));
+                    }
 
-            @Override
-            public void onSuccess(ResponseInfo<String> arg0) {
-                LogUtils.i("news-comment-->" + arg0.result);
+                    @Override
+                    public void onSuccess(ResponseInfo<String> arg0) {
+                        LogUtils.i("news-comment-->" + arg0.result);
 
 
-                JSONObject obj = null;
-                try {
-                    obj = JSONObject.parseObject(arg0.result);
-                } catch (Exception e) {
-                    return;
-                }
+                        JSONObject obj = null;
+                        try {
+                            obj = JSONObject.parseObject(arg0.result);
+                        } catch (Exception e) {
+                            return;
+                        }
 
-                if (200 == obj.getIntValue("code")) {
-                    setComcountsId(bean.getId(), comcount);
-                    TUtils.toast(getString(R.string.comment_ok));
-                    EventBus.getDefault().post(new UpdateNewsBeanDbEvent("Update_OK"));
-                    Intent resultIntent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("result", content);
-                    bundle.putBoolean("isShare", isShare);
-                    resultIntent.putExtras(bundle);
-                    setResult(RESULT_OK, resultIntent);
-                    EventUtils.sendComment(activity);
-                    finish();
-                } else {
-                    TUtils.toast(getString(R.string.toast_fail_to_comment));
-                }
-            }
-        });
+                        if (200 == obj.getIntValue("code")) {
+                            setComcountsId(bean.getId(), comcount);
+                            TUtils.toast(getString(R.string.comment_ok));
+                            EventBus.getDefault().post(new UpdateNewsBeanDbEvent("Update_OK"));
+                            Intent resultIntent = new Intent();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("result", content);
+                            bundle.putBoolean("isShare", isShare);
+                            resultIntent.putExtras(bundle);
+                            setResult(RESULT_OK, resultIntent);
+                            EventUtils.sendComment(activity);
+                            finish();
+                        } else {
+                            TUtils.toast(getString(R.string.toast_fail_to_comment));
+                        }
+                    }
+                });
     }
 
     public void setComcountsId(String nid, String comcount) {

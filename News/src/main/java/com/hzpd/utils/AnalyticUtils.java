@@ -159,6 +159,8 @@ public class AnalyticUtils {
         String loginIn = "登录";
         String loginOut = "登出";
         String newsItem = "点击新闻item";
+        String networkErrorOnDetail = "详情页网络连接失败";
+        String networkErrorOnList = "列表页网络连接失败";
     }
 
     // 屏幕分类

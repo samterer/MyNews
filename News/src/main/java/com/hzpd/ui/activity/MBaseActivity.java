@@ -47,7 +47,6 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
     protected FragmentManager fm;
     protected Fragment currentFm;
 
-
     boolean isResume = false;
     List<HttpHandler> handlerList = new ArrayList<>();
 

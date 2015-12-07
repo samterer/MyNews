@@ -70,7 +70,6 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.subject_detail_layout);
-            changeStatus();
             EventBus.getDefault().register(this);
             init();
             page = 1;
@@ -80,36 +79,8 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
 
-    private void changeStatus() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true);
-            //透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //透明导航栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
-
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(true);
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
-        int color = typedValue.data;
-        tintManager.setStatusBarTintColor(color);
-    }
-
-    @TargetApi(19)
-    private void setTranslucentStatus(boolean on) {
-        Window win = getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
+        super.changeStatusBar();
     }
 
     private void init() {

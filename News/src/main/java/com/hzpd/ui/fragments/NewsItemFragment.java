@@ -40,8 +40,10 @@ import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.db.NewsListDbTask;
+import com.joy.update.Utils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.RequestParams;
@@ -279,6 +281,11 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         if (isLoading) {
             return;
         }
+        if (!Utils.isNetworkConnected(App.getInstance())) {
+            showEmpty();
+            TUtils.toast(getString(R.string.toast_check_network));
+            return;
+        }
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("tid", channelbean.getTid());
@@ -315,16 +322,22 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
             @Override
             public void onFailure(HttpException error, String msg) {
-                isLoading = false;
-                pullRefresh = false;
-                if (!isAdded()) {
-                    return;
-                }
-                mSwipeRefreshWidget.setRefreshing(false);
+                showEmpty();
                 TUtils.toast(getString(R.string.toast_cannot_connect_network));
+                AnalyticUtils.sendGaEvent(getActivity(), AnalyticUtils.ACTION.networkErrorOnList, null, null, 0L);
+                AnalyticUtils.sendUmengEvent(getActivity(), AnalyticUtils.ACTION.networkErrorOnList);
             }
         });
         handlerList.add(httpHandler);
+    }
+
+    private void showEmpty() {
+        isLoading = false;
+        pullRefresh = false;
+        if (!isAdded()) {
+            return;
+        }
+        mSwipeRefreshWidget.setRefreshing(false);
     }
 
     boolean loadad = true;
@@ -357,8 +370,8 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                     }
 
                     if (page == 1) {
-                        if(list.size()>7){
-                        adapter.removeOld();
+                        if (list.size() > 7) {
+                            adapter.removeOld();
                         }
                     }
                     if (list.size() == pageSize) {
@@ -444,14 +457,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        for (NativeAd nativeAd : ads.values()) {
-            if (nativeAd != null) {
-                nativeAd.unregisterView();
-                nativeAd.setAdListener(null);
-                nativeAd.destroy();
-            }
-        }
-        ads.clear();
+        SPUtil.clearAds(ads);
         super.onDestroy();
     }
 

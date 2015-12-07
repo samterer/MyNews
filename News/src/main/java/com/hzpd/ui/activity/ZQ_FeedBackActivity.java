@@ -61,42 +61,12 @@ public class ZQ_FeedBackActivity extends MBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zq_feedback_layout);
         ViewUtils.inject(this);
-        changeStatus();
+        super.changeStatusBar();
         SPUtil.setFont(zq_feedback_et_content);
         SPUtil.setFont(zq_feedback_et_email);
         SPUtil.setFont(zq_feedback_btn_submit);
         stitle_tv_content.setText(getString(R.string.prompt_feedback));
 
-    }
-
-    private void changeStatus() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true);
-            //透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //透明导航栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
-
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(true);
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
-        int color = typedValue.data;
-        tintManager.setStatusBarTintColor(color);
-    }
-
-    @TargetApi(19)
-    private void setTranslucentStatus(boolean on) {
-        Window win = getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
     }
 
     @Override

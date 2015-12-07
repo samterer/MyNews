@@ -1130,7 +1130,8 @@ public class CalendarUtil {
 //            ftime = c.getResources().getString(R.string.calendarutil_time_4);//" kemarin";
 //        }
         else {
-            ftime = dateFormater.get().format(time);
+//            ftime = dateFormater.get().format(time);
+            ftime = "";
         }
         return ftime;
     }

@@ -1,6 +1,5 @@
 package com.hzpd.utils;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -13,13 +12,9 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Build;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
@@ -28,6 +23,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.facebook.ads.NativeAd;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.UserBean;
 import com.hzpd.ui.App;
@@ -41,12 +37,26 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 /**
  * @author color
  *         程序配置
  */
 public class SPUtil {
+
+    public static void clearAds(HashMap<String, NativeAd> ads) {
+        if (ads != null) {
+            for (NativeAd nativeAd : ads.values()) {
+                if (nativeAd != null) {
+                    nativeAd.unregisterView();
+                    nativeAd.setAdListener(null);
+                    nativeAd.destroy();
+                }
+            }
+            ads.clear();
+        }
+    }
 
     public static Typeface typeFace;
     public static Typeface typeFaceTitle;
