@@ -1,0 +1,34 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/zqzx_bg_normal">
+
+    <LinearLayout
+        android:id="@+id/ll_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/zqzx_bg_normal"
+        android:orientation="vertical">
+
+        <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/pushmsg_lv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="@android:color/transparent"
+            android:descendantFocusability="blocksDescendants"
+            android:divider="@color/zqzx_bg_dark"
+            android:dividerHeight="0dp"
+            android:fastScrollEnabled="false"
+            android:listSelector="@android:color/transparent"
+            android:scrollbarThumbVertical="@drawable/base_list_scrollbar_handle"
+            android:scrollbarTrackVertical="@color/transparent"
+            android:scrollbars="vertical"
+            ptr:ptrAnimationStyle="flip"
+            ptr:ptrDrawable="@drawable/default_ptr_rotate"
+            ptr:ptrHeaderSubTextColor="@color/grey_font"
+            ptr:ptrHeaderTextColor="@color/pulltorefresh_font" />
+
+    </LinearLayout>
+
+
+</FrameLayout>

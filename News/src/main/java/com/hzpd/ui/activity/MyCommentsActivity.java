@@ -249,19 +249,10 @@ public class MyCommentsActivity extends MBaseActivity {
 
         LogUtils.e("uid" + uid);
 
-        String station = SharePreferecesUtils.getParam(MyCommentsActivity.this, StationConfig.STATION, "def").toString();
         String siteid = null;
         String myComm_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            siteid = InterfaceJsonfile.SITEID;
-            myComm_url = InterfaceJsonfile.XF_MYCOMMENTS;
-        } else if (station.equals(StationConfig.YN)) {
-            siteid = InterfaceJsonfile_YN.SITEID;
-            myComm_url = InterfaceJsonfile_YN.XF_MYCOMMENTS;
-        } else if (station.equals(StationConfig.TW)) {
-            siteid = InterfaceJsonfile_TW.SITEID;
-            myComm_url = InterfaceJsonfile_TW.XF_MYCOMMENTS;
-        }
+        siteid = InterfaceJsonfile.SITEID;
+        myComm_url = InterfaceJsonfile.XF_MYCOMMENTS;
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("uid", uid);
         params.addBodyParameter("siteid", siteid);

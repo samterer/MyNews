@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_10"
+            android:background="@color/main_background_color" />
+
+        <!-- 标签-->
+        <LinearLayout
+            android:id="@+id/my_newdetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#fafafa"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/margin_10"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="@dimen/margin_10">
+
+            <ImageView
+                android:id="@+id/discovery_iv_tag"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:scaleType="centerCrop"
+                android:src="@color/main_background_color" />
+
+            <com.hzpd.ui.widget.FontTextView
+                android:id="@+id/mycoms_content_txt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="@dimen/margin_10"
+                android:text="tag"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_subscribe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/discovery_item_corners_bg"
+                android:drawableLeft="@drawable/discovery_image_nor"
+                android:drawablePadding="3dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Pilih"
+                android:textColor="@color/pager_sliding_tab_indicator_color" />
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_height"
+            android:background="#e6e6e6" />
+
+        <!-- 新闻 -->
+        <LinearLayout
+            android:id="@+id/news_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"></LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

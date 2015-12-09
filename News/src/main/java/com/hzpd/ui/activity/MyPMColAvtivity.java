@@ -447,19 +447,8 @@ public class MyPMColAvtivity extends MBaseActivity {
     //获取数据
     private void getCollectionInfoFromServer() {
         if (null != spu.getUser()) { //登录
-            String station = SharePreferecesUtils.getParam(MyPMColAvtivity.this, StationConfig.STATION, "def").toString();
-            String siteid = null;
-            String COLLECTIONLIST_url = null;
-            if (station.equals(StationConfig.DEF)) {
-                siteid = InterfaceJsonfile.SITEID;
-                COLLECTIONLIST_url = InterfaceJsonfile.COLLECTIONLIST;
-            } else if (station.equals(StationConfig.YN)) {
-                siteid = InterfaceJsonfile_YN.SITEID;
-                COLLECTIONLIST_url = InterfaceJsonfile_YN.COLLECTIONLIST;
-            } else if (station.equals(StationConfig.TW)) {
-                siteid = InterfaceJsonfile_TW.SITEID;
-                COLLECTIONLIST_url = InterfaceJsonfile_TW.COLLECTIONLIST;
-            }
+            String  siteid = InterfaceJsonfile.SITEID;
+            String  COLLECTIONLIST_url = InterfaceJsonfile.COLLECTIONLIST;
             RequestParams params = RequestParamsUtils.getParamsWithU();
             params.addBodyParameter("page", Page + "");
             params.addBodyParameter("pagesize", PageSize + "");

@@ -2,136 +2,129 @@ package com.hzpd.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
-import com.hzpd.adapter.MainPagerAdapter;
+import com.alibaba.fastjson.JSONObject;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.hzpd.adapter.DiscoveryItemAdapter;
 import com.hzpd.hflt.R;
-import com.hzpd.ui.activity.SearchActivity;
-import com.hzpd.utils.AAnim;
+import com.hzpd.modle.CollectionJsonBean;
+import com.hzpd.modle.DiscoveryItemBean;
 import com.hzpd.utils.AnalyticUtils;
-import com.hzpd.utils.AvoidOnClickFastUtils;
+import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.Log;
+import com.hzpd.utils.RequestParamsUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
+import com.lidroid.xutils.util.LogUtils;
+
+import java.util.List;
 
 public class ZY_DiscoveryItemFragment extends BaseFragment {
+
+    private String url = "http://www.nutnote.com/ltcms/api.php?s=/Tag/discovery";
+    private PullToRefreshListView pushmsg_lv;
+    private DiscoveryItemAdapter adapter;
 
     @Override
     public String getAnalyticPageName() {
         return AnalyticUtils.SCREEN.leftMenu;
     }
 
-    private View main_top_search;
-
-    private BaseFragment[] fragments;
-    private ViewPager viewPager;
-    private MainPagerAdapter adapter;
-    /**
-     * ViewPager的当前选中页
-     */
-    private int currentIndex = 0;
-    private View[] tv_menu;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = null;
         try {
-            view = inflater.inflate(R.layout.zy_findfragment, container, false);
-            main_top_search = view.findViewById(R.id.main_top_search);
-            main_top_search.setOnClickListener(new View.OnClickListener() {
+            view = inflater.inflate(R.layout.zy_discovery_item_fragment, container, false);
+            adapter = new DiscoveryItemAdapter(getActivity());
+            pushmsg_lv = (PullToRefreshListView) view.findViewById(R.id.pushmsg_lv);
+            pushmsg_lv.setAdapter(adapter);
+            pushmsg_lv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
                 @Override
-                public void onClick(View v) {
-                    if (AvoidOnClickFastUtils.isFastDoubleClick())
-                        return;
-                    Intent mIntent = new Intent();
-                    mIntent.setClass(getActivity(), SearchActivity.class);
-                    startActivity(mIntent);
-                    AAnim.ActivityStartAnimation(getActivity());
+                public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                    LogUtils.i("下拉刷新");
+                    refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_pull_label));
+                    getDiscoveryServer();
+                }
+
+                @Override
+                public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                    //上拉加载
+                    LogUtils.i("上拉加载");
+                    refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_from_bottom_pull_label));
+                    getDiscoveryServer();
                 }
             });
-            initLayout(view);
+            pushmsg_lv.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    pushmsg_lv.setRefreshing(true);
+                }
+            }, 600);
+
+
         } catch (Exception e) {
 
         }
-
-
         return view;
+    }
+
+    private int Page = 1;
+    private int pageSize = 10;
+
+    private void getDiscoveryServer() {
+
+        RequestParams params = RequestParamsUtils.getParamsWithU();
+        params.addBodyParameter("Page", Page + "");
+        params.addBodyParameter("PageSize", pageSize + "");
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                pushmsg_lv.onRefreshComplete();
+                pushmsg_lv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
+                if (null == obj) {
+                    return;
+                }
+                if (200 == obj.getIntValue("code")) {
+                    List<DiscoveryItemBean> mlist = FjsonUtil.parseArray(obj.getString("data")
+                            , DiscoveryItemBean.class);
+                    Log.i("", "ZY_DiscoveryItemFragment" + mlist.toString());
+                    if (null == mlist) {
+                        return;
+                    }
+                    adapter.appendData(mlist, true);
+                    adapter.notifyDataSetChanged();
+                    LogUtils.i("listsize-->" + mlist.size());
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                pushmsg_lv.onRefreshComplete();
+                pushmsg_lv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+            }
+        });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-    }
-
-
-    private void initLayout(View layout) {
-        // TODO Auto-generated method stub
-        viewPager = (ViewPager) layout.findViewById(R.id.rank_pager);
-        adapter = new MainPagerAdapter(getActivity()
-                .getSupportFragmentManager());
-        fragments = new BaseFragment[2];
-        fragments[0] = new ZY_RightFragment();
-        fragments[1] = new ZY_RightFragment();
-        adapter.add(fragments[0]);
-        adapter.add(fragments[1]);
-        viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(currentIndex);
-        viewPager.setOnPageChangeListener(new MyOnPageChangeListener());
-        viewPager.setOffscreenPageLimit(adapter.getCount());
-        InitTextView(layout);
-        viewPager.setCurrentItem(0);
-        tv_menu[0].setSelected(true);
-    }
-
-    private void InitTextView(View layout) {
-        tv_menu = new View[2];
-        tv_menu[0] = layout.findViewById(R.id.tv_week);
-        tv_menu[1] = layout.findViewById(R.id.tv_month);
-        for (int i = 0; i < tv_menu.length; i++) {
-            tv_menu[i].setOnClickListener(new MyOnClickListener(i));
-        }
 
     }
 
-    private class MyOnClickListener implements View.OnClickListener {
-        private int index = 0;
-
-        public MyOnClickListener(int i) {
-            index = i;
-        }
-
-        public void onClick(View v) {
-            viewPager.setCurrentItem(index);
-        }
-
-    }
-
-    public class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
-
-        public void onPageScrollStateChanged(int arg0) {
-
-        }
-
-        public void onPageScrolled(int position, float offset, int offsetPixels) {
-        }
-
-        public void onPageSelected(int position) {
-            resetTextView();
-            tv_menu[position].setSelected(true);
-            currentIndex = position;
-        }
-    }
-
-    private void resetTextView() {
-        for (View textView : tv_menu) {
-            textView.setSelected(false);
-        }
-    }
 
 }

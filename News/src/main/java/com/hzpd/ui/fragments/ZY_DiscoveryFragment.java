@@ -36,7 +36,7 @@ public class ZY_DiscoveryFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = null;
         try {
-            view = inflater.inflate(R.layout.zy_findfragment, container, false);
+            view = inflater.inflate(R.layout.zy_discoveryfragment, container, false);
             main_top_search = view.findViewById(R.id.main_top_search);
             main_top_search.setOnClickListener(new View.OnClickListener() {
                 @Override
