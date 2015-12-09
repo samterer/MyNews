@@ -17,6 +17,7 @@ import com.hzpd.hflt.R;
 import com.hzpd.ui.App;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.DBHelper;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SystemBarTintManager;
 import com.lidroid.xutils.HttpUtils;
@@ -114,6 +115,7 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
     protected void onDestroy() {
         super.onDestroy();
         for (HttpHandler httpHandler : handlerList) {
+            Log.e("test", "httpHandler.getState " + httpHandler.getState());
             if (httpHandler.getState() == HttpHandler.State.LOADING || httpHandler.getState() == HttpHandler.State.STARTED) {
                 httpHandler.setRequestCallBack(null);
                 httpHandler.cancel();

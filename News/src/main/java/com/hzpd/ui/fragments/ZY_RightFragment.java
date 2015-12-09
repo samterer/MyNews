@@ -226,20 +226,13 @@ public class ZY_RightFragment extends BaseFragment {
 
     @OnClick({R.id.zy_rfrag_ll_login, R.id.zy_rfrag_ll_comm, R.id.zy_rfrag_ll_collect, R.id.zy_rfrag_ll_push,
             R.id.zy_rfrag_ll_setting, })
+
     private void rightClick(View v) {
         if (AvoidOnClickFastUtils.isFastDoubleClick())
             return;
         boolean flag = false;
         Intent mIntent = new Intent();
         switch (v.getId()) {
-//            case R.id.zy_rfrag_ll_login: {
-//                if (spu.getUser() != null) {
-//
-//                } else {
-//                    flag = false;
-//                }
-//            }
-//            break;
             case R.id.zy_rfrag_ll_comm: {
                 mIntent.setClass(activity, MyCommentsActivity.class);
                 flag = true;

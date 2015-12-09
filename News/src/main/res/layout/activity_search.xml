@@ -33,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/background_tab_pressed_select_back" />
+                    android:src="@drawable/webview_prev_mz" />
 
             </RelativeLayout>
 

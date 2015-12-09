@@ -187,6 +187,7 @@ public class SPUtil {
 
     public static void displayImage(String uri, ImageView imageView, DisplayImageOptions options, ImageLoadingListener loadingListener,
                                     ImageLoadingProgressListener progressListener) {
+
         if (isImageUri(uri)) {
             try {
                 uri = uri.replaceAll("&amp;", "&");

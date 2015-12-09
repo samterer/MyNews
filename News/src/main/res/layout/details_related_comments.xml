@@ -3,7 +3,7 @@
     android:id="@+id/details_related_comments"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/fragment_background"
     android:orientation="vertical">
 
     <View
@@ -20,22 +20,19 @@
         android:layout_below="@+id/top_line"
         android:layout_marginTop="10dp"
         android:background="#f5f5f5"
-        />
-
+        android:visibility="gone"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="5dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="15dp">
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/details_bg_color"
             android:orientation="horizontal">
 
             <ImageView
@@ -43,14 +40,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:background="@drawable/details_related_comments" />
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/article_hot_comment" />
 
             <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/relate_news"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="12dp"
+                android:layout_marginLeft="5dp"
                 android:text="@string/details_lv_3"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
@@ -60,15 +60,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:textSize="16sp"
-                android:text=""
                 android:background="@drawable/details_comment_counts_selector"
-                />
+                android:paddingLeft="10dp"
+                android:text=""
+                android:textSize="16sp"
+                android:visibility="gone"/>
         </LinearLayout>
 
 
     </LinearLayout>
-
 
 </LinearLayout>

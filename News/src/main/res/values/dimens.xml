@@ -9,7 +9,9 @@
     <dimen name="nonetworkpadding">130dp</dimen>
     <dimen name="item_height">1dp</dimen>
     <dimen name="detail_margin_left">5dp</dimen>
-    <dimen name="main_title_bar">40dp</dimen>
+    <dimen name="main_title_bar">50dp</dimen>
+
+    <dimen name="details_title_bar">50dp</dimen>
     <!--  -->
     <dimen name="image_size">110dp</dimen>
     <dimen name="space_size">4dp</dimen>
@@ -30,5 +32,8 @@
 
     <dimen name="line_height">0.1dp</dimen>
     <dimen name="zy_right_margin_left">15dp</dimen>
+    <dimen name="margin_20">20dp</dimen>
+    <dimen name="margin_15">15dp</dimen>
+    <dimen name="margin_10">10dp</dimen>
 
 </resources>

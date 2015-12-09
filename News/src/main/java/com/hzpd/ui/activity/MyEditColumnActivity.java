@@ -1,6 +1,7 @@
 package com.hzpd.ui.activity;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -24,6 +25,7 @@ import com.hzpd.modle.event.ChangeChannelEvent;
 import com.hzpd.modle.event.ChannelSortedList;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
@@ -81,14 +83,10 @@ public class MyEditColumnActivity extends MBaseActivity {
     private TextView editcolumn_item_tv;
     @ViewInject(R.id.text_editcolumn)
     private TextView text_editcolumn;
-    @ViewInject(R.id.choose_tab)
-    private TextView choose_tab;
     @ViewInject(R.id.editcolum_explain)
     private TextView editcolum_explain;
 
     private ChannelSortedList csl;
-
-
     private boolean isEdit;
 
     @Override
@@ -97,6 +95,14 @@ public class MyEditColumnActivity extends MBaseActivity {
         try {
             setContentView(R.layout.editcolumn_my_layout);
             ViewUtils.inject(this);
+            findViewById(R.id.ll_choose_channel).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MyEditColumnActivity.this, SearchActivity.class);
+                    startActivity(intent);
+                    AAnim.ActivityStartAnimation(MyEditColumnActivity.this);
+                }
+            });
             stitle_tv_content.setText(R.string.prompt_column_subscribe);
             text_editcolumn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -106,12 +112,14 @@ public class MyEditColumnActivity extends MBaseActivity {
                         Log.e("isEdit", "isEdit" + true);
                         editcolum_explain.setVisibility(View.VISIBLE);
                         dragAdapter.isEditItem(isEdit);
+                        myAllAdapter.isEditItem(isEdit);
                         editcolumn_dragGridView.isEditColumn(isEdit);
                         text_editcolumn.setText(getResources().getString(R.string.editcolumn_ok));
                     } else {
                         isEdit = false;
                         editcolum_explain.setVisibility(View.GONE);
                         dragAdapter.isEditItem(isEdit);
+                        myAllAdapter.isEditItem(isEdit);
                         text_editcolumn.setText(getResources().getString(R.string.editcolumn_edit));
                         editcolumn_dragGridView.isEditColumn(isEdit);
                         Log.e("isEdit", "isEdit" + false);
@@ -304,7 +312,7 @@ public class MyEditColumnActivity extends MBaseActivity {
         myAllList = JSONArray.parseArray(array.toJSONString(), NewsChannelBean.class);
         Collections.sort(myAllList);
         addLocalChannels(myAllList);
-        Log.i(getLogTag(), "Channel count : " + myAllList.size() + "::::" + myAllList.toString());
+//        Log.i(getLogTag(), "Channel count : " + myAllList.size() + "::::" + myAllList.toString());
 
         // 将新获取的频道临时保存到map中
         for (NewsChannelBean stb : myAllList) {

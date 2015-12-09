@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,7 +21,7 @@ import com.hzpd.ui.App;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.ui.fragments.NewsFragment;
 import com.hzpd.ui.fragments.WebviewFragment;
-import com.hzpd.ui.fragments.ZY_FindFragment;
+import com.hzpd.ui.fragments.ZY_DiscoveryFragment;
 import com.hzpd.ui.fragments.ZY_RightFragment;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
@@ -108,7 +107,7 @@ public class MainActivity extends BaseActivity {
             });
         }
         fragments[0] = new NewsFragment();
-        fragments[1] = new ZY_FindFragment();
+        fragments[1] = new ZY_DiscoveryFragment();
         fragments[2] = new ZY_RightFragment();
         adapter.add(fragments[0]);
         adapter.add(fragments[1]);

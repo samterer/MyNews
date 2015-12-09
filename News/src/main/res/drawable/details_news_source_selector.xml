@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!--<item-->
-        <!--android:state_pressed="true"-->
-        <!--android:drawable="@color/tag_select"/>-->
+    <!--android:state_pressed="true"-->
+    <!--android:drawable="@color/tag_select"/>-->
     <!--<item-->
-        <!--android:drawable="@color/tag_unselect"/>-->
+    <!--android:drawable="@color/tag_unselect"/>-->
 
     <item android:state_pressed="true">
         <shape>
             <!-- 点击效果-->
-            <solid android:color="@color/tag_select" />
+            <solid android:color="@color/details_bg_check_color" />
             <corners android:radius="20dp" />
         </shape>
     </item>
     <item>
         <shape>
-            <solid android:color="@color/tag_unselect" />
+            <solid android:color="@color/details_bg_check_color" />
             <corners android:radius="20dp" />
         </shape>
     </item>
-
 
 
 </selector>

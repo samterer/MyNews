@@ -99,6 +99,11 @@ public class BaseFragment extends Fragment implements AnalyticCallback {
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
     public String getLogTag() {
         return getClass().getSimpleName();
     }
@@ -121,6 +126,13 @@ public class BaseFragment extends Fragment implements AnalyticCallback {
 
     @Override
     public void onStop() {
+        for (HttpHandler httpHandler : handlerList) {
+            if (httpHandler.getState() == HttpHandler.State.LOADING || httpHandler.getState() == HttpHandler.State.STARTED) {
+                httpHandler.setRequestCallBack(null);
+                httpHandler.cancel();
+            }
+        }
+        handlerList.clear();
         super.onStop();
         action.onStop(this);
     }
@@ -137,14 +149,6 @@ public class BaseFragment extends Fragment implements AnalyticCallback {
 
     @Override
     public void onDestroy() {
-        for (HttpHandler httpHandler : handlerList) {
-            if (httpHandler.getState() == HttpHandler.State.LOADING || httpHandler.getState() == HttpHandler.State.STARTED) {
-                httpHandler.setRequestCallBack(null);
-                httpHandler.cancel();
-            }
-        }
-        handlerList.clear();
-        httpUtils = null;
         super.onDestroy();
         App.getInstance().getRefWatcher().watch(this);
     }

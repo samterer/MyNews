@@ -18,7 +18,7 @@
         <!-- MainActivity-->
         <item name="title_bar_color">@color/toolbar_bg</item>
         <item name="title_bar_name_color">@color/white</item>
-        <item name="m_background_tab_pressed">@drawable/title_bar_btn_selector_color</item>
+        <item name="m_background_tab_pressed">@drawable/title_bar_details_btn_selector_color</item>
 
         <item name="main_activity_color">@color/white</item>
         <item name="fragment_main_backgroup">@color/fragment_background</item>

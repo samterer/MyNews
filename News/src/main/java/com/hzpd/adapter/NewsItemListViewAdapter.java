@@ -97,7 +97,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         nativeAd.setAdListener(new AdListener() {
             @Override
             public void onError(Ad ad, AdError adError) {
-                Log.e("test", "onError->" + nextAdPosition + ": " + adError);
+                Log.e("test", "onError->" + nextAdPosition + ": " + adError.getErrorMessage());
             }
 
             @Override

@@ -12,13 +12,13 @@
         <shape>
             <corners android:radius="@dimen/category_item_corner" />
             <solid android:color="@android:color/transparent" />
-            <stroke android:width="0.5dip" android:color="#ff7e00" />
+            <stroke android:width="0.5dip" android:color="@color/pager_sliding_tab_text_selected_color" />
         </shape>
     </item>
     <item>
         <shape>
             <corners android:radius="@dimen/category_item_corner" />
-            <stroke android:width="0.5dip" android:color="#ff7e00" />
+            <stroke android:width="0.5dip" android:color="@color/pager_sliding_tab_text_selected_color" />
             <solid android:color="@android:color/transparent" />
         </shape>
     </item>

@@ -14,105 +14,118 @@
         <!--标题栏-->
         <include layout="@layout/main_top_layout" />
 
-        <RelativeLayout
-            android:id="@+id/news_indicator_root"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="33dp"
-            android:background="?fragment_main_psts_tabs_background">
+            android:layout_height="match_parent">
 
-            <!-- -->
             <LinearLayout
-                android:id="@+id/ll_news_button"
-                android:layout_width="45dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/edit_tab_btn_selector"
-                android:gravity="center">
+                android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/news_button"
-                    android:layout_width="13dp"
-                    android:layout_height="13dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@null"
-                    android:src="@drawable/main_channel_unselect" />
+                <RelativeLayout
+                    android:id="@+id/news_indicator_root"
+                    android:layout_width="match_parent"
+                    android:layout_height="33dp"
+                    android:background="?fragment_main_psts_tabs_background">
+
+                    <!-- -->
+                    <LinearLayout
+                        android:id="@+id/ll_news_button"
+                        android:layout_width="45dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/edit_tab_btn_selector"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/news_button"
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:layout_gravity="center"
+                            android:contentDescription="@null"
+                            android:src="@drawable/main_channel_unselect" />
+                    </LinearLayout>
+
+                    <!--顶部频道展示-->
+                    <com.hzpd.ui.widget.PagerSlidingTabStrip xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/psts_tabs_app"
+                        android:layout_width="match_parent"
+                        android:layout_height="33dp"
+                        android:layout_toLeftOf="@id/ll_news_button"
+                        android:background="?fragment_main_psts_tabs_background"
+                        app:pstsDividerColor="#00ffffff"
+                        app:pstsIndicatorColor="?fragment_main_psts_tabs_indicator_color"
+                        app:pstsIndicatorHeight="2dp"
+                        app:pstsTabPaddingLeftRight="10dp"
+                        app:pstsTabTextColor="?fragment_main_psts_tabs_text_color"
+                        app:pstsTabTextSelectedColor="?fragment_main_psts_tabs_indicator_color"
+                        app:pstsTabTextSize="15sp"
+                        app:pstsUnderlineColor="#33444444"
+                        app:pstsUnderlineHeight="0dp" />
+
+                    <View
+                        android:id="@+id/line"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="#33444444" />
+                </RelativeLayout>
+
+                <!--分割线-->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#33444444"
+                    android:visibility="gone" />
+
+                <!--频道跟换ViewPager-->
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/news_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
             </LinearLayout>
-
-
-            <!--顶部频道展示-->
-            <com.hzpd.ui.widget.PagerSlidingTabStrip xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/psts_tabs_app"
+            <!--数据为空时显示-->
+            <FrameLayout
+                android:id="@+id/main_no_news"
                 android:layout_width="match_parent"
-                android:layout_height="33dp"
-                android:layout_toLeftOf="@id/ll_news_button"
-                android:background="?fragment_main_psts_tabs_background"
-                app:pstsDividerColor="#00ffffff"
-                app:pstsIndicatorColor="?fragment_main_psts_tabs_indicator_color"
-                app:pstsIndicatorHeight="2dp"
-                app:pstsTabPaddingLeftRight="10dp"
-                app:pstsTabTextColor="?fragment_main_psts_tabs_text_color"
-                app:pstsTabTextSelectedColor="?fragment_main_psts_tabs_indicator_color"
-                app:pstsTabTextSize="15sp"
-                app:pstsUnderlineColor="#33444444"
-                app:pstsUnderlineHeight="0dp" />
+                android:layout_height="match_parent"
+                android:paddingBottom="100dp"
+                android:visibility="gone">
 
-            <View
-                android:id="@+id/line"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_alignParentBottom="true"
-                android:background="#33444444" />
-        </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
 
-        <!--分割线-->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#33444444"
-            android:visibility="gone" />
+                    <ImageView
+                        android:id="@+id/background_empty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/main_none" />
 
-        <!--频道跟换ViewPager-->
-        <android.support.v4.view.ViewPager
-            android:id="@+id/news_pager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+                    <TextView
+                        android:id="@+id/text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/click_here_to_refresh" />
+
+
+                </LinearLayout>
+
+
+            </FrameLayout>
+        </FrameLayout>
+
+
 
     </LinearLayout>
 
-    <!--数据为空时显示-->
-    <FrameLayout
-        android:id="@+id/main_no_news"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="100dp"
-        android:visibility="gone">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/background_empty"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/main_none" />
-
-            <TextView
-                android:id="@+id/text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/click_here_to_refresh" />
-
-
-        </LinearLayout>
-
-
-    </FrameLayout>
 
     <!-- 为空时点击屏幕加载Loading-->
     <FrameLayout

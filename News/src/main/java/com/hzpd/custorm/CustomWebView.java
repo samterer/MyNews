@@ -1,6 +1,7 @@
 package com.hzpd.custorm;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -8,6 +9,7 @@ import android.view.MotionEvent;
 import android.webkit.WebView;
 
 import com.hzpd.ui.interfaces.OnScrollChangeListener;
+import com.hzpd.utils.Log;
 
 /**
  * Created by AvatarQing on 2015/7/24.
@@ -35,7 +37,9 @@ public class CustomWebView extends WebView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        //heightMeasureSpec = MeasureSpec.makeMeasureSpec(getContentHeight(), MeasureSpec.EXACTLY);
+        int height = (int) (1.0 * getContentHeight() * getScale());
+        //heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.AT_MOST);
+        Log.e("test", "getContentHeight() " + height);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
@@ -58,13 +62,16 @@ public class CustomWebView extends WebView {
         if (mOnScrollChangeListener != null) {
             mOnScrollChangeListener.onScrollChange(this, l, t, oldl, oldt);
         }
-//		if (mTitleBar != null) {
-//			mTitleBar.offsetLeftAndRight(l - mTitleBar.getLeft());
-//		}
     }
 
     public void setOnScrollChangeListener(OnScrollChangeListener listener) {
         mOnScrollChangeListener = listener;
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        invalidate();
     }
 
     @Override

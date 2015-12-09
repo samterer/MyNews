@@ -20,6 +20,7 @@ import com.hzpd.ui.activity.NewsAlbumActivity;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.VideoPlayerActivity;
 import com.hzpd.utils.AAnim;
+import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
@@ -88,6 +89,9 @@ public class MycommentsAdapter extends ListBaseAdapter<MycommentsBean> {
         holder.my_newdetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (AvoidOnClickFastUtils.isFastDoubleClick())
+                    return;
 
                 Intent intent = new Intent();
                 if ("1".equals(myCommentBean.getType())) {

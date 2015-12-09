@@ -121,6 +121,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         newsItemPath = App.getInstance().getJsonFileCacheRootDir();
+
         newsListDbTask = new NewsListDbTask(activity);
         EventBus.getDefault().register(this);
     }
@@ -158,7 +159,9 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         TypedValue typedValue1 = new TypedValue();
         getActivity().getTheme().resolveAttribute(R.attr.title_bar_color, typedValue1, true);
         int color1 = typedValue1.data;
-        mSwipeRefreshWidget.setColorSchemeColors(color1);
+//        mSwipeRefreshWidget.setColorSchemeColors(color1);
+
+        mSwipeRefreshWidget.setColorSchemeResources(R.color.google_blue);
 
         mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -225,6 +228,12 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         super.onDetach();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        SPUtil.clearAds(ads);
+    }
+
     boolean firstLoading = false;
 
     public void loadData() {
@@ -251,9 +260,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
             @Override
             public void setList(List<NewsBeanDB> list) {
-                if (!isAdded()) {
-                    return;
-                }
                 String nids = "";
                 if (null != list && list.size() > 5) {
                     StringBuilder sb = new StringBuilder();
@@ -296,7 +302,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             newTimew = newTimew == null ? "" : newTimew;
             params.addBodyParameter("newTime", newTimew);
         }
-
+        isLoading = true;
         HttpHandler httpHandler = httpUtils.send(HttpMethod.POST
                 , InterfaceJsonfile.NEWSLIST
                 , params
@@ -304,11 +310,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 isLoading = false;
-                if (!isAdded()) {
-                    return;
-                }
                 mSwipeRefreshWidget.setRefreshing(false);
-
                 final JSONObject obj = FjsonUtil
                         .parseObject(responseInfo.result);
                 if (null != obj) {
@@ -345,9 +347,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     //服务端返回数据处理
     @Override
     public void setData(JSONObject obj) {
-        if (!isAdded()) {
-            return;
-        }
         //数据处理
         switch (obj.getIntValue("code")) {
             case 200: {
@@ -373,6 +372,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                         if (list.size() > 7) {
                             adapter.removeOld();
                         }
+                        newsListDbTask.saveList(list, null);
                     }
                     if (list.size() == pageSize) {
                         adapter.showLoading = true;
@@ -382,7 +382,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                     if (page == 1) {
                         App.getInstance().newTimeMap.put(channelbean.getTid(), obj.getString("newTime"));
                     }
-                    newsListDbTask.saveList(list, null);
                 }
 
             }
@@ -457,7 +456,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        SPUtil.clearAds(ads);
         super.onDestroy();
     }
 

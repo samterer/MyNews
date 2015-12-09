@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/background_tab_pressed_select_back" />
+            android:src="@drawable/webview_prev_mz" />
 
     </RelativeLayout>
 
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="@string/prompt_column_subscribe"
-        android:textColor="@color/white"
-        android:textSize="22sp" />
+        android:textColor="@color/item_title"
+        android:textSize="20sp" />
 
 </LinearLayout>

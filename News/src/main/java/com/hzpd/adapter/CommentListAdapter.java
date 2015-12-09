@@ -101,14 +101,10 @@ public class CommentListAdapter extends BaseAdapter {
                     NewsBeanDB nbfc = DBHelper.getInstance(parent.getContext()).getNewsListDbUtils().findFirst(
                             Selector.from(NewsBeanDB.class).where("nid", "=", nid));
                     if (null != nbfc) {
-//                        com.hzpd.utils.Log.e("NewsBeanDB", "NewsBeanDB--->" + nbfc.getFav() + "::::" + nbfc.getComcount());
-                        comcount_adapter_tv.setText("("+nbfc.getComcount()+")");
-//                        if (Integer.parseInt(nbfc.getComcount()) > Integer.parseInt(comcount)) {
-//                            comcount = nbfc.getComcount();
-//                        }
+                        comcount_adapter_tv.setText("(" + nbfc.getComcount() + ")");
                     } else {
-                    }
 
+                    }
                 } catch (DbException e) {
                     e.printStackTrace();
                 }
@@ -125,26 +121,24 @@ public class CommentListAdapter extends BaseAdapter {
                 holder.comment_time = (TextView) convertView.findViewById(R.id.comment_time);
                 holder.up_icon = (ImageView) convertView.findViewById(R.id.up_icon);
                 holder.comment_up_num = (TextView) convertView.findViewById(R.id.comment_up_num);
-                holder.rl_comment_text=convertView.findViewById(R.id.rl_comment_text);
-                holder.line=convertView.findViewById(R.id.line);
+                holder.rl_comment_text = convertView.findViewById(R.id.rl_comment_text);
+                holder.line = convertView.findViewById(R.id.line);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
             final CommentzqzxBean item = getItem(position);
-            if (position==1){
+            if (position == 1) {
                 holder.line.setVisibility(View.GONE);
             }
 
-//            Log.e("test","test"+item.toString());
             holder.userId = item.getUid();
             // 显示头像
 
             SPUtil.displayImage(item.getAvatar_path()
                     , holder.comment_user_icon
                     , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.XF_Avatar));
-//            ImageLoader.getInstance().displayImage(item.getAvatar_path(), holder.avatar);
             holder.comment_user_icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -173,7 +167,7 @@ public class CommentListAdapter extends BaseAdapter {
             holder.comment_text.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (AvoidOnClickFastUtils.isFastDoubleClick()){
+                    if (AvoidOnClickFastUtils.isFastDoubleClick()) {
                         return;
                     }
                     ArrayList<String> titles = new ArrayList<String>();
@@ -238,7 +232,7 @@ public class CommentListAdapter extends BaseAdapter {
                         if (null == spu.getUser()) {
                             return;
                         }
-                        Log.e("test","点赞"+item.getCid());
+                        Log.e("test", "点赞" + item.getCid());
                         Log.i(getLogTag(), "uid-" + spu.getUser().getUid() + "  mType-News" + " nid-" + item.getCid());
                         String station = SharePreferecesUtils.getParam(parent.getContext(), StationConfig.STATION, "def").toString();
                         String siteid = null;
@@ -276,7 +270,7 @@ public class CommentListAdapter extends BaseAdapter {
                                 JSONObject obj = JSONObject.parseObject(arg0.result);
 
                                 if (200 == obj.getInteger("code")) {
-                                    Log.e("","m---->" + item.getPraise());
+                                    Log.e("", "m---->" + item.getPraise());
                                     SharePreferecesUtils.setParam(parent.getContext(), "" + item.getCid(), "1");
                                     if (TextUtils.isDigitsOnly(item.getPraise())) {
                                         holder.up_icon.setImageResource(R.drawable.details_icon_likeit);

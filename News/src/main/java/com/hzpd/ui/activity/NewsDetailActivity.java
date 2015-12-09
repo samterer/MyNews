@@ -9,7 +9,6 @@ import android.net.http.SslError;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -35,7 +34,6 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -92,7 +90,6 @@ import com.hzpd.utils.TUtils;
 import com.hzpd.utils.showwebview.MyJavascriptInterface;
 import com.joy.update.Utils;
 import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
@@ -104,7 +101,6 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -143,7 +139,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private RelativeLayout mRelativeLayoutPopuBig;
     private RelativeLayout mRelativeLayoutPopuCenter;
     private RelativeLayout mRelativeLayoutPopuSmaill;
-    private RelativeLayout mRelativeLayoutTitleRoot;
     private boolean mFlagPopuShow;
     private CustomScrollView mLayoutRoot;
     private WebSettings webSettings;
@@ -160,50 +155,20 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     // ---------------------------
 
     private RelativeLayout newdetail_rl_comm;
+    private View newdetail_ll_comm;
     private TextView newdetail_tv_comm;// 评论
     private ImageView newdetail_fontsize;// 字体
     private ImageView newdetail_share;// 分享
     private ImageView newdetail_collection;// 收藏
     private ImageView newdetail_more;//更多
-
-    private LinearLayout newsdetails_title_comment;// 跳转到评论
+    private RelativeLayout mRelativeLayoutTitleRoot;
     // -------------------------
     private FontsizePop fontpop;
 
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case CODE.font_big: {
-//					SPUtil.getInstance().setTextSize(CODE.textSize_big);
-                    setupWebView(CODE.textSize_big);
-//					FontSizeEvent event = new FontSizeEvent(CODE.textSize_big);
-//					EventBus.getDefault().post(event);
-                }
-                break;
-                case CODE.font_mid: {
-//					SPUtil.getInstance().setTextSize(CODE.textSize_normal);
-                    setupWebView(CODE.textSize_normal);
-//					FontSizeEvent event = new FontSizeEvent(CODE.textSize_normal);
-//					EventBus.getDefault().post(event);
-                }
-                break;
-                case CODE.font_small: {
-//					SPUtil.getInstance().setTextSize(CODE.textSize_small);
-                    setupWebView(CODE.textSize_small);
-//					FontSizeEvent event = new FontSizeEvent(CODE.textSize_small);
-//					EventBus.getDefault().post(event);
-                }
-                break;
-            }
-
-        }
-    };
 
     App.Callback callback = new App.Callback() {
         @Override
         public void onSuccess(Profile currentProfile) {
-//            Log.e("test", "onSuccess " + nb + "::" + currentProfile);
             if (nb != null && currentProfile != null) {
                 Log.e("test", "currentProfile " + currentProfile.getId());
                 ThirdLoginBean tlb = new ThirdLoginBean();
@@ -222,7 +187,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         }
     };
 
-    private View details_iv_comment;
     private boolean isTheme;
     private View transparent_layout_id;
 
@@ -240,29 +204,20 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
         App.getInstance().setProfileTracker(callback);
         setContentView(R.layout.news_details_layout);
-        transparent_layout_id = findViewById(R.id.transparent_layout_id);
-        if (App.getInstance().getThemeName().equals("3")) {
-            transparent_layout_id.setVisibility(View.VISIBLE);
-        } else {
-            transparent_layout_id.setVisibility(View.GONE);
-        }
+
+//        transparent_layout_id = findViewById(R.id.transparent_layout_id);
+//        if (App.getInstance().getThemeName().equals("3")) {
+//            transparent_layout_id.setVisibility(View.VISIBLE);
+//        } else {
+//            transparent_layout_id.setVisibility(View.GONE);
+//        }
         try {
             load_progress_bar = (ProgressBar) findViewById(R.id.load_progress_bar);
-            details_iv_comment = (View) findViewById(R.id.details_iv_comment);
             if (loading) {
                 progress = 0;
                 wProgress = 0;
                 load_progress_bar.postDelayed(runnable, 50);
             }
-            details_iv_comment.setVisibility(View.VISIBLE);
-            details_iv_comment.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (AvoidOnClickFastUtils.isFastDoubleClick())
-                        return;
-                    if (skipComment()) return;
-                }
-            });
 
             loadingView = findViewById(R.id.app_progress_bar);
             // ----------------------
@@ -292,7 +247,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             e.printStackTrace();
         }
         try {
-            nativeAd.loadAd();
+            if (nativeAd != null) {
+                nativeAd.loadAd();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -330,7 +287,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     Date curDate = new Date(System.currentTimeMillis());//获取当前时间
                     String date = sDateFormat.format(curDate);
-                    Log.e("date", "onActivityResult  date--->" + date);
                     bean.setDateline(date);
                     bean.setUid(spu.getUser().getUid());
                     bean.setStatus("1");
@@ -387,7 +343,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         dbUtils = DbUtils.create(this, App.getInstance().getJsonFileCacheRootDir(), App.collectiondbname);
         initViews();
         initPopupWindows();
-
+        mCommentListView.setVisibility(View.GONE);
         getNewsDetails();
 
         isCollection();
@@ -408,6 +364,19 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         App.getInstance().setProfileTracker(null);
         super.onDestroy();
         nb = null;
+        try {
+            mWebView.destroy();
+            mWebView = null;
+            mBean = null;
+            mCommentListAdapter = null;
+            mLayoutInflater = null;
+            mRoot.removeAllViews();
+            mLayoutRoot = null;
+            latestList = null;
+            mCommentListView = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private LinearLayout ll_tag;
@@ -510,28 +479,29 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null); // 关闭硬件加速
+        webViewChangeProgress(mWebView);
         mRelativeLayoutTitleRoot = (RelativeLayout) findViewById(R.id.news_detail_layout);
         mBack = findViewById(R.id.news_detail_bak);
         mRoot = (LinearLayout) findViewById(R.id.news_detail_main_root_id);
         mLayoutRoot = (CustomScrollView) findViewById(R.id.news_detail_root_id);
         newdetail_rl_comm = (RelativeLayout) findViewById(R.id.comment_box);
         newdetail_tv_comm = (TextView) findViewById(R.id.newdetail_tv_comm);
+        newdetail_ll_comm = findViewById(R.id.newdetail_ll_comm);
         newdetail_fontsize = (ImageView) findViewById(R.id.newdetail_fontsize);
         newdetail_share = (ImageView) findViewById(R.id.newdetail_share);
         newdetail_collection = (ImageView) findViewById(R.id.newdetail_collection);
         newdetail_more = (ImageView) findViewById(R.id.newdetail_more);
         news_detail_nonetwork = findViewById(R.id.news_detail_nonetwork);
-        newsdetails_title_comment = (LinearLayout) findViewById(R.id.newsdetails_title_comment);
         mButtomLayout1 = (LinearLayout) findViewById(R.id.news_detail_ll_bottom1);
 
         mBack.setOnClickListener(this);
         newdetail_rl_comm.setOnClickListener(this);
         newdetail_tv_comm.setOnClickListener(this);
+        newdetail_ll_comm.setOnClickListener(this);
         newdetail_fontsize.setOnClickListener(this);
         newdetail_share.setOnClickListener(this);
         newdetail_collection.setOnClickListener(this);
         newdetail_more.setOnClickListener(this);
-        newsdetails_title_comment.setOnClickListener(this);
 
         if ("yes".equals(isVideo)) {
             newdetail_collection.setVisibility(View.GONE);
@@ -791,32 +761,13 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 case R.id.news_detail_bak:
                     this.finish();
                     break;
-                case R.id.newsdetails_title_comment: {
-                    // 跳转到评论页
-                    if (null == nb) {
-                        return;
-                    }
-                    String img = "";
-                    if (null != nb.getImgs() && nb.getImgs().length > 0) {
-                        img = nb.getImgs()[0];
-                    }
-                    ReplayBean bean = new ReplayBean(nb.getNid(), nb.getTitle(),
-                            Constant.TYPE.News.toString(), nb.getJson_url(), img, nb.getComcount());
-
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("reply", bean);
-                    Intent intent = new Intent(NewsDetailActivity.this, XF_NewsCommentsActivity.class);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                    AAnim.ActivityStartAnimation(NewsDetailActivity.this);
-                }
-                break;
                 case R.id.comment_box: {
                     if (skipComment()) return;
                 }
                 break;
-                case R.id.details_iv_comment: {
-
+                //添加评论
+                case R.id.newdetail_ll_comm: {
+                    if (skipComment()) return;
                 }
                 break;
                 //添加评论
@@ -841,35 +792,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 }
                 break;
                 case R.id.newdetail_fontsize: {
-
-                    if (null == fontpop) {
-                        View view = this.getLayoutInflater().inflate(R.layout.nd_fontsize_pop, null);
-                        fontpop = new FontsizePop(view, handler);
-                        fontpop.showAsDropDown(mButtomLayout1, 0, -mButtomLayout1.getHeight() * 3 - 60);
-
-                    } else {
-
-                        if (fontpop.isShowing()) {
-                            fontpop.dismiss();
-                        } else {
-                            fontpop.showAsDropDown(mButtomLayout1, 0, -mButtomLayout1.getHeight() * 3 - 60);
-
-                        }
-                    }
                 }
                 break;
                 case R.id.newdetail_more: {
-                    if (null == fontpop) {
-                        View view = this.getLayoutInflater().inflate(R.layout.nd_more_pop, null);
-                        fontpop = new FontsizePop(view, handler);
-                        fontpop.showAsDropDown(mButtomLayout1, 0, -mButtomLayout1.getHeight() * 2 - 20);
-                    } else {
-                        if (fontpop.isShowing()) {
-                            fontpop.dismiss();
-                        } else {
-                            fontpop.showAsDropDown(mButtomLayout1, 0, -mButtomLayout1.getHeight() * 2 - 20);
-                        }
-                    }
                 }
                 break;
                 case R.id.newdetail_collection: {
@@ -1029,7 +954,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
             @Override
             public void onPageFinished(WebView view, String url) {
+                Log.e("test", "wProgress " + wProgress);
                 if (!isResume) {
+                    load_progress_bar.setVisibility(View.GONE);
                     return;
                 }
                 try {
@@ -1054,7 +981,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                                     return;
                                 }
                                 mLayoutRoot.updateUI();
-                                int realY = mWebView.getContentHeight();
+                                int realY = mWebView.getHeight();
                                 mWebView.scrollTo(0, realY < y ? realY : y);
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -1089,6 +1016,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     int wProgress = 0;
     int MIDDLE_PROGRESS = 95;
     int progress = 0;
+    int delay = 30;
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -1101,7 +1029,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 if (wProgress < MIDDLE_PROGRESS && progress < MIDDLE_PROGRESS) {
                     progress += 1;
                 } else if (wProgress > MIDDLE_PROGRESS) {
-                    progress += 5;
+                    progress += 3;
+                    delay = 10;
                     if (progress >= 100) {
                         progress = 100;
                         wProgress = 101;
@@ -1110,10 +1039,11 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 if (wProgress > 100) {
                     loading = false;
                     load_progress_bar.setVisibility(View.GONE);
+                    mCommentListView.setVisibility(View.VISIBLE);
                     return;
                 }
                 load_progress_bar.setProgress(progress);
-                load_progress_bar.postDelayed(runnable, 20);
+                load_progress_bar.postDelayed(runnable, delay);
             } else {
                 load_progress_bar.setVisibility(View.GONE);
             }
@@ -1133,7 +1063,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
      * @param textSize
      */
     private void setupWebView(int textSize) {
-        webViewChangeProgress(mWebView);
         if (mBean != null) {
             setContentData(textSize);
         }
@@ -1246,19 +1175,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         if (mBean == null) {
             return;
         }
-        String station = SharePreferecesUtils.getParam(NewsDetailActivity.this, StationConfig.STATION, "def").toString();
-        String siteid = null;
-        String mLatestComm_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            siteid = InterfaceJsonfile.SITEID;
-            mLatestComm_url = InterfaceJsonfile.CHECKCOMMENT;
-        } else if (station.equals(StationConfig.YN)) {
-            siteid = InterfaceJsonfile_YN.SITEID;
-            mLatestComm_url = InterfaceJsonfile_YN.CHECKCOMMENT;
-        } else if (station.equals(StationConfig.TW)) {
-            siteid = InterfaceJsonfile_TW.SITEID;
-            mLatestComm_url = InterfaceJsonfile_TW.CHECKCOMMENT;
-        }
+        String siteid =InterfaceJsonfile.SITEID;
+        String mLatestComm_url = InterfaceJsonfile.CHECKCOMMENT;
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("Page", "" + mCurPage);
         params.addBodyParameter("PageSize", "" + mPageSize);
@@ -1274,9 +1192,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             public void onSuccess(ResponseInfo<String> responseInfo) {
 
                 if (responseInfo.result == null) {
-//                    ll_rob.setVisibility(View.VISIBLE);
+                    ll_rob.setVisibility(View.VISIBLE);
                 } else {
-                    Log.e("test", "getLatestComm   onSuccess");
                     parseCommentJson(responseInfo.result);
                 }
 
@@ -1328,7 +1245,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 hasMore = false;
                 if (mCurPage <= 1) {
                     //没有评论，显示抢沙发
-//                    ll_rob.setVisibility(View.VISIBLE);
+                    ll_rob.setVisibility(View.VISIBLE);
                 }
                 //TUtils.toast(obj.getString("msg"));
                 mLoadMoreContainer.removeFooterView(mLoadMoreContainer.getmFooterView());
@@ -1425,11 +1342,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         }
                         try {
                             mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
-                            Log.e("mBean", "getNewsDetails  mBean1--->" + mBean.toString());
                             int textSize = spu.getTextSize();
                             setupWebView(textSize);
                             if ((mBean.getRef() != null && mBean.getRef().size() > 0) || (mBean.getTag() != null) && mBean.getTag().length > 0) {
-                                Log.e("httpUtils", "httpUtils" + mBean.getRef().toString());
                                 rl_related.setVisibility(View.VISIBLE);
                                 addRelatedNewsView();
                                 addRelatedTagView();
@@ -1506,7 +1421,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             }
         }
     }
-
 
     //左边图片，右title，评论，时间，脚标
     private class VHLeftPic {
@@ -1930,25 +1844,13 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     @Override
     public void finish() {
-        if (isDetail) {
-            isDetail = false;
-            if (null != mWebView) {
-                if (mWebView.canGoBack()) {
-                    mWebView.goBack();
-                    int textSize = spu.getTextSizeNews();
-                    setupWebView(textSize);
-                }
-            }
-            return;
-        }
-
+        super.finish();
         if (!App.isStartApp) {
             Intent in = new Intent();
             in.setClass(this, MainActivity.class);
             startActivity(in);
         }
 
-        super.finish();
     }
 
     class MyOtherClickListener implements OnClickListener {
@@ -2046,7 +1948,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 if (App.getInstance().getThemeName().equals("0"))
                     newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
                 else
-                    newdetail_collection.setImageResource(R.drawable.details_collect_already_select_red);
+                    newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
 
             } else {
                 dbUtils.delete(NewsItemBeanForCollection.class, WhereBuilder.b("nid", "=", nb.getNid()));
@@ -2115,7 +2017,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             HttpHandler httpHandler = httpUtils.send(HttpMethod.POST, ISCELLECTION_url, params, new RequestCallBack<String>() {
                 @Override
                 public void onSuccess(ResponseInfo<String> responseInfo) {
-                    LogUtils.i("isCollection result-->" + responseInfo.result);
                     JSONObject obj = null;
                     try {
                         obj = JSONObject.parseObject(responseInfo.result);
@@ -2162,6 +2063,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     @Override
     protected void onPause() {
+        SharePreferecesUtils.setParam(this, StationConfig.DETAILS_LOCATION + nb.getNid(), mWebView.getScrollY());
         SharePreferecesUtils.setParam(this, StationConfig.DETAILS_LOCATION + nb.getNid(), mWebView.getScrollY());
         super.onPause();
         long totalTile = System.currentTimeMillis() - enterTime;

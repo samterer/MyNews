@@ -3,7 +3,7 @@
     android:id="@+id/details_more"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?main_activity_color"
+    android:background="@color/main_activity_background_color"
     android:orientation="vertical">
 
     <com.hzpd.ui.widget.FontTextView
@@ -13,7 +13,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:paddingBottom="20dp"
+        android:layout_marginTop="30dp"
         android:text="@string/details_lv_1"
         android:textColor="#aeaeae"
         android:textSize="14sp" />
@@ -23,23 +23,22 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:background="#f5f5f5"
+        android:layout_marginLeft="@dimen/margin_10"
+        android:layout_marginRight="@dimen/margin_10"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/details_news_source_selector"
         android:gravity="center"
         android:text="@string/details_lv_4"
-        android:textColor="#aeaeae"
-        android:textSize="18sp"
-        android:visibility="gone" />
+        android:textColor="@color/details_tv_check_color"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:orientation="horizontal"
-        android:paddingBottom="20dp">
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="@dimen/margin_10"
+        android:layout_marginRight="@dimen/margin_10"
+        android:orientation="horizontal">
 
         <RelativeLayout
             android:id="@+id/rl_dal_praise"
@@ -70,9 +69,10 @@
                 android:layout_centerInParent="true"
                 android:layout_gravity="center_horizontal"
                 android:drawableLeft="@drawable/news_details_praise_unselect"
-                android:drawablePadding="5dp"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
                 android:text="0"
-                android:textColor="#ccc"
+                android:textColor="@color/details_tv_check_color"
                 android:textSize="16sp" />
 
         </RelativeLayout>
@@ -94,7 +94,7 @@
                 android:layout_toRightOf="@+id/text_undal_praise"
                 android:gravity="center"
                 android:text="+1"
-                android:textColor="#ccc"
+                android:textColor="@color/details_tv_check_color"
                 android:textSize="14dip"
                 android:visibility="gone" />
 
@@ -105,14 +105,14 @@
                 android:layout_centerInParent="true"
                 android:layout_gravity="center_horizontal"
                 android:drawableLeft="@drawable/news_details_unpraise_unselect"
-                android:drawablePadding="5dp"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
                 android:text="0"
                 android:textColor="#ccc"
                 android:textSize="16sp" />
         </RelativeLayout>
 
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/ad_layout"
@@ -125,8 +125,7 @@
             android:id="@+id/ad_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp">
-        </FrameLayout>
+            android:layout_marginTop="6dp"></FrameLayout>
 
     </LinearLayout>
 
@@ -135,16 +134,16 @@
         android:id="@+id/rl_related"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#f5f5f5"
+        android:background="@color/white"
         android:orientation="vertical"
+        android:layout_marginTop="26dp"
         android:visibility="gone">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:background="@color/white"
+            android:background="@color/details_bg_color"
             android:orientation="horizontal">
 
             <ImageView
@@ -156,7 +155,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/details_related_news" />
+                android:background="@drawable/article_new_comment" />
 
             <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/relate_news"
@@ -164,11 +163,11 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/details_comments_iv"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 android:layout_toEndOf="@+id/details_comments_iv"
                 android:layout_toRightOf="@+id/details_comments_iv"
                 android:text="@string/details_lv_2"
-                android:textColor="@color/black"
+                android:textColor="#666666"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -207,11 +206,12 @@
     <LinearLayout
         android:id="@+id/ll_rob"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/rl_related"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:paddingBottom="10dp"
+        android:orientation="vertical">
 
         <View
             android:layout_width="match_parent"
@@ -238,6 +238,5 @@
             android:textColor="#aeaeae" />
 
     </LinearLayout>
-
 
 </LinearLayout>

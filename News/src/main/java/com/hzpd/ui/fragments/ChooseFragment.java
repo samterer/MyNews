@@ -187,9 +187,9 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         TypedValue typedValue1 = new TypedValue();
         getActivity().getTheme().resolveAttribute(R.attr.title_bar_color, typedValue1, true);
         int color1 = typedValue1.data;
-        mSwipeRefreshWidget.setColorSchemeColors(color1);
+//        mSwipeRefreshWidget.setColorSchemeColors(color1);
 //        mSwipeRefreshWidget.setColorScheme(R.color.google_blue);
-//        mSwipeRefreshWidget.setColorSchemeResources(R.color.google_blue);
+        mSwipeRefreshWidget.setColorSchemeResources(R.color.google_blue);
         mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -558,13 +558,6 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-
-        TextView title = (TextView) v.findViewById(R.id.newsitem_title);
-        if (null != title) {
-            title.setTextColor(getResources().getColor(R.color.grey_font));
-        }
-//        NewsBean nb=(NewsBean)v.getTag();
-//        adapter.setReadedId(nb.getNid());
         Log.e("isRefresh", "isRefresh--->" + isRefresh);
         if (AvoidOnClickFastUtils.isFastDoubleClick()) {
             return;
@@ -582,6 +575,13 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                 return;
             }
             if (v.getTag() instanceof NewsBean) {
+                if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+                    return;
+                }
+                TextView title = (TextView) v.findViewById(R.id.newsitem_title);
+                if (null != title) {
+                    title.setTextColor(getResources().getColor(R.color.grey_font));
+                }
                 NewsBean nb = (NewsBean) v.getTag();
                 Intent mIntent = new Intent();
                 mIntent.putExtra("newbean", nb);

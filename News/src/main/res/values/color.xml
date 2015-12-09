@@ -11,7 +11,7 @@
 
     <color name="white">#ffffffff</color>
     <color name="black">#000</color>
-    <color name="item_title">#333</color>
+    <color name="item_title">#333333</color>
     <color name="transparent">#00000000</color>
     <color name="grey22">#757575</color>
 
@@ -77,7 +77,7 @@
     <color name="nav_title_unselected_new">#DC9990</color>
 
     <!-- color -->
-    <color name="toolbar_bg">#ff0177d9</color>
+    <color name="toolbar_bg">#fff0f0f0</color>
     <color name="grey_color">#F6F6F6</color>
 
     <color name="tag_select">#ececec</color>
@@ -100,7 +100,7 @@
     <color name="subscribe_item_selected_stroke">#0033ee</color>
     <color name="subscribe_item_disabled_bg">#ffefefef</color>
     <color name="subscribe_item_disabled_stroke">#ffd9d9d9</color>
-    <color name="subscribe_item_normal_stroke">#ffcdcdcd</color>
+    <color name="subscribe_item_normal_stroke">#e6e6e6</color>
     <item name="subscribe_item_text_color_normal" type="color">@color/default_text</item>
     <color name="default_text">#555</color>
     <color name="subscribe_seperate_line">#ffcdcdcd</color>
@@ -135,5 +135,13 @@
     <color name="pager_sliding_tab_text_selected_color">#129aee</color>
 
     <color name="main_background_color">#f0f0f0</color>
+    <color name="line_color">#e0e0e0</color>
+    <color name="main_activity_background_color">#f5f5f5</color>
+    <color name="details_tv_check_color">#999999</color>
+    <color name="details_bg_check_color">#ededed</color>
+    <color name="details_bg_color">#fafafa</color>
+    <color name="details_hot_comment_nickname">#94c4f1</color>
+    <color name="details_hot_comment_time">#bababa</color>
+    <color name="details_hot_comment_content">#333333</color>
 
 </resources>

@@ -1,134 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?fragment_main_backgroup"
     android:clipToPadding="true"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
 
-    <include
-        android:id="@+id/editcolum_include"
-        layout="@layout/stitle_layout" />
+    <include layout="@layout/stitle_layout" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height"
+        android:background="@color/line_color" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/editcolum_include"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:background="@color/main_activity_background_color">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!--提醒-->
-            <LinearLayout
-                android:id="@+id/editcolumn_remind_ll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <com.hzpd.ui.widget.FontTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="#fffaec"
-                    android:drawableLeft="@drawable/tips"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:text="@string/prompt_click_to_add_or_cancel"
-                    android:textColor="#f1b159"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-
             <!--我的频道-->
             <LinearLayout
                 android:id="@+id/editcolumn_my_channel_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/editcolumn_remind_ll"
-                android:orientation="vertical">
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal">
 
+                    <!-- 我的频道-->
                     <com.hzpd.ui.widget.FontTextView
                         android:id="@+id/my_channel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
+                        android:layout_gravity="center_vertical"
                         android:paddingLeft="15dp"
                         android:text="@string/edit_my_colum"
-                        android:textColor="@color/subscribe_item_text_color_normal"
+                        android:textColor="@color/item_title"
                         android:textSize="16sp" />
 
+                    <!-- 解释-->
                     <com.hzpd.ui.widget.FontTextView
                         android:id="@+id/editcolum_explain"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_toRightOf="@+id/my_channel"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="10dp"
-                        android:text="@string/prompt_click_to_add_or_cancel"
-                        android:textSize="12sp"
-                        android:visibility="gone" />
-
-                    <com.hzpd.ui.widget.FontTextView
-                        android:id="@+id/text_editcolumn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginRight="23dp"
-                        android:background="@drawable/btn_order"
-                        android:gravity="center"
-                        android:paddingBottom="2dp"
-                        android:paddingLeft="18dp"
-                        android:paddingRight="18dp"
-                        android:paddingTop="2dp"
-                        android:text="@string/editcolumn_edit"
-                        android:textColor="#ff7e00"
+                        android:paddingLeft="5dp"
+                        android:text="@string/prompt_click_to_add_or_cancel"
                         android:textSize="12sp" />
 
 
-                </RelativeLayout>
-
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/editColumn_line"
-                    android:visibility="gone" />
+                </LinearLayout>
+                <!-- 编辑-->
+                <com.hzpd.ui.widget.FontTextView
+                    android:id="@+id/text_editcolumn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/btn_order"
+                    android:gravity="center"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp"
+                    android:paddingTop="3dp"
+                    android:text="@string/editcolumn_edit"
+                    android:textColor="@color/pager_sliding_tab_text_selected_color"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <com.hzpd.custorm.DragGrid
                 android:id="@+id/editcolumn_dragGridView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_margin="13dp"
                 android:cacheColorHint="@android:color/transparent"
                 android:gravity="center"
-                android:horizontalSpacing="8dp"
+                android:horizontalSpacing="10dp"
                 android:listSelector="@android:color/transparent"
                 android:numColumns="3"
                 android:stretchMode="columnWidth"
                 android:verticalSpacing="10dp"></com.hzpd.custorm.DragGrid>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/line_height"
+                android:background="@color/line_color" />
 
             <View
                 android:id="@+id/line"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:layout_below="@id/editcolumn_dragGridView"
-                android:background="#e6e6e6" />
+                android:background="@color/main_background_color" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/line_height"
+                android:background="@color/line_color" />
 
             <!--推荐频道-->
             <LinearLayout
@@ -145,39 +130,44 @@
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:text="@string/edit_other_colum"
-                    android:textColor="@color/subscribe_item_text_color_normal"
+                    android:textColor="@color/item_title"
                     android:textSize="16sp" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/editColumn_line"
-                    android:visibility="gone" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/choose_tab"
+            <LinearLayout
+                android:id="@+id/ll_choose_channel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/corners_bg"
-                android:drawableLeft="@drawable/choose_tab_search"
-                android:drawablePadding="3dp"
-                android:padding="5dp"
-                android:paddingLeft="10dp"
-                android:text="输入你感兴趣的任意频道"
-                android:textColor="@color/pulltorefresh_font"
-                android:textSize="12sp"
-                android:visibility="gone" />
+                android:padding="6dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="25dp"
+                    android:background="@drawable/choose_tab_search" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:text="Cari informasi yang kamu suka"
+                    android:textColor="@color/details_hot_comment_time"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
             <com.hzpd.custorm.OtherGridView
                 android:id="@+id/editcolumn_gridview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="13dp"
+                android:layout_marginRight="13dp"
                 android:layout_marginTop="20dp"
                 android:cacheColorHint="@android:color/transparent"
                 android:gravity="center"
@@ -192,7 +182,6 @@
     </ScrollView>
 
     <include
-        android:id="@+id/category_layout"
         layout="@layout/channel_item"
         android:visibility="gone" />
 
@@ -207,4 +196,4 @@
         android:textSize="20dp"
         android:visibility="gone" />
 
-</RelativeLayout>
+</LinearLayout>

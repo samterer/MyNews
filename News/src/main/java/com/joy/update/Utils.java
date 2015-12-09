@@ -451,7 +451,7 @@ public class Utils {
      * 转化语言代码
      */
     private static String testLanguage(String language) {
-        String country = Locale.getDefault().getISO3Country();
+        String country = Locale.getDefault().getCountry();
         if (country.equals("CHN") || country.equals("SGP")) {
             return "zh-chs";
         }

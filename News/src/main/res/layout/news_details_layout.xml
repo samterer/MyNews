@@ -23,21 +23,20 @@
                 android:id="@+id/news_detail_main_root_id"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
                 android:orientation="vertical">
 
                 <!--标题-->
-                <RelativeLayout
-                    android:id="@+id/news_detail_layout"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/main_title_bar"
-                    android:background="#f5f5f5">
+                    android:layout_height="@dimen/details_title_bar"
+                    android:background="@color/main_background_color"
+                    android:orientation="horizontal">
                     <!--返回按钮-->
 
                     <RelativeLayout
                         android:id="@+id/news_detail_bak"
-                        android:layout_width="@dimen/main_title_bar"
-                        android:layout_height="@dimen/main_title_bar"
+                        android:layout_width="@dimen/details_title_bar"
+                        android:layout_height="@dimen/details_title_bar"
                         android:background="@drawable/title_bar_details_btn_selector_color">
 
                         <ImageView
@@ -45,63 +44,72 @@
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/background_tab_pressed_select_back_details" />
+                            android:src="@drawable/webview_prev_mz" />
 
                     </RelativeLayout>
 
                     <ImageView
-                        android:layout_width="@dimen/main_title_bar"
-                        android:layout_height="@dimen/main_title_bar"
+                        android:layout_width="29dp"
+                        android:layout_height="29dp"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/background_tab_pressed_selector"
-                        android:visibility="gone" />
-                    <!-- 顶部显示评论数-->
+                        android:background="#ccc" />
+
                     <LinearLayout
-                        android:id="@+id/newsdetails_title_comment"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:clickable="true"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:visibility="gone">
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/newsdetails_title_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="12dp"
-                            android:background="@drawable/details_comment_counts_selector"
-                            android:gravity="center"
-                            android:paddingLeft="4dp"
-                            android:paddingRight="5dp"
-                            android:text="1"
-                            android:textColor="@drawable/button_font_style"
-                            android:textSize="18sp"
-                            android:visibility="gone" />
+                            android:text="Bloa"
+                            android:textColor="#333333"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="5.2million people like"
+                            android:textColor="#333333"
+                            android:textSize="10sp" />
                     </LinearLayout>
 
-                    <RelativeLayout
-                        android:id="@+id/details_iv_comment"
-                        android:layout_width="@dimen/main_title_bar"
-                        android:layout_height="@dimen/main_title_bar"
-                        android:layout_alignParentRight="true"
-                        android:background="@drawable/title_bar_details_btn_selector_color">
+                    <LinearLayout
+                        android:layout_width="60dp"
+                        android:layout_height="26dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="20dp"
+                        android:background="@drawable/details_subscription_corners_bg"
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:src="@drawable/newsdetails_no_comment_select_details" />
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="10dp"
+                            android:src="@drawable/editcolum_image"
+                            />
 
-                    </RelativeLayout>
-                </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:text="Pilih"
+                            android:textColor="@color/white" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/background_tab_details_pressed_color" />
+                    android:layout_height="@dimen/line_height"
+                    android:background="#e0e0e0" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -132,7 +140,7 @@
                                 android:id="@+id/comment_listview"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="6dp"
+                                android:layout_marginBottom="10dp"
                                 android:background="#f5f5f5"
                                 android:divider="#40444444"
                                 android:dividerHeight="0dp"
@@ -205,7 +213,7 @@
             android:id="@+id/news_detail_ll_bottom1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/main_background_color"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingBottom="5dp"
@@ -216,39 +224,58 @@
                 android:id="@+id/comment_box"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="1">
 
-                <com.hzpd.ui.widget.FontTextView
-                    android:id="@+id/newdetail_tv_comm"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/newdetail_ll_comm"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:drawableLeft="?details_comment_pen_drawable"
-                    android:drawablePadding="3dp"
+                    android:background="@drawable/corners_bg"
                     android:gravity="center_vertical"
-                    android:singleLine="true"
-                    android:text="@string/prompt_write_comment"
-                    android:textColor="?button_comment_style_drawable"
-                    android:textSize="16sp" />
+                    android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_toRightOf="@+id/newdetail_tv_comm"
-                    android:background="@drawable/details_comment_pen"
-                    android:gravity="center"
-                    android:visibility="gone" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/details_comment_pen_select"
+                        android:gravity="center_vertical" />
+
+                    <com.hzpd.ui.widget.FontTextView
+                        android:id="@+id/newdetail_tv_comm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="5dp"
+                        android:singleLine="true"
+                        android:text="@string/prompt_write_comment"
+                        android:textColor="#999999"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@+id/newdetail_tv_comm"
+                        android:background="@drawable/details_comment_pen"
+                        android:gravity="center"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+
             </RelativeLayout>
 
-            <!--收藏-->
+
+            <!--分享-->
             <ImageView
-                android:id="@+id/newdetail_collection"
+                android:id="@+id/newdetail_comment"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_marginLeft="16dp"
                 android:contentDescription="@null"
-                android:src="@drawable/details_collect_select" />
+                android:src="@drawable/details_comment_selector" />
 
             <!--分享-->
             <ImageView
@@ -259,6 +286,15 @@
                 android:contentDescription="@null"
                 android:src="?newsdetail_share_drawable" />
 
+            <!--收藏-->
+            <ImageView
+                android:id="@+id/newdetail_collection"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="16dp"
+                android:contentDescription="@null"
+                android:src="@drawable/details_collect_select" />
+
             <!-- 字体大小-->
             <ImageView
                 android:id="@+id/newdetail_fontsize"
@@ -266,9 +302,10 @@
                 android:layout_height="35dp"
                 android:layout_marginLeft="16dp"
                 android:contentDescription="@null"
-                android:src="?newsdetail_fontsize_drawable" />
+                android:src="?newsdetail_fontsize_drawable"
+                android:visibility="gone" />
 
-
+            <!-- 更多设置-->
             <ImageView
                 android:id="@+id/newdetail_more"
                 android:layout_width="35dp"
@@ -282,5 +319,5 @@
 
     </LinearLayout>
 
-    <include layout="@layout/transparent_layout" />
+    <!--<include layout="@layout/transparent_layout" />-->
 </FrameLayout>

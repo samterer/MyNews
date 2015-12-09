@@ -31,7 +31,7 @@
     <item android:state_pressed="true">
         <shape>
             <!-- 点击效果-->
-            <stroke android:width="0.5dip" android:color="#ff7e00" />
+            <stroke android:width="0.5dip" android:color="@color/pager_sliding_tab_text_selected_color" />
             <solid android:color="@color/white" /><!--拖动颜色-->
             <corners android:radius="20dp" />
         </shape>

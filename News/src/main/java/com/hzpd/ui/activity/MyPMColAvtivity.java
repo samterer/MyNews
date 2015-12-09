@@ -38,6 +38,7 @@ import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
+import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
@@ -265,6 +266,8 @@ public class MyPMColAvtivity extends MBaseActivity {
 
     private void pushmsgItemclick(AdapterView<?> parent, View view,
                                   int position, long id) {
+
+
         PushmsgBean pb = (PushmsgBean) pmgadapter.getItem(position);
         Intent intent = new Intent();
         boolean flag = false;//是否是预定类型
@@ -289,6 +292,9 @@ public class MyPMColAvtivity extends MBaseActivity {
 
     private void mycollectionItemclick(AdapterView<?> parent, View view,
                                        int position, long id) {
+
+        if (AvoidOnClickFastUtils.isFastDoubleClick())
+            return;
         CollectionJsonBean cb = (CollectionJsonBean) colladAdapter.getItem(position - 1);
         CollectionDataBean cdb = cb.getData();
         Intent intent = new Intent();

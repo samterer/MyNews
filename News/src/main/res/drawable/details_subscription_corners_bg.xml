@@ -3,6 +3,6 @@
     <stroke
         android:width="0.5dip"
         android:color="@color/subscribe_item_normal_stroke" />
-    <solid android:color="@color/white" />
+    <solid android:color="@color/pager_sliding_tab_text_selected_color" />
     <corners android:radius="20dp" />
 </shape>
