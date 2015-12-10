@@ -1,1 +1,2 @@
-include ':News', ':mylibrary', 'MySilding', 'OneKeyShare', 'PullToRefreshlib', 'ShareSDK',  'PullToRefreshLib', 'LoadMoreLib', ':CommonAnalyticsLib', ':facebook'
+include ':News', ':mylibrary', 'MySilding', 'PullToRefreshLib', 'LoadMoreLib', ':CommonAnalyticsLib'
+

@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -14,7 +15,9 @@ import com.hzpd.adapter.ClassifyItemAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.DiscoveryItemBean;
 import com.hzpd.modle.TagBean;
+import com.hzpd.ui.interfaces.I_Control;
 import com.hzpd.utils.AnalyticUtils;
+import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
@@ -24,10 +27,13 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.LogUtils;
+import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import java.util.List;
 
-public class ZY_ClassifyItemFragment extends BaseFragment {
+import de.greenrobot.event.EventBus;
+
+public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public String getAnalyticPageName() {
@@ -45,6 +51,11 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        try {
+            EventBus.getDefault().register(this);
+        } catch (Exception e) {
+        }
         View view = null;
         try {
             view = inflater.inflate(R.layout.zy_classify_item_fragment, container, false);
@@ -53,7 +64,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             mRecyclerView.setLayoutManager(linearLayoutManager);
-            adapter = new ClassifyItemAdapter(getActivity());
+            adapter = new ClassifyItemAdapter(getActivity(),this);
             //设置适配器
             mRecyclerView.setAdapter(adapter);
             getClassifyHorServer();
@@ -108,5 +119,22 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
     }
 
+    @Override
+    public void onClick(View v) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+            return;
+        }
+        Toast.makeText(getActivity(), "点击了", Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        try {
+            EventBus.getDefault().unregister(this);
+            super.onDestroy();
+        } catch (Exception e) {
+        }
+    }
 
 }
