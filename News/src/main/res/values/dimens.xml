@@ -30,7 +30,7 @@
 
     <dimen name="tabmenu_with">42.5dp</dimen>
 
-    <dimen name="line_height">0.1dp</dimen>
+    <dimen name="line_height">1dp</dimen>
     <dimen name="zy_right_margin_left">15dp</dimen>
     <dimen name="margin_20">20dp</dimen>
     <dimen name="margin_15">15dp</dimen>

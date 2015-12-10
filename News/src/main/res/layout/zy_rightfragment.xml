@@ -158,6 +158,7 @@
 
                 <!--推送-->
                 <LinearLayout
+                    android:id="@+id/zy_rfrag_ll_read"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
@@ -191,7 +192,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:padding="@dimen/zy_right_margin_left">
+                    android:padding="@dimen/zy_right_margin_left"
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -231,6 +233,7 @@
                 android:orientation="horizontal">
                 <!--离线下载-->
                 <LinearLayout
+                    android:id="@+id/zy_rfrag_ll_download"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -245,10 +248,11 @@
 
                     <com.hzpd.ui.widget.FontTextView
                         style="@style/personal_item_text"
-                        android:text="@string/title_settings" />
+                        android:text="离线阅读" />
                 </LinearLayout>
                 <!--模式-->
                 <LinearLayout
+                    android:id="@+id/zy_rfrag_ll_night"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -263,10 +267,11 @@
 
                     <com.hzpd.ui.widget.FontTextView
                         style="@style/personal_item_text"
-                        android:text="@string/title_settings" />
+                        android:text="夜间模式" />
                 </LinearLayout>
                 <!--设置-->
                 <LinearLayout
+                    android:id="@+id/zy_rfrag_ll_feedback"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -281,7 +286,7 @@
 
                     <com.hzpd.ui.widget.FontTextView
                         style="@style/personal_item_text"
-                        android:text="@string/title_settings" />
+                        android:text="@string/settings_feedback" />
                 </LinearLayout>
                 <!--设置-->
                 <LinearLayout

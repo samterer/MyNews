@@ -32,6 +32,7 @@ import com.hzpd.ui.App;
 import com.hzpd.ui.activity.MyCommentsActivity;
 import com.hzpd.ui.activity.MyPMColAvtivity;
 import com.hzpd.ui.activity.SettingActivity;
+import com.hzpd.ui.activity.ZQ_FeedBackActivity;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.InterfaceJsonfile_TW;
 import com.hzpd.url.InterfaceJsonfile_YN;
@@ -225,8 +226,7 @@ public class ZY_RightFragment extends BaseFragment {
     private List<String> permissions = Arrays.asList("public_profile", "user_friends");
 
     @OnClick({R.id.zy_rfrag_ll_login, R.id.zy_rfrag_ll_comm, R.id.zy_rfrag_ll_collect, R.id.zy_rfrag_ll_push,
-            R.id.zy_rfrag_ll_setting, })
-
+            R.id.zy_rfrag_ll_setting, R.id.zy_rfrag_ll_feedback,R.id.zy_rfrag_ll_download,R.id.zy_rfrag_ll_night,R.id.zy_rfrag_ll_read})
     private void rightClick(View v) {
         if (AvoidOnClickFastUtils.isFastDoubleClick())
             return;
@@ -255,6 +255,23 @@ public class ZY_RightFragment extends BaseFragment {
             case R.id.zy_rfrag_ll_setting: {
                 mIntent.setClass(activity, SettingActivity.class);
                 flag = true;
+            }
+            break;
+            case R.id.zy_rfrag_ll_feedback: {
+                mIntent.setClass(activity,ZQ_FeedBackActivity.class);
+                flag = true;
+            }
+            break;
+            case R.id.zy_rfrag_ll_download: {
+               Toast.makeText(getActivity(),"暂无此功能。。。",Toast.LENGTH_SHORT).show();
+            }
+            break;
+            case R.id.zy_rfrag_ll_night: {
+               Toast.makeText(getActivity(),"暂无此功能。。。",Toast.LENGTH_SHORT).show();
+            }
+            break;
+            case R.id.zy_rfrag_ll_read: {
+               Toast.makeText(getActivity(),"暂无此功能。。。",Toast.LENGTH_SHORT).show();
             }
             break;
             case R.id.zy_rfrag_ll_login: {

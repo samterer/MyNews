@@ -73,7 +73,6 @@ public class DiscoveryItemAdapter extends ListBaseAdapter<DiscoveryItemBean> {
 
     @Override
     public View getMyView(int position, View convertView, ViewGroup parent) {
-        LogUtils.i("position-->" + position);
         final ViewHolder holder ;
         if (null == convertView) {
             convertView = inflater.inflate(R.layout.discovery_item_layout, parent, false);

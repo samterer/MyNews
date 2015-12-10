@@ -34,11 +34,9 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
         return AnalyticUtils.SCREEN.leftMenu;
     }
 
-    String classify_top_url="http://www.nutnote.com/ltcms/api.php?s=/Tag/category";
+    String classify_top_url = "http://www.nutnote.com/ltcms/api.php?s=/Tag/category";
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
     private ClassifyItemAdapter adapter;
 
@@ -55,15 +53,21 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             mRecyclerView.setLayoutManager(linearLayoutManager);
-
-            getClassifyServer();
+            adapter = new ClassifyItemAdapter(getActivity());
+            //设置适配器
+            mRecyclerView.setAdapter(adapter);
+            getClassifyHorServer();
 
         } catch (Exception e) {
 
         }
         return view;
     }
-    private void getClassifyServer() {
+
+    /**
+     * 获取
+     */
+    private void getClassifyHorServer() {
 
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("Page", Page + "");
@@ -78,13 +82,11 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
                 if (200 == obj.getIntValue("code")) {
                     List<TagBean> mlist = FjsonUtil.parseArray(obj.getString("data")
                             , TagBean.class);
-                    Log.i("", "getClassifyServer" + mlist.toString());
                     if (null == mlist) {
                         return;
                     }
-                    adapter=new ClassifyItemAdapter(getActivity(),mlist);
-                    //设置适配器
-                    mRecyclerView.setAdapter(mAdapter);
+
+                    adapter.appendData(mlist);
                     LogUtils.i("listsize-->" + mlist.size());
                 }
             }
@@ -94,6 +96,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
             }
         });
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
