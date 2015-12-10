@@ -143,5 +143,8 @@
     <color name="details_hot_comment_nickname">#94c4f1</color>
     <color name="details_hot_comment_time">#bababa</color>
     <color name="details_hot_comment_content">#333333</color>
+    <color name="search_position_1">#FF8E54</color>
+    <color name="search_position_2">#73BCFF</color>
+    <color name="search_position_3">#99d22b</color>
 
 </resources>

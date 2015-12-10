@@ -41,7 +41,7 @@ public class SearchKeyFragment extends BaseFragment {
         return view;
     }
 
-    public final static int COUNT_COLUMS = 3;
+    public final static int COUNT_COLUMS = 2;
 
     private RecyclerView recyclerView;
     private SearchKeysAdapter adapter;

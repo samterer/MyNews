@@ -55,9 +55,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             mRecyclerView.setLayoutManager(linearLayoutManager);
-            adapter=new ClassifyItemAdapter(getActivity());
-            //设置适配器
-            mRecyclerView.setAdapter(mAdapter);
+
             getClassifyServer();
 
         } catch (Exception e) {
@@ -84,8 +82,9 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
                     if (null == mlist) {
                         return;
                     }
-                    adapter.appendData(mlist);
-//                    adapter.notifyDataSetChanged();
+                    adapter=new ClassifyItemAdapter(getActivity(),mlist);
+                    //设置适配器
+                    mRecyclerView.setAdapter(mAdapter);
                     LogUtils.i("listsize-->" + mlist.size());
                 }
             }

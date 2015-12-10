@@ -11,6 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
+        android:background="@color/grey_item"
         android:scaleType="centerCrop" />
 
     <TextView

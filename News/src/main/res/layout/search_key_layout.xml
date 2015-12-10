@@ -1,29 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/search_padding_low"
-    android:layout_marginRight="@dimen/search_padding_low"
-    android:layout_marginTop="@dimen/search_padding_middle"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="horizontal">
 
-
-    <com.hzpd.ui.widget.FontTextView
-        android:id="@+id/search_key"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/search_key_bg_selector"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:lines="1"
-        android:paddingBottom="2dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:paddingTop="2dp"
-        android:text="123123"
-        android:textColor="@color/search_key_color"
-        android:textSize="@dimen/search_key_size" />
+        android:background="@color/white"
+        android:orientation="vertical">
 
+        <View
+            android:id="@+id/search_line_w"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#f0f0f0" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/search_line_h"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#f0f0f0" />
+
+            <LinearLayout
+                android:id="@+id/search_key_llayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/search_position"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="#d4d4d4"
+                    android:gravity="center"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="2dp"
+                    android:text="1"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/search_key_size" />
+
+
+                <com.hzpd.ui.widget.FontTextView
+                    android:id="@+id/search_key"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:paddingLeft="10dp"
+                    android:text="123123"
+                    android:textColor="#333333"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>
