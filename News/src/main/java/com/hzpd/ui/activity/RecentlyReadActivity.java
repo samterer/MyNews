@@ -64,15 +64,27 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
                 Log.i("isreaded", "isreaded" + list + ":::" + list.size());
 //                adapter.appendData(list,false,false);
 
-                List<NewsBean> mlist = new ArrayList<>();
+//                nb.setType(nbobj.getString("type"));
+//                nb.setTid(nbobj.getString("tid"));
+
+                List<NewsBean> nblist = new ArrayList<>();
                 int count = 0;
                 for (NewsBeanDB nb : list) {
-                    Log.i("isreaded","isreaded  getIsreaded--->"+nb.getIsreaded());
+                    NewsBean newsBean = new NewsBean();
+                    newsBean.setTid(nb.getTid());
+                    newsBean.setType(nb.getType());
+                    newsBean.setNid(nb.getNid() + "");
+                    newsBean.setTitle(nb.getTitle());
+                    newsBean.setJson_url(nb.getJson_url());
+                    newsBean.setAttname(nb.getAttname());
+                    newsBean.setLike(nb.getLike());
+                    newsBean.setUnlike(nb.getUnlike());
+                    Log.i("isreaded", "isreaded  getIsreaded--->" + nb.getIsreaded());
                     count++;
-//                mlist.add(nb);
+                    nblist.add(newsBean);
                 }
-                Log.i("isreaded","isreaded  count--->"+count);
-
+                Log.i("isreaded", "isreaded  count--->" + count);
+                adapter.appendData(nblist, false, false);
             } else {
 
             }
