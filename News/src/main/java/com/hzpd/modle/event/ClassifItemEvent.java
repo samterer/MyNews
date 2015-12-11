@@ -5,9 +5,15 @@ package com.hzpd.modle.event;
  */
 public class ClassifItemEvent {
 
-    public ClassifItemEvent(String key) {
-        this.key = key;
+    private String id;
+
+    public ClassifItemEvent(String id) {
+        // TODO Auto-generated constructor stub
+        this.id = id;
     }
 
-    public String key;
+    public String getId(){
+        return id;
+    }
+
 }

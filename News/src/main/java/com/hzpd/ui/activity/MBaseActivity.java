@@ -81,21 +81,21 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
     }
 
     public void changeStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true);
-            //透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            //透明导航栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(true);
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
-        int color = typedValue.data;
-        tintManager.setStatusBarTintResource(R.color.transparent);
-        tintManager.setStatusBarTintResource(R.color.red);
-        tintManager.setStatusBarTintColor(color);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            setTranslucentStatus(true);
+//            //透明状态栏
+//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+////            //透明导航栏
+//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//        }
+//        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+//        tintManager.setStatusBarTintEnabled(true);
+//        TypedValue typedValue = new TypedValue();
+//        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
+//        int color = typedValue.data;
+//        tintManager.setStatusBarTintResource(R.color.transparent);
+//        tintManager.setStatusBarTintResource(R.color.red);
+//        tintManager.setStatusBarTintColor(color);
     }
 
     @TargetApi(19)

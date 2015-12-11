@@ -9,22 +9,23 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
 
 import com.hzpd.hflt.R;
+import com.hzpd.modle.TagBean;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SampleAdapter extends RecyclerView.Adapter<ViewHolder> {
-    private List<Integer> list;
+    private List<TagBean> list;
 
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
 
-    public List<Integer> getList() {
+    public List<TagBean> getList() {
         return list;
     }
 
     public SampleAdapter() {
-        list = new ArrayList<Integer>();
+        list = new ArrayList<TagBean>();
     }
 
     @Override
@@ -44,7 +45,8 @@ public class SampleAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         if (holder instanceof ItemViewHolder) {
-            ((ItemViewHolder) holder).textView.setText(String.valueOf(list.get(position)));
+            if (list.get(position).getName()!=null)
+            ((ItemViewHolder) holder).textView.setText(list.get(position).getName());
         }
     }
 
