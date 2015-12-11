@@ -136,13 +136,10 @@ public class MyPMColAvtivity extends MBaseActivity {
 
         if ("pushmsg".equals(type)) {
             stitle_tv_content.setText(R.string.prompt_my_msg);
-
             pmgadapter = new PushmsgAdapter(this);
             pushmsg_lv.setAdapter(pmgadapter);
         } else {
-
             stitle_tv_content.setText(R.string.prompt_collect);
-
             colladAdapter = new CollectionAdapter(this);
             pushmsg_lv.setAdapter(colladAdapter);
             pushmsg_lv.getRefreshableView().setOnItemLongClickListener(onItemLongClickListener);

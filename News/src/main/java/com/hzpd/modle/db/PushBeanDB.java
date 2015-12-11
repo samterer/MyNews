@@ -9,7 +9,7 @@ import com.lidroid.xutils.db.annotation.Unique;
 
 
 @Table(name = "newslist")
-public class NewsBeanDB extends BaseDB implements Comparable<NewsBeanDB> {
+public class PushBeanDB extends BaseDB implements Comparable<PushBeanDB> {
 
     @Unique
     @Column(column = "nid")
@@ -38,36 +38,6 @@ public class NewsBeanDB extends BaseDB implements Comparable<NewsBeanDB> {
     private String comcount;//": "0",
     @Column(column = "sort_order")
     private String sort_order;//": "1736823498",
-
-    @Override
-    public String toString() {
-        return "NewsBeanDB{" +
-                "nid=" + nid +
-                ", authorname='" + authorname + '\'' +
-                ", title='" + title + '\'' +
-                ", sid='" + sid + '\'' +
-                ", tid='" + tid + '\'' +
-                ", outline='" + outline + '\'' +
-                ", type='" + type + '\'' +
-                ", update_time='" + update_time + '\'' +
-                ", json_url='" + json_url + '\'' +
-                ", imgs='" + imgs + '\'' +
-                ", rtype='" + rtype + '\'' +
-                ", comcount='" + comcount + '\'' +
-                ", sort_order='" + sort_order + '\'' +
-                ", subjectsort='" + subjectsort + '\'' +
-                ", status='" + status + '\'' +
-                ", comflag='" + comflag + '\'' +
-                ", isreaded=" + isreaded +
-                ", columnid='" + columnid + '\'' +
-                ", copyfrom='" + copyfrom + '\'' +
-                ", fav='" + fav + '\'' +
-                ", attname='" + attname + '\'' +
-                ", like='" + like + '\'' +
-                ", unlike='" + unlike + '\'' +
-                '}';
-    }
-
     @Column(column = "subjectsort")
     private String subjectsort;//": "1736823498",
     @Column(column = "status")
@@ -113,11 +83,11 @@ public class NewsBeanDB extends BaseDB implements Comparable<NewsBeanDB> {
         this.unlike = unlike;
     }
 
-    public NewsBeanDB() {
+    public PushBeanDB() {
 
     }
 
-    public NewsBeanDB(NewsBean nb) {
+    public PushBeanDB(NewsBean nb) {
 
         nid = Integer.parseInt(nb.getNid());
         authorname = nb.getAuthorname();
@@ -348,7 +318,7 @@ public class NewsBeanDB extends BaseDB implements Comparable<NewsBeanDB> {
     }
 
     @Override
-    public int compareTo(NewsBeanDB another) {
+    public int compareTo(PushBeanDB another) {
 
         if (nid > another.getNid()) {
             return 1;

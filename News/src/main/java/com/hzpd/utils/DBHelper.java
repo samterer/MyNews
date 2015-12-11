@@ -14,6 +14,7 @@ public class DBHelper {
     private DbUtils newsListDbUtils;//新闻列表数据库
     private DbUtils bianminListDbUtils;//便民列表数据库
     private DbUtils zhuantiListDbUtils;//专题列表数据库
+    private DbUtils pushListDbUtils;//新闻列表数据库
 
     private DbUtils logDbUtils;
 
@@ -21,6 +22,8 @@ public class DBHelper {
 
     private String dbPath;
     private Context context;
+
+
 
     private DBHelper(Context mContext) {
         this.context = mContext;
@@ -43,6 +46,8 @@ public class DBHelper {
                 , dbPath, App.zhuantiListDb);
         logDbUtils = DbUtils.create(context
                 , dbPath, App.userLogDb);
+        pushListDbUtils = DbUtils.create(context
+                , dbPath, App.pushListDb);
 
 
     }
@@ -83,5 +88,9 @@ public class DBHelper {
 
     public DbUtils getLogDbUtils() {
         return logDbUtils;
+    }
+
+    public DbUtils getPushListDbUtils() {
+        return pushListDbUtils;
     }
 }

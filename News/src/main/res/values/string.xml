@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="icon_name">BeritaKini</string>
+    <string name="error_delete">Berita telah dihapus</string>
     <string name="feedback_hint_suggestion">Bantu kami untuk lebih baik !</string>
     <string name="feedback_rating">Nilai</string>
     <!-- 翻译 -->
@@ -115,7 +116,7 @@
     <string name="prompt_vote">Vote</string>
     <string name="prompt_lottery">Lucky Draw</string>
     <string name="prompt_share">Berbagi</string>
-    
+
     <string name="prompt_auditing">Memeriksa</string>
     <string name="prompt_click_to_add_or_cancel">(Tarik Untuk Memindahkan Kolom)</string>
     <string name="prompt_get_captcha">Dapatkan captcha</string>

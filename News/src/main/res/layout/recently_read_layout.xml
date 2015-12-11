@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/zqzx_bg_lgrey"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/stitle_layout" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recylerlist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?fragment_main_backgroup"
+        android:cacheColorHint="@null"
+        android:scrollbars="none" />
+
+</LinearLayout>

@@ -199,7 +199,7 @@
 
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="@string/jpush_key" />
+            android:value="de1d2a800d272841495b67b3" />
         <!-- <<< 极光推送组件声明 @string/jpush_key    测试key：de1d2a800d272841495b67b3-->
 
         <service android:name="com.hzpd.services.InitService"></service>
@@ -226,6 +226,9 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.hzpd.ui.activity.ZQ_FeedBackActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.hzpd.ui.activity.RecentlyReadActivity"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.hzpd.ui.activity.ZQ_ReplyActivity"

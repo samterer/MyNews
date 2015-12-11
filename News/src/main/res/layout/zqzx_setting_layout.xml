@@ -301,7 +301,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="?zqzx_onclik_setting_item"
-        android:padding="10dip">
+        android:padding="10dip"
+        android:visibility="gone">
 
         <com.hzpd.ui.widget.FontTextView
             android:id="@+id/setting_station"

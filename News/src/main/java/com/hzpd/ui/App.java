@@ -252,6 +252,7 @@ public class App extends Application {
     public static final String albumListDb = "albumlist.db"; //图集列表
     public static final String videoListDb = "videolist.db"; //视频列表
     public static final String userLogDb = "userlog.db"; // 用户日志
+    public static final String pushListDb = "pushlist.db"; //新闻列表
 
     /**
      * 频道信息

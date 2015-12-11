@@ -17,6 +17,7 @@ import com.hzpd.modle.UserBean;
 import com.hzpd.modle.db.AlbumBeanDB;
 import com.hzpd.modle.db.AlbumItemBeanDB;
 import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.db.PushBeanDB;
 import com.hzpd.modle.db.VideoItemBeanDb;
 import com.hzpd.modle.db.ZhuantiBeanDB;
 import com.hzpd.services.InitService;
@@ -104,9 +105,10 @@ public class WelcomeActivity extends MWBaseActivity {
             DbUtils newsListDb = DBHelper.getInstance(getApplicationContext()).getNewsListDbUtils();
             newsListDb.count(AlbumBeanDB.class);
             newsListDb.count(AlbumItemBeanDB.class);
-            newsListDb.count(NewsBeanDB.class);
             newsListDb.count(VideoItemBeanDb.class);
             newsListDb.count(ZhuantiBeanDB.class);
+            newsListDb.count(NewsBeanDB.class);
+            newsListDb.count(PushBeanDB.class);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -8,9 +8,12 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.modle.NewsBean;
+import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.ui.activity.NewsDetailActivity;
+import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
+import com.hzpd.utils.db.PushListDbTask;
 import com.lidroid.xutils.util.LogUtils;
 
 import cn.jpush.android.api.JPushInterface;
@@ -85,11 +88,24 @@ public class MyReceiver extends BroadcastReceiver {
 				myintent = new Intent(context, NewsDetailActivity.class);
 				NewsBean nb = new NewsBean();
 				JSONObject nbobj = object.getJSONObject("data");
+				Log.i("MyReceiver","MyReceiver--->"+nbobj.toString());
+
 				nb.setNid(nbobj.getString("nid"));
 				nb.setTitle(title);
 				nb.setJson_url(nbobj.getString("json_url"));
 				nb.setType(nbobj.getString("type"));
 				nb.setTid(nbobj.getString("tid"));
+
+
+				new PushListDbTask(context).saveList(nb, new I_Result() {
+					@Override
+					public void setResult(Boolean flag) {
+						Log.i("","PushDB"+flag);
+					}
+				});
+
+//				NewsBeanDB
+
 				myintent.putExtra("newbean", nb);
 				myintent.putExtra("from", "push");
 			}

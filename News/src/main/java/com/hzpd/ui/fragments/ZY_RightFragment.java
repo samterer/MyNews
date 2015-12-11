@@ -31,6 +31,7 @@ import com.hzpd.modle.UserBean;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.MyCommentsActivity;
 import com.hzpd.ui.activity.MyPMColAvtivity;
+import com.hzpd.ui.activity.RecentlyReadActivity;
 import com.hzpd.ui.activity.SettingActivity;
 import com.hzpd.ui.activity.ZQ_FeedBackActivity;
 import com.hzpd.url.InterfaceJsonfile;
@@ -271,6 +272,8 @@ public class ZY_RightFragment extends BaseFragment {
             }
             break;
             case R.id.zy_rfrag_ll_read: {
+                mIntent.setClass(activity, RecentlyReadActivity.class);
+                flag=true;
                Toast.makeText(getActivity(),"暂无此功能。。。",Toast.LENGTH_SHORT).show();
             }
             break;
