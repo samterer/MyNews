@@ -287,4 +287,6 @@
     <string name="main_menu1_text">Temukan</string>
     <string name="main_menu2_text">Saya</string>
 
+    <string name="search">Search&#8230;</string>
+
 </resources>

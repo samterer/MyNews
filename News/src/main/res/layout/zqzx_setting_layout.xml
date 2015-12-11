@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?zqzx_setting_main_color"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    android:background="?zqzx_setting_main_color"
     android:orientation="vertical">
     <!--标题-->
     <include layout="@layout/stitle_layout" />
@@ -172,20 +172,18 @@
 
         <com.hzpd.custorm.switchbutton.SwitchButton
             android:id="@+id/sb_use_listener"
-            android:layout_alignParentRight="true"
             style="@style/MaterialDesignStyle"
-            android:layout_marginRight="10dp"
-           />
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp" />
 
         <com.hzpd.custorm.SlideSwitch xmlns:slideswitch="http://schemas.android.com/apk/res-auto"
             android:id="@+id/zqzx_setting_push"
             android:layout_width="60dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
-            slideswitch:shape="circle"
-            slideswitch:themeColor="@color/zqzx_green"
             android:visibility="gone"
-            />
+            slideswitch:shape="circle"
+            slideswitch:themeColor="@color/zqzx_green" />
 
     </RelativeLayout>
     <!--微博绑定-->
@@ -257,12 +255,12 @@
     </RelativeLayout>
     <!--站点设置-->
     <RelativeLayout
+        android:id="@+id/zqzx_setting_choose_country"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/setting_item_selector"
-        android:padding="10dip"
-        android:visibility="gone">
+        android:padding="10dip">
 
         <com.hzpd.ui.widget.FontTextView
             android:layout_width="wrap_content"
@@ -273,26 +271,27 @@
             android:textColor="@color/zqzx_font_set_title"
             android:textSize="20sp" />
 
-        <RadioGroup
+
+        <com.hzpd.ui.widget.FontTextView
+            android:id="@+id/setting_chosse_country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/choose_country_iv"
+            android:text="Indonesia"
+            android:textColor="?zqzx_setting_item_right_text"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/choose_country_iv"
+            android:layout_width="10dp"
+            android:layout_height="15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dip"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_marginRight="10dp"
+            android:background="@drawable/bbs_modle_jt"
+            android:gravity="center_vertical" />
 
-            <RadioButton
-                android:id="@+id/zqzx_setting_rb4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@drawable/zq_textradiobtn_selector"
-                android:checked="true"
-                android:text="Indonesia"
-                android:textColor="@color/zqzx_font_set_normal"
-                android:textSize="18sp" />
-
-        </RadioGroup>
     </RelativeLayout>
 
     <!--站点设置2-->

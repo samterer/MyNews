@@ -61,6 +61,8 @@ import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.sithagi.countrycodepicker.CountryPicker;
+import com.sithagi.countrycodepicker.CountryPickerListener;
 
 import java.io.File;
 import java.util.Set;
@@ -118,13 +120,13 @@ public class SettingActivity extends MBaseActivity {
     @ViewInject(R.id.setting_chosse_station)
     private FontTextView setting_chosse_station;
     //站点设置
-    @ViewInject(R.id.zqzx_setting_rb4)
-    private RadioButton zqzx_setting_rb4;
     @ViewInject(R.id.sb_use_listener)
     private SwitchButton sb_use_listener;
     private View loadingView;
     private AlertDialog.Builder mDeleteDialog;
 
+
+    private TextView setting_chosse_country;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -242,9 +244,45 @@ public class SettingActivity extends MBaseActivity {
 
         zqzx_setting_tv_version.setText(App.getInstance().
 
-                getVersionName()
+                        getVersionName()
 
         );
+
+        setting_chosse_country = (TextView) findViewById(R.id.setting_chosse_country);
+        Object country_Name = SharePreferecesUtils.getParam(SettingActivity.this, "CountryPicker", "Indonesia");
+        setting_chosse_country.setText("" + country_Name.toString());
+        findViewById(R.id.zqzx_setting_choose_country).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final CountryPicker picker = CountryPicker.newInstance("SelectCountry");
+                picker.setListener(new CountryPickerListener() {
+
+                    @Override
+                    public void onSelectCountry(String name, String code, String dialCode) {
+                        Toast.makeText(
+                                SettingActivity.this,
+                                "Country Name: " + name + " - Code: " + code
+                                        + " - Currency: "
+                                        + CountryPicker.getCurrencyCode(code) + " - Dial Code: " + dialCode,
+                                Toast.LENGTH_SHORT).show();
+
+                        setting_chosse_country.setText("" + name);
+                        SharePreferecesUtils.setParam(SettingActivity.this, "CountryPicker", name);
+
+                        //重新设置
+                        //activity.startService(new Intent(activity, ClearCacheService.class));
+                        //DataCleanManager.cleanCustomCache(App.getInstance().getAllDiskCacheDir()
+                        //+ File.separator
+                        //+ App.mTitle);
+                        //EventBus.getDefault().post(new RestartEvent());
+                        //finish();
+                        picker.dismiss();
+                    }
+                });
+
+                picker.show(getSupportFragmentManager(), "COUNTRY_CODE_PICKER");
+            }
+        });
 
         getCacheSize();
     }
@@ -384,31 +422,6 @@ public class SettingActivity extends MBaseActivity {
     }
 
 
-    /**
-     * 站点设置*
-     */
-    @OnClick({R.id.zqzx_setting_rb4})
-    private void onRadioCheckStation(View v) {
-
-        switch (v.getId()) {
-            case R.id.zqzx_setting_rb4: {
-//                checkStation(zqzx_setting_rb4, "def", "http://221.130.163.77/99cms");
-            }
-            break;
-        }
-
-    }
-
-
-    private void defaultStation() {
-        Object obj = SharePreferecesUtils.getParam(SettingActivity.this, "STATION", "def");
-        String station = obj.toString();
-        if (station == null || station.equals("def")) {
-            zqzx_setting_rb4.setChecked(true);
-            LogUtils.e("" + station);
-        }
-    }
-
     private String[] areas = new String[]{"Indonesia"};
     private String[] areas1 = new String[]{"def"};
 
@@ -539,27 +552,27 @@ public class SettingActivity extends MBaseActivity {
                 , InterfaceJsonfile.GET_VERSION
                 , params
                 , new RequestCallBack<String>() {
-                    @Override
-                    public void onSuccess(ResponseInfo<String> responseInfo) {
-                        JSONObject obj = FjsonUtil
-                                .parseObject(responseInfo.result);
-                        if (obj == null) {
-                            return;
-                        }
-                        if (200 == obj.getIntValue("code")) {
-                            UpdateBean mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), UpdateBean.class);
-                            SPUtil.updateDialog(mBean.getDescription(), SettingActivity.this);
-                        } else {
-                            Toast.makeText(SettingActivity.this, getString(R.string.update_no_version), Toast.LENGTH_SHORT).show();
-                        }
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                JSONObject obj = FjsonUtil
+                        .parseObject(responseInfo.result);
+                if (obj == null) {
+                    return;
+                }
+                if (200 == obj.getIntValue("code")) {
+                    UpdateBean mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), UpdateBean.class);
+                    SPUtil.updateDialog(mBean.getDescription(), SettingActivity.this);
+                } else {
+                    Toast.makeText(SettingActivity.this, getString(R.string.update_no_version), Toast.LENGTH_SHORT).show();
+                }
 
-                    }
+            }
 
-                    @Override
-                    public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(SettingActivity.this, getString(R.string.toast_cannot_connect_to_server), Toast.LENGTH_SHORT).show();
-                    }
-                });
+            @Override
+            public void onFailure(HttpException error, String msg) {
+                Toast.makeText(SettingActivity.this, getString(R.string.toast_cannot_connect_to_server), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
