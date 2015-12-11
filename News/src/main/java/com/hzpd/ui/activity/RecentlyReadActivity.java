@@ -64,8 +64,6 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
                 Log.i("isreaded", "isreaded" + list + ":::" + list.size());
 //                adapter.appendData(list,false,false);
 
-//                nb.setType(nbobj.getString("type"));
-//                nb.setTid(nbobj.getString("tid"));
 
                 List<NewsBean> nblist = new ArrayList<>();
                 int count = 0;
