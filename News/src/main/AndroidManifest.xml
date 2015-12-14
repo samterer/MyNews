@@ -69,8 +69,12 @@
         <activity
             android:name="com.hzpd.ui.activity.NewsDetailActivity"
             android:screenOrientation="portrait"></activity>
-
-
+        <activity
+            android:name="com.hzpd.ui.activity.RecentlyReadActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.hzpd.ui.activity.MyPushActivity"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.hzpd.ui.activity.NewsAlbumActivity"
             android:screenOrientation="portrait">
@@ -226,12 +230,6 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.hzpd.ui.activity.ZQ_FeedBackActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name="com.hzpd.ui.activity.RecentlyReadActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name="com.hzpd.ui.activity.MyPushActivity"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.hzpd.ui.activity.ZQ_ReplyActivity"

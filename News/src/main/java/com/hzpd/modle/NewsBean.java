@@ -1,9 +1,15 @@
 package com.hzpd.modle;
 
 import android.text.Html;
+import android.text.TextUtils;
+
+import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.utils.Log;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class NewsBean implements Serializable {
@@ -32,6 +38,45 @@ public class NewsBean implements Serializable {
     private String attname;//显示类型
     private String like;
     private String unlike;
+
+    public NewsBean() {
+
+    }
+
+    public NewsBean(NewsBeanDB nb) {
+        if (null != nb) {
+            Log.i("MyPush", "MyPush list--->" + nb);
+                nid = nb.getNid() + "";
+                title = nb.getTitle();
+                sid = nb.getSid();
+                tid = nb.getTid();
+                authorname = nb.getAuthorname();
+                outline = nb.getOutline();
+                type = nb.getType();
+                update_time = nb.getUpdate_time();
+                json_url = nb.getJson_url();
+                if (!TextUtils.isEmpty(nb.getImgs())) {
+                    imgs = nb.getImgs().split(",");
+                }
+
+                rtype=nb.getRtype();
+                comcount=nb.getComcount();
+                sort_order=nb.getSort_order();
+                status=nb.getStatus();
+                comflag=nb.getComflag();
+                subjectsort=nb.getSubjectsort();
+                columnid=nb.getColumnid();
+                copyfrom=nb.getCopyfrom();
+                fav=nb.getFav();
+                attname=nb.getAttname();
+                like=nb.getLike();
+                unlike=nb.getUnlike();
+
+                //newsBean.setCnname(nb.getCnname);
+                //private String cnname;//频道
+                Log.i("MyPush", "MyPush  getpush--->" + nb.getNid());
+        }
+    }
 
     public String getCnname() {
         return cnname;

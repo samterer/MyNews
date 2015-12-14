@@ -47,7 +47,7 @@ import java.util.Random;
 
 public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
-    public static final String AD_KEY = "1902056863352757_1942167249341718"; // "1902056863352757_1922349784656798";
+    public static final String AD_KEY = "1902056863352757_1942167249341718"; // "1902056863352757_1922349784656798" "1902056863352757_1942167249341718 ;
     public static final int STEP = 10;
     public static final int MAX_POSITION = 80;
 
@@ -93,6 +93,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         }
         Log.e("test", "nextAdPosition " + nextAdPosition);
         final NativeAd nativeAd = new NativeAd(context.getApplicationContext(), AD_KEY);
+        ads.put("" + nextAdPosition, nativeAd);
         final int adPos = nextAdPosition;
         nativeAd.setAdListener(new AdListener() {
             @Override
@@ -568,26 +569,28 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                         vhLeftPic.newsitem_img.setVisibility(View.GONE);
                     }
 
-                    if (!"0".equals(bean.getSid())) {
+                    if (bean.getSid()!=null&&!"0".equals(bean.getSid())) {
                         vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_issue);
                         vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
                     }
-                    //1新闻  2图集  3直播 4专题  5关联新闻 6视频 7引用
-                    if ("2".equals(bean.getRtype())) {
-                        vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_album);
-                        vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
-                    } else if ("3".equals(bean.getRtype())) {
-                        vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_live);
-                        //				vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
-                    } else if ("4".equals(bean.getRtype())) {
-                        vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_issue);
-                        vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
-                    } else if ("7".equals(bean.getRtype())) {
-                        vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_html);
-                        vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
-                    } else if ("6".equals(bean.getRtype())) {
-                        vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_video);
-                        vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
+                    if (bean.getRtype() != null) {
+                        //1新闻  2图集  3直播 4专题  5关联新闻 6视频 7引用
+                        if ("2".equals(bean.getRtype())) {
+                            vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_album);
+                            vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
+                        } else if ("3".equals(bean.getRtype())) {
+                            vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_live);
+                            //				vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
+                        } else if ("4".equals(bean.getRtype())) {
+                            vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_issue);
+                            vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
+                        } else if ("7".equals(bean.getRtype())) {
+                            vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_html);
+                            vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
+                        } else if ("6".equals(bean.getRtype())) {
+                            vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_video);
+                            vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
+                        }
                     }
                     vhLeftPic.newsitem_img.setImageResource(R.drawable.default_bg);
 
@@ -605,13 +608,17 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     }
                     break;
                 case TYPE_AD:
-                    bean = list.get(position);
-                    holder.itemView.setTag(bean);
-                    AdHolder adHolder = (AdHolder) holder;
-                    NativeAd nativeAd = ads.get("" + position);
-                    nativeAd.unregisterView();
-                    View view = NativeAdView.render(context, nativeAd, NativeAdView.Type.HEIGHT_120);
-                    adHolder.viewGroup.addView(view);
+                    try {
+                        bean = list.get(position);
+                        holder.itemView.setTag(bean);
+                        AdHolder adHolder = (AdHolder) holder;
+                        NativeAd nativeAd = ads.get("" + position);
+                        nativeAd.unregisterView();
+                        View view = NativeAdView.render(context, nativeAd, NativeAdView.Type.HEIGHT_120);
+                        adHolder.viewGroup.addView(view);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     //ads.get("" + position).registerViewForInteraction(holder.itemView);
                     break;
                 case TYPE_BIGPIC:
@@ -721,22 +728,24 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                         vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_issue);
                         vhLargePic.nli_foot.setVisibility(View.VISIBLE);
                     }
-                    //1新闻  2图集  3直播 4专题  5关联新闻 6视频 7引用
-                    if ("2".equals(bean.getRtype())) {
-                        vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_album);
-                        vhLargePic.nli_foot.setVisibility(View.VISIBLE);
-                    } else if ("3".equals(bean.getRtype())) {
-                        vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_live);
-                        //				vhLargePic.nli_foot.setVisibility(View.VISIBLE);
-                    } else if ("4".equals(bean.getRtype())) {
-                        vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_issue);
-                        vhLargePic.nli_foot.setVisibility(View.VISIBLE);
-                    } else if ("7".equals(bean.getRtype())) {
-                        vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_html);
-                        vhLargePic.nli_foot.setVisibility(View.VISIBLE);
-                    } else if ("6".equals(bean.getRtype())) {
-                        vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_video);
-                        vhLargePic.nli_foot.setVisibility(View.VISIBLE);
+                    if (bean.getRtype()!=null){
+                        //1新闻  2图集  3直播 4专题  5关联新闻 6视频 7引用
+                        if ("2".equals(bean.getRtype())) {
+                            vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_album);
+                            vhLargePic.nli_foot.setVisibility(View.VISIBLE);
+                        } else if ("3".equals(bean.getRtype())) {
+                            vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_live);
+                            //				vhLargePic.nli_foot.setVisibility(View.VISIBLE);
+                        } else if ("4".equals(bean.getRtype())) {
+                            vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_issue);
+                            vhLargePic.nli_foot.setVisibility(View.VISIBLE);
+                        } else if ("7".equals(bean.getRtype())) {
+                            vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_html);
+                            vhLargePic.nli_foot.setVisibility(View.VISIBLE);
+                        } else if ("6".equals(bean.getRtype())) {
+                            vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_video);
+                            vhLargePic.nli_foot.setVisibility(View.VISIBLE);
+                        }
                     }
 
                     if (vhLargePic.newsitem_img.getVisibility() == View.VISIBLE
@@ -799,7 +808,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
         public AdHolder(View itemView) {
             super(itemView);
-            viewGroup = (ViewGroup) itemView;
+            viewGroup = (ViewGroup) itemView.findViewById(R.id.ad_layout);
         }
 
     }

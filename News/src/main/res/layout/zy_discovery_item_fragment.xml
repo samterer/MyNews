@@ -10,6 +10,15 @@
         android:background="@color/zqzx_bg_normal"
         android:orientation="vertical">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/id_recyclerview_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:background="@color/white"
+            android:scrollbars="none"
+            android:visibility="gone"/>
+
         <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
             android:id="@+id/pushmsg_lv"
             android:layout_width="match_parent"

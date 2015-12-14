@@ -110,10 +110,10 @@ import java.util.List;
 
 public class NewsDetailActivity extends MBaseActivity implements OnClickListener, AdListener {
 
+    private static CallbackManager callbackManager = CallbackManager.Factory.create();
     NewsDetailAdapter adapter;
     RecyclerView recyclerView;
 
-    private CallbackManager callbackManager;
     public final static String PREFIX = "P:";
     ViewGroup ad_layout;
     ViewGroup ad_view;
@@ -192,7 +192,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(null);
+        Log.e("test", "1 " + System.currentTimeMillis());
         nativeAd = new NativeAd(this, AD_KEY);
         nativeAd.setAdListener(this);
         if (App.getInstance().getThemeName().equals("3")) {
@@ -223,18 +224,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             } else if (station.equals(StationConfig.TW)) {
                 BASEURL = InterfaceJsonfile_TW.ROOT + "index.php?s=/Public/newsview/nid/";
             }
-            try {
-                if (null != nb && !TextUtils.isEmpty(nb.getNid())) {
-                    DBHelper.getInstance(getApplicationContext()).getLogDbUtils()
-                            .save(new UserLog(nb.getNid(), SPUtil.format(Calendar.getInstance())));
-                }
-            } catch (Exception e) {
-            }
-
             // 适配器设置
 //            mCommentListAdapter = new CommentListAdapter();
             mCommentListAdapter = new CommentListAdapter(nb.getNid());
-            callbackManager = CallbackManager.Factory.create();
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -368,7 +360,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         });
         getNewsDetails();
         initCommentListView();
+        Log.e("test", "10 " + System.currentTimeMillis());
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1086,6 +1080,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             head = content.substring(0, start);
             head = head.substring(0, start - 45);
             localTime = localTime + DIV + " " + CONTENT_START;
+            Log.e("test", "head " + head);
             head = head + localTime;
             content = content.substring(start);
         }
@@ -1141,7 +1136,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         if (mBean == null) {
             return;
         }
-        String siteid =InterfaceJsonfile.SITEID;
+        String siteid = InterfaceJsonfile.SITEID;
         String mLatestComm_url = InterfaceJsonfile.CHECKCOMMENT;
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("Page", "" + mCurPage);
@@ -1257,6 +1252,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     TUtils.toast(getString(R.string.toast_check_network));
                 }
             }
+            final long start = System.currentTimeMillis();
             HttpHandler httpHandler = httpUtils.download(nb.getJson_url(), detailPathRoot + "detail_" + nb.getNid(), new RequestCallBack<File>() {
                 @Override
                 public void onStart() {
@@ -1267,6 +1263,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 @Override
                 public void onSuccess(ResponseInfo<File> responseInfo) {
                     try {
+                        Log.e("test", "news " + (System.currentTimeMillis() - start));
                         loadingView.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -2034,6 +2031,20 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             AnalyticUtils.sendGaScreenViewHit(this, PREFIX + nb.getTid() + "#" + nb.getNid(), nb.getCnname(), nb.getAuthorname());
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        try {
+            if (null != nb && !TextUtils.isEmpty(nb.getNid())) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(enterTime);
+//                DBHelper.getInstance(getApplicationContext()).getLogDbUtils()
+//                        .save(new UserLog(nb.getNid(), SPUtil.format(calendar), (int) ((System.currentTimeMillis() - enterTime) / 1000)));
+            }
+        } catch (Exception e) {
         }
     }
 

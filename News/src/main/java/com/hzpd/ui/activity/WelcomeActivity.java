@@ -138,16 +138,7 @@ public class WelcomeActivity extends MWBaseActivity {
             loadMainUI();
         }
         Log.e("loadMainUI()", "loadMainUI()");
-        String station = SharePreferecesUtils.getParam(WelcomeActivity.this, StationConfig.STATION, "def").toString();
-        String CHANNELLIST_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            CHANNELLIST_url = InterfaceJsonfile.CHANNELLIST;
-        } else if (station.equals(StationConfig.YN)) {
-            CHANNELLIST_url = InterfaceJsonfile_YN.CHANNELLIST;
-        } else if (station.equals(StationConfig.TW)) {
-            CHANNELLIST_url = InterfaceJsonfile_TW.CHANNELLIST;
-        }
-        String urlChannelList = CHANNELLIST_url + "News";
+        String urlChannelList = InterfaceJsonfile.CHANNELLIST + "News";
 //			下载信息并保存
         HttpHandler httpHandler = httpUtils.download(urlChannelList,
                 target.getAbsolutePath(),

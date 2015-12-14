@@ -57,52 +57,15 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
                     .from(NewsBeanDB.class)
                     .where("isreaded", "=", "1")
                     .orderBy("id", true));
-//			DBHelper dbHelper;
-//			NewsBeanDB nbfc = DBHelper.getInstance(this).getNewsListDbUtils().findFirst(
-//					Selector.from(NewsBeanDB.class).where("isreaded", "=", "1"));
 
             if (null != list) {
                 Log.i("isreaded", "isreaded" + list + ":::" + list.size());
-//                adapter.appendData(list,false,false);
-
-
                 List<NewsBean> nblist = new ArrayList<>();
-                int count = 0;
-                for (NewsBeanDB nb : list) {
-                    NewsBean newsBean = new NewsBean();
-                    newsBean.setNid(nb.getNid() + "");
-                    newsBean.setTitle(nb.getTitle());
-                    newsBean.setSid(nb.getSid());
-                    newsBean.setTid(nb.getTid());
-                    newsBean.setAuthorname(nb.getAuthorname());
-                    newsBean.setOutline(nb.getOutline());
-                    newsBean.setType(nb.getType());
-                    newsBean.setUpdate_time(nb.getUpdate_time());
-                    newsBean.setJson_url(nb.getJson_url());
-                    if (!TextUtils.isEmpty(nb.getImgs())) {
-                        String[] nbImgs = nb.getImgs().split(",");
-                        newsBean.setImgs(nbImgs);
-                    }
-                    newsBean.setRtype(nb.getRtype());
-                    newsBean.setComcount(nb.getComcount());
-                    newsBean.setSort_order(nb.getSort_order());
-                    newsBean.setStatus(nb.getStatus());
-                    newsBean.setComflag(nb.getComflag());
-                    newsBean.setSubjectsort(nb.getSubjectsort());
-                    newsBean.setColumnid(nb.getColumnid());
-                    newsBean.setCopyfrom(nb.getCopyfrom());
-                    newsBean.setFav(nb.getFav());
-                    newsBean.setAttname(nb.getAttname());
-                    newsBean.setLike(nb.getLike());
-                    newsBean.setUnlike(nb.getUnlike());
-                    //newsBean.setCnname(nb.getCnname);
-                    //private String cnname;//频道
-
-                    Log.i("isreaded", "isreaded  getIsreaded--->" + nb.getIsreaded());
-                    count++;
-                    nblist.add(newsBean);
+                for (int i=0;i<list.size();i++) {
+                    NewsBean bean = new NewsBean(list.get(i));
+//                    Log.i("MyPushActivity", "MyPushActivity" + bean.getNid());
+                    nblist.add(bean);
                 }
-                Log.i("isreaded", "isreaded  count--->" + count);
                 adapter.appendData(nblist, false, false);
             } else {
 
