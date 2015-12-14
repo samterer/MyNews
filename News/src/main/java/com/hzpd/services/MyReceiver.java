@@ -16,6 +16,9 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.db.PushListDbTask;
 import com.lidroid.xutils.util.LogUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.jpush.android.api.JPushInterface;
 
 /**
@@ -82,27 +85,31 @@ public class MyReceiver extends BroadcastReceiver {
 			if (TextUtils.isEmpty(type)) {
 				return;
 			}
+
+			NewsBean nb = new NewsBean();
+			JSONObject nbobj = object.getJSONObject("data");
+			Log.i("MyReceiver", "MyReceiver--->" + nbobj.toString());
+
+			nb.setNid(nbobj.getString("nid"));
+			nb.setTitle(title);
+			nb.setJson_url(nbobj.getString("json_url"));
+			nb.setType(nbobj.getString("type"));
+			nb.setTid(nbobj.getString("tid"));
+
+			List<NewsBean> list=new ArrayList<>();
+			list.add(nb);
+
+			new PushListDbTask(context).saveList(list, new I_Result() {
+				@Override
+				public void setResult(Boolean flag) {
+					Log.i("","PushDB"+flag);
+				}
+			});
+
 			Intent myintent = null;
 
 			if (type.equals("1")) {
 				myintent = new Intent(context, NewsDetailActivity.class);
-				NewsBean nb = new NewsBean();
-				JSONObject nbobj = object.getJSONObject("data");
-				Log.i("MyReceiver","MyReceiver--->"+nbobj.toString());
-
-				nb.setNid(nbobj.getString("nid"));
-				nb.setTitle(title);
-				nb.setJson_url(nbobj.getString("json_url"));
-				nb.setType(nbobj.getString("type"));
-				nb.setTid(nbobj.getString("tid"));
-
-
-				new PushListDbTask(context).saveList(nb, new I_Result() {
-					@Override
-					public void setResult(Boolean flag) {
-						Log.i("","PushDB"+flag);
-					}
-				});
 
 //				NewsBeanDB
 

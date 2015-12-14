@@ -247,8 +247,6 @@ public class WelcomeActivity extends MWBaseActivity {
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("tid", "" + NewsChannelBean.TYPE_RECOMMEND);
-        params.addBodyParameter("newTime", App.getInstance().newTime);
-        params.addBodyParameter("oldTime", App.getInstance().oldTime);
         params.addBodyParameter("Page", "1");
         params.addBodyParameter("PageSize", "15");
         UserBean user = SPUtil.getInstance().getUser();

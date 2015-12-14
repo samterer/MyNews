@@ -2,6 +2,7 @@
 <resources>
     <string name="feedback_hint_suggestion">help us to be better !</string>
     <string name="feedback_rating">Rate</string>
+    <string name="error_delete">News has been deleted</string>
     <string name="VideoView_error_text_unknown">Sorry,this video is unable to play.</string>
     <string name="VideoView_error_text_invalid_progressive_playback">Sorry, this video is not valid for streaming to this device.</string>
     <string name="VideoView_error_button">OK</string>
@@ -245,7 +246,6 @@
     <string name="calendarutil_time_4">yesterday</string>
     <string name="calendarutil_time_5">2days ago</string>
     <string name="calendarutil_time_6">days ago</string>
-    <string name="app_fbid">1902056863352757</string>
     <string name="sgin_time">Registered in: </string>
 
     <string name="reply_comment">Reply to comment</string>
@@ -275,4 +275,7 @@
     <string name="main_menu0_text">Home</string>
     <string name="main_menu1_text">Explore</string>
     <string name="main_menu2_text">Me</string>
+
+    <string name="search">Search&#8230;</string>
+    <string name="recently_read">Recently read</string>
 </resources>

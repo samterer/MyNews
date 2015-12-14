@@ -288,6 +288,7 @@
     <string name="main_menu1_text">Temukan</string>
     <string name="main_menu2_text">Saya</string>
 
-    <string name="search">Search&#8230;</string>
+    <string name="search">Cari&#8230;</string>
+    <string name="recently_read">Terakhir dibaca</string>
 
 </resources>

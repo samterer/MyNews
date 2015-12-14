@@ -9,10 +9,10 @@
 
     -->
 
-    <string name="app_fbid">1902056863352757</string>
     <string name="app_name">热点资讯</string>
     <string name="feedback_hint_suggestion">帮助我们做得更好 !</string>
     <string name="feedback_rating">评分</string>
+    <string name="error_delete">新闻已删除</string>
     <string name="VideoView_error_text_unknown">对不起,这个视频不能播放。</string>
     <string name="VideoView_error_text_invalid_progressive_playback">Sorry, this video is not valid for streaming to
 		this device.</string>
@@ -348,4 +348,7 @@
     <string name="main_menu0_text">首页</string>
     <string name="main_menu1_text">发现</string>
     <string name="main_menu2_text">我</string>
+
+    <string name="search">搜索&#8230;</string>
+    <string name="recently_read">最近阅读</string>
 </resources>

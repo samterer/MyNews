@@ -193,11 +193,11 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        switch (viewType){
+        switch (viewType) {
             case TYPE_HEAD:
-                return null;
+                return new HeadViewHolder(new View(context));
             default:
-                return null;
+                return new HeadViewHolder(new View(context));
         }
     }
 

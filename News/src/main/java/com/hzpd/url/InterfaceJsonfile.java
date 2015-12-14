@@ -255,4 +255,9 @@ public class InterfaceJsonfile {
     // 更新
     public static final String GET_VERSION = PATH_ROOT + "/Version/getVersion";
 
+
+    public static final String classify_top_url = "http://www.nutnote.com/ltcms/api.php?s=/Tag/category";
+    public static final String classify_url = "http://www.nutnote.com/ltcms/api.php?s=/Tag/tagList";
+
+
 }

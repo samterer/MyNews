@@ -2,12 +2,10 @@ package com.hzpd.ui.activity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,7 +17,6 @@ import com.hzpd.utils.AAnim;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
-import com.hzpd.utils.SystemBarTintManager;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.http.HttpHandler;
 
@@ -65,7 +62,7 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
         }
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        // setTheme(android.R.style.Theme_Translucent_NoTitleBar);//不能删
+        setTheme(android.R.style.Theme_Translucent_NoTitleBar);//不能删
 
         layout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
                 R.layout.base, null);

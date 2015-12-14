@@ -31,6 +31,7 @@ import com.hzpd.modle.UserBean;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.MyCommentsActivity;
 import com.hzpd.ui.activity.MyPMColAvtivity;
+import com.hzpd.ui.activity.MyPushActivity;
 import com.hzpd.ui.activity.RecentlyReadActivity;
 import com.hzpd.ui.activity.SettingActivity;
 import com.hzpd.ui.activity.ZQ_FeedBackActivity;
@@ -248,7 +249,7 @@ public class ZY_RightFragment extends BaseFragment {
             break;
             case R.id.zy_rfrag_ll_push: {
                 Log.i("", "shoucang--push");
-                mIntent.setClass(activity, MyPMColAvtivity.class);
+                mIntent.setClass(activity, MyPushActivity.class);
                 mIntent.putExtra("type", "pushmsg");
                 flag = true;
             }

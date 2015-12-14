@@ -1,18 +1,13 @@
 package com.hzpd.ui.activity;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -30,7 +25,6 @@ import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
-import com.hzpd.utils.SystemBarTintManager;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.db.ZhuantiDetailListDbTask;
 import com.lidroid.xutils.exception.HttpException;
@@ -70,7 +64,6 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.subject_detail_layout);
-            EventBus.getDefault().register(this);
             init();
             page = 1;
             mFlagRefresh = true;

@@ -9,6 +9,7 @@ import com.hzpd.ui.App;
 import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.utils.DBHelper;
+import com.hzpd.utils.Log;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
@@ -17,10 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PushListDbTask {
-    private DbUtils newsListDb;
+    private DbUtils pushListDb;
 
     public PushListDbTask(Context context) {
-        newsListDb = DBHelper.getInstance(context).getNewsListDbUtils();
+        pushListDb = DBHelper.getInstance(context).getPushListDbUtils();
     }
 
     public void findList(String tid
@@ -31,7 +32,7 @@ public class PushListDbTask {
         newsFindTask.executeOnExecutor(App.executorService);
     }
 
-    public void saveList(NewsBean nbList, I_Result callBack) {
+    public void saveList(List<NewsBean> nbList, I_Result callBack) {
         NewsSaveTask newsSaveTask = new NewsSaveTask(nbList, callBack);
         newsSaveTask.executeOnExecutor(App.executorService);
     }
@@ -44,7 +45,7 @@ public class PushListDbTask {
     public void asyncDeleteList(List<String> nbList) {
         for (String nid : nbList) {
             try {
-                newsListDb.delete(NewsBeanDB.class
+                pushListDb.delete(NewsBeanDB.class
                         , WhereBuilder.b("nid", "=", nid));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -65,7 +66,7 @@ public class PushListDbTask {
 
     public void asyncDropTable() {
         try {
-            newsListDb.deleteAll(NewsBeanDB.class);
+            pushListDb.deleteAll(NewsBeanDB.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -104,7 +105,7 @@ public class PushListDbTask {
                 selector.orderBy("nid", true)
                         .limit(pageSize)
                         .offset(page * pageSize);
-                list = newsListDb.findAll(selector);
+                list = pushListDb.findAll(selector);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -119,12 +120,11 @@ public class PushListDbTask {
         }
 
     }
-
     class NewsSaveTask extends AsyncTask<String, String, Boolean> {
         private I_Result callBack;
-        private NewsBean nbList;
+        private List<NewsBean> nbList;
 
-        public NewsSaveTask(NewsBean nbList, I_Result callBack) {
+        public NewsSaveTask(List<NewsBean> nbList, I_Result callBack) {
             super();
             this.nbList = nbList;
             this.callBack = callBack;
@@ -137,12 +137,24 @@ public class PushListDbTask {
             if (null == nbList) {
                 return flag;
             }
-
             try {
-                newsListDb.delete(NewsBeanDB.class
-                        , WhereBuilder.b("nid", "=", nbList.getNid()));
-                newsListDb.save(nbList);
-                flag = true;
+                List<NewsBeanDB> list = new ArrayList<NewsBeanDB>();
+                for (NewsBean nb : nbList) {
+                    NewsBeanDB nbdb = new NewsBeanDB(nb);
+                    list.add(nbdb);
+                }
+
+                for (NewsBeanDB nbdb : list) {
+                    try {
+                        Log.i("PushListDbTask", "PushListDbTask--->OK");
+                        pushListDb.delete(NewsBeanDB.class
+                                , WhereBuilder.b("nid", "=", nbdb.getNid()));
+                        pushListDb.save(nbdb);
+                        flag = true;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -159,6 +171,46 @@ public class PushListDbTask {
 
 
     }
+//    class NewsSaveTask extends AsyncTask<String, String, Boolean> {
+//        private I_Result callBack;
+//        private NewsBean nbList;
+//
+//        public NewsSaveTask(NewsBean nbList, I_Result callBack) {
+//            super();
+//            this.nbList = nbList;
+//            this.callBack = callBack;
+//        }
+//
+//
+//        @Override
+//        protected Boolean doInBackground(String... params) {
+//            boolean flag = false;
+//            if (null == nbList) {
+//                return flag;
+//            }
+//            Log.i("PushListDbTask", "PushListDbTask"+nbList.toString());
+//
+//            try {
+//                Log.i("PushListDbTask", "PushListDbTask--->OK");
+//                pushListDb.save(nbList);
+//                flag = true;
+//                Log.i("PushListDbTask", "PushListDbTask--->"+flag);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            return flag;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Boolean result) {
+//            if (null != callBack) {
+//                callBack.setResult(result);
+//            }
+//        }
+//
+//
+//    }
 
     class NewsDeleteTask extends AsyncTask<String, String, Boolean> {
         private I_Result callBack;
@@ -178,7 +230,7 @@ public class PushListDbTask {
 
             for (String nid : nbList) {
                 try {
-                    newsListDb.delete(NewsBeanDB.class
+                    pushListDb.delete(NewsBeanDB.class
                             , WhereBuilder.b("nid", "=", nid));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -210,7 +262,7 @@ public class PushListDbTask {
         protected Boolean doInBackground(String... params) {
             boolean isReaded = false;
             try {
-                NewsBeanDB newsdb = newsListDb.findFirst(Selector
+                NewsBeanDB newsdb = pushListDb.findFirst(Selector
                         .from(NewsBeanDB.class)
                         .where("nid", "=", nid)
                         .and("isreaded", "=", 1));
@@ -244,8 +296,8 @@ public class PushListDbTask {
         @Override
         protected Boolean doInBackground(String... params) {
             try {
-                newsListDb.dropTable(NewsBeanDB.class);
-                return newsListDb.tableIsExist(NewsBeanDB.class);
+                pushListDb.dropTable(NewsBeanDB.class);
+                return pushListDb.tableIsExist(NewsBeanDB.class);
             } catch (Exception e) {
                 e.printStackTrace();
             }

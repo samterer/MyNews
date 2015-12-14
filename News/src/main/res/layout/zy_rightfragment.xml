@@ -175,7 +175,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:paddingLeft="@dimen/zy_right_margin_left"
-                        android:text="最近阅读"
+                        android:text="@string/recently_read"
                         android:textSize="16sp" />
                 </LinearLayout>
 

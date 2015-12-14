@@ -4,12 +4,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.webkit.WebView;
 
 import com.hzpd.ui.interfaces.OnScrollChangeListener;
-import com.hzpd.utils.Log;
 
 /**
  * Created by AvatarQing on 2015/7/24.
@@ -37,9 +37,12 @@ public class CustomWebView extends WebView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int height = (int) (1.0 * getContentHeight() * getScale());
+        if (Build.VERSION.SDK_INT < 16) { //4.1
+            invalidate();
+        }
+        //int height = (int) (1.0 * getContentHeight() * getScale());
         //heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.AT_MOST);
-        Log.e("test", "getContentHeight() " + height);
+        //Log.e("test", "getContentHeight() " + height);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 

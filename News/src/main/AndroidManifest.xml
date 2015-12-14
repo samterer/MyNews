@@ -231,6 +231,9 @@
             android:name="com.hzpd.ui.activity.RecentlyReadActivity"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name="com.hzpd.ui.activity.MyPushActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name="com.hzpd.ui.activity.ZQ_ReplyActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustResize"></activity>
@@ -254,7 +257,7 @@
             android:value="@string/app_fbid" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationName"
-            android:value="@string/app_name" />
+            android:value="@string/facebook_app_name" />
     </application>
 
 </manifest>

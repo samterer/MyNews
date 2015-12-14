@@ -115,44 +115,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <com.hzpd.custorm.CustomScrollView
-                        android:id="@+id/news_detail_root_id"
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-
-                        <com.hzpd.custorm.CustomWebView
-                            android:id="@+id/webview"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layerType="software"
-                            android:overScrollMode="never"
-                            android:scrollbarStyle="outsideOverlay" />
-
-                        <!--详情页面评论列表-->
-                        <com.avatarqing.loadmore.lib.LoadMoreListViewContainer
-                            android:id="@+id/load_more_list_view_container"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#f5f5f5">
-
-                            <com.hzpd.ui.widget.FixedListView
-                                android:id="@+id/comment_listview"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="10dp"
-                                android:background="#f5f5f5"
-                                android:divider="#40444444"
-                                android:dividerHeight="0dp"
-                                android:fadeScrollbars="true"
-                                android:fadingEdge="none"
-                                android:headerDividersEnabled="false"
-                                android:scrollingCache="false" />
-
-                        </com.avatarqing.loadmore.lib.LoadMoreListViewContainer>
-                    </com.hzpd.custorm.CustomScrollView>
-
-                    <!--<include layout="@layout/transparent_layout"/>-->
+                        android:layout_height="match_parent"
+                        android:overScrollMode="always"
+                        android:scrollbarStyle="outsideOverlay"
+                        android:scrollbars="none" />
 
                     <!-- 进度条-->
                     <ProgressBar
@@ -172,7 +141,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginTop="3dp"
                         android:background="@color/white"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <ProgressBar
                             style="@style/loadingProgressBar"

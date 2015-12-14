@@ -15,6 +15,7 @@ import com.hzpd.adapter.SampleAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.TagBean;
 import com.hzpd.modle.event.ClassifItemEvent;
+import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
@@ -36,10 +37,6 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
     public String getAnalyticPageName() {
         return AnalyticUtils.SCREEN.leftMenu;
     }
-
-    String classify_top_url = "http://www.nutnote.com/ltcms/api.php?s=/Tag/category";
-    String classify_url = "http://www.nutnote.com/ltcms/api.php?s=/Tag/tagList";
-
 
     private RecyclerView hRecyclerView;
     private ClassifyItemAdapter adapter;
@@ -94,7 +91,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("Page", Page + "");
         params.addBodyParameter("PageSize", pageSize + "");
-        httpUtils.send(HttpRequest.HttpMethod.POST, classify_top_url, params, new RequestCallBack<String>() {
+        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.classify_top_url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
@@ -134,7 +131,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
         params.addBodyParameter("Page", tPage + "");
         params.addBodyParameter("PageSize", tpageSize + "");
 
-        httpUtils.send(HttpRequest.HttpMethod.POST, classify_url, params, new RequestCallBack<String>() {
+        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.classify_url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
