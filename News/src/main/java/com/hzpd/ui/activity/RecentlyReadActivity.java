@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -69,14 +70,34 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
                 int count = 0;
                 for (NewsBeanDB nb : list) {
                     NewsBean newsBean = new NewsBean();
-                    newsBean.setTid(nb.getTid());
-                    newsBean.setType(nb.getType());
                     newsBean.setNid(nb.getNid() + "");
                     newsBean.setTitle(nb.getTitle());
+                    newsBean.setSid(nb.getSid());
+                    newsBean.setTid(nb.getTid());
+                    newsBean.setAuthorname(nb.getAuthorname());
+                    newsBean.setOutline(nb.getOutline());
+                    newsBean.setType(nb.getType());
+                    newsBean.setUpdate_time(nb.getUpdate_time());
                     newsBean.setJson_url(nb.getJson_url());
+                    if (!TextUtils.isEmpty(nb.getImgs())) {
+                        String[] nbImgs = nb.getImgs().split(",");
+                        newsBean.setImgs(nbImgs);
+                    }
+                    newsBean.setRtype(nb.getRtype());
+                    newsBean.setComcount(nb.getComcount());
+                    newsBean.setSort_order(nb.getSort_order());
+                    newsBean.setStatus(nb.getStatus());
+                    newsBean.setComflag(nb.getComflag());
+                    newsBean.setSubjectsort(nb.getSubjectsort());
+                    newsBean.setColumnid(nb.getColumnid());
+                    newsBean.setCopyfrom(nb.getCopyfrom());
+                    newsBean.setFav(nb.getFav());
                     newsBean.setAttname(nb.getAttname());
                     newsBean.setLike(nb.getLike());
                     newsBean.setUnlike(nb.getUnlike());
+                    //newsBean.setCnname(nb.getCnname);
+                    //private String cnname;//频道
+
                     Log.i("isreaded", "isreaded  getIsreaded--->" + nb.getIsreaded());
                     count++;
                     nblist.add(newsBean);

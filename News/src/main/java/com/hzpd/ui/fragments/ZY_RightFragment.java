@@ -274,7 +274,7 @@ public class ZY_RightFragment extends BaseFragment {
             case R.id.zy_rfrag_ll_read: {
                 mIntent.setClass(activity, RecentlyReadActivity.class);
                 flag=true;
-               Toast.makeText(getActivity(),"暂无此功能。。。",Toast.LENGTH_SHORT).show();
+//               Toast.makeText(getActivity(),"暂无此功能。。。",Toast.LENGTH_SHORT).show();
             }
             break;
             case R.id.zy_rfrag_ll_login: {
