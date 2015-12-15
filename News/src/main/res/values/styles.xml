@@ -39,7 +39,9 @@
         <item name="left_menu_version_line">@color/white</item>
         <!-- newsfragment-->
         <item name="fragment_main_psts_tabs_background">@color/white</item>
-        <item name="fragment_main_psts_tabs_indicator_color">@color/pager_sliding_tab_text_selected_color</item>
+        <item name="fragment_main_psts_tabs_indicator_color">
+            @color/pager_sliding_tab_text_selected_color
+        </item>
         <item name="fragment_main_psts_tabs_text_color">@color/pager_sliding_tab_text_color</item>
         <!-- choosefragment-->
         <item name="fragment_choose_card_backgroup_color">#ffffff</item>
@@ -78,6 +80,10 @@
         <item name="news_detail_rel_item_title">@color/black</item>
     </style>
 
+    <style name="ThemeDefault_2" parent="ThemeDefault">
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
+
     <style name="ThemeRed" parent="AppTheme">
         <!-- MainActivity-->
         <item name="title_bar_color">#eb413d</item>
@@ -101,7 +107,9 @@
         <item name="left_menu_version_line">@color/white</item>
         <!-- newsfragment-->
         <item name="fragment_main_psts_tabs_background">@color/white</item>
-        <item name="fragment_main_psts_tabs_indicator_color">@color/pager_sliding_tab_text_selected_color</item>
+        <item name="fragment_main_psts_tabs_indicator_color">
+            @color/pager_sliding_tab_text_selected_color
+        </item>
         <item name="fragment_main_psts_tabs_text_color">@color/pager_sliding_tab_text_color</item>
         <!-- choosefragment-->
         <item name="fragment_choose_card_backgroup_color">#ffffff</item>

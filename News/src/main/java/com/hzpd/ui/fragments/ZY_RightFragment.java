@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +27,6 @@ import com.hzpd.custorm.CircleImageView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.ThirdLoginBean;
 import com.hzpd.modle.UserBean;
-import com.hzpd.ui.App;
 import com.hzpd.ui.activity.MyCommentsActivity;
 import com.hzpd.ui.activity.MyPMColAvtivity;
 import com.hzpd.ui.activity.MyPushActivity;
@@ -281,6 +279,7 @@ public class ZY_RightFragment extends BaseFragment {
             case R.id.zy_rfrag_ll_login: {
                 final LoginManager loginManager = LoginManager.getInstance();
                 if (null == spu.getUser()) {
+
                     loginManager.setDefaultAudience(DefaultAudience.FRIENDS);
                     loginManager.setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);
                     loginManager.logInWithReadPermissions(this, permissions);
@@ -322,6 +321,8 @@ public class ZY_RightFragment extends BaseFragment {
             AAnim.ActivityStartAnimation(activity);
         }
     }
+
+
 
     public class LoginQuitBR extends BroadcastReceiver {
         @Override

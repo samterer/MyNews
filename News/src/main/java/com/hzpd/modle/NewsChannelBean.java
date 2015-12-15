@@ -25,6 +25,12 @@ public class NewsChannelBean implements Comparable<NewsChannelBean>, Serializabl
     private String siteid;//": "1"
     private String default_show;
 
+
+    private String icon;
+    private String id;
+    private String name;
+    private String num;
+
     @Override
     public String toString() {
         return "NewsChannelBean{" +
@@ -38,8 +44,44 @@ public class NewsChannelBean implements Comparable<NewsChannelBean>, Serializabl
                 ", status='" + status + '\'' +
                 ", siteid='" + siteid + '\'' +
                 ", default_show='" + default_show + '\'' +
+                ", icon='" + icon + '\'' +
+                ", id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", num='" + num + '\'' +
                 ", type=" + type +
                 '}';
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNum() {
+        return num;
+    }
+
+    public void setNum(String num) {
+        this.num = num;
     }
 
     public String getDefault_show() {

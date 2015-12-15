@@ -84,6 +84,8 @@ public class MainActivity extends BaseActivity {
         super.finish();
     }
 
+    private View  login_bg;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
@@ -91,6 +93,7 @@ public class MainActivity extends BaseActivity {
         long start = System.currentTimeMillis();
         setContentView(R.layout.app_main);
         ViewUtils.inject(this);
+        login_bg=findViewById(R.id.login_bg);
         viewPager = (MyViewPager) findViewById(R.id.main_pager);
         adapter = new MainPagerAdapter(getSupportFragmentManager());
         fragments = new BaseFragment[3];
@@ -273,5 +276,6 @@ public class MainActivity extends BaseActivity {
 //        restartApplication();
         finish();
     }
+
 
 }

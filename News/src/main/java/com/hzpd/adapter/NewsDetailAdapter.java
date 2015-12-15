@@ -50,7 +50,8 @@ public class NewsDetailAdapter extends RecyclerView.Adapter {
                 viewHolder = new WebViewHolder(webView);
                 break;
             case TYPE_ITEM:
-                ListView view = new FixedListView(context);
+                FixedListView view = new FixedListView(context);
+                view.setDividerHeight(0); //  dividerHeight
                 context.setListView(view);
                 viewHolder = new ItemViewHolder(view);
                 break;

@@ -57,12 +57,12 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
         } else if (App.getInstance().getThemeName().equals("2")) {
             setTheme(R.style.ThemeNight);
         } else {
-            setTheme(R.style.ThemeDefault);
+            setTheme(R.style.ThemeDefault_2);
 //            setTheme(R.style.ThemeNight);
         }
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        setTheme(android.R.style.Theme_Translucent_NoTitleBar);//不能删
+//        setTheme(android.R.style.Theme_Translucent_NoTitleBar);//不能删
 
         layout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
                 R.layout.base, null);

@@ -24,6 +24,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzpd.custorm.SlideSwitch;
 import com.hzpd.custorm.switchbutton.SwitchButton;
 import com.hzpd.hflt.R;
+import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.modle.UpdateBean;
 import com.hzpd.modle.event.FontSizeEvent;
 import com.hzpd.modle.event.RestartEvent;
@@ -42,6 +43,7 @@ import com.hzpd.utils.GetFileSizeUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
+import com.hzpd.utils.SerializeUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
@@ -59,6 +61,7 @@ import com.sithagi.countrycodepicker.CountryPicker;
 import com.sithagi.countrycodepicker.CountryPickerListener;
 
 import java.io.File;
+import java.util.List;
 import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
@@ -126,6 +129,21 @@ public class SettingActivity extends MBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zqzx_setting_layout);
+
+
+        final String channelCachePath = App.getInstance().getAllDiskCacheDir()
+                + File.separator
+                + App.mTitle;
+        final File channelCacheFile = new File(channelCachePath);
+        final File target = App.getFile(App.getInstance().getAllDiskCacheDir() + File.separator + "News");
+
+        // 读取频道信息的本地缓存
+        SerializeUtil<List<NewsChannelBean>> serializeUtil = new SerializeUtil<List<NewsChannelBean>>();
+        List<NewsChannelBean> cacheChannels = serializeUtil
+                .readyDataToFile(channelCacheFile.getAbsolutePath());
+
+
+        Log.i("cacheChannels","cacheChannels--->"+cacheChannels.size()+"::::"+cacheChannels.toString());
 
         try {
             ViewUtils.inject(this);
