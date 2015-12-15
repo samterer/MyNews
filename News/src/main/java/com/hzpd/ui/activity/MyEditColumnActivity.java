@@ -88,7 +88,6 @@ public class MyEditColumnActivity extends MBaseActivity {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.editcolumn_my_layout);
-
             ViewUtils.inject(this);
             findViewById(R.id.ll_choose_channel).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -128,7 +127,15 @@ public class MyEditColumnActivity extends MBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        final String channelCachePath = App.getInstance().getAllDiskCacheDir()
+                + File.separator
+                + App.mTitle;
+//		LogUtils.e("WelcomeActivity存储--->" + channelCachePath);
+        final File channelCacheFile = new File(channelCachePath);
+        // 读取频道信息的本地缓存
+        SerializeUtil<List<NewsChannelBean>> serializeUtil = new SerializeUtil<List<NewsChannelBean>>();
+        List<NewsChannelBean> cacheChannels = serializeUtil
+                .readyDataToFile(channelCacheFile.getAbsolutePath());
 
         super.changeStatusBar();
     }
@@ -436,16 +443,16 @@ public class MyEditColumnActivity extends MBaseActivity {
         if (!list.contains(channelRecommend)) {
             list.add(0, channelRecommend);
         }
-
-        //	专题
-        NewsChannelBean channelSubject = new NewsChannelBean();
-        channelSubject.setTid("" + NewsChannelBean.TYPE_SUBJECT);
-        channelSubject.setType(NewsChannelBean.TYPE_SUBJECT);
-        channelSubject.setCnname(getString(R.string.menu_subject));
-        if (!list.contains(channelSubject)) {
-            list.add(0, channelSubject);
-            Log.d(getLogTag(), "add channelSubject");
-        }
+//
+//        //	专题
+//        NewsChannelBean channelSubject = new NewsChannelBean();
+//        channelSubject.setTid("" + NewsChannelBean.TYPE_SUBJECT);
+//        channelSubject.setType(NewsChannelBean.TYPE_SUBJECT);
+//        channelSubject.setCnname(getString(R.string.menu_subject));
+//        if (!list.contains(channelSubject)) {
+//            list.add(0, channelSubject);
+//            Log.d(getLogTag(), "add channelSubject");
+//        }
     }
 
 

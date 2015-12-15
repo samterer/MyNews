@@ -171,12 +171,12 @@ public class WelcomeActivity extends MWBaseActivity {
                             List<NewsChannelBean> cacheChannels = serializeUtil
                                     .readyDataToFile(channelCacheFile.getAbsolutePath());
 
-                            List<NewsChannelBean> showChannel = new ArrayList<NewsChannelBean>();
+
+
                             // 如果没有缓存
                             if (null == cacheChannels || cacheChannels.size() < 1) {
 
                                 if (newestChannels != null && newestChannels.size() > 0) {
-
                                     for (int i = 0; i < newestChannels.size(); i++) {
                                         String default_show = newestChannels.get(i).getDefault_show();
                                         if (default_show.equals("0")) {
@@ -184,7 +184,6 @@ public class WelcomeActivity extends MWBaseActivity {
                                             --i;
                                         }
                                     }
-                                    Log.e("showChannel", "showChannel-->" + showChannel.toString() + "\n" + showChannel.size());
                                     addLocalChannels(newestChannels);
                                     // 缓存频道信息到SD卡上
                                     serializeUtil.writeDataToFile(newestChannels, channelCachePath);
