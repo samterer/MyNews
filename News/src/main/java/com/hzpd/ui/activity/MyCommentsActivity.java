@@ -1,14 +1,9 @@
 package com.hzpd.ui.activity;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -16,10 +11,6 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.daimajia.numberprogressbar.NumberProgressBar;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.hzpd.adapter.MycommentsAdapter;
 import com.hzpd.custorm.CircleImageView;
 import com.hzpd.hflt.R;
@@ -27,17 +18,12 @@ import com.hzpd.modle.MycommentsBean;
 import com.hzpd.modle.XF_UserInfoBean;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
-import com.hzpd.utils.SystemBarTintManager;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -72,17 +58,16 @@ public class MyCommentsActivity extends MBaseActivity {
     private View title;
     @ViewInject(R.id.stitle_tv_content)
     private TextView stitle_tv_content;
-    @ViewInject(R.id.pushmsg_lv)
-    private PullToRefreshListView pushmsg_lv;
     @ViewInject(R.id.pushmsg_tv_empty)
     private View pushmsg_tv_empty;
     @ViewInject(R.id.mycomments_title)
     private LinearLayout mycomments_title;
     @ViewInject(R.id.mycoms_text)
     private TextView mycoms_text;
+    private ListView listView;
 
     private int Page = 1;
-    private static final int PageSize = 15;
+    private static final int PageSize = 1500;
     private boolean mFlagRefresh;
     private MycommentsAdapter adapter;
     @ViewInject(R.id.transparent_layout_id)
@@ -100,35 +85,16 @@ public class MyCommentsActivity extends MBaseActivity {
         }
         super.changeStatusBar();
         stitle_tv_content.setText(R.string.comment_mine);
-        pushmsg_lv.setEmptyView(pushmsg_tv_empty);
+        listView = (ListView) findViewById(R.id.list_view);
+        listView.setEmptyView(pushmsg_tv_empty);
         adapter = new MycommentsAdapter(this);
-        pushmsg_lv.setAdapter(adapter);
+        listView.setAdapter(adapter);
 
-        pushmsg_lv.setOnRefreshListener(new OnRefreshListener2<ListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                LogUtils.i("下拉刷新");
-                refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_pull_label));
-                Page = 1;
-                mFlagRefresh = true;
-                getInfoFromServer();
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                //上拉加载
-                LogUtils.i("上拉加载");
-                refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_from_bottom_pull_label));
-                Page++;
-                mFlagRefresh = false;
-                getInfoFromServer();
-            }
-        });
-
-        pushmsg_lv.postDelayed(new Runnable() {
+        listView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                pushmsg_lv.setRefreshing(true);
+                Page = 1;
+                getInfoFromServer();
             }
         }, 600);
 
@@ -150,8 +116,7 @@ public class MyCommentsActivity extends MBaseActivity {
         xf_pinfo_npb = (NumberProgressBar) headView.findViewById(R.id.xf_pinfo_npb);
         xf_pinfo_tv_regtime = (TextView) headView.findViewById(R.id.xf_pinfo_tv_regtime);
         xf_pinfo_tv_levelup = (TextView) headView.findViewById(R.id.xf_pinfo_tv_levelup);
-        ListView lv = pushmsg_lv.getRefreshableView();
-        lv.addHeaderView(headView);
+        listView.addHeaderView(headView);
 
         getUserInfoFromServer();
 
@@ -241,7 +206,6 @@ public class MyCommentsActivity extends MBaseActivity {
 
     private void getInfoFromServer() {
         if (null == spu.getUser()) {
-            pushmsg_lv.onRefreshComplete();
 //            TUtils.toast(getString(R.string.toast_please_login));
             return;
         }
@@ -267,8 +231,6 @@ public class MyCommentsActivity extends MBaseActivity {
                 , new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                pushmsg_lv.onRefreshComplete();
-                pushmsg_lv.setMode(Mode.PULL_FROM_START);
                 LogUtils.i("data-->" + responseInfo.result);
                 JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
 
@@ -288,9 +250,6 @@ public class MyCommentsActivity extends MBaseActivity {
                     if (null == mlist) {
                         return;
                     }
-                    if (mlist.size() >= PageSize) {
-                        pushmsg_lv.setMode(Mode.BOTH);
-                    }
                     Log.e("MyCommentsActivity", "mlist--->" + mlist.toString());
                     adapter.appendData(mlist, mFlagRefresh);
                     adapter.notifyDataSetChanged();
@@ -308,8 +267,6 @@ public class MyCommentsActivity extends MBaseActivity {
 
             @Override
             public void onFailure(HttpException error, String msg) {
-                pushmsg_lv.onRefreshComplete();
-                pushmsg_lv.setMode(Mode.PULL_FROM_START);
                 if (!mFlagRefresh) {
                     Page--;
                 }

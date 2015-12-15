@@ -6,7 +6,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -200,16 +199,7 @@ public class NewsFragment extends BaseFragment {
                 + App.mTitle;
         final File channelCacheFile = new File(channelCachePath);
         final File target = App.getFile(App.getInstance().getAllDiskCacheDir() + File.separator + "News");
-        String station = SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
-        String CHANNELLIST_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            CHANNELLIST_url = InterfaceJsonfile.CHANNELLIST;
-        } else if (station.equals(StationConfig.YN)) {
-            CHANNELLIST_url = InterfaceJsonfile_YN.CHANNELLIST;
-        } else if (station.equals(StationConfig.TW)) {
-            CHANNELLIST_url = InterfaceJsonfile_TW.CHANNELLIST;
-        }
-        String urlChannelList = CHANNELLIST_url + "News";
+        String urlChannelList = InterfaceJsonfile.CHANNELLIST + "News";
 //			下载信息并保存
         httpUtils.download(urlChannelList,
                 target.getAbsolutePath(),

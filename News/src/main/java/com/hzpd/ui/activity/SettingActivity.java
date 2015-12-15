@@ -262,14 +262,17 @@ public class SettingActivity extends MBaseActivity {
 
                         setting_chosse_country.setText("" + name);
                         SharePreferecesUtils.setParam(SettingActivity.this, "CountryPicker", name);
+                        activity.startService(new Intent(activity, ClearCacheService.class));
 
-                        //重新设置
-                        //activity.startService(new Intent(activity, ClearCacheService.class));
-                        //DataCleanManager.cleanCustomCache(App.getInstance().getAllDiskCacheDir()
-                        //+ File.separator
-                        //+ App.mTitle);
-                        //EventBus.getDefault().post(new RestartEvent());
-                        //finish();
+                        SharePreferecesUtils.setParam(SettingActivity.this, "CountryCode", code);
+//                        重新设置
+                        DataCleanManager.cleanCustomCache(App.getInstance().getAllDiskCacheDir()
+                        + File.separator
+                        + App.mTitle);
+                        DataCleanManager.deleteDir(new File(getChannelInfoCacheSavePath()));
+                        EventBus.getDefault().post(new RestartEvent());
+                        restartApplication();
+//                        finish();
                         picker.dismiss();
                     }
                 });
@@ -281,6 +284,19 @@ public class SettingActivity extends MBaseActivity {
         getCacheSize();
     }
 
+
+    //修改频道缓存配置，清除缓存时不删除频道
+    private String getChannelInfoCacheSavePath() {
+        return App.getInstance().getAllDiskCacheDir()
+                + File.separator
+                + App.mTitle;
+    }
+
+    private void restartApplication() {
+        final Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -493,7 +509,7 @@ public class SettingActivity extends MBaseActivity {
                         loadingView.setVisibility(View.VISIBLE);
                         activity.startService(new Intent(activity, ClearCacheService.class));
                         //刪除SharedPreference
-                        DataCleanManager.cleanSharedPreference(SettingActivity.this);
+//                        DataCleanManager.cleanSharedPreference(SettingActivity.this);
 //                        App.getInstance().newTimeMap.put(channelbean.getTid(), obj.getString("newTime"));
                         App.getInstance().newTimeMap.clear();
                         handler.sendEmptyMessageDelayed(111, 2000);

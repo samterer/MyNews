@@ -291,4 +291,12 @@
     <string name="search">Cari&#8230;</string>
     <string name="recently_read">Terakhir dibaca</string>
 
+
+    <string name="search_keyword">Masukkan Kolom yang Anda ingingkan</string>
+    <string name="discovery_name">Temukan</string>
+    <string name="classify_name">Kategori</string>
+    <string name="discovery_follow">Pilih</string>
+
+
+
 </resources>

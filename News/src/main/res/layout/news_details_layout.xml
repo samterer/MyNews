@@ -98,7 +98,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginLeft="5dp"
-                            android:text="Pilih"
+                            android:text="@string/discovery_follow"
                             android:textColor="@color/white" />
 
                     </LinearLayout>
@@ -119,7 +119,7 @@
                         android:id="@+id/recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:overScrollMode="always"
+                        android:overScrollMode="never"
                         android:scrollbarStyle="outsideOverlay"
                         android:scrollbars="none" />
 

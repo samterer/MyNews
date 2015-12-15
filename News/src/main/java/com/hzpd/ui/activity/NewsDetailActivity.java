@@ -53,6 +53,7 @@ import com.facebook.login.LoginManager;
 import com.hzpd.adapter.CommentListAdapter;
 import com.hzpd.adapter.NewsDetailAdapter;
 import com.hzpd.custorm.ShuoMClickableSpan;
+import com.hzpd.hflt.BuildConfig;
 import com.hzpd.hflt.R;
 import com.hzpd.hflt.wxapi.FacebookSharedUtil;
 import com.hzpd.modle.CommentsCountBean;
@@ -2038,6 +2039,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     protected void onStop() {
         super.onStop();
         try {
+            if (BuildConfig.DEBUG) {
+                return;
+            }
             if (null != nb && !TextUtils.isEmpty(nb.getNid())) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(enterTime);

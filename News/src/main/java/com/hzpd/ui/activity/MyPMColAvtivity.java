@@ -20,10 +20,6 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.hzpd.adapter.CollectionAdapter;
 import com.hzpd.adapter.PushmsgAdapter;
 import com.hzpd.hflt.R;
@@ -80,7 +76,7 @@ public class MyPMColAvtivity extends MBaseActivity {
     private TextView stitle_tv_content;
 
     @ViewInject(R.id.pushmsg_lv)
-    private PullToRefreshListView pushmsg_lv;
+    private ListView pushmsg_lv;
     @ViewInject(R.id.pushmsg_tv_empty)
     private View pushmsg_tv_empty;
 
@@ -132,7 +128,6 @@ public class MyPMColAvtivity extends MBaseActivity {
         }
         type = intent.getStringExtra("type");
         pushmsg_lv.setEmptyView(pushmsg_tv_empty);
-        pushmsg_lv.setMode(Mode.PULL_FROM_START);
 
         if ("pushmsg".equals(type)) {
             stitle_tv_content.setText(R.string.prompt_my_msg);
@@ -142,40 +137,8 @@ public class MyPMColAvtivity extends MBaseActivity {
             stitle_tv_content.setText(R.string.prompt_collect);
             colladAdapter = new CollectionAdapter(this);
             pushmsg_lv.setAdapter(colladAdapter);
-            pushmsg_lv.getRefreshableView().setOnItemLongClickListener(onItemLongClickListener);
         }
 
-        pushmsg_lv.setOnRefreshListener(new OnRefreshListener2<ListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                LogUtils.i("下拉刷新");
-                //下拉刷新
-                refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_pull_label));
-                Page = 1;
-                mFlagRefresh = true;
-                if ("pushmsg".equals(type)) {
-                    getPushmsgInfoFromServer();
-                } else {
-                    colladAdapter.clear();
-                    getDbCache();
-                }
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                //上拉加载
-                LogUtils.i("上拉加载");
-
-                refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_from_bottom_pull_label));
-                Page++;
-                mFlagRefresh = false;
-                if ("pushmsg".equals(type)) {
-                    getPushmsgInfoFromServer();
-                } else {
-                    getDbCache();
-                }
-            }
-        });
 
         pushmsg_lv.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -192,7 +155,12 @@ public class MyPMColAvtivity extends MBaseActivity {
         pushmsg_lv.postDelayed(new Runnable() {
             @Override
             public void run() {
-                pushmsg_lv.setRefreshing(true);
+                if ("pushmsg".equals(type)) {
+                    getPushmsgInfoFromServer();
+                } else {
+                    colladAdapter.clear();
+                    getDbCache();
+                }
             }
         }, 500);
 
@@ -200,7 +168,6 @@ public class MyPMColAvtivity extends MBaseActivity {
 
     private void getPushmsgInfoFromServer() {
         if (null == spu.getUser()) {
-            pushmsg_lv.onRefreshComplete();
             return;
         }
         RequestParams params = RequestParamsUtils.getParamsWithU();
@@ -213,8 +180,6 @@ public class MyPMColAvtivity extends MBaseActivity {
                 , new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                pushmsg_lv.onRefreshComplete();
-
                 LogUtils.i("tsbl--list-->" + responseInfo.result);
                 JSONObject obj = null;
                 try {
@@ -232,12 +197,6 @@ public class MyPMColAvtivity extends MBaseActivity {
 
                         pmgadapter.appendData(list, mFlagRefresh);
 
-                        if (list.size() < PageSize) {
-                            pushmsg_lv.setMode(Mode.PULL_FROM_START);
-                        } else {
-                            pushmsg_lv.setMode(Mode.BOTH);
-                        }
-
                     } else {
                         if (!mFlagRefresh) {
                             Page--;
@@ -252,7 +211,6 @@ public class MyPMColAvtivity extends MBaseActivity {
             @Override
             public void onFailure(HttpException error, String msg) {
                 Log.i("push", msg);
-                pushmsg_lv.onRefreshComplete();
                 if (!mFlagRefresh) {
                     Page--;
                 }
@@ -367,7 +325,6 @@ public class MyPMColAvtivity extends MBaseActivity {
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            pushmsg_lv.onRefreshComplete();
             if (!isResume) {
                 return;
             }
@@ -375,11 +332,6 @@ public class MyPMColAvtivity extends MBaseActivity {
                 List<CollectionJsonBean> list = (List<CollectionJsonBean>) msg.obj;
                 colladAdapter.appendData(list, mFlagRefresh);
                 colladAdapter.notifyDataSetChanged();
-                if (list.size() >= PageSize) {
-                    pushmsg_lv.setMode(Mode.BOTH);
-                } else {
-                    pushmsg_lv.setMode(Mode.PULL_FROM_START);
-                }
             }
             mFlagRefresh = false;
         }
@@ -416,8 +368,6 @@ public class MyPMColAvtivity extends MBaseActivity {
                                 if (!isResume) {
                                     return;
                                 }
-                                pushmsg_lv.onRefreshComplete();
-                                pushmsg_lv.setMode(Mode.BOTH);
                             }
                         });
 
@@ -444,8 +394,8 @@ public class MyPMColAvtivity extends MBaseActivity {
     //获取数据
     private void getCollectionInfoFromServer() {
         if (null != spu.getUser()) { //登录
-            String  siteid = InterfaceJsonfile.SITEID;
-            String  COLLECTIONLIST_url = InterfaceJsonfile.COLLECTIONLIST;
+            String siteid = InterfaceJsonfile.SITEID;
+            String COLLECTIONLIST_url = InterfaceJsonfile.COLLECTIONLIST;
             RequestParams params = RequestParamsUtils.getParamsWithU();
             params.addBodyParameter("page", Page + "");
             params.addBodyParameter("pagesize", PageSize + "");
@@ -458,8 +408,6 @@ public class MyPMColAvtivity extends MBaseActivity {
                 @Override
                 public void onSuccess(ResponseInfo<String> responseInfo) {
                     try {
-                        pushmsg_lv.onRefreshComplete();
-                        pushmsg_lv.setMode(Mode.PULL_FROM_START);
                         LogUtils.i("collection--list-->" + responseInfo.result);
                         JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
                         if (null == obj) {
@@ -478,10 +426,6 @@ public class MyPMColAvtivity extends MBaseActivity {
                             colladAdapter.appendData(mlist, mFlagRefresh);
                             colladAdapter.notifyDataSetChanged();
 
-                            if (mlist.size() >= PageSize) {
-                                pushmsg_lv.setMode(Mode.BOTH);
-                            }
-
                         } else {
                             if (!mFlagRefresh) {
                                 Page--;
@@ -495,8 +439,6 @@ public class MyPMColAvtivity extends MBaseActivity {
 
                 @Override
                 public void onFailure(HttpException error, String msg) {
-                    pushmsg_lv.onRefreshComplete();
-                    pushmsg_lv.setMode(Mode.PULL_FROM_START);
                     if (!mFlagRefresh) {
                         Page--;
                     }
@@ -504,9 +446,6 @@ public class MyPMColAvtivity extends MBaseActivity {
                     TUtils.toast(getString(R.string.toast_cannot_connect_to_server));
                 }
             });
-        } else {
-            pushmsg_lv.onRefreshComplete();
-            pushmsg_lv.setMode(Mode.PULL_FROM_START);
         }
     }
 

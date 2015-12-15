@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hzpd.hflt.BuildConfig;
 import com.hzpd.modle.UserBean;
 import com.hzpd.modle.db.UserLog;
 import com.hzpd.ui.App;
@@ -19,6 +20,7 @@ import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
+import com.joy.update.Utils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -154,21 +156,25 @@ public class InitService extends IntentService {
     }
 
     private void sendUserLog() {
-        UserBean user = SPUtil.getInstance().getUser();
-        if (user == null || TextUtils.isEmpty(user.getUid())) {
+        if (BuildConfig.DEBUG || !Utils.isNetworkConnected(this)) {
             return;
+        }
+        UserBean user = SPUtil.getInstance().getUser();
+        String uid = "";
+        if (user != null && !TextUtils.isEmpty(user.getUid())) {
+            uid = user.getUid();
         }
         final DbUtils dbUtils = DBHelper.getInstance(getApplicationContext()).getLogDbUtils();
         try {
             List<UserLog> logs = dbUtils.findAll(UserLog.class);
-            if (logs.isEmpty() || logs.size() < 10) {
+            if (logs.isEmpty() || logs.size() < 20) {
                 return;
             }
             String json = FjsonUtil.toJsonString(logs);
-            Log.e("test", "json " + json);
             RequestParams params = RequestParamsUtils.getParams();
-            params.addBodyParameter("uid", user.getUid());
+            params.addBodyParameter("uid", uid);
             params.addBodyParameter("json", json);
+
             ResponseStream rs = httpUtils.sendSync(HttpMethod.POST, InterfaceJsonfile.USER_LOG, params);
             String str = rs.readString();
             if (!TextUtils.isEmpty(str)) {

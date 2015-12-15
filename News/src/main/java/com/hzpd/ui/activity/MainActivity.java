@@ -259,18 +259,19 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    public void onEventMainThread(RestartEvent event) {
-        restartApplication();
-    }
-
     public void onEventMainThread(SetThemeEvent event) {
         recreate();
     }
-
     private void restartApplication() {
         final Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
+
+    public void onEventMainThread(RestartEvent event) {
+//        restartApplication();
+        finish();
+    }
+
 }

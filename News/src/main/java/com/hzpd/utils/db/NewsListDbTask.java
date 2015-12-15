@@ -101,7 +101,7 @@ public class NewsListDbTask {
             try {
                 Selector selector = Selector.from(NewsBeanDB.class)
                         .where("tid", "=", tid);
-                selector.orderBy("nid", true)
+                selector.orderBy("sort_order", true)
                         .limit(pageSize)
                         .offset(page * pageSize);
                 list = newsListDb.findAll(selector);

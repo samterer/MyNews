@@ -50,10 +50,11 @@
 
                 <!--android:divider="@color/zqzx_bg_dark"
                         android:dividerHeight="1px"-->
-                <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+                <ListView
                     android:id="@+id/pushmsg_lv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:cacheColorHint="@android:color/transparent"
                     android:descendantFocusability="blocksDescendants"
                     android:divider="@color/zqzx_bg_normal"
@@ -62,28 +63,25 @@
                     android:listSelector="@android:color/transparent"
                     android:scrollbarThumbVertical="@drawable/base_list_scrollbar_handle"
                     android:scrollbarTrackVertical="@color/transparent"
-                    android:scrollbars="none"
-                    ptr:ptrAnimationStyle="flip"
-                    ptr:ptrDrawable="@drawable/default_ptr_rotate"
-                    ptr:ptrHeaderSubTextColor="@color/grey_font"
-                    ptr:ptrHeaderTextColor="@color/pulltorefresh_font" />
+                    android:scrollbars="none" />
 
-                <ImageView
-                    android:id="@+id/pushmsg_tv_empty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/zqzx_nonetwork" />
-
-
-                <com.mingle.widget.LoadingView
-                    android:id="@+id/loadView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:visibility="gone"
-                    app:loadingText="@string/load_more_loading" />
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/pushmsg_tv_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/zqzx_nonetwork" />
+
+
+            <com.mingle.widget.LoadingView
+                android:id="@+id/loadView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                app:loadingText="@string/load_more_loading" />
 
             <include layout="@layout/transparent_layout" />
         </FrameLayout>

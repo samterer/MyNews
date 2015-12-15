@@ -1,16 +1,12 @@
 package com.hzpd.ui.activity;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -30,8 +26,6 @@ import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SerializeUtil;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.SystemBarTintManager;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -94,6 +88,7 @@ public class MyEditColumnActivity extends MBaseActivity {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.editcolumn_my_layout);
+
             ViewUtils.inject(this);
             findViewById(R.id.ll_choose_channel).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -133,6 +128,8 @@ public class MyEditColumnActivity extends MBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
         super.changeStatusBar();
     }
 
@@ -144,6 +141,8 @@ public class MyEditColumnActivity extends MBaseActivity {
         mSaveTitleData = new SerializeUtil<List<NewsChannelBean>>();
         // 读取缓存的频道信息，频道信息在WelcomeActivity中就已经请求过了
         channelData = mSaveTitleData.readyDataToFile(getChannelInfoCacheSavePath());
+//            addLocalVisibleChannels(channelData);
+
         if (channelData == null) {
             return;
         }
@@ -408,15 +407,7 @@ public class MyEditColumnActivity extends MBaseActivity {
 
     private void addLocalChannels(List<NewsChannelBean> list) {
 
-//        //	专题
-//        NewsChannelBean channelSubject = new NewsChannelBean();
-//        channelSubject.setTid("" + NewsChannelBean.TYPE_SUBJECT);
-//        channelSubject.setType(NewsChannelBean.TYPE_SUBJECT);
-//        channelSubject.setCnname(getString(R.string.menu_subject));
-//        if (!list.contains(channelSubject)) {
-//            list.add(0, channelSubject);
-//            Log.d(getLogTag(), "add channelSubject");
-//        }
+
 //        // 视频
 //        NewsChannelBean channelVideo = new NewsChannelBean();
 //        channelVideo.setTid("" + NewsChannelBean.TYPE_VIDEO);
@@ -446,5 +437,60 @@ public class MyEditColumnActivity extends MBaseActivity {
             list.add(0, channelRecommend);
         }
 
+        //	专题
+        NewsChannelBean channelSubject = new NewsChannelBean();
+        channelSubject.setTid("" + NewsChannelBean.TYPE_SUBJECT);
+        channelSubject.setType(NewsChannelBean.TYPE_SUBJECT);
+        channelSubject.setCnname(getString(R.string.menu_subject));
+        if (!list.contains(channelSubject)) {
+            list.add(0, channelSubject);
+            Log.d(getLogTag(), "add channelSubject");
+        }
     }
+
+
+    private void addLocalVisibleChannels(List<NewsChannelBean> list) {
+
+
+//        // 视频
+//        NewsChannelBean channelVideo = new NewsChannelBean();
+//        channelVideo.setTid("" + NewsChannelBean.TYPE_VIDEO);
+//        channelVideo.setType(NewsChannelBean.TYPE_VIDEO);
+//        channelVideo.setCnname(getString(R.string.menu_video));
+//        if (!list.contains(channelVideo)) {
+//            list.add(0, channelVideo);
+//            Log.d(getLogTag(), "add channelVideo");
+//        }
+//        //	图集
+//        NewsChannelBean channelImageAlbum = new NewsChannelBean();
+//        channelImageAlbum.setTid("" + NewsChannelBean.TYPE_IMAGE_ALBUM);
+//        channelImageAlbum.setType(NewsChannelBean.TYPE_IMAGE_ALBUM);
+//        channelImageAlbum.setCnname(getString(R.string.menu_album));
+//        if (!list.contains(channelImageAlbum)) {
+//            list.add(0, channelImageAlbum);
+//            Log.d(getLogTag(), "add channelImageAlbum");
+//        }
+
+
+        // 添加推荐频道
+        NewsChannelBean channelRecommend = new NewsChannelBean();
+        channelRecommend.setTid("" + NewsChannelBean.TYPE_RECOMMEND);
+        channelRecommend.setType(NewsChannelBean.TYPE_RECOMMEND);
+        channelRecommend.setCnname(getString(R.string.recommend));
+        if (!list.contains(channelRecommend)) {
+            list.add(0, channelRecommend);
+        }
+
+        //	专题
+        NewsChannelBean channelSubject = new NewsChannelBean();
+        channelSubject.setTid("" + NewsChannelBean.TYPE_SUBJECT);
+        channelSubject.setType(NewsChannelBean.TYPE_SUBJECT);
+        channelSubject.setCnname(getString(R.string.menu_subject));
+        if (!list.contains(channelSubject)) {
+            list.add(0, channelSubject);
+            Log.d(getLogTag(), "add channelSubject");
+        }
+    }
+
+
 }

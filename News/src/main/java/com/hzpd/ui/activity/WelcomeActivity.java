@@ -20,6 +20,7 @@ import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.db.PushBeanDB;
 import com.hzpd.modle.db.VideoItemBeanDb;
 import com.hzpd.modle.db.ZhuantiBeanDB;
+import com.hzpd.modle.event.RestartEvent;
 import com.hzpd.services.InitService;
 import com.hzpd.ui.App;
 import com.hzpd.ui.fragments.welcome.AdFlashFragment;
@@ -51,6 +52,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 
 /**
  * @author color
@@ -331,7 +333,7 @@ public class WelcomeActivity extends MWBaseActivity {
         if (!list.contains(channelRecommend)) {
             list.add(0, channelRecommend);
         }
-
     }
+
 
 }

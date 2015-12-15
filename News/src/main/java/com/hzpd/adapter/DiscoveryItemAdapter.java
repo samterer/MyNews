@@ -11,30 +11,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hzpd.custorm.CircleImageView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.DiscoveryItemBean;
-import com.hzpd.modle.MyCommentBean;
-import com.hzpd.modle.MycommentsBean;
-import com.hzpd.modle.MycommentsitemBean;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.TagBean;
-import com.hzpd.modle.VideoItemBean;
 import com.hzpd.ui.App;
-import com.hzpd.ui.activity.HtmlActivity;
-import com.hzpd.ui.activity.NewsAlbumActivity;
 import com.hzpd.ui.activity.NewsDetailActivity;
-import com.hzpd.ui.activity.VideoPlayerActivity;
-import com.hzpd.ui.widget.FontTextView;
-import com.hzpd.utils.AAnim;
-import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
-import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 
 public class DiscoveryItemAdapter extends ListBaseAdapter<DiscoveryItemBean> {
@@ -89,6 +76,7 @@ public class DiscoveryItemAdapter extends ListBaseAdapter<DiscoveryItemBean> {
                     , holder.discovery_iv_tag
                     , DisplayOptionFactory.getOption(OptionTp.Personal_center_News));
         }
+
         holder.tv_subscribe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
