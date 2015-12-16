@@ -23,8 +23,6 @@ import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.ui.activity.XF_PInfoActivity;
 import com.hzpd.ui.activity.ZQ_ReplyCommentActivity;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DBHelper;
@@ -33,7 +31,6 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
@@ -234,27 +231,14 @@ public class CommentListAdapter extends BaseAdapter {
                         }
                         Log.e("test", "点赞" + item.getCid());
                         Log.i(getLogTag(), "uid-" + spu.getUser().getUid() + "  mType-News" + " nid-" + item.getCid());
-                        String station = SharePreferecesUtils.getParam(parent.getContext(), StationConfig.STATION, "def").toString();
-                        String siteid = null;
-                        String prise_url = null;
-                        if (station.equals(StationConfig.DEF)) {
-                            siteid = InterfaceJsonfile.SITEID;
-                            prise_url = InterfaceJsonfile.PRISE1;
-                        } else if (station.equals(StationConfig.YN)) {
-                            siteid = InterfaceJsonfile_YN.SITEID;
-                            prise_url = InterfaceJsonfile_YN.PRISE1;
-                        } else if (station.equals(StationConfig.TW)) {
-                            siteid = InterfaceJsonfile_TW.SITEID;
-                            prise_url = InterfaceJsonfile_TW.PRISE1;
-                        }
                         final RequestParams params = RequestParamsUtils.getParamsWithU();
                         params.addBodyParameter("uid", spu.getUser().getUid());
                         params.addBodyParameter("type", "News");
                         params.addBodyParameter("nid", item.getCid());
-                        params.addBodyParameter("siteid", siteid);
+                        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
 
                         httpUtils.send(HttpRequest.HttpMethod.POST
-                                , prise_url//InterfaceApi.mPraise
+                                , InterfaceJsonfile.PRISE1//InterfaceApi.mPraise
                                 , params
                                 , new RequestCallBack<String>() {
                             @Override
@@ -334,27 +318,14 @@ public class CommentListAdapter extends BaseAdapter {
             return;
         }
         Log.i(getLogTag(), "uid-" + spu.getUser().getUid() + "  mType-News" + " nid-" + cb.getCid());
-        String station = SharePreferecesUtils.getParam(context, StationConfig.STATION, "def").toString();
-        String siteid = null;
-        String prise_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            siteid = InterfaceJsonfile.SITEID;
-            prise_url = InterfaceJsonfile.PRISE1;
-        } else if (station.equals(StationConfig.YN)) {
-            siteid = InterfaceJsonfile_YN.SITEID;
-            prise_url = InterfaceJsonfile_YN.PRISE1;
-        } else if (station.equals(StationConfig.TW)) {
-            siteid = InterfaceJsonfile_TW.SITEID;
-            prise_url = InterfaceJsonfile_TW.PRISE1;
-        }
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("uid", spu.getUser().getUid());
         params.addBodyParameter("type", "News");
         params.addBodyParameter("nid", cb.getCid());
-        params.addBodyParameter("siteid", siteid);
+        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
 
         httpUtils.send(HttpRequest.HttpMethod.POST
-                , prise_url//InterfaceApi.mPraise
+                , InterfaceJsonfile.PRISE1//InterfaceApi.mPraise
                 , params
                 , new RequestCallBack<String>() {
             @Override

@@ -352,7 +352,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             case 200: {
                 List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
                 if (null != list && list.size() > 0) {
-
+                    newsListDbTask.saveList(list, null);
                     for (NewsBean bean : list) {
                         bean.setCnname(channelbean.getCnname());
                     }
@@ -372,7 +372,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                         if (list.size() > 7) {
                             adapter.removeOld();
                         }
-                        newsListDbTask.saveList(list, null);
                     }
                     if (list.size() == pageSize) {
                         adapter.showLoading = true;
@@ -415,7 +414,8 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 + "channel_" + channelbean.getTid()
                 + File.separator + "flash");
         String path = InterfaceJsonfile.FLASH + channelbean.getTid();
-
+        String country = SPUtil.getCountry();
+        path = path.replace("#country#", country.toLowerCase());
         HttpHandler httpHandler = httpUtils.download(
                 path
                 , pageFile.getAbsolutePath()

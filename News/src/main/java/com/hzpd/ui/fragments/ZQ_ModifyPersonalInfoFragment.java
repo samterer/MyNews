@@ -18,12 +18,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.UserBean;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -77,31 +73,14 @@ public class ZQ_ModifyPersonalInfoFragment extends BaseFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
-		String PWDTYPE =null;
-		int NICKNAME=1;
-		int GENDER=2;
-		if (station.equals(StationConfig.DEF)){
-			NICKNAME=InterfaceJsonfile.NICKNAME;
-			GENDER=InterfaceJsonfile.GENDER;
-			PWDTYPE =InterfaceJsonfile.PWDTYPE;
-		}else if (station.equals(StationConfig.YN)){
-			NICKNAME=InterfaceJsonfile_YN.NICKNAME;
-			GENDER=InterfaceJsonfile_YN.GENDER;
-			PWDTYPE = InterfaceJsonfile_YN.PWDTYPE;
-		}else if (station.equals(StationConfig.TW)){
-			NICKNAME=InterfaceJsonfile_TW.NICKNAME;
-			GENDER=InterfaceJsonfile_TW.GENDER;
-			PWDTYPE = InterfaceJsonfile_TW.PWDTYPE;
-		}
 		Bundle bundle = getArguments();
-		type = bundle.getInt(PWDTYPE, NICKNAME);
-		if (NICKNAME == type) {
+		type = bundle.getInt(InterfaceJsonfile.PWDTYPE, InterfaceJsonfile.NICKNAME);
+		if (InterfaceJsonfile.NICKNAME == type) {
 			mi_ll_nick.setVisibility(View.VISIBLE);
 			mi_ll_gender.setVisibility(View.GONE);
 			stitle_tv_content.setText(R.string.prompt_change_nickname);
 			mi_et_context.setText(spu.getUser().getNickname());
-		} else if (GENDER == type) {
+		} else if (InterfaceJsonfile.GENDER == type) {
 
 			mi_ll_nick.setVisibility(View.GONE);
 			mi_ll_gender.setVisibility(View.VISIBLE);
@@ -131,15 +110,6 @@ public class ZQ_ModifyPersonalInfoFragment extends BaseFragment {
 
 	@OnClick(R.id.mi_bt_comfirm)
 	private void confirm(View v) {
-		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
-		String CHANGEPINFO_url =null;
-		if (station.equals(StationConfig.DEF)){
-			CHANGEPINFO_url =InterfaceJsonfile.CHANGEPINFO;
-		}else if (station.equals(StationConfig.YN)){
-			CHANGEPINFO_url = InterfaceJsonfile_YN.CHANGEPINFO;
-		}else if (station.equals(StationConfig.TW)){
-			CHANGEPINFO_url = InterfaceJsonfile_TW.CHANGEPINFO;
-		}
 		RequestParams params = RequestParamsUtils.getParamsWithU();
 		params.addBodyParameter("token", spu.getUser().getToken());
 		if (1 == type) {
@@ -168,7 +138,7 @@ public class ZQ_ModifyPersonalInfoFragment extends BaseFragment {
 		}
 
 		httpUtils.send(HttpMethod.POST
-				, CHANGEPINFO_url//InterfaceApi.modify_gender
+				, InterfaceJsonfile.CHANGEPINFO//InterfaceApi.modify_gender
 				, params
 				, new RequestCallBack<String>() {
 			@Override

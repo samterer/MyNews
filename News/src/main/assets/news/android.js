@@ -5,7 +5,7 @@ if(typeof close_lazyload == 'undefined'){
 }
 if(typeof url_prefix == 'undefined'){
 	//加载图片的客户端协议
-	url_prefix = "content:/com.hzpd.provider.ImageProvider/";
+	url_prefix = "content://com.hzpd.provider.ImageProvider/";
 }
 
 function largeImg(){
@@ -27,9 +27,4 @@ function initPage(){
 
 // TODO
 document.addEventListener("DOMContentLoaded",initPage,false);
-/**
-* window.load相关动作
-*/
-function bodyLoad(){
-}
-window.addEventListener("load",bodyLoad(), false);
+

@@ -1,13 +1,8 @@
 package com.hzpd.ui.activity;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,15 +10,12 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
-import com.hzpd.utils.SystemBarTintManager;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -112,26 +104,13 @@ public class ZQ_FeedBackActivity extends MBaseActivity {
             TUtils.toast(getString(R.string.toast_email_cannot_be_empty));//不能为空
             return;
         }
-        String station = SharePreferecesUtils.getParam(ZQ_FeedBackActivity.this, StationConfig.STATION, "def").toString();
-        String siteid = null;
-        String feedback_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            siteid = InterfaceJsonfile.SITEID;
-            feedback_url = InterfaceJsonfile.feedback;
-        } else if (station.equals(StationConfig.YN)) {
-            siteid = InterfaceJsonfile_YN.SITEID;
-            feedback_url = InterfaceJsonfile_YN.feedback;
-        } else if (station.equals(StationConfig.TW)) {
-            siteid = InterfaceJsonfile_TW.SITEID;
-            feedback_url = InterfaceJsonfile_TW.feedback;
-        }
         RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("siteid", siteid);
+        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("Email", email);
         params.addBodyParameter("content", content);
 
         httpUtils.send(HttpMethod.POST
-                , feedback_url
+                , InterfaceJsonfile.feedback
                 , params
                 , new RequestCallBack<String>() {
             @Override

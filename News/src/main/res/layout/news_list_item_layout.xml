@@ -37,7 +37,6 @@
                     android:id="@+id/lineners"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/newsitem_img"
                     android:minHeight="@dimen/main_image_item_layout"
                     android:orientation="vertical">
 

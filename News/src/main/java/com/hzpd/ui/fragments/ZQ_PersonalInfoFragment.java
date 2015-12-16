@@ -26,16 +26,12 @@ import com.hzpd.modle.UserBean;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.PersonalInfoActivity;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.CipherUtils;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -171,17 +167,8 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 			TUtils.toast(getString(R.string.toast_cannot_modify_nickname));
 			return;
 		}
-		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
-		int NICKNAME_url =1;
-		if (station.equals(StationConfig.DEF)){
-			NICKNAME_url =InterfaceJsonfile.NICKNAME;
-		}else if (station.equals(StationConfig.YN)){
-			NICKNAME_url = InterfaceJsonfile_YN.NICKNAME;
-		}else if (station.equals(StationConfig.TW)){
-			NICKNAME_url = InterfaceJsonfile_TW.NICKNAME;
-		}
 
-		((PersonalInfoActivity) activity).toModifyPinfoFm(NICKNAME_url);
+		((PersonalInfoActivity) activity).toModifyPinfoFm(InterfaceJsonfile.NICKNAME);
 	}
 
 	@OnClick(R.id.pi_gender_tr)
@@ -190,18 +177,7 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 			TUtils.toast(getString(R.string.toast_cannot_modify_sex));
 			return;
 		}
-
-		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
-		int GENDER_url =2;
-		if (station.equals(StationConfig.DEF)){
-			GENDER_url =InterfaceJsonfile.NICKNAME;
-		}else if (station.equals(StationConfig.YN)){
-			GENDER_url = InterfaceJsonfile_YN.NICKNAME;
-		}else if (station.equals(StationConfig.TW)){
-			GENDER_url = InterfaceJsonfile_TW.NICKNAME;
-		}
-
-		((PersonalInfoActivity) activity).toModifyPinfoFm(GENDER_url);
+		((PersonalInfoActivity) activity).toModifyPinfoFm(InterfaceJsonfile.NICKNAME);
 	}
 
 	/**
@@ -294,21 +270,12 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 			e.printStackTrace();
 		}
 		lg_pi_iv_touxiang.setImageBitmap(photo);
-		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
-		String CHANGEPINFO_url =null;
-		if (station.equals(StationConfig.DEF)){
-			CHANGEPINFO_url =InterfaceJsonfile.CHANGEPINFO;
-		}else if (station.equals(StationConfig.YN)){
-			CHANGEPINFO_url = InterfaceJsonfile_YN.CHANGEPINFO;
-		}else if (station.equals(StationConfig.TW)){
-			CHANGEPINFO_url = InterfaceJsonfile_TW.CHANGEPINFO;
-		}
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("token", spu.getUser().getToken());
 		params.addBodyParameter("avatar", CipherUtils.base64Encode(photo));
 
 		httpUtils.send(HttpMethod.POST
-				, CHANGEPINFO_url//InterfaceApi.modify_gender
+				, InterfaceJsonfile.CHANGEPINFO//InterfaceApi.modify_gender
 				, params
 				, new RequestCallBack<String>() {
 			@Override

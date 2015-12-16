@@ -13,14 +13,10 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.SubjectNumber;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.SPUtil;
-import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.ViewHolder;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -113,15 +109,6 @@ public class ZhuantiListAdapter extends ListBaseAdapter<NewsBean> {
 
 	private void getCounts(String nid) {
 
-		String station= SharePreferecesUtils.getParam(context, StationConfig.STATION, "def").toString();
-		String subjectNum =null;
-		if (station.equals(StationConfig.DEF)){
-			subjectNum =InterfaceJsonfile.SITEID;
-		}else if (station.equals(StationConfig.YN)){
-			subjectNum = InterfaceJsonfile_YN.SITEID;
-		}else if (station.equals(StationConfig.TW)){
-			subjectNum = InterfaceJsonfile_TW.SITEID;
-		}
 
 
 		RequestParams params = new RequestParams();
@@ -129,7 +116,7 @@ public class ZhuantiListAdapter extends ListBaseAdapter<NewsBean> {
 
 		HttpUtils httpUtils = SPUtil.getHttpUtils();
 		httpUtils.send(HttpMethod.POST
-				, subjectNum
+				, InterfaceJsonfile.SITEID
 				, params
 				, new RequestCallBack<String>() {
 			@Override

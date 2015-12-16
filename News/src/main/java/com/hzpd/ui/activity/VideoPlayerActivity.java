@@ -41,8 +41,6 @@ import com.hzpd.modle.VideoDetailBean;
 import com.hzpd.modle.VideoItemBean;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.Constant;
 import com.hzpd.utils.EventUtils;
@@ -52,8 +50,6 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
@@ -224,18 +220,9 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
 
     // 来自浏览器
     private void getVideoItemBean(String vid) {
-        String station = SharePreferecesUtils.getParam(VideoPlayerActivity.this, StationConfig.STATION, "def").toString();
-        String videoItem_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            videoItem_url = InterfaceJsonfile.videoItem;
-        } else if (station.equals(StationConfig.YN)) {
-            videoItem_url = InterfaceJsonfile_YN.videoItem;
-        } else if (station.equals(StationConfig.TW)) {
-            videoItem_url = InterfaceJsonfile_TW.videoItem;
-        }
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("vid", vid);
-        httpUtils.send(HttpMethod.POST, videoItem_url, params, new RequestCallBack<String>() {
+        httpUtils.send(HttpMethod.POST, InterfaceJsonfile.videoItem, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 String json = responseInfo.result;
@@ -311,26 +298,13 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
             }
             return;
         }
-        String station = SharePreferecesUtils.getParam(VideoPlayerActivity.this, StationConfig.STATION, "def").toString();
-        String siteid = null;
-        String ADDCOLLECTION_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            siteid = InterfaceJsonfile.SITEID;
-            ADDCOLLECTION_url = InterfaceJsonfile.ADDCOLLECTION;
-        } else if (station.equals(StationConfig.YN)) {
-            siteid = InterfaceJsonfile_YN.SITEID;
-            ADDCOLLECTION_url = InterfaceJsonfile_YN.ADDCOLLECTION;
-        } else if (station.equals(StationConfig.TW)) {
-            siteid = InterfaceJsonfile_TW.SITEID;
-            ADDCOLLECTION_url = InterfaceJsonfile_TW.ADDCOLLECTION;
-        }
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("type", "3");
         params.addBodyParameter("typeid", vib.getVid());
-        params.addBodyParameter("siteid", siteid);
+        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("data", vib.getJson_url());
 
-        httpUtils.send(HttpMethod.POST, ADDCOLLECTION_url// InterfaceApi.addcollection
+        httpUtils.send(HttpMethod.POST, InterfaceJsonfile.ADDCOLLECTION// InterfaceApi.addcollection
                 , params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -373,20 +347,11 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
             return;
         }
         if (null != spu.getUser()) {
-            String station = SharePreferecesUtils.getParam(VideoPlayerActivity.this, StationConfig.STATION, "def").toString();
-            String ISCELLECTION_url = null;
-            if (station.equals(StationConfig.DEF)) {
-                ISCELLECTION_url = InterfaceJsonfile.ISCELLECTION;
-            } else if (station.equals(StationConfig.YN)) {
-                ISCELLECTION_url = InterfaceJsonfile_YN.ISCELLECTION;
-            } else if (station.equals(StationConfig.TW)) {
-                ISCELLECTION_url = InterfaceJsonfile_TW.ISCELLECTION;
-            }
             RequestParams params = new RequestParams();
             params.addBodyParameter("uid", spu.getUser().getUid());
             params.addBodyParameter("typeid", vib.getVid());
             params.addBodyParameter("type", "3");
-            httpUtils.send(HttpMethod.POST, ISCELLECTION_url, params, new RequestCallBack<String>() {
+            httpUtils.send(HttpMethod.POST, InterfaceJsonfile.ISCELLECTION, params, new RequestCallBack<String>() {
                 @Override
                 public void onSuccess(ResponseInfo<String> responseInfo) {
                     LogUtils.i("isCollection result-->" + responseInfo.result);
@@ -780,20 +745,11 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
             return;
         }
         EventUtils.sendReadAtical(activity);
-        String station = SharePreferecesUtils.getParam(VideoPlayerActivity.this, StationConfig.STATION, "def").toString();
-        String commentsConts_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            commentsConts_url = InterfaceJsonfile.commentsConts;
-        } else if (station.equals(StationConfig.YN)) {
-            commentsConts_url = InterfaceJsonfile_YN.commentsConts;
-        } else if (station.equals(StationConfig.TW)) {
-            commentsConts_url = InterfaceJsonfile_TW.commentsConts;
-        }
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("type", Constant.TYPE.VideoA.toString());
         params.addBodyParameter("nids", vib.getVid());
         HttpUtils httpUtils = SPUtil.getHttpUtils();
-        httpUtils.send(HttpMethod.POST, commentsConts_url, params, new RequestCallBack<String>() {
+        httpUtils.send(HttpMethod.POST, InterfaceJsonfile.commentsConts, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 LogUtils.i("getCommentsCounts-->" + responseInfo.result);

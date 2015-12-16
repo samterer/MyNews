@@ -1,18 +1,15 @@
 package com.hzpd.ui.activity;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,8 +17,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -49,8 +44,6 @@ import com.hzpd.modle.NewsJumpBean;
 import com.hzpd.modle.ReplayBean;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.Constant;
 import com.hzpd.utils.DisplayOptionFactory;
@@ -60,9 +53,6 @@ import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
-import com.hzpd.utils.SystemBarTintManager;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
@@ -669,28 +659,15 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
             }
             return;
         }
-        String station = SharePreferecesUtils.getParam(NewsAlbumActivity.this, StationConfig.STATION, "def").toString();
-        String siteid = null;
-        String ADDCOLLECTION_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            siteid = InterfaceJsonfile.SITEID;
-            ADDCOLLECTION_url = InterfaceJsonfile.ADDCOLLECTION;
-        } else if (station.equals(StationConfig.YN)) {
-            siteid = InterfaceJsonfile_YN.SITEID;
-            ADDCOLLECTION_url = InterfaceJsonfile_YN.ADDCOLLECTION;
-        } else if (station.equals(StationConfig.TW)) {
-            siteid = InterfaceJsonfile_TW.SITEID;
-            ADDCOLLECTION_url = InterfaceJsonfile_TW.ADDCOLLECTION;
-        }
         LogUtils.i("Type-->" + "  Fid-->" + imgListBean.getPid());
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("type", "2");
         params.addBodyParameter("typeid", imgListBean.getPid());
-        params.addBodyParameter("siteid", siteid);
+        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("data", imgListBean.getJson_url());
 
         httpUtils.send(HttpMethod.POST
-                , ADDCOLLECTION_url//InterfaceApi.addcollection
+                , InterfaceJsonfile.ADDCOLLECTION//InterfaceApi.addcollection
                 , params
                 , new RequestCallBack<String>() {
             @Override
@@ -873,26 +850,13 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
             setVisible();
             return;
         }
-        String station = SharePreferecesUtils.getParam(NewsAlbumActivity.this, StationConfig.STATION, "def").toString();
-        String siteid = null;
-        String bAlbum_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            siteid = InterfaceJsonfile.SITEID;
-            bAlbum_url = InterfaceJsonfile.bAlbum;
-        } else if (station.equals(StationConfig.YN)) {
-            siteid = InterfaceJsonfile_YN.SITEID;
-            bAlbum_url = InterfaceJsonfile_YN.bAlbum;
-        } else if (station.equals(StationConfig.TW)) {
-            siteid = InterfaceJsonfile_TW.SITEID;
-            bAlbum_url = InterfaceJsonfile_TW.bAlbum;
-        }
         RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("siteid", siteid);
+        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("id", pid);
 
         httpUtils.send(
                 HttpMethod.POST
-                , bAlbum_url
+                , InterfaceJsonfile.bAlbum
                 , params
                 , new RequestCallBack<String>() {
                     @Override
@@ -995,21 +959,12 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
         }
 
         EventUtils.sendReadAtical(activity);
-        String station = SharePreferecesUtils.getParam(NewsAlbumActivity.this, StationConfig.STATION, "def").toString();
-        String commentsConts_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            commentsConts_url = InterfaceJsonfile.commentsConts;
-        } else if (station.equals(StationConfig.YN)) {
-            commentsConts_url = InterfaceJsonfile_YN.commentsConts;
-        } else if (station.equals(StationConfig.TW)) {
-            commentsConts_url = InterfaceJsonfile_TW.commentsConts;
-        }
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("type", Constant.TYPE.AlbumA.toString());
         params.addBodyParameter("nids", imgListBean.getPid());
 
         httpUtils.send(HttpMethod.POST
-                , commentsConts_url
+                ,  InterfaceJsonfile.commentsConts
                 , params
                 , new RequestCallBack<String>() {
             @Override

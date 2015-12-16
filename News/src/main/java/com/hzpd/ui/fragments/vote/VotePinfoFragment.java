@@ -14,13 +14,9 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.vote.Vote_detailMultiPicBean;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -136,22 +132,12 @@ public class VotePinfoFragment extends BaseFragment {
 
 	private void getInfoFromServer() {
 
-		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
-		String mOptbyoptid_url =null;
-		if (station.equals(StationConfig.DEF)){
-			mOptbyoptid_url =InterfaceJsonfile.mOptbyoptid;
-		}else if (station.equals(StationConfig.YN)){
-			mOptbyoptid_url = InterfaceJsonfile_YN.mOptbyoptid;
-		}else if (station.equals(StationConfig.TW)){
-			mOptbyoptid_url = InterfaceJsonfile_TW.mOptbyoptid;
-		}
-
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("optid", optid);
 		params.addBodyParameter("device", androidId);
 
 		httpUtils.send(HttpMethod.POST
-				, mOptbyoptid_url
+				, InterfaceJsonfile.mOptbyoptid
 				, params
 				, new RequestCallBack<String>() {
 			@Override

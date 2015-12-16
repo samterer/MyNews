@@ -17,16 +17,12 @@ import com.hzpd.hflt.wxapi.FacebookSharedUtil;
 import com.hzpd.modle.ActionDetailBean;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.CODE;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -131,19 +127,10 @@ public class ActionDetailFragment extends BaseFragment {
 
     private void getInfoFromSever() {
 
-        String station = SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
-        String actionDetail_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            actionDetail_url = InterfaceJsonfile.actionDetail;
-        } else if (station.equals(StationConfig.YN)) {
-            actionDetail_url = InterfaceJsonfile_YN.actionDetail;
-        } else if (station.equals(StationConfig.TW)) {
-            actionDetail_url = InterfaceJsonfile_TW.actionDetail;
-        }
 
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("id", id);
-        httpUtils.send(HttpMethod.POST, actionDetail_url, params, new RequestCallBack<String>() {
+        httpUtils.send(HttpMethod.POST, InterfaceJsonfile.actionDetail, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 LogUtils.i("action list result-->" + responseInfo.result);
@@ -236,4 +223,3 @@ public class ActionDetailFragment extends BaseFragment {
         });
     }
 }
-

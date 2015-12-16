@@ -24,11 +24,10 @@ public class DBHelper {
     private Context context;
 
 
-
     private DBHelper(Context mContext) {
         this.context = mContext;
         Log.e("test", "DBHelper collectionDBUitls ");
-        dbPath = this.context.getDatabasePath("hzpd").getAbsolutePath();
+        dbPath = this.context.getDatabasePath(SPUtil.getCountry()).getAbsolutePath();
         collectionDBUitls = DbUtils.create(context
                 , dbPath, App.collectiondbname);
         albumDBUitls = DbUtils.create(context
@@ -48,8 +47,6 @@ public class DBHelper {
                 , dbPath, App.userLogDb);
         pushListDbUtils = DbUtils.create(context
                 , dbPath, App.pushListDb);
-
-
     }
 
     public static synchronized DBHelper getInstance(Context context) {
@@ -60,6 +57,10 @@ public class DBHelper {
             instance = new DBHelper(context);
         }
         return instance;
+    }
+
+    public static synchronized void setInstance(Context context) {
+        instance = new DBHelper(context);
     }
 
     public DbUtils getCollectionDBUitls() {

@@ -1,13 +1,8 @@
 package com.hzpd.ui.activity;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -20,21 +15,14 @@ import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.event.UpdateNewsBeanDbEvent;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
-import com.hzpd.utils.SystemBarTintManager;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
-import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -180,19 +168,6 @@ public class ZQ_ReplyActivity extends MBaseActivity {
     private void sendComment(final String content, final String comcount) {
 
         spu.getUser();
-        String station = SharePreferecesUtils.getParam(ZQ_ReplyActivity.this, StationConfig.STATION, "def").toString();
-        String siteid = null;
-        String PUBLISHCOMMENT_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            siteid = InterfaceJsonfile.SITEID;
-            PUBLISHCOMMENT_url = InterfaceJsonfile.PUBLISHCOMMENT;
-        } else if (station.equals(StationConfig.YN)) {
-            siteid = InterfaceJsonfile_YN.SITEID;
-            PUBLISHCOMMENT_url = InterfaceJsonfile_YN.PUBLISHCOMMENT;
-        } else if (station.equals(StationConfig.TW)) {
-            siteid = InterfaceJsonfile_TW.SITEID;
-            PUBLISHCOMMENT_url = InterfaceJsonfile_TW.PUBLISHCOMMENT;
-        }
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("uid", spu.getUser().getUid());
 //        params.addBodyParameter("uid","53");
@@ -202,10 +177,10 @@ public class ZQ_ReplyActivity extends MBaseActivity {
         params.addBodyParameter("content", content);
         params.addBodyParameter("json_url", bean.getJsonUrl());
         params.addBodyParameter("smallimg", bean.getImgUrl());
-        params.addBodyParameter("siteid", siteid);
+        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
 
         httpUtils.send(HttpMethod.POST
-                , PUBLISHCOMMENT_url// InterfaceApi.mSendComment
+                ,  InterfaceJsonfile.PUBLISHCOMMENT// InterfaceApi.mSendComment
                 , params, new RequestCallBack<String>() {
                     @Override
                     public void onFailure(HttpException arg0, String arg1) {

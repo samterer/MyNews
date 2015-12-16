@@ -178,7 +178,7 @@
     <string name="prompt_send">发送</string>
     <string name="prompt_relevant">相关</string>
     <string name="prompt_login_now">立即登录</string>
-    <string name="prompt_collect">收藏</string>
+    <string name="prompt_collect">我的收藏</string>
     <string name="prompt_push">推送</string>
     <string name="prompt_daytime">白天</string>
     <string name="prompt_qrcode">二维码</string>

@@ -9,7 +9,7 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="22"
-        tools:overrideLibrary="com.facebook" />
+        tools:overrideLibrary="com.facebook,com.facebook.ads" />
 
     <!-- 极光推送自定义权限 -->
     <permission
@@ -103,7 +103,6 @@
         <activity
             android:name="com.hzpd.ui.activity.VideoPlayerActivity"
             android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
-            android:hardwareAccelerated="true"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.facebook.ads.NativeAd;
+import com.facebook.ads.NativeAdView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.UserBean;
 import com.hzpd.ui.App;
@@ -38,12 +40,55 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListe
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  * @author color
  *         程序配置
  */
 public class SPUtil {
+    public static Random random = new Random(System.currentTimeMillis());
+
+    public static String getCountry() {
+        return PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString("CountryCode", "id");
+    }
+
+    public static void setCountry(String country) {
+        if (!TextUtils.isEmpty(country)) {
+            country = country.toLowerCase();
+            PreferenceManager.getDefaultSharedPreferences(App.getInstance()).edit().putString("CountryCode", country).commit();
+
+            SharePreferecesUtils.init();
+            getInstance().msp = ACache.get(App.getInstance().getApplicationContext(), getCountry());
+            DBHelper.setInstance(App.getInstance());
+        }
+    }
+
+
+    public static View getRandomAdView(Context context, NativeAd nativeAd) {
+        View view = null;
+
+        if (nativeAd != null) {
+            int value = random.nextInt(5);
+            NativeAdView.Type type;
+            switch (value) {
+                case 1:
+                    type = NativeAdView.Type.HEIGHT_100;
+                    break;
+                case 2:
+                    type = NativeAdView.Type.HEIGHT_300;
+                    break;
+                case 3:
+                    type = NativeAdView.Type.HEIGHT_400;
+                    break;
+                default:
+                    type = NativeAdView.Type.HEIGHT_120;
+                    break;
+            }
+            view = NativeAdView.render(context, nativeAd, type);
+        }
+        return view;
+    }
 
     public static void clearAds(HashMap<String, NativeAd> ads) {
         if (ads != null) {
@@ -102,6 +147,10 @@ public class SPUtil {
         //httpUtils.configSoTimeout(2000);
         //httpUtils.configTimeout(5000);
         return httpUtils;
+    }
+
+    public static void addParams(Context context) {
+
     }
 
     /**
@@ -235,10 +284,9 @@ public class SPUtil {
     private UserBean user;
 
     private SPUtil() {
+        msp = ACache.get(App.getInstance().getApplicationContext(), getCountry());
         AssetManager assetManager = App.getInstance()
                 .getApplicationContext().getAssets();
-        msp = ACache.get(App.getInstance()
-                .getApplicationContext(), SETTINGS);
         typeFaceTitle = Typeface.createFromAsset(assetManager, "fonts/britannic-bold.ttf");
         typeFace = Typeface.createFromAsset(assetManager, "fonts/KievitPro-Regular.otf");
         typeFaceBold = Typeface.createFromAsset(assetManager, "fonts/KievitPro-Medium.otf");
@@ -434,4 +482,60 @@ public class SPUtil {
         msp.put("forumTitle", forumTitle);
     }
 
+
+    public static void setAtt(ImageView item_type_iv, String attname) {
+        if (!TextUtils.isEmpty(attname)) {
+            if (attname.equals("a")) {
+                item_type_iv.setVisibility(View.VISIBLE);
+                item_type_iv.setImageResource(R.drawable.zq_subscript_hot);
+            } else if (attname.equals("b")) {
+                item_type_iv.setVisibility(View.VISIBLE);
+                item_type_iv.setImageResource(R.drawable.zq_subscript_rekom);
+            } else if (attname.equals("c")) {
+                item_type_iv.setVisibility(View.VISIBLE);
+                item_type_iv.setImageResource(R.drawable.zq_subscript_kolom);
+            } else if (attname.equals("f")) {
+                item_type_iv.setVisibility(View.VISIBLE);
+                item_type_iv.setImageResource(R.drawable.zq_subscript_fokus);
+            } else if (attname.equals("h")) {
+                item_type_iv.setVisibility(View.VISIBLE);
+                item_type_iv.setImageResource(R.drawable.zq_subscript_xtend);
+            } else if (attname.equals("j")) {
+                item_type_iv.setVisibility(View.VISIBLE);
+                item_type_iv.setImageResource(R.drawable.zq_subscript_issue);
+            } else if (attname.equals("p")) {
+                item_type_iv.setVisibility(View.VISIBLE);
+                item_type_iv.setImageResource(R.drawable.zq_subscript_album);
+            } else if (attname.equals("s")) {
+                item_type_iv.setVisibility(View.VISIBLE);
+                item_type_iv.setImageResource(R.drawable.zq_subscript_video);
+            } else {
+                item_type_iv.setVisibility(View.GONE);
+            }
+        } else {
+            item_type_iv.setVisibility(View.GONE);
+        }
+    }
+
+    public static void setRtype(String rtype, ImageView nli_foot) {
+        if (rtype != null) {
+            //1新闻  2图集  3直播 4专题  5关联新闻 6视频 7引用
+            if ("2".equals(rtype)) {
+                nli_foot.setImageResource(R.drawable.zq_subscript_album);
+                nli_foot.setVisibility(View.VISIBLE);
+            } else if ("3".equals(rtype)) {
+                nli_foot.setImageResource(R.drawable.zq_subscript_live);
+                //				vhLargePic.nli_foot.setVisibility(View.VISIBLE);
+            } else if ("4".equals(rtype)) {
+                nli_foot.setImageResource(R.drawable.zq_subscript_issue);
+                nli_foot.setVisibility(View.VISIBLE);
+            } else if ("7".equals(rtype)) {
+                nli_foot.setImageResource(R.drawable.zq_subscript_html);
+                nli_foot.setVisibility(View.VISIBLE);
+            } else if ("6".equals(rtype)) {
+                nli_foot.setImageResource(R.drawable.zq_subscript_video);
+                nli_foot.setVisibility(View.VISIBLE);
+            }
+        }
+    }
 }

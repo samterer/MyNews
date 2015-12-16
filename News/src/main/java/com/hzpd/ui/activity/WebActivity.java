@@ -44,8 +44,10 @@ public class WebActivity extends MBaseActivity {
 
     @Override
     protected void onDestroy() {
+        webView.loadUrl("about:blank");
+        webView.destroy();
+        webView = null;
         super.onDestroy();
-        App.getInstance().getRefWatcher().watch(this);
     }
 
     public final static String KEY_URL = "key_url";

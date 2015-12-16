@@ -14,13 +14,9 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.LotteryDrawBean;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -96,22 +92,12 @@ public class ActionLotteryFragment extends BaseFragment {
 	}
 
 	private void getInfo() {
-
-		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
-		String drawPrice_url =null;
-		if (station.equals(StationConfig.DEF)){
-			drawPrice_url =InterfaceJsonfile.drawPrice;
-		}else if (station.equals(StationConfig.YN)){
-			drawPrice_url = InterfaceJsonfile_YN.drawPrice;
-		}else if (station.equals(StationConfig.TW)){
-			drawPrice_url = InterfaceJsonfile_TW.drawPrice;
-		}
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("device", androidId);
 		params.addBodyParameter("subjectid", subjectid);
 
 		httpUtils.send(HttpMethod.POST
-				, drawPrice_url
+				, InterfaceJsonfile.drawPrice
 				, params
 				, new RequestCallBack<String>() {
 			@Override

@@ -19,12 +19,8 @@ import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.db.ZhuantiDetailListDbTask;
 import com.lidroid.xutils.exception.HttpException;
@@ -219,28 +215,15 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
     //获取专题子分类list
     public void getServerList(final SubjectItemColumnsBean columnid) {
 
-        String station = SharePreferecesUtils.getParam(ZhuanTiActivity.this, StationConfig.STATION, "def").toString();
-        String siteid = null;
-        String NEWSLIST_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            siteid = InterfaceJsonfile.SITEID;
-            NEWSLIST_url = InterfaceJsonfile.NEWSLIST;
-        } else if (station.equals(StationConfig.YN)) {
-            siteid = InterfaceJsonfile_YN.SITEID;
-            NEWSLIST_url = InterfaceJsonfile_YN.NEWSLIST;
-        } else if (station.equals(StationConfig.TW)) {
-            siteid = InterfaceJsonfile_TW.SITEID;
-            NEWSLIST_url = InterfaceJsonfile_TW.NEWSLIST;
-        }
         RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("siteid", siteid);
+        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("columnid", columnid.getCid());
         params.addBodyParameter("Page", "" + page);
         params.addBodyParameter("PageSize", "" + pageSize);
         params.addBodyParameter("update_time", spu.getCacheUpdatetime());
 
         httpUtils.send(HttpMethod.POST
-                , NEWSLIST_url
+                , InterfaceJsonfile.NEWSLIST
                 , params
                 , new RequestCallBack<String>() {
             @Override

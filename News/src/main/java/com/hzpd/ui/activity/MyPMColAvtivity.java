@@ -31,15 +31,11 @@ import com.hzpd.modle.NewsItemBeanForCollection;
 import com.hzpd.modle.PushmsgBean;
 import com.hzpd.modle.VideoItemBean;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
@@ -145,7 +141,7 @@ public class MyPMColAvtivity extends MBaseActivity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 if ("pushmsg".equals(type)) {
-                    pushmsgItemclick(parent, view, position, id);
+
                 } else {
                     mycollectionItemclick(parent, view, position, id);
                 }
@@ -156,7 +152,7 @@ public class MyPMColAvtivity extends MBaseActivity {
             @Override
             public void run() {
                 if ("pushmsg".equals(type)) {
-                    getPushmsgInfoFromServer();
+
                 } else {
                     colladAdapter.clear();
                     getDbCache();
@@ -164,85 +160,6 @@ public class MyPMColAvtivity extends MBaseActivity {
             }
         }, 500);
 
-    }
-
-    private void getPushmsgInfoFromServer() {
-        if (null == spu.getUser()) {
-            return;
-        }
-        RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("Page", Page + "");
-        params.addBodyParameter("PageSize", PageSize + "");
-
-        httpUtils.send(HttpMethod.POST
-                , ""
-                , params
-                , new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                LogUtils.i("tsbl--list-->" + responseInfo.result);
-                JSONObject obj = null;
-                try {
-                    obj = JSONObject.parseObject(responseInfo.result);
-                } catch (Exception e) {
-                    return;
-                }
-
-                try {
-                    if (200 == obj.getIntValue("code")) {
-                        JSONArray array = obj.getJSONArray("data");
-                        LogUtils.i("array-->" + array.toJSONString());
-                        ArrayList<PushmsgBean> list = (ArrayList<PushmsgBean>) JSONArray.parseArray(array.toJSONString(), PushmsgBean.class);
-                        LogUtils.i("listsize-->" + list.size());
-
-                        pmgadapter.appendData(list, mFlagRefresh);
-
-                    } else {
-                        if (!mFlagRefresh) {
-                            Page--;
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                mFlagRefresh = false;
-            }
-
-            @Override
-            public void onFailure(HttpException error, String msg) {
-                Log.i("push", msg);
-                if (!mFlagRefresh) {
-                    Page--;
-                }
-                mFlagRefresh = false;
-            }
-        });
-    }
-
-    private void pushmsgItemclick(AdapterView<?> parent, View view,
-                                  int position, long id) {
-
-
-        PushmsgBean pb = (PushmsgBean) pmgadapter.getItem(position);
-        Intent intent = new Intent();
-        boolean flag = false;//是否是预定类型
-
-        if ("1".equals(pb.getAtype())) {//
-            intent.setClass(MyPMColAvtivity.this, NewsDetailActivity.class);
-            Bundle mBundle = new Bundle();
-            mBundle.putString("nid", pb.getArticleid());//
-            mBundle.putString("type", "1");
-            mBundle.putString("commentCount", pb.getComcount());
-            intent.putExtras(mBundle);
-            flag = true;
-        }
-
-        if (!flag) {
-            return;
-        }
-
-        startActivity(intent);
-        AAnim.ActivityStartAnimation(activity);
     }
 
     private void mycollectionItemclick(AdapterView<?> parent, View view,
@@ -267,7 +184,6 @@ public class MyPMColAvtivity extends MBaseActivity {
         LogUtils.i("type-->" + cb.getType());
         if ("1".equals(cb.getType())) {//
             intent.setClass(MyPMColAvtivity.this, NewsDetailActivity.class);
-
             NewsBean nb = new NewsBean();
             nb.setNid(cdb.getNid());
             nb.setSid("0");
@@ -296,7 +212,6 @@ public class MyPMColAvtivity extends MBaseActivity {
             flag = true;
         } else if ("4".equals(cb.getType())) {
             intent.setClass(MyPMColAvtivity.this, HtmlActivity.class);
-
             NewsBean nb = new NewsBean();
             nb.setCopyfrom(cdb.getCopyfrom());
             nb.setFav(cdb.getFav());
@@ -394,15 +309,13 @@ public class MyPMColAvtivity extends MBaseActivity {
     //获取数据
     private void getCollectionInfoFromServer() {
         if (null != spu.getUser()) { //登录
-            String siteid = InterfaceJsonfile.SITEID;
-            String COLLECTIONLIST_url = InterfaceJsonfile.COLLECTIONLIST;
             RequestParams params = RequestParamsUtils.getParamsWithU();
             params.addBodyParameter("page", Page + "");
             params.addBodyParameter("pagesize", PageSize + "");
-            params.addBodyParameter("siteid", siteid);
+            params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
 
             httpUtils.send(HttpMethod.POST
-                    , COLLECTIONLIST_url//InterfaceApi.collection
+                    , InterfaceJsonfile.COLLECTIONLIST//InterfaceApi.collection
                     , params
                     , new RequestCallBack<String>() {
                 @Override
@@ -483,23 +396,13 @@ public class MyPMColAvtivity extends MBaseActivity {
                         TUtils.toast(getString(R.string.toast_delete_failed));
                     }
 
-
                     //网络获取
                     if (spu.getUser() != null) {
-                        String station = SharePreferecesUtils.getParam(MyPMColAvtivity.this, StationConfig.STATION, "def").toString();
-                        String DELETECOLLECTION_url = null;
-                        if (station.equals(StationConfig.DEF)) {
-                            DELETECOLLECTION_url = InterfaceJsonfile.DELETECOLLECTION;
-                        } else if (station.equals(StationConfig.YN)) {
-                            DELETECOLLECTION_url = InterfaceJsonfile_YN.DELETECOLLECTION;
-                        } else if (station.equals(StationConfig.TW)) {
-                            DELETECOLLECTION_url = InterfaceJsonfile_TW.DELETECOLLECTION;
-                        }
                         RequestParams pa = RequestParamsUtils.getParamsWithU();
                         pa.addBodyParameter("id", cb.getId());
 
                         httpUtils.send(HttpMethod.POST
-                                , DELETECOLLECTION_url//InterfaceApi.deletecollection
+                                , InterfaceJsonfile.DELETECOLLECTION//InterfaceApi.deletecollection
                                 , pa
                                 , new RequestCallBack<String>() {
 

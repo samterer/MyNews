@@ -27,16 +27,12 @@ import com.hzpd.ui.interfaces.I_Control;
 import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.DataCleanManager;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.db.AlbumListDbTask;
 import com.lidroid.xutils.ViewUtils;
@@ -202,30 +198,15 @@ public class NewsAlbumFragment extends BaseFragment implements I_Control {
 	@Override
 	public void getServerList(String nids) {
 		LogUtils.i("ids-->" + nids);
-		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
-		String siteid=null;
-		String ALBUMLIST_url =null;
-		if (station.equals(StationConfig.DEF)){
-			siteid=InterfaceJsonfile.SITEID;
-			ALBUMLIST_url =InterfaceJsonfile.ALBUMLIST;
-		}else if (station.equals(StationConfig.YN)){
-			siteid= InterfaceJsonfile_YN.SITEID;
-			ALBUMLIST_url = InterfaceJsonfile_YN.ALBUMLIST;
-		}else if (station.equals(StationConfig.TW)){
-			siteid= InterfaceJsonfile_TW.SITEID;
-			ALBUMLIST_url = InterfaceJsonfile_TW.ALBUMLIST;
-		}
 		RequestParams params = RequestParamsUtils.getParams();
-		params.addBodyParameter("siteid", siteid);
+		params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
 		params.addBodyParameter("ids", nids);
 		params.addBodyParameter("Page", "" + page);
 		params.addBodyParameter("PageSize", "" + pageSize);
 		params.addBodyParameter("update_time", spu.getCacheUpdatetime());
 
-		LogUtils.e("图集"+ALBUMLIST_url);
-
 		httpUtils.send(HttpMethod.POST
-				, ALBUMLIST_url
+				, InterfaceJsonfile.ALBUMLIST
 				, params
 				, new RequestCallBack<String>() {
 			@Override

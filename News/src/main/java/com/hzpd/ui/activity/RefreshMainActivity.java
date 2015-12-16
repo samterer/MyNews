@@ -21,12 +21,8 @@ import com.hzpd.custorm.RefreshLayout;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.CollectionJsonBean;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.SystemBarTintManager;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -199,26 +195,13 @@ public class RefreshMainActivity extends MBaseActivity {
     private void getCollectionInfoFromServer() {
         if (null != spu.getUser()) { //未登录
             LogUtils.i("uid-->" + spu.getUser().getUid());
-            String station = SharePreferecesUtils.getParam(RefreshMainActivity.this, StationConfig.STATION, "def").toString();
-            String siteid = null;
-            String COLLECTIONLIST_url = null;
-            if (station.equals(StationConfig.DEF)) {
-                siteid = InterfaceJsonfile.SITEID;
-                COLLECTIONLIST_url = InterfaceJsonfile.COLLECTIONLIST;
-            } else if (station.equals(StationConfig.YN)) {
-                siteid = InterfaceJsonfile_YN.SITEID;
-                COLLECTIONLIST_url = InterfaceJsonfile_YN.COLLECTIONLIST;
-            } else if (station.equals(StationConfig.TW)) {
-                siteid = InterfaceJsonfile_TW.SITEID;
-                COLLECTIONLIST_url = InterfaceJsonfile_TW.COLLECTIONLIST;
-            }
             RequestParams params = RequestParamsUtils.getParamsWithU();
             params.addBodyParameter("page", Page + "");
             params.addBodyParameter("pagesize", PageSize + "");
-            params.addBodyParameter("siteid", siteid);
+            params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
 
             httpUtils.send(HttpRequest.HttpMethod.POST
-                    , COLLECTIONLIST_url//InterfaceApi.collection
+                    , InterfaceJsonfile.COLLECTIONLIST//InterfaceApi.collection
                     , params
                     , new RequestCallBack<String>() {
                 @Override

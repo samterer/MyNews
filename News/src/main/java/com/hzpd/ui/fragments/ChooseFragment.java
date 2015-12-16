@@ -34,7 +34,6 @@ import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.event.FontSizeEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.NewsDetailActivity;
-import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.ui.widget.RecyclerViewPauseOnScrollListener;
 import com.hzpd.url.InterfaceJsonfile;
@@ -51,7 +50,6 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
-import com.lidroid.xutils.util.LogUtils;
 import com.melnykov.fab.FloatingActionButton;
 import com.nineoldandroids.view.ViewHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -319,7 +317,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         public void onClick(View v) {
             if (AvoidOnClickFastUtils.isFastDoubleClick())
                 return;
-            Log.i("","mFloatBtn.getWidth()--->"+mFloatBtn.getWidth()+":::mFloatBtn.getHeight()--->"+mFloatBtn.getHeight());
+            Log.i("", "mFloatBtn.getWidth()--->" + mFloatBtn.getWidth() + ":::mFloatBtn.getHeight()--->" + mFloatBtn.getHeight());
             // 显示反馈对话框
             showFeedback();
         }
@@ -411,12 +409,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                         }
                     }
                     if (null != list) {
-                        LogUtils.i(" getChooseNewsJson --> " + list.size());
-                        new NewsListDbTask(getActivity()).saveList(list, new I_Result() {
-                            @Override
-                            public void setResult(Boolean flag) {
-                            }
-                        });
+                        new NewsListDbTask(getActivity()).saveList(list, null);
                     }
                 }
             }
@@ -426,7 +419,6 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                 isRefresh = false;
                 pullRefresh = false;
                 mSwipeRefreshWidget.setRefreshing(false);
-//                loadMainUI();
             }
         });
     }

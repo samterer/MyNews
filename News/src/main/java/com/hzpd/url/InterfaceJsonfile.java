@@ -14,9 +14,9 @@ public class InterfaceJsonfile {
     //public static final String host1 = "http://ec2-52-76-26-225.ap-southeast-1.compute.amazonaws.com/1tcms";
     //private static final String host2 = "http://ec2-52-76-26-225.ap-southeast-1.compute.amazonaws.com/1tcms";
     //印尼
-    public static final String host1 = "http://www.nutnote.com/ltcms";
+    public static final String host1 = "http://api.nutnote.com";
     //本地测试
-//    public static final String host1 = "http://10.80.3.123/cmsv2";
+    //public static final String host1 = "http://10.80.3.123/cmsv2";
 
     // ========================================
     public static final String PATH_ROOT = host1 + "/api.php?s=";
@@ -47,13 +47,13 @@ public class InterfaceJsonfile {
     public static final String CHANNEL_RECOMMEND = PATH_ROOT + "/ChooseNews/getChoosedNews";
 
     // 频道列表
-    public static final String CHANNELLIST = ROOT + "cms_json/" + SITE + "/common/type/";// +{$type}(News,Lohas,Album)";
+    public static final String CHANNELLIST = ROOT + "cms_json/#country#/" + SITE + "/common/type/";// +{$type}(News,Lohas,Album)";
     // 广告
     public static final String mAdPic = PATH_ROOT + "/Version/getAd"; //TODO getAdNew
     // 缓存
     public static final String CACHE = PATH_ROOT + "/News/getAppCache";
     // 幻灯
-    public static final String FLASH = ROOT + "cms_json/" + SITE + "/common/flash/";
+    public static final String FLASH = ROOT + "cms_json/#country#/" + SITE + "/common/flash/";
 
     // 新闻列表
     public static final String NEWSLIST = PATH_ROOT + "/News/getNewsLastList";
@@ -100,18 +100,6 @@ public class InterfaceJsonfile {
     // 是否收藏
     public static final String ISCELLECTION = PATH_ROOT + "/Favorite/isMyFavoritev3";
 
-    // 图集index
-    public static final String ALBUMINDEX = ROOT + "cms_json/" + SITE + "/Album/List/index";
-    // 图集latest
-    public static final String ALBUMLATEST = ROOT + "cms_json/" + SITE + "/Album/List/latest";
-    // 图片集页page
-    public static final String ALBUMPAGE = ROOT + "cms_json/" + SITE + "/Album/List/";
-
-    // 专题详情列表页
-    public static final String SUBJECTDETAIL = ROOT + "cms_json/" + SITE + "/Subject/Content/";
-
-    // 视频列表
-
     // 搜索
     public static final String SEARCH = PATH_ROOT + "/Search/getSearch";
 
@@ -149,12 +137,6 @@ public class InterfaceJsonfile {
     // 视频条目
     public static final String videoItem = ROOT + "api.php?s=/Video/getVideoItem";
 
-    // 报刊信息
-    public static final String NEWSPAGER = ROOT + "cms_json/" + SITE + "/Newspaper/";
-    // 新闻列表详情
-    public static final String NEWSPAGERLIST = ROOT + "cms_json/" + SITE + "/Content/";
-    public static final String NEWSPAGERDATE = ROOT + "api.php?s=/Newspaper/getDate";
-
     // 专题列表页
     public static final String SUBJECTLIST = NEWSLIST;
     // 专题栏目列表
@@ -171,23 +153,6 @@ public class InterfaceJsonfile {
     public static final String TSBLCOMMENT = PATH_ROOT + "/Tipoffs/setComment";
     //
 
-    // ==========================================
-    public static final String bm_gslk = "http://m.hbgajg.com/";
-    public static final String bm_lcsk = "http://touch.qunar.com/h5/train/?from=touchindex&startStation=%E7%9F%B3%E5%AE%B6%E5%BA%84";
-    public static final String bm_gjcx = "http://zuoche.com/touch/searincity.jspx?cityname=%E7%9F%B3%E5%AE%B6%E5%BA%84";
-    public static final String bm_ctky = "http://zuoche.com/touch/transfromcity.jspx";
-    public static final String bm_hbdt = "http://touch.qunar.com/h5/flight/?startCity=%E7%9F%B3%E5%AE%B6%E5%BA%84";
-
-    public static final String bm_wzcx = "http://m.hbgajg.com/";
-    public static final String bm_hcpcx = "http://zuoche.com/touch/transfromcity.jspx";
-    public static final String bm_kdcx = "http://m.kuaidi100.com/index_all.html#input";
-    // ==========================================
-    // 新闻index
-    public static final String PAGEINDEX = "http://101.200.174.98:81/cms_json/cscec/News/list/";
-    // 新闻列表页
-    public static final String PAGE = "http://101.200.174.98:81/cms_json/cscec/News/list/";
-    // ==========================================
-    // 积分
     public static final String XF_UPLOADEVENT = PATH_ROOT + "/Credit/setCredit";
 
 
@@ -256,8 +221,8 @@ public class InterfaceJsonfile {
     public static final String GET_VERSION = PATH_ROOT + "/Version/getVersion";
 
 
-    public static final String classify_top_url = "http://www.nutnote.com/ltcms/api.php?s=/Tag/category";
-    public static final String classify_url = "http://www.nutnote.com/ltcms/api.php?s=/Tag/tagList";
+    public static final String classify_top_url = PATH_ROOT + "/Tag/category";
+    public static final String classify_url = PATH_ROOT + "/Tag/tagList";
 
 
 }

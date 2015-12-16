@@ -20,13 +20,9 @@ import com.hzpd.ui.App;
 import com.hzpd.ui.fragments.MySearchFragment;
 import com.hzpd.ui.fragments.SearchKeyFragment;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.RequestParams;
@@ -79,18 +75,9 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
     private void getKeys() {
         try {
             final File target = App.getFile(App.getInstance().getJsonFileCacheRootDir() + File.separator + "saerch_keys");
-            String station = SharePreferecesUtils.getParam(this, StationConfig.STATION, "def").toString();
-            String keys_url = null;
-            if (station.equals(StationConfig.DEF)) {
-                keys_url = InterfaceJsonfile.SEARCH_KEY;
-            } else if (station.equals(StationConfig.YN)) {
-                keys_url = InterfaceJsonfile_YN.SEARCH_TAG;
-            } else if (station.equals(StationConfig.TW)) {
-                keys_url = InterfaceJsonfile_TW.SEARCH_TAG;
-            }
             RequestParams requestParams = new RequestParams();
             requestParams.addQueryStringParameter("Pagesize", "10");
-            HttpHandler httpHandler = httpUtils.download(keys_url,
+            HttpHandler httpHandler = httpUtils.download(InterfaceJsonfile.SEARCH_KEY,
                     target.getAbsolutePath(),
                     new RequestCallBack<File>() {
                         @Override

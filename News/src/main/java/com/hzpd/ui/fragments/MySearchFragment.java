@@ -26,14 +26,10 @@ import com.hzpd.ui.activity.NewsAlbumActivity;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.ZhuanTiActivity;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -157,27 +153,14 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
 
     public void getSearchData(String content) {
 
-        String station = SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
-        String siteid = null;
-        String SEARCH_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            siteid = InterfaceJsonfile.SITEID;
-            SEARCH_url = InterfaceJsonfile.SEARCH;
-        } else if (station.equals(StationConfig.YN)) {
-            siteid = InterfaceJsonfile_YN.SITEID;
-            SEARCH_url = InterfaceJsonfile_YN.SEARCH;
-        } else if (station.equals(StationConfig.TW)) {
-            siteid = InterfaceJsonfile_TW.SITEID;
-            SEARCH_url = InterfaceJsonfile_TW.SEARCH;
-        }
         RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("siteid", siteid);
+        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("content", content);
         params.addBodyParameter("Page", "" + page);
         params.addBodyParameter("PageSize", "" + pageSize);
 
         HttpHandler httpHandler = httpUtils.send(HttpMethod.POST
-                , SEARCH_url
+                , InterfaceJsonfile.SEARCH
                 , params
                 , new RequestCallBack<String>() {
             @Override

@@ -1,16 +1,11 @@
 package com.hzpd.ui.activity;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
 import android.net.http.SslError;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -33,17 +28,12 @@ import com.hzpd.modle.NewsItemBeanForCollection;
 import com.hzpd.modle.ReplayBean;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.Constant;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
-import com.hzpd.utils.SystemBarTintManager;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
@@ -208,23 +198,10 @@ public class HtmlActivity extends MBaseActivity {
 		}
 
 		LogUtils.i("getNewsBean");
-		String station= SharePreferecesUtils.getParam(HtmlActivity.this, StationConfig.STATION, "def").toString();
-		String siteid=null;
-		String bnewsItem_url =null;
-		if (station.equals(StationConfig.DEF)){
-			siteid=InterfaceJsonfile.SITEID;
-			bnewsItem_url =InterfaceJsonfile.bnewsItem;
-		}else if (station.equals(StationConfig.YN)){
-			siteid=InterfaceJsonfile_YN.SITEID;
-			bnewsItem_url = InterfaceJsonfile_YN.bnewsItem;
-		}else if (station.equals(StationConfig.TW)){
-			siteid=InterfaceJsonfile_TW.SITEID;
-			bnewsItem_url = InterfaceJsonfile_TW.bnewsItem;
-		}
 		RequestParams params = RequestParamsUtils.getParams();
-		params.addBodyParameter("siteid", siteid);
+		params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
 		params.addBodyParameter("nid", nid);
-		httpUtils.send(HttpMethod.POST, bnewsItem_url, params, new RequestCallBack<String>() {
+		httpUtils.send(HttpMethod.POST, InterfaceJsonfile.bnewsItem, params, new RequestCallBack<String>() {
 			@Override
 			public void onSuccess(ResponseInfo<String> responseInfo) {
 				LogUtils.i("result-->" + responseInfo.result);
@@ -318,20 +295,11 @@ public class HtmlActivity extends MBaseActivity {
 	// 是否收藏
 	private void isCollection() {
 		if (null == spu.getUser()) {
-			String station= SharePreferecesUtils.getParam(HtmlActivity.this, StationConfig.STATION, "def").toString();
-			String ISCELLECTION_url =null;
-			if (station.equals(StationConfig.DEF)){
-				ISCELLECTION_url =InterfaceJsonfile.ISCELLECTION;
-			}else if (station.equals(StationConfig.YN)){
-				ISCELLECTION_url = InterfaceJsonfile_YN.ISCELLECTION;
-			}else if (station.equals(StationConfig.TW)){
-				ISCELLECTION_url = InterfaceJsonfile_TW.ISCELLECTION;
-			}
 			RequestParams params = RequestParamsUtils.getParamsWithU();
 			params.addBodyParameter("typeid", nb.getNid());
 			params.addBodyParameter("type", "4");
 
-			httpUtils.send(HttpMethod.POST, ISCELLECTION_url, params, new RequestCallBack<String>() {
+			httpUtils.send(HttpMethod.POST, InterfaceJsonfile.ISCELLECTION, params, new RequestCallBack<String>() {
 				@Override
 				public void onSuccess(ResponseInfo<String> responseInfo) {
 					LogUtils.i("isCollection result-->" + responseInfo.result);
@@ -393,27 +361,14 @@ public class HtmlActivity extends MBaseActivity {
 			return;
 		}
 		LogUtils.i("Type-->" + nb.getType() + "  Fid-->" + nb.getNid());
-		String station= SharePreferecesUtils.getParam(HtmlActivity.this, StationConfig.STATION, "def").toString();
-		String siteid=null;
-		String ADDCOLLECTION_url =null;
-		if (station.equals(StationConfig.DEF)){
-			siteid=InterfaceJsonfile.SITEID;
-			ADDCOLLECTION_url =InterfaceJsonfile.ADDCOLLECTION;
-		}else if (station.equals(StationConfig.YN)){
-			siteid=InterfaceJsonfile_YN.SITEID;
-			ADDCOLLECTION_url = InterfaceJsonfile_YN.ADDCOLLECTION;
-		}else if (station.equals(StationConfig.TW)){
-			siteid=InterfaceJsonfile_TW.SITEID;
-			ADDCOLLECTION_url = InterfaceJsonfile_TW.ADDCOLLECTION;
-		}
 		RequestParams params = RequestParamsUtils.getParamsWithU();
 		///
 		params.addBodyParameter("type", "4");
 		params.addBodyParameter("typeid", nb.getNid());
-		params.addBodyParameter("siteid", siteid);
+		params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
 		params.addBodyParameter("data", nb.getJson_url());
 
-		httpUtils.send(HttpMethod.POST, ADDCOLLECTION_url// InterfaceApi.addcollection
+		httpUtils.send(HttpMethod.POST, InterfaceJsonfile.ADDCOLLECTION// InterfaceApi.addcollection
 				, params, new RequestCallBack<String>() {
 			@Override
 			public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -448,21 +403,12 @@ public class HtmlActivity extends MBaseActivity {
 
 	private void getCommentsCounts() {
 		EventUtils.sendReadAtical(activity);
-		String station= SharePreferecesUtils.getParam(HtmlActivity.this, StationConfig.STATION, "def").toString();
-		String commentsConts_url =null;
-		if (station.equals(StationConfig.DEF)){
-			commentsConts_url =InterfaceJsonfile.commentsConts;
-		}else if (station.equals(StationConfig.YN)){
-			commentsConts_url = InterfaceJsonfile_YN.commentsConts;
-		}else if (station.equals(StationConfig.TW)){
-			commentsConts_url = InterfaceJsonfile_TW.commentsConts;
-		}
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("type", Constant.TYPE.NewsA.toString());
 		params.addBodyParameter("nids", nb.getNid());
 
 		HttpUtils httpUtils = new HttpUtils();
-		httpUtils.send(HttpMethod.POST,commentsConts_url, params, new RequestCallBack<String>() {
+		httpUtils.send(HttpMethod.POST,InterfaceJsonfile.commentsConts, params, new RequestCallBack<String>() {
 			@Override
 			public void onSuccess(ResponseInfo<String> responseInfo) {
 				LogUtils.i("loginSubmit-->" + responseInfo.result);

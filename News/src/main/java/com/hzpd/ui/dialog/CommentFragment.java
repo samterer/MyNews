@@ -22,13 +22,9 @@ import com.hzpd.ui.App;
 import com.hzpd.ui.activity.ZQ_ReplyActivity;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.MyCommonUtil;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.util.LogUtils;
@@ -149,24 +145,10 @@ public class CommentFragment extends BaseFragment {
 
         this.bean = bean;
         LogUtils.i("nid---" + bean.getId() + " mNewtype-->" + bean.getType());
-        String station = SharePreferecesUtils.getParam(getActivity()
-                , StationConfig.STATION, "def").toString();
-        String siteid = null;
-        String PATH_ROOT_url=null;
-        if (station.equals(StationConfig.DEF)) {
-            siteid = InterfaceJsonfile.SITEID;
-            PATH_ROOT_url=InterfaceJsonfile.PATH_ROOT;
-        } else if (station.equals(StationConfig.YN)) {
-            siteid = InterfaceJsonfile_YN.SITEID;
-            PATH_ROOT_url=InterfaceJsonfile_YN.PATH_ROOT;
-        } else if (station.equals(StationConfig.TW)) {
-            siteid = InterfaceJsonfile_TW.SITEID;
-            PATH_ROOT_url=InterfaceJsonfile_TW.PATH_ROOT;
-        }
 
 //        private static final String HTMLURL = InterfaceJsonfile.PATH_ROOT + "/Comment/showcommentv3/nid/";
-        String HTMLURL=PATH_ROOT_url+ "/Comment/showcomment/nid/";
-        String url = HTMLURL + bean.getId() + "/type/" + bean.getType() + "/siteid/" + siteid
+        String HTMLURL=InterfaceJsonfile.PATH_ROOT+ "/Comment/showcomment/nid/";
+        String url = HTMLURL + bean.getId() + "/type/" + bean.getType() + "/siteid/" + InterfaceJsonfile.SITEID
                 + "/page/1/pagesize/10";
         if (null != spu.getUser()) {
             url += "/uid/" + spu.getUser().getUid();

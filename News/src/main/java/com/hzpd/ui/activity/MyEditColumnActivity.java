@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -25,6 +24,7 @@ import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SerializeUtil;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -283,8 +283,11 @@ public class MyEditColumnActivity extends MBaseActivity {
         if (target.exists()) {
             parseChannelJson(target);
         } else {
+            String urlChannelList = InterfaceJsonfile.CHANNELLIST + "News";
+            String country = SPUtil.getCountry();
+            urlChannelList = urlChannelList.replace("#country#", country.toLowerCase());
             httpUtils.download(
-                    InterfaceJsonfile.CHANNELLIST + "News"
+                    urlChannelList
                     , target.getAbsolutePath()
                     , new RequestCallBack<File>() {
                         @Override

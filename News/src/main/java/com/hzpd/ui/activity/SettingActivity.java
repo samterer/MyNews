@@ -281,16 +281,10 @@ public class SettingActivity extends MBaseActivity {
                         setting_chosse_country.setText("" + name);
                         SharePreferecesUtils.setParam(SettingActivity.this, "CountryPicker", name);
                         activity.startService(new Intent(activity, ClearCacheService.class));
-
-                        SharePreferecesUtils.setParam(SettingActivity.this, "CountryCode", code);
+                        SPUtil.setCountry(code);
 //                        重新设置
-                        DataCleanManager.cleanCustomCache(App.getInstance().getAllDiskCacheDir()
-                        + File.separator
-                        + App.mTitle);
-                        DataCleanManager.deleteDir(new File(getChannelInfoCacheSavePath()));
                         EventBus.getDefault().post(new RestartEvent());
                         restartApplication();
-//                        finish();
                         picker.dismiss();
                     }
                 });
@@ -315,6 +309,7 @@ public class SettingActivity extends MBaseActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

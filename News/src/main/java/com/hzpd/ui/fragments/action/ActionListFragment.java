@@ -19,8 +19,6 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.ActionItemBean;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
@@ -123,25 +121,12 @@ public class ActionListFragment extends BaseFragment {
 
 	private void getDbList() {
 
-		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
-		String siteid=null;
-		String actionList_url =null;
-		if (station.equals(StationConfig.DEF)){
-			siteid=InterfaceJsonfile.SITEID;
-			actionList_url =InterfaceJsonfile.actionList;
-		}else if (station.equals(StationConfig.YN)){
-			siteid=InterfaceJsonfile_YN.SITEID;
-			actionList_url = InterfaceJsonfile_YN.actionList;
-		}else if (station.equals(StationConfig.TW)){
-			siteid=InterfaceJsonfile_TW.SITEID;
-			actionList_url = InterfaceJsonfile_TW.actionList;
-		}
 		RequestParams params = RequestParamsUtils.getParams();
-		params.addBodyParameter("siteid", siteid);
+		params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
 		params.addBodyParameter("page", "" + page);
 		params.addBodyParameter("pagesize", "" + pageSize);
 		httpUtils.send(HttpMethod.POST
-				, actionList_url
+				, InterfaceJsonfile.actionList
 				, params
 				, new RequestCallBack<String>() {
 			@Override

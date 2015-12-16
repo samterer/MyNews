@@ -1,6 +1,7 @@
 package com.hzpd.adapter;
 
 import android.app.Activity;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,9 @@ import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
+import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.util.LogUtils;
+import com.lidroid.xutils.view.annotation.ViewInject;
 
 public class CollectionAdapter extends ListBaseAdapter<CollectionJsonBean> {
     private SPUtil spu;
@@ -42,12 +45,13 @@ public class CollectionAdapter extends ListBaseAdapter<CollectionJsonBean> {
     }
 
     public void deleteItem(int position) {
-        if (list != null&&list.size()>0) {
+        if (list != null && list.size() > 0) {
             this.list.remove(position);
 //            notifyDataSetChanged();
         }
     }
 
+    final static int TYPE_TEXT = 4; // 纯文本
 
     @Override
     public int getViewTypeCount() {
@@ -79,10 +83,10 @@ public class CollectionAdapter extends ListBaseAdapter<CollectionJsonBean> {
 
         CollectionJsonBean cb = list.get(position);
         CollectionDataBean cdb = cb.getData();
-        if (cb!=null)
-        Log.e("CollectionJsonBean","CollectionJsonBean--->"+cb.toString());
+        if (cb != null)
+            Log.e("CollectionJsonBean", "CollectionJsonBean--->" + cb.toString());
         else
-        Log.e("CollectionJsonBean","CollectionJsonBean--->null");
+            Log.e("CollectionJsonBean", "CollectionJsonBean--->null");
 
 
         if (convertView == null) {
@@ -103,7 +107,7 @@ public class CollectionAdapter extends ListBaseAdapter<CollectionJsonBean> {
                     holder.newsitem_collectcount = (TextView) convertView.findViewById(R.id.newsitem_collectcount);
                     holder.newsitem_commentcount = (TextView) convertView.findViewById(R.id.newsitem_commentcount);
                     holder.nli_foot = (ImageView) convertView.findViewById(R.id.nli_foot);
-                    holder.ll_tag= (LinearLayout) convertView.findViewById(R.id.ll_tag);
+                    holder.ll_tag = (LinearLayout) convertView.findViewById(R.id.ll_tag);
                     convertView.setTag(holder);
                 }
                 break;
@@ -135,18 +139,17 @@ public class CollectionAdapter extends ListBaseAdapter<CollectionJsonBean> {
                     holder.newsitem_title.setText(cdb.getTitle());
                 }
                 if (cdb.getImgs() != null && cdb.getImgs().length > 0) {
-                    Log.e("getImgs", "getImgs" + cdb.getImgs().length+"::::"+ cdb.getTitle());
+                    Log.e("getImgs", "getImgs" + cdb.getImgs().length + "::::" + cdb.getTitle());
                     String s[] = cdb.getImgs();
                     holder.newsitem_title.setPadding(App.px_15dp, 0, 0, 0);
                     holder.ll_tag.setPadding(App.px_15dp, 0, 0, 0);
                     SPUtil.displayImage(s[0], holder.newsitem_img1, DisplayOptionFactory.getOption(OptionTp.Small));
                 } else {
-                    Log.e("cdb.getImgs()","cdb.getImgs()--->"+cdb.getTitle());
+                    Log.e("cdb.getImgs()", "cdb.getImgs()--->" + cdb.getTitle());
                     holder.newsitem_img1.setVisibility(View.GONE);
                     holder.newsitem_title.setPadding(0, 0, 0, App.px_15dp);
                     holder.ll_tag.setPadding(0, 0, 0, 0);
                 }
-
 
 
                 String copyfrom = cdb.getCopyfrom();

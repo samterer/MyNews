@@ -5,8 +5,6 @@ import android.content.Context;
 import com.hzpd.modle.event.ScoreEvent;
 import com.hzpd.modle.event.ScoreEvents;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -24,26 +22,13 @@ public class EventUtils {
         ScoreEvent event = new ScoreEvent("3");
         ScoreEvents events = new ScoreEvents(SPUtil.getInstance().getUser().getUid());
         events.addEvent(event);
-        String station = SharePreferecesUtils.getParam(context, StationConfig.STATION, "def").toString();
-        String siteid = null;
-        String XF_UPLOADEVENT_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            siteid = InterfaceJsonfile.SITEID;
-            XF_UPLOADEVENT_url = InterfaceJsonfile.XF_UPLOADEVENT;
-        } else if (station.equals(StationConfig.YN)) {
-            siteid = InterfaceJsonfile_YN.SITEID;
-            XF_UPLOADEVENT_url = InterfaceJsonfile_YN.XF_UPLOADEVENT;
-        } else if (station.equals(StationConfig.TW)) {
-            siteid = InterfaceJsonfile_TW.SITEID;
-            XF_UPLOADEVENT_url = InterfaceJsonfile_TW.XF_UPLOADEVENT;
-        }
         HttpUtils httpUtils = SPUtil.getHttpUtils();
         RequestParams params = new RequestParams();
-        params.addBodyParameter("siteid", siteid);
+        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("jsonstr", FjsonUtil.toJsonString(events));
 
         httpUtils.send(HttpMethod.POST
-                , XF_UPLOADEVENT_url
+                ,  InterfaceJsonfile.XF_UPLOADEVENT
                 , params
                 , new RequestCallBack<String>() {
             @Override
@@ -71,26 +56,13 @@ public class EventUtils {
         ScoreEvent event = new ScoreEvent("5");
         ScoreEvents events = new ScoreEvents(SPUtil.getInstance().getUser().getUid());
         events.addEvent(event);
-        String station = SharePreferecesUtils.getParam(context, StationConfig.STATION, "def").toString();
-        String siteid = null;
-        String XF_UPLOADEVENT_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            siteid = InterfaceJsonfile.SITEID;
-            XF_UPLOADEVENT_url = InterfaceJsonfile.XF_UPLOADEVENT;
-        } else if (station.equals(StationConfig.YN)) {
-            siteid = InterfaceJsonfile_YN.SITEID;
-            XF_UPLOADEVENT_url = InterfaceJsonfile_YN.XF_UPLOADEVENT;
-        } else if (station.equals(StationConfig.TW)) {
-            siteid = InterfaceJsonfile_TW.SITEID;
-            XF_UPLOADEVENT_url = InterfaceJsonfile_TW.XF_UPLOADEVENT;
-        }
         HttpUtils httpUtils = SPUtil.getHttpUtils();
         RequestParams params = new RequestParams();
-        params.addBodyParameter("siteid", siteid);
+        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("jsonstr", FjsonUtil.toJsonString(events));
 
         httpUtils.send(HttpMethod.POST
-                , XF_UPLOADEVENT_url
+                , InterfaceJsonfile.XF_UPLOADEVENT
                 , params
                 , new RequestCallBack<String>() {
             @Override
@@ -115,26 +87,13 @@ public class EventUtils {
         ScoreEvent event = new ScoreEvent("6");
         ScoreEvents events = new ScoreEvents(SPUtil.getInstance().getUser().getUid());
         events.addEvent(event);
-        String station = SharePreferecesUtils.getParam(context, StationConfig.STATION, "def").toString();
-        String siteid = null;
-        String XF_UPLOADEVENT_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            siteid = InterfaceJsonfile.SITEID;
-            XF_UPLOADEVENT_url = InterfaceJsonfile.XF_UPLOADEVENT;
-        } else if (station.equals(StationConfig.YN)) {
-            siteid = InterfaceJsonfile_YN.SITEID;
-            XF_UPLOADEVENT_url = InterfaceJsonfile_YN.XF_UPLOADEVENT;
-        } else if (station.equals(StationConfig.TW)) {
-            siteid = InterfaceJsonfile_TW.SITEID;
-            XF_UPLOADEVENT_url = InterfaceJsonfile_TW.XF_UPLOADEVENT;
-        }
         HttpUtils httpUtils = SPUtil.getHttpUtils();
         RequestParams params = new RequestParams();
-        params.addBodyParameter("siteid", siteid);
+        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("jsonstr", FjsonUtil.toJsonString(events));
 
         httpUtils.send(HttpMethod.POST
-                , XF_UPLOADEVENT_url
+                , InterfaceJsonfile.XF_UPLOADEVENT
                 , params
                 , new RequestCallBack<String>() {
             @Override
@@ -157,26 +116,13 @@ public class EventUtils {
         ScoreEvent event = new ScoreEvent("7");
         ScoreEvents events = new ScoreEvents(SPUtil.getInstance().getUser().getUid());
         events.addEvent(event);
-        String station = SharePreferecesUtils.getParam(context, StationConfig.STATION, "def").toString();
-        String siteid = null;
-        String XF_UPLOADEVENT_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            siteid = InterfaceJsonfile.SITEID;
-            XF_UPLOADEVENT_url = InterfaceJsonfile.XF_UPLOADEVENT;
-        } else if (station.equals(StationConfig.YN)) {
-            siteid = InterfaceJsonfile_YN.SITEID;
-            XF_UPLOADEVENT_url = InterfaceJsonfile_YN.XF_UPLOADEVENT;
-        } else if (station.equals(StationConfig.TW)) {
-            siteid = InterfaceJsonfile_TW.SITEID;
-            XF_UPLOADEVENT_url = InterfaceJsonfile_TW.XF_UPLOADEVENT;
-        }
         HttpUtils httpUtils = SPUtil.getHttpUtils();
         RequestParams params = new RequestParams();
-        params.addBodyParameter("siteid", siteid);
+        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("jsonstr", FjsonUtil.toJsonString(events));
 
         httpUtils.send(HttpMethod.POST
-                , XF_UPLOADEVENT_url
+                , InterfaceJsonfile.XF_UPLOADEVENT
                 , params
                 , new RequestCallBack<String>() {
             @Override

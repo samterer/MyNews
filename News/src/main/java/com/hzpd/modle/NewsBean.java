@@ -7,9 +7,7 @@ import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.utils.Log;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 
 public class NewsBean implements Serializable {

@@ -17,18 +17,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.hzpd.adapter.MyCommentListAdapter;
-import com.hzpd.adapter.MycommentsAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.MyCommentListBean;
 import com.hzpd.modle.ReplayBean;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.SystemBarTintManager;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -156,20 +151,6 @@ public class XF_NewsCommentsActivity extends MBaseActivity {
     }
 
     private void getInfoFromServer() {
-
-        String station = SharePreferecesUtils.getParam(this, StationConfig.STATION, "def").toString();
-        String siteid = null;
-        String myComm_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            siteid = InterfaceJsonfile.SITEID;
-            myComm_url = InterfaceJsonfile.CHECKCOMMENT;
-        } else if (station.equals(StationConfig.YN)) {
-            siteid = InterfaceJsonfile_YN.SITEID;
-            myComm_url = InterfaceJsonfile_YN.CHECKCOMMENT;
-        } else if (station.equals(StationConfig.TW)) {
-            siteid = InterfaceJsonfile_TW.SITEID;
-            myComm_url = InterfaceJsonfile_TW.CHECKCOMMENT;
-        }
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("PageSize", PageSize + "");
         params.addBodyParameter("Page", Page + "");
@@ -177,9 +158,9 @@ public class XF_NewsCommentsActivity extends MBaseActivity {
         params.addBodyParameter("nid", bean.getId());
         params.addBodyParameter("type", bean.getType());
 
-        params.addBodyParameter("siteid", siteid);
+        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         httpUtils.send(HttpRequest.HttpMethod.POST
-                , myComm_url
+                , InterfaceJsonfile.CHECKCOMMENT
                 , params
                 , new RequestCallBack<String>() {
             @Override

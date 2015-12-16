@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -92,19 +94,18 @@ public class App extends Application {
     }
 
     public void setThemeName(String themeName) {
-        SharePreferecesUtils.setParam(this, "THEME", "0");
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putString("THEME", themeName).commit();
         this.themeName = themeName;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        themeName = SharePreferecesUtils.getParam(this, "THEME", "0").toString();
+        themeName = PreferenceManager.getDefaultSharedPreferences(this).getString("THEME", "0");
 //        newTimeMap.clear();
         refWatcher = LeakCanary.install(this);
         newTimeMap.clear();
         long start = System.currentTimeMillis();
-        FacebookSdk.sdkInitialize(getApplicationContext());
         mInstance = this;
         spu = SPUtil.getInstance();
         DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -114,6 +115,9 @@ public class App extends Application {
         px_150dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
         String str = SharePreferecesUtils.getParam(this, "STATION", "def").toString();
 
+        if (Build.VERSION.SDK_INT >= 11) {
+            FacebookSdk.sdkInitialize(getApplicationContext());
+        }
         com.hzpd.utils.Log.e("App", "App 1here " + (System.currentTimeMillis() - start));
         init();
         com.hzpd.utils.Log.e("App", "App Success here " + (System.currentTimeMillis() - start));

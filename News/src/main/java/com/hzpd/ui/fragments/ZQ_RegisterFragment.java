@@ -16,13 +16,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.UserBean;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -182,15 +178,6 @@ public class ZQ_RegisterFragment extends BaseFragment {
 
 		this.ph = lgr_et_phone_id.getText().toString();
 
-		String station = SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
-		String REGISTER_url = null;
-		if (station.equals(StationConfig.DEF)) {
-			REGISTER_url = InterfaceJsonfile.REGISTER;
-		} else if (station.equals(StationConfig.YN)) {
-			REGISTER_url = InterfaceJsonfile_YN.REGISTER;
-		} else if (station.equals(StationConfig.TW)) {
-			REGISTER_url = InterfaceJsonfile_TW.REGISTER;
-		}
 		// 注册
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("username", ph);
@@ -198,7 +185,7 @@ public class ZQ_RegisterFragment extends BaseFragment {
 		params.addBodyParameter("verify", sms);
 //		params.addBodyParameter("email", "");
 
-		httpUtils.send(HttpMethod.POST, REGISTER_url// InterfaceApi.mRegister
+		httpUtils.send(HttpMethod.POST, InterfaceJsonfile.REGISTER// InterfaceApi.mRegister
 				, params, new RequestCallBack<String>() {
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {

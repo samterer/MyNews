@@ -34,8 +34,6 @@ import com.hzpd.ui.activity.RecentlyReadActivity;
 import com.hzpd.ui.activity.SettingActivity;
 import com.hzpd.ui.activity.ZQ_FeedBackActivity;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.AvoidOnClickFastUtils;
@@ -45,8 +43,6 @@ import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -149,15 +145,6 @@ public class ZY_RightFragment extends BaseFragment {
     }
 
     public void thirdlogin(ThirdLoginBean tlb) {
-        String station = SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
-        String thirdLogin_url = null;
-        if (station.equals(StationConfig.DEF)) {
-            thirdLogin_url = InterfaceJsonfile.thirdLogin;
-        } else if (station.equals(StationConfig.YN)) {
-            thirdLogin_url = InterfaceJsonfile_YN.thirdLogin;
-        } else if (station.equals(StationConfig.TW)) {
-            thirdLogin_url = InterfaceJsonfile_TW.thirdLogin;
-        }
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("userid", tlb.getUserid());
         params.addBodyParameter("gender", tlb.getGender());
@@ -166,7 +153,7 @@ public class ZY_RightFragment extends BaseFragment {
         params.addBodyParameter("third", tlb.getThird());
         params.addBodyParameter("is_ucenter", "0");
 
-        httpUtils.send(HttpRequest.HttpMethod.POST, thirdLogin_url, params,
+        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.thirdLogin, params,
                 new RequestCallBack<String>() {
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {

@@ -20,14 +20,11 @@ import com.hzpd.ui.activity.MyEditColumnActivity;
 import com.hzpd.ui.activity.SearchActivity;
 import com.hzpd.ui.widget.PagerSlidingTabStrip;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SerializeUtil;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -200,6 +197,8 @@ public class NewsFragment extends BaseFragment {
         final File channelCacheFile = new File(channelCachePath);
         final File target = App.getFile(App.getInstance().getAllDiskCacheDir() + File.separator + "News");
         String urlChannelList = InterfaceJsonfile.CHANNELLIST + "News";
+        String country = SPUtil.getCountry();
+        urlChannelList = urlChannelList.replace("#country#", country.toLowerCase());
 //			下载信息并保存
         httpUtils.download(urlChannelList,
                 target.getAbsolutePath(),

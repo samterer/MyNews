@@ -20,14 +20,10 @@ import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.db.PushBeanDB;
 import com.hzpd.modle.db.VideoItemBeanDb;
 import com.hzpd.modle.db.ZhuantiBeanDB;
-import com.hzpd.modle.event.RestartEvent;
 import com.hzpd.services.InitService;
 import com.hzpd.ui.App;
 import com.hzpd.ui.fragments.welcome.AdFlashFragment;
-import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.DBHelper;
@@ -36,8 +32,6 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SerializeUtil;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.db.NewsListDbTask;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -137,10 +131,12 @@ public class WelcomeActivity extends MWBaseActivity {
 
         if (channelCacheFile.exists() && channelCacheFile.length() > 30) {
             exists = true;
+            Log.e("loadMainUI()", "loadMainUI()");
             loadMainUI();
         }
-        Log.e("loadMainUI()", "loadMainUI()");
         String urlChannelList = InterfaceJsonfile.CHANNELLIST + "News";
+        String country = SPUtil.getCountry();
+        urlChannelList = urlChannelList.replace("#country#", country.toLowerCase());
 //			下载信息并保存
         HttpHandler httpHandler = httpUtils.download(urlChannelList,
                 target.getAbsolutePath(),
@@ -269,21 +265,10 @@ public class WelcomeActivity extends MWBaseActivity {
                     }
                     if (null != list) {
                         LogUtils.i(" getChooseNewsJson --> " + list.size());
-                        new NewsListDbTask(getApplicationContext()).saveList(list, new I_Result() {
-                            @Override
-                            public void setResult(Boolean flag) {
-                                if (isResume) {
-                                    loadMainUI();
-                                }
-                                return;
-                            }
-                        });
-                    } else {
-                        loadMainUI();
+                        new NewsListDbTask(getApplicationContext()).saveList(list, null);
                     }
-                } else {
-                    loadMainUI();
                 }
+                loadMainUI();
             }
 
             @Override

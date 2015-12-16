@@ -11,8 +11,6 @@ import com.hzpd.modle.UserBean;
 import com.hzpd.modle.db.UserLog;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
@@ -57,22 +55,9 @@ public class InitService extends IntentService {
         rootPath = App.getInstance().getJsonFileCacheRootDir();
         String station = SharePreferecesUtils.getParam(this, StationConfig.STATION, "def").toString();
 
-        if (station.equals(StationConfig.DEF)) {
-            siteid = InterfaceJsonfile.SITEID;
-            CACHE_url = InterfaceJsonfile.CACHE;
-            mAdPic_url = InterfaceJsonfile.mAdPic;
-            CHANNELLIST_url = InterfaceJsonfile.CHANNELLIST;
-        } else if (station.equals(StationConfig.YN)) {
-            siteid = InterfaceJsonfile_YN.SITEID;
-            CACHE_url = InterfaceJsonfile_YN.CACHE;
-            mAdPic_url = InterfaceJsonfile_YN.mAdPic;
-            CHANNELLIST_url = InterfaceJsonfile_YN.CHANNELLIST;
-        } else if (station.equals(StationConfig.TW)) {
-            siteid = InterfaceJsonfile_TW.SITEID;
-            CACHE_url = InterfaceJsonfile_TW.CACHE;
-            mAdPic_url = InterfaceJsonfile_TW.mAdPic;
-            CHANNELLIST_url = InterfaceJsonfile_TW.CHANNELLIST;
-        }
+        siteid = InterfaceJsonfile.SITEID;
+        CACHE_url = InterfaceJsonfile.CACHE;
+        mAdPic_url = InterfaceJsonfile.mAdPic;
     }
 
     // 开屏图片

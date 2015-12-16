@@ -19,7 +19,6 @@ import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.NativeAd;
-import com.facebook.ads.NativeAdView;
 import com.hzpd.custorm.TopPicViewPager;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
@@ -69,6 +68,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
     final static int TYPE_LEFTPIC = 1;
     final static int TYPE_BIGPIC = 2;
     final static int TYPE_LARGE = 3;
+    final static int TYPE_TEXT = 4; // 纯文本
     final static int TYPE_AD = 0xad;
     final static int TYPE_LOADING = 0xDD;
     public boolean showLoading = false;
@@ -285,6 +285,11 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                         R.layout.news_item_flash_layout, parent, false);
                 viewHolder = new FlashHolder(convertView);
                 break;
+            case TYPE_TEXT://纯文本
+                convertView = inflater.inflate(
+                        R.layout.news_list_text_layout, parent, false);
+                viewHolder = new TextViewHolder(convertView);
+                break;
             case TYPE_THREEPIC://三张连图
                 convertView = inflater.inflate(
                         R.layout.news_3_item_layout, parent, false);
@@ -341,6 +346,82 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     flashHolder.topViewpager.setCurrentItem(0, true);
                     flashHolder.indicator_default.setViewPager(flashHolder.topViewpager);
                     break;
+                case TYPE_TEXT: {
+                    bean = list.get(position);
+                    holder.itemView.setTag(bean);
+                    TextViewHolder textViewHolder = (TextViewHolder) holder;
+                    textViewHolder.newsitem_title.setTextSize(fontSize);
+                    textViewHolder.newsitem_title.setText(bean.getTitle());
+                    textViewHolder.newsitem_title.setTextColor(App.getInstance()
+                            .getResources().getColor(R.color.item_title));
+                    if (readedNewsSet.contains(bean.getNid())) {
+                        textViewHolder.newsitem_title.setTextColor(App.getInstance()
+                                .getResources().getColor(R.color.grey_font));
+                    } else {
+                        textViewHolder.newsitem_title.setTextColor(App.getInstance()
+                                .getResources().getColor(R.color.item_title));
+                    }
+                    SPUtil.setAtt(textViewHolder.item_type_iv, bean.getAttname());
+
+                    String fav = bean.getFav();
+                    if (!TextUtils.isEmpty(fav)) {
+
+                        int fav_counts = Integer.parseInt(fav);
+                        if (fav_counts > 0) {
+                            textViewHolder.newsitem_collectcount.setVisibility(View.VISIBLE);
+                            textViewHolder.newsitem_collectcount.setText(fav_counts + "");
+                        } else {
+                            textViewHolder.newsitem_collectcount.setVisibility(View.GONE);
+                        }
+                    } else {
+                        textViewHolder.newsitem_collectcount.setVisibility(View.GONE);
+                    }
+
+                    String from = bean.getCopyfrom();
+                    if (!TextUtils.isEmpty(from)) {
+                        textViewHolder.newsitem_source.setVisibility(View.VISIBLE);
+                        textViewHolder.newsitem_source.setText(from);
+                    } else {
+                        textViewHolder.newsitem_source.setVisibility(View.GONE);
+                    }
+
+                    String comcount = bean.getComcount();
+                    if (!TextUtils.isEmpty(comcount)) {
+                        int counts = Integer.parseInt(comcount);
+                        if (counts > 0) {
+                            textViewHolder.newsitem_commentcount.setVisibility(View.VISIBLE);
+                            bean.setComcount(counts + "");
+                            textViewHolder.newsitem_commentcount.setText(counts + "");
+                        } else {
+                            textViewHolder.newsitem_commentcount.setVisibility(View.GONE);
+                        }
+                    } else {
+                        textViewHolder.newsitem_commentcount.setVisibility(View.GONE);
+                    }
+
+
+                    if (CalendarUtil.friendlyTime(bean.getUpdate_time(), context) == null) {
+                        textViewHolder.newsitem_time.setText("");
+                    } else {
+                        textViewHolder.newsitem_time.setText(CalendarUtil.friendlyTime(bean.getUpdate_time(), context));
+                    }
+                    textViewHolder.nli_foot.setVisibility(View.GONE);
+
+                    textViewHolder.newsitem_unlike.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Toast.makeText(context, "不喜欢", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    if (bean.getSid() != null && !"0".equals(bean.getSid())) {
+                        textViewHolder.nli_foot.setImageResource(R.drawable.zq_subscript_issue);
+                        textViewHolder.nli_foot.setVisibility(View.VISIBLE);
+                    }
+                    SPUtil.setRtype(bean.getRtype(), textViewHolder.nli_foot);
+
+                }
+                break;
                 case TYPE_THREEPIC:
                     bean = list.get(position);
                     VHThree vhThree = (VHThree) holder;
@@ -352,7 +433,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     if (readedNewsSet.contains(bean.getNid())) {
                         vhThree.newsitem_title.setTextColor(App.getInstance()
                                 .getResources().getColor(R.color.grey_font));
-                    }else{
+                    } else {
                         vhThree.newsitem_title.setTextColor(App.getInstance()
                                 .getResources().getColor(R.color.item_title));
                     }
@@ -395,38 +476,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     }
 
 
-                    if (!TextUtils.isEmpty(bean.getAttname())) {
-                        String attname = bean.getAttname();
-                        if (attname.equals("a")) {
-                            vhThree.item_type_iv.setVisibility(View.VISIBLE);
-                            vhThree.item_type_iv.setImageResource(R.drawable.zq_subscript_hot);
-                        } else if (attname.equals("b")) {
-                            vhThree.item_type_iv.setVisibility(View.VISIBLE);
-                            vhThree.item_type_iv.setImageResource(R.drawable.zq_subscript_rekom);
-                        } else if (attname.equals("c")) {
-                            vhThree.item_type_iv.setVisibility(View.VISIBLE);
-                            vhThree.item_type_iv.setImageResource(R.drawable.zq_subscript_kolom);
-                        } else if (attname.equals("f")) {
-                            vhThree.item_type_iv.setVisibility(View.VISIBLE);
-                            vhThree.item_type_iv.setImageResource(R.drawable.zq_subscript_fokus);
-                        } else if (attname.equals("h")) {
-                            vhThree.item_type_iv.setVisibility(View.VISIBLE);
-                            vhThree.item_type_iv.setImageResource(R.drawable.zq_subscript_xtend);
-                        } else if (attname.equals("j")) {
-                            vhThree.item_type_iv.setVisibility(View.VISIBLE);
-                            vhThree.item_type_iv.setImageResource(R.drawable.zq_subscript_issue);
-                        } else if (attname.equals("p")) {
-                            vhThree.item_type_iv.setVisibility(View.VISIBLE);
-                            vhThree.item_type_iv.setImageResource(R.drawable.zq_subscript_album);
-                        } else if (attname.equals("s")) {
-                            vhThree.item_type_iv.setVisibility(View.VISIBLE);
-                            vhThree.item_type_iv.setImageResource(R.drawable.zq_subscript_video);
-                        } else {
-                            vhThree.item_type_iv.setVisibility(View.GONE);
-                        }
-                    } else {
-                        vhThree.item_type_iv.setVisibility(View.GONE);
-                    }
+                    SPUtil.setAtt(vhThree.item_type_iv, bean.getAttname());
                     vhThree.tv3.setText(CalendarUtil.friendlyTime(bean.getUpdate_time(), context));
 
                     String s[] = bean.getImgs();
@@ -445,25 +495,9 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     }
 
                     vhThree.newsitem_foot.setVisibility(View.GONE);
-                    //1新闻  2图集  3直播 4专题  5关联新闻 6视频
-                    if ("2".equals(bean.getRtype())) {
-                        vhThree.newsitem_foot.setImageResource(R.drawable.zq_subscript_album);
-                        vhThree.newsitem_foot.setVisibility(View.VISIBLE);
-                    } else if ("3".equals(bean.getRtype())) {
-                        vhThree.newsitem_foot.setImageResource(R.drawable.zq_subscript_live);
-                    } else if ("4".equals(bean.getRtype())) {
-                        vhThree.newsitem_foot.setImageResource(R.drawable.zq_subscript_issue);
-                        vhThree.newsitem_foot.setVisibility(View.VISIBLE);
-                    } else if ("6".equals(bean.getRtype())) {
-                        vhThree.newsitem_foot.setImageResource(R.drawable.zq_subscript_video);
-                        vhThree.newsitem_foot.setVisibility(View.VISIBLE);
-                    } else if ("7".equals(bean.getRtype())) {
-                        vhThree.newsitem_foot.setImageResource(R.drawable.zq_subscript_html);
-                        vhThree.newsitem_foot.setVisibility(View.VISIBLE);
-                    }
-
+                    SPUtil.setRtype(bean.getRtype(), vhThree.newsitem_foot);
                     break;
-                case TYPE_LEFTPIC:
+                case TYPE_LEFTPIC: {
                     bean = list.get(position);
                     holder.itemView.setTag(bean);
                     VHLeftPic vhLeftPic = (VHLeftPic) holder;
@@ -474,42 +508,11 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     if (readedNewsSet.contains(bean.getNid())) {
                         vhLeftPic.newsitem_title.setTextColor(App.getInstance()
                                 .getResources().getColor(R.color.grey_font));
-                    }else{
+                    } else {
                         vhLeftPic.newsitem_title.setTextColor(App.getInstance()
                                 .getResources().getColor(R.color.item_title));
                     }
-                    if (!TextUtils.isEmpty(bean.getAttname())) {
-                        String attname = bean.getAttname();
-                        if (attname.equals("a")) {
-                            vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
-                            vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_hot);
-                        } else if (attname.equals("b")) {
-                            vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
-                            vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_rekom);
-                        } else if (attname.equals("c")) {
-                            vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
-                            vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_kolom);
-                        } else if (attname.equals("f")) {
-                            vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
-                            vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_fokus);
-                        } else if (attname.equals("h")) {
-                            vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
-                            vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_xtend);
-                        } else if (attname.equals("j")) {
-                            vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
-                            vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_issue);
-                        } else if (attname.equals("p")) {
-                            vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
-                            vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_album);
-                        } else if (attname.equals("s")) {
-                            vhLeftPic.item_type_iv.setVisibility(View.VISIBLE);
-                            vhLeftPic.item_type_iv.setImageResource(R.drawable.zq_subscript_video);
-                        } else {
-                            vhLeftPic.item_type_iv.setVisibility(View.GONE);
-                        }
-                    } else {
-                        vhLeftPic.item_type_iv.setVisibility(View.GONE);
-                    }
+                    SPUtil.setAtt(vhLeftPic.item_type_iv, bean.getAttname());
 
                     fav = bean.getFav();
                     if (!TextUtils.isEmpty(fav)) {
@@ -569,29 +572,12 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                         vhLeftPic.newsitem_img.setVisibility(View.GONE);
                     }
 
-                    if (bean.getSid()!=null&&!"0".equals(bean.getSid())) {
+                    if (bean.getSid() != null && !"0".equals(bean.getSid())) {
                         vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_issue);
                         vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
                     }
-                    if (bean.getRtype() != null) {
-                        //1新闻  2图集  3直播 4专题  5关联新闻 6视频 7引用
-                        if ("2".equals(bean.getRtype())) {
-                            vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_album);
-                            vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
-                        } else if ("3".equals(bean.getRtype())) {
-                            vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_live);
-                            //				vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
-                        } else if ("4".equals(bean.getRtype())) {
-                            vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_issue);
-                            vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
-                        } else if ("7".equals(bean.getRtype())) {
-                            vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_html);
-                            vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
-                        } else if ("6".equals(bean.getRtype())) {
-                            vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_video);
-                            vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
-                        }
-                    }
+                    SPUtil.setRtype(bean.getRtype(), vhLeftPic.nli_foot);
+
                     vhLeftPic.newsitem_img.setImageResource(R.drawable.default_bg);
 
                     if (vhLeftPic.newsitem_img.getVisibility() == View.VISIBLE
@@ -606,7 +592,8 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                         vhLeftPic.newsitem_title.setPadding(0, 0, 0, App.px_15dp);
                         vhLeftPic.ll_tag.setPadding(0, 0, 0, 0);
                     }
-                    break;
+                }
+                break;
                 case TYPE_AD:
                     try {
                         bean = list.get(position);
@@ -614,7 +601,8 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                         AdHolder adHolder = (AdHolder) holder;
                         NativeAd nativeAd = ads.get("" + position);
                         nativeAd.unregisterView();
-                        View view = NativeAdView.render(context, nativeAd, NativeAdView.Type.HEIGHT_120);
+                        View view = SPUtil.getRandomAdView(context, nativeAd);
+                        adHolder.viewGroup.removeAllViews();
                         adHolder.viewGroup.addView(view);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -641,38 +629,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                                 .getResources().getColor(R.color.item_title));
                     }
 
-                    if (bean.getAttname() != null) {
-                        String attname = bean.getAttname();
-                        if (attname.equals("a")) {
-                            vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
-                            vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_hot);
-                        } else if (attname.equals("b")) {
-                            vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
-                            vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_rekom);
-                        } else if (attname.equals("c")) {
-                            vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
-                            vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_kolom);
-                        } else if (attname.equals("f")) {
-                            vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
-                            vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_fokus);
-                        } else if (attname.equals("h")) {
-                            vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
-                            vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_xtend);
-                        } else if (attname.equals("j")) {
-                            vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
-                            vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_issue);
-                        } else if (attname.equals("p")) {
-                            vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
-                            vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_album);
-                        } else if (attname.equals("s")) {
-                            vhLargePic.item_type_iv.setVisibility(View.VISIBLE);
-                            vhLargePic.item_type_iv.setImageResource(R.drawable.zq_subscript_video);
-                        } else {
-                            vhLargePic.item_type_iv.setVisibility(View.GONE);
-                        }
-                    } else {
-                        vhLargePic.item_type_iv.setVisibility(View.GONE);
-                    }
+                    SPUtil.setAtt(vhLargePic.item_type_iv, bean.getAttname());
 
                     fav = bean.getFav();
                     if (!TextUtils.isEmpty(fav)) {
@@ -728,25 +685,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                         vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_issue);
                         vhLargePic.nli_foot.setVisibility(View.VISIBLE);
                     }
-                    if (bean.getRtype()!=null){
-                        //1新闻  2图集  3直播 4专题  5关联新闻 6视频 7引用
-                        if ("2".equals(bean.getRtype())) {
-                            vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_album);
-                            vhLargePic.nli_foot.setVisibility(View.VISIBLE);
-                        } else if ("3".equals(bean.getRtype())) {
-                            vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_live);
-                            //				vhLargePic.nli_foot.setVisibility(View.VISIBLE);
-                        } else if ("4".equals(bean.getRtype())) {
-                            vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_issue);
-                            vhLargePic.nli_foot.setVisibility(View.VISIBLE);
-                        } else if ("7".equals(bean.getRtype())) {
-                            vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_html);
-                            vhLargePic.nli_foot.setVisibility(View.VISIBLE);
-                        } else if ("6".equals(bean.getRtype())) {
-                            vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_video);
-                            vhLargePic.nli_foot.setVisibility(View.VISIBLE);
-                        }
-                    }
+                    SPUtil.setRtype(bean.getRtype(), vhLargePic.nli_foot);
 
                     if (vhLargePic.newsitem_img.getVisibility() == View.VISIBLE
                             && null != bean.getImgs()
@@ -778,6 +717,8 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         NewsBean bean = list.get(position);
         if ("ad".equals(bean.getType())) {
             return TYPE_AD;
+        } else if (bean.getImgs() == null || bean.getImgs().length == 0) {
+            return TYPE_TEXT;
         } else if ("4".equals(bean.getType())) {
             return TYPE_THREEPIC;
         } else if ("10".equals(bean.getType())) {
@@ -922,6 +863,37 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         private LinearLayout ll_tag;
 
         public VHLeftPic(View v) {
+            super(v);
+            ViewUtils.inject(this, v);
+            v.setOnClickListener(onClickListener);
+        }
+    }
+
+    //纯文本，评论，时间，脚标
+    private class TextViewHolder extends RecyclerView.ViewHolder {
+        @ViewInject(R.id.newsitem_title)
+        private TextView newsitem_title;
+        @ViewInject(R.id.nli_foot)
+        private ImageView nli_foot;
+        //		来源
+        @ViewInject(R.id.newsitem_source)
+        private TextView newsitem_source;
+        //		收藏数
+        @ViewInject(R.id.newsitem_collectcount)
+        private TextView newsitem_collectcount;
+        //		评论数
+        @ViewInject(R.id.newsitem_commentcount)
+        private TextView newsitem_commentcount;
+        @ViewInject(R.id.newsitem_time)
+        private TextView newsitem_time;
+        @ViewInject(R.id.newsitem_unlike)
+        private ImageView newsitem_unlike;
+        @ViewInject(R.id.item_type_iv)
+        private ImageView item_type_iv;
+        @ViewInject(R.id.ll_tag)
+        private LinearLayout ll_tag;
+
+        public TextViewHolder(View v) {
             super(v);
             ViewUtils.inject(this, v);
             v.setOnClickListener(onClickListener);

@@ -19,14 +19,10 @@ import com.hzpd.custorm.GridViewInScrollView;
 import com.hzpd.hflt.R;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.url.InterfaceJsonfile;
-import com.hzpd.url.InterfaceJsonfile_TW;
-import com.hzpd.url.InterfaceJsonfile_YN;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.CODE;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -164,18 +160,9 @@ public class ActionRegisterFragment extends BaseFragment {
 	}
 
 	private void getInfoFromSever() {
-		String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
-		String actionConf_url =null;
-		if (station.equals(StationConfig.DEF)){
-			actionConf_url =InterfaceJsonfile.actionConf;
-		}else if (station.equals(StationConfig.YN)){
-			actionConf_url = InterfaceJsonfile_YN.actionConf;
-		}else if (station.equals(StationConfig.TW)){
-			actionConf_url = InterfaceJsonfile_TW.actionConf;
-		}
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("activityid", activityid);
-		httpUtils.send(HttpMethod.POST, actionConf_url, params, new RequestCallBack<String>() {
+		httpUtils.send(HttpMethod.POST, InterfaceJsonfile.actionConf, params, new RequestCallBack<String>() {
 			@Override
 			public void onSuccess(ResponseInfo<String> responseInfo) {
 				LogUtils.i("action regconf result-->" + responseInfo.result);
@@ -511,33 +498,16 @@ public class ActionRegisterFragment extends BaseFragment {
 
 		@Override
 		protected String doInBackground(String... params) {
-			String station= SharePreferecesUtils.getParam(getActivity(), StationConfig.STATION, "def").toString();
-			String siteid=null;
-			String TSBLADDIMG_url =null;
-			String actionRegSubm_url=null;
-			if (station.equals(StationConfig.DEF)){
-				siteid=InterfaceJsonfile.SITEID;
-				TSBLADDIMG_url =InterfaceJsonfile.TSBLADDIMG;
-				actionRegSubm_url=InterfaceJsonfile.actionRegSubm;
-			}else if (station.equals(StationConfig.YN)){
-				siteid=InterfaceJsonfile_YN.SITEID;
-				TSBLADDIMG_url = InterfaceJsonfile_YN.TSBLADDIMG;
-				actionRegSubm_url=InterfaceJsonfile_YN.actionRegSubm;
-			}else if (station.equals(StationConfig.TW)){
-				siteid=InterfaceJsonfile_TW.SITEID;
-				TSBLADDIMG_url = InterfaceJsonfile_TW.TSBLADDIMG;
-				actionRegSubm_url=InterfaceJsonfile_TW.actionRegSubm;
-			}
 			StringBuilder pics = new StringBuilder();
 			for (int i = 0; i < mSelectPath.size(); i++) {
 				File f = new File(mSelectPath.get(i));
 
 				RequestParams para = RequestParamsUtils.getParams();
 				para.addBodyParameter("fpic", f);
-				para.addBodyParameter("siteid", siteid);
+				para.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
 				ResponseStream rs;
 				try {
-					rs = httpUtils.sendSync(HttpMethod.POST, TSBLADDIMG_url, para);
+					rs = httpUtils.sendSync(HttpMethod.POST, InterfaceJsonfile.TSBLADDIMG, para);
 					JSONObject obj = FjsonUtil.parseObject(rs.readString());
 					LogUtils.i(obj.toJSONString());
 					if (200 == obj.getIntValue("code")) {
@@ -559,7 +529,7 @@ public class ActionRegisterFragment extends BaseFragment {
 				pic = pics.substring(0, pics.length() - 1);
 			}
 			RequestParams para1 = RequestParamsUtils.getParams();
-			para1.addBodyParameter("siteid", siteid);
+			para1.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
 			para1.addBodyParameter("activityid", activityid);
 			para1.addBodyParameter("pic", pic);
 			LogUtils.i("pics-->" + pic);
@@ -593,7 +563,7 @@ public class ActionRegisterFragment extends BaseFragment {
 
 			String result = null;
 			try {
-				ResponseStream rs = httpUtils.sendSync(HttpMethod.POST,actionRegSubm_url, para1);
+				ResponseStream rs = httpUtils.sendSync(HttpMethod.POST,InterfaceJsonfile.actionRegSubm, para1);
 				result = rs.readString();
 			} catch (HttpException e) {
 				e.printStackTrace();
