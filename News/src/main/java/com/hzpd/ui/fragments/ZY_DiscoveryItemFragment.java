@@ -2,6 +2,8 @@ package com.hzpd.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +13,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.hzpd.adapter.DiscoveryItemAdapter;
+import com.hzpd.adapter.DiscoveryItemNewAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.CollectionJsonBean;
 import com.hzpd.modle.DiscoveryItemBean;
+import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
@@ -29,9 +33,11 @@ import java.util.List;
 
 public class ZY_DiscoveryItemFragment extends BaseFragment {
 
-    private String url = "http://www.nutnote.com/ltcms/api.php?s=/Tag/discovery";
     private PullToRefreshListView pushmsg_lv;
     private DiscoveryItemAdapter adapter;
+
+    private RecyclerView discovery_recyclerview;
+    private DiscoveryItemNewAdapter newAdapter;
 
     @Override
     public String getAnalyticPageName() {
@@ -44,33 +50,14 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
         View view = null;
         try {
             view = inflater.inflate(R.layout.zy_discovery_item_fragment, container, false);
-            adapter = new DiscoveryItemAdapter(getActivity());
-            pushmsg_lv = (PullToRefreshListView) view.findViewById(R.id.pushmsg_lv);
-            pushmsg_lv.setAdapter(adapter);
-            pushmsg_lv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-                @Override
-                public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                    LogUtils.i("下拉刷新");
-                    refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_pull_label));
-                    getDiscoveryServer();
-                }
-
-                @Override
-                public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                    //上拉加载
-                    LogUtils.i("上拉加载");
-                    refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_from_bottom_pull_label));
-                    getDiscoveryServer();
-                }
-            });
-            pushmsg_lv.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    pushmsg_lv.setRefreshing(true);
-                }
-            }, 600);
-
-
+            discovery_recyclerview = (RecyclerView) view.findViewById(R.id.discovery_recyclerview);
+            //设置布局管理器
+            LinearLayoutManager vlinearLayoutManager = new LinearLayoutManager(getActivity());
+            vlinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            discovery_recyclerview.setLayoutManager(vlinearLayoutManager);
+            newAdapter = new DiscoveryItemNewAdapter(getContext());
+            discovery_recyclerview.setAdapter(newAdapter);
+            getDiscoveryServer();
         } catch (Exception e) {
 
         }
@@ -85,11 +72,9 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("Page", Page + "");
         params.addBodyParameter("PageSize", pageSize + "");
-        httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
+        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.discovery_url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                pushmsg_lv.onRefreshComplete();
-                pushmsg_lv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
                 JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
                 if (null == obj) {
                     return;
@@ -101,16 +86,14 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
                     if (null == mlist) {
                         return;
                     }
-                    adapter.appendData(mlist, true);
-                    adapter.notifyDataSetChanged();
+                    newAdapter.appendData(mlist, false);
                     LogUtils.i("listsize-->" + mlist.size());
                 }
             }
 
             @Override
             public void onFailure(HttpException e, String s) {
-                pushmsg_lv.onRefreshComplete();
-                pushmsg_lv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+
             }
         });
     }

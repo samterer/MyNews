@@ -1,9 +1,11 @@
 package com.hzpd.adapter;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,88 +16,116 @@ import android.widget.Toast;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.DiscoveryItemBean;
 import com.hzpd.modle.NewsBean;
-import com.hzpd.modle.TagBean;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
 
-public class DiscoveryItemAdapter extends ListBaseAdapter<DiscoveryItemBean> {
+import java.util.ArrayList;
+import java.util.List;
 
-    private int size;
+public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
 
-    private boolean flag = false;
+    private Context context;
+    private LayoutInflater mInflater;
+    List<DiscoveryItemBean> list = null;
 
-    public DiscoveryItemAdapter(Activity c) {
-        super(c);
+    public DiscoveryItemNewAdapter(Context context) {
+        this.context = context;
+        this.mInflater = LayoutInflater.from(context);
+        list = new ArrayList<>();
     }
 
-    public DiscoveryItemAdapter(Activity c, int size) {
-        super(c);
-        this.size = size;
-    }
-
-    private static class ViewHolder {
-        @ViewInject(R.id.discovery_iv_tag)
-        ImageView discovery_iv_tag;
-        @ViewInject(R.id.mycoms_content_txt)
-        TextView mycoms_content_txt;
-        @ViewInject(R.id.news_ll)
-        LinearLayout news_ll;
-        @ViewInject(R.id.tv_subscribe)
-        TextView tv_subscribe;
-        public ViewHolder(View v) {
-            ViewUtils.inject(this, v);
+    public void appendData(List<DiscoveryItemBean> data, boolean isClearOld) {
+        if (data == null) {
+            return;
         }
+        if (isClearOld) {
+            list.clear();
+        }
+        list.addAll(data);
+        notifyDataSetChanged();
     }
 
 
     @Override
-    public View getMyView(int position, View convertView, ViewGroup parent) {
-        final ViewHolder holder ;
-        if (null == convertView) {
-            convertView = inflater.inflate(R.layout.discovery_item_layout, parent, false);
-            holder = new ViewHolder(convertView);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
+    public int getItemCount() {
+        if (list.size() > 0)
+            return list.size();
+        else
+            return 0;
+    }
+
+    public class ItemViewHolder extends RecyclerView.ViewHolder {
+        public ItemViewHolder(View v) {
+            super(v);
         }
-        final TagBean tagBean = list.get(position).getTag();
-        holder.mycoms_content_txt.setText(tagBean.getName());
-        String tagIcon = tagBean.getIcon();
+        ImageView discovery_iv_tag;
+        TextView discovery_tag_name;
+        TextView tv_subscribe;
+        LinearLayout news_ll;
+        LinearLayout tag_layout;
+
+    }
+
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = mInflater.inflate(R.layout.discovery_item_layout,
+                parent, false);
+        ItemViewHolder viewHolder = new ItemViewHolder(view);
+        viewHolder.discovery_iv_tag = (ImageView) view.findViewById(R.id.discovery_iv_tag);
+        viewHolder.discovery_tag_name = (TextView) view.findViewById(R.id.discovery_tag_name);
+        viewHolder.tv_subscribe = (TextView) view.findViewById(R.id.tv_subscribe);
+        viewHolder.tag_layout = (LinearLayout) view.findViewById(R.id.tag_layout);
+        viewHolder.news_ll = (LinearLayout) view.findViewById(R.id.news_ll);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        final ItemViewHolder viewHolder = (ItemViewHolder) holder;
+        final DiscoveryItemBean bean = list.get(position);
+        if (!TextUtils.isEmpty(bean.getTag().getName())) {
+            viewHolder.discovery_tag_name.setText(bean.getTag().getName());
+        }
+        String tagIcon = bean.getTag().getIcon();
         if (tagIcon != null) {
             SPUtil.displayImage(tagIcon
-                    , holder.discovery_iv_tag
+                    , viewHolder.discovery_iv_tag
                     , DisplayOptionFactory.getOption(OptionTp.Personal_center_News));
         }
-
-        holder.tv_subscribe.setOnClickListener(new View.OnClickListener() {
+        viewHolder.tv_subscribe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,"订阅",Toast.LENGTH_SHORT).show();
-                holder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
-                holder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.details_tv_check_color));
+//                Toast.makeText(context,"订阅",Toast.LENGTH_SHORT).show();
+                Log.i("DiscoveryItemNewAdapter","DiscoveryItemNewAdapter  viewHolder.tv_subscribe  onClick");
+                viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
+                viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.details_tv_check_color));
                 Drawable nav_up=context.getResources().getDrawable(R.drawable.discovery_image_select);
                 nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
-                holder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+                viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+            }
+        });
+        viewHolder.tag_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("DiscoveryItemNewAdapter","DiscoveryItemNewAdapter   viewHolder.tag_layout   onClick");
             }
         });
 
-        DiscoveryItemBean bean = list.get(position);
-        holder.news_ll.removeAllViews();
+
+        viewHolder.news_ll.removeAllViews();
         for (final NewsBean itembean : bean.getNews()) {
-            View vi = inflater.inflate(R.layout.news_list_item_layout, null);
-            holder.news_ll.addView(vi);
+            View vi = mInflater.inflate(R.layout.news_list_item_layout, null);
+
             ImageView newsitem_img = (ImageView) vi.findViewById(R.id.newsitem_img);
             TextView newsitem_title = (TextView) vi.findViewById(R.id.newsitem_title);
             TextView newsitem_time = (TextView) vi.findViewById(R.id.newsitem_time);
             LinearLayout ll_tag = (LinearLayout) vi.findViewById(R.id.ll_tag);
-//            newsitem_time.setText("312321");
-//            newsitem_time.setText(itembean.getUpdate_time());
             if (CalendarUtil.friendlyTime(itembean.getUpdate_time(), context) == null) {
                 newsitem_time.setText(" ");
             } else {
@@ -151,27 +181,19 @@ public class DiscoveryItemAdapter extends ListBaseAdapter<DiscoveryItemBean> {
             }
 
 
-
             vi.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(context, "" + itembean.getNid(), Toast.LENGTH_SHORT).show();
-                    Intent mIntent = new Intent(context,NewsDetailActivity.class);
+                    Intent mIntent = new Intent(context, NewsDetailActivity.class);
                     mIntent.putExtra("newbean", itembean);
                     mIntent.putExtra("from", "newsitem");
                     context.startActivity(mIntent);
                 }
             });
-//            TextView mycomment_news = (TextView) vi.findViewById(R.id.mycomment_news);
-//            TextView mycomments_itemc_tv_content = (TextView) vi.findViewById(R.id.mycomments_itemc_tv_content);
-//            TextView mycomments_itemc_tv_prise = (TextView) vi.findViewById(R.id.mycomments_itemc_tv_prise);
-//            TextView mycomments_itemc_tv_sj_txt = (TextView) vi.findViewById(R.id.mycomments_itemc_tv_sj_txt);
-//            TextView cm_item_tv_comstate = (TextView) vi.findViewById(R.id.cm_item_tv_comstate);
+
+            viewHolder.news_ll.addView(vi);
         }
-
-
-        return convertView;
     }
-
 
 }

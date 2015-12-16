@@ -131,25 +131,6 @@ public class ZQ_ReplyActivity extends MBaseActivity {
             break;
             case R.id.zq_reply_tv_send: {
                 String comcount = bean.getComcount();
-//                if (AvoidOnClickFastUtils.isFastDoubleClick()) {
-//                    return;//防止过快点击
-//                }
-//                try {
-//                    NewsBeanDB nbfc = dbHelper.getNewsListDbUtils().findFirst(
-//                            Selector.from(NewsBeanDB.class).where("nid", "=", bean.getId()));
-//                    if (null != nbfc) {
-//                        com.hzpd.utils.Log.e("NewsBeanDB", "NewsBeanDB--->" + nbfc.getFav() + "::::" + nbfc.getComcount());
-//                        if (nbfc.getColumnid() != null || Integer.parseInt(nbfc.getComcount()) >= Integer.parseInt(comcount)) {
-//                            comcount = nbfc.getComcount();
-//                        }
-//                    } else {
-//                        com.hzpd.utils.Log.e("NewsBeanDB", "NewsBeanDB--->null");
-//                    }
-//
-//                } catch (DbException e) {
-//                    e.printStackTrace();
-//                    com.hzpd.utils.Log.e("DbException", "NewsBeanDB--->" + e);
-//                }
                 String comment = zq_reply_et_content.getText().toString();
                 if (null == comment || "".equals(comment)) {
                     TUtils.toast(getString(R.string.toast_input_cannot_be_empty));

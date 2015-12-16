@@ -447,15 +447,15 @@ public class MyEditColumnActivity extends MBaseActivity {
             list.add(0, channelRecommend);
         }
 
-        //	专题
-        NewsChannelBean channelSubject = new NewsChannelBean();
-        channelSubject.setTid("" + NewsChannelBean.TYPE_SUBJECT);
-        channelSubject.setType(NewsChannelBean.TYPE_SUBJECT);
-        channelSubject.setCnname(getString(R.string.menu_subject));
-        if (!list.contains(channelSubject)) {
-            list.add(0, channelSubject);
-            Log.d(getLogTag(), "add channelSubject");
-        }
+//        //	专题
+//        NewsChannelBean channelSubject = new NewsChannelBean();
+//        channelSubject.setTid("" + NewsChannelBean.TYPE_SUBJECT);
+//        channelSubject.setType(NewsChannelBean.TYPE_SUBJECT);
+//        channelSubject.setCnname(getString(R.string.menu_subject));
+//        if (!list.contains(channelSubject)) {
+//            list.add(0, channelSubject);
+//            Log.d(getLogTag(), "add channelSubject");
+//        }
     }
 
 

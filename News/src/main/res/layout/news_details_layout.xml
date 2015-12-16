@@ -31,8 +31,8 @@
                     android:layout_height="@dimen/details_title_bar"
                     android:background="@color/main_background_color"
                     android:orientation="horizontal">
-                    <!--返回按钮-->
 
+                    <!--返回按钮-->
                     <RelativeLayout
                         android:id="@+id/news_detail_bak"
                         android:layout_width="@dimen/details_title_bar"
@@ -48,62 +48,87 @@
 
                     </RelativeLayout>
 
-                    <ImageView
-                        android:layout_width="29dp"
-                        android:layout_height="29dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="#ccc" />
-
+                    <!--显示tag View-->
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Bloa"
-                            android:textColor="#333333"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="5.2million people like"
-                            android:textColor="#333333"
-                            android:textSize="10sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="60dp"
-                        android:layout_height="26dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginRight="20dp"
-                        android:background="@drawable/details_subscription_corners_bg"
+                        android:id="@+id/details_tag_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="wrap_content"
+                            android:layout_width="29dp"
+                            android:layout_height="29dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="#ccc" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="10dp"
-                            android:src="@drawable/editcolum_image"
-                            />
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Bloa"
+                                android:textColor="#333333"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="5.2million people like"
+                                android:textColor="#333333"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="60dp"
+                            android:layout_height="26dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="20dp"
+                            android:background="@drawable/details_subscription_corners_bg"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:src="@drawable/editcolum_image" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="5dp"
+                                android:text="@string/discovery_follow"
+                                android:textColor="@color/white" />
+
+                        </LinearLayout>
 
                         <TextView
+                            android:id="@+id/details_tv_subscribe"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="5dp"
+                            android:background="@drawable/details_subscription_corners_bg"
+                            android:drawableLeft="@drawable/editcolum_image"
+                            android:drawablePadding="3dp"
+                            android:paddingTop="3dp"
+                            android:paddingBottom="3dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:layout_marginRight="20dp"
                             android:text="@string/discovery_follow"
                             android:textColor="@color/white" />
 
+
+
                     </LinearLayout>
-
-
                 </LinearLayout>
 
                 <View

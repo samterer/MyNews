@@ -34,24 +34,9 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/background_tab_pressed_select_back" />
+                        android:src="@drawable/webview_prev_mz" />
 
                 </RelativeLayout>
-
-                <LinearLayout
-                    android:id="@+id/news_detail_bak"
-                    android:layout_width="@dimen/main_title_bar"
-                    android:layout_height="match_parent"
-                    android:clickable="true"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:layout_width="@dimen/main_title_bar"
-                        android:layout_height="@dimen/main_title_bar"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/background_tab_pressed_selector" />
-                </LinearLayout>
 
                 <com.hzpd.ui.widget.FontTextView
                     android:id="@+id/stitle_tv_content"
@@ -59,25 +44,36 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="15dp"
                     android:layout_toRightOf="@+id/news_detail_bak"
                     android:layout_weight="1"
-                    android:textColor="@color/white"
-                    android:textSize="22sp" />
+                    android:text="@string/comment"
+                    android:textColor="@color/item_title"
+                    android:textSize="20sp" />
 
-                <RelativeLayout
+                <LinearLayout
                     android:id="@+id/zq_reply_tv_send"
                     android:layout_width="@dimen/main_title_bar"
                     android:layout_height="@dimen/main_title_bar"
-                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:background="?m_background_tab_pressed">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:src="@drawable/zq_reply_send_iv_select" />
-                </RelativeLayout>
+                        android:src="@drawable/zq_reply_send_iv_select"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="完成"
+
+                        />
+
+
+                </LinearLayout>
             </LinearLayout>
 
             <FrameLayout

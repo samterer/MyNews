@@ -19,32 +19,43 @@
 
         <!-- 标签-->
         <LinearLayout
-            android:id="@+id/my_newdetails"
+            android:id="@+id/discovery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#fafafa"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/margin_10"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="@dimen/margin_10">
+            android:paddingRight="16dp">
 
-            <ImageView
-                android:id="@+id/discovery_iv_tag"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:scaleType="centerCrop"
-                android:src="@color/main_background_color" />
 
-            <com.hzpd.ui.widget.FontTextView
-                android:id="@+id/mycoms_content_txt"
+            <LinearLayout
+                android:id="@+id/tag_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingLeft="@dimen/margin_10"
-                android:text="tag"
-                android:textSize="16sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/margin_10"
+                android:paddingLeft="16dp"
+                android:paddingTop="@dimen/margin_10">
+
+                <ImageView
+                    android:id="@+id/discovery_iv_tag"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:scaleType="centerCrop"
+                    android:src="@color/main_background_color" />
+
+                <com.hzpd.ui.widget.FontTextView
+                    android:id="@+id/discovery_tag_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/margin_10"
+                    android:text="tag"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/tv_subscribe"
@@ -54,10 +65,10 @@
                 android:background="@drawable/discovery_item_corners_bg"
                 android:drawableLeft="@drawable/discovery_image_nor"
                 android:drawablePadding="3dp"
-                android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
+                android:paddingTop="5dp"
                 android:text="@string/discovery_follow"
                 android:textColor="@color/pager_sliding_tab_indicator_color" />
 

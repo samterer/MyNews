@@ -482,9 +482,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private View rl_undal_praise;
     private boolean isPraise = false;
     private boolean isUnPraise = false;
+    private TextView details_tv_subscribe;
 
     private void initViews() {
-
         mLayoutInflater = LayoutInflater.from(this);
         recyclerView = (CustomRecyclerView) findViewById(R.id.recycler_view);
         mRoot = recyclerView;
@@ -492,6 +492,18 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         recyclerView.setLayoutManager(layoutManager);
         adapter = new NewsDetailAdapter(this);
         recyclerView.setAdapter(adapter);
+        details_tv_subscribe= (TextView) findViewById(R.id.details_tv_subscribe);
+        details_tv_subscribe.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                details_tv_subscribe.setBackgroundResource(R.drawable.discovery_item_corners_bg);
+                details_tv_subscribe.setTextColor(getResources().getColor(R.color.details_tv_check_color));
+                Drawable nav_up=getResources().getDrawable(R.drawable.discovery_image_select);
+                nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+                details_tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+            }
+        });
+
 
     }
 
@@ -607,7 +619,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     }
 
     private void isDalNewsPraise() {
-
         String praise = SharePreferecesUtils.getParam(NewsDetailActivity.this, nb.getNid(), "0").toString();
         if (praise.equals("1")) {
             Drawable img = getResources().getDrawable(R.drawable.news_details_praise_select);
@@ -679,7 +690,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         mRelativeLayoutPopuCenter.setOnClickListener(this);
         mRelativeLayoutPopuSmaill.setOnClickListener(this);
     }
-
 
     private void dismissPopupWindows() {
         if (mPopupWindow != null && mPopupWindow.isShowing()) {
@@ -785,7 +795,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         return false;
     }
 
-
     public void thirdlogin(ThirdLoginBean tlb) {
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("userid", tlb.getUserid());
@@ -834,7 +843,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     private ArrayList<CommentzqzxBean> latestList;
     private String completeCom;
-
 
     private View loadingView;
 
@@ -1027,7 +1035,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         mWebView.loadDataWithBaseURL(BASE_URL, formatStringToHtml(stringBuilder.toString(), textSize), "text/html", "utf-8", BASE_URL);
         //mWebView.loadUrl("http://www.nutnote.com/ltcms/api.php?s=/View/details/nid/378216");
         jsInterface.setNewsDetailBean(mBean);
-
     }
 
     public static final String DIV = "</div>";
@@ -1039,7 +1046,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         int start = content.indexOf(CONTENT_START) + CONTENT_START.length();
         Log.e("head", "head  length--->" + start);
         String head = "";
-        String str = "";
         if (start > 10) {
             head = content.substring(0, start);
             head = head.substring(0, start - 45);
@@ -1391,7 +1397,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         }
     }
 
-
     //纯文本，评论，时间，脚标
     private class TextViewHolder {
         private TextView newsitem_title;
@@ -1713,7 +1718,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         return;
     }
 
-
     private class MyOnClickListener implements OnClickListener {
         private String tag;
 
@@ -1740,27 +1744,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             Intent in = new Intent();
             in.setClass(this, MainActivity.class);
             startActivity(in);
-        }
-
-    }
-
-    class MyOtherClickListener implements OnClickListener {
-        private int i;
-
-        public MyOtherClickListener(int i) {
-            this.i = i;
-        }
-
-        @Override
-        public void onClick(View v) {
-            Intent in = new Intent();
-            Bundle bu = new Bundle();
-            bu.putString("nid", mBean.getRef().get(i).getNid());
-            bu.putString("type", "1");
-            in.putExtras(bu);
-            in.setClass(NewsDetailActivity.this, NewsDetailActivity.class);
-            startActivity(in);
-            AAnim.ActivityStartAnimation(NewsDetailActivity.this);
         }
 
     }
@@ -1976,5 +1959,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     }
 
     private long enterTime = 0;
+
     private final int MAX_SIZE = 30;
 }
