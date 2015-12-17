@@ -296,7 +296,6 @@
     <string name="discovery_name">Temukan</string>
     <string name="classify_name">Kategori</string>
     <string name="discovery_follow">Pilih</string>
-
-
+    <string name="follow_num">Pembaca</string>
 
 </resources>

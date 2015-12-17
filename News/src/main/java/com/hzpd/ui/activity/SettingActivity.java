@@ -130,21 +130,6 @@ public class SettingActivity extends MBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zqzx_setting_layout);
 
-
-        final String channelCachePath = App.getInstance().getAllDiskCacheDir()
-                + File.separator
-                + App.mTitle;
-        final File channelCacheFile = new File(channelCachePath);
-        final File target = App.getFile(App.getInstance().getAllDiskCacheDir() + File.separator + "News");
-
-        // 读取频道信息的本地缓存
-        SerializeUtil<List<NewsChannelBean>> serializeUtil = new SerializeUtil<List<NewsChannelBean>>();
-        List<NewsChannelBean> cacheChannels = serializeUtil
-                .readyDataToFile(channelCacheFile.getAbsolutePath());
-
-
-        Log.i("cacheChannels","cacheChannels--->"+cacheChannels.size()+"::::"+cacheChannels.toString());
-
         try {
             ViewUtils.inject(this);
         } catch (Exception e) {

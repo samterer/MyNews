@@ -2,6 +2,8 @@ package com.hzpd.modle;
 
 import android.text.TextUtils;
 
+import com.hzpd.modle.db.NewsChannelBeanDB;
+
 import java.io.Serializable;
 
 public class NewsChannelBean implements Comparable<NewsChannelBean>, Serializable {
@@ -26,10 +28,33 @@ public class NewsChannelBean implements Comparable<NewsChannelBean>, Serializabl
     private String default_show;
 
 
+    private int type = TYPE_NORMAL;
     private String icon;
     private String id;
     private String name;
     private String num;
+
+    public NewsChannelBean() {
+
+    }
+
+    public NewsChannelBean(NewsChannelBeanDB bean) {
+        setTid(bean.getTid());
+        setCnname(bean.getCnname());
+        setSort_order(bean.getSort_order());
+        setFid(bean.getFid());
+        setPath(bean.getPath());
+        setSource(bean.getSource());
+        setStyle(bean.getStyle());
+        setStatus(bean.getStatus());
+        setSiteid(bean.getSiteid());
+        setDefault_show(bean.getDefault_show());
+        setIcon(bean.getIcon());
+        setId(bean.getTagid());
+        setName(bean.getName());
+        setNum(bean.getNum());
+        setType(bean.getType());
+    }
 
     @Override
     public String toString() {
@@ -37,14 +62,8 @@ public class NewsChannelBean implements Comparable<NewsChannelBean>, Serializabl
                 "tid='" + tid + '\'' +
                 ", cnname='" + cnname + '\'' +
                 ", sort_order='" + sort_order + '\'' +
-                ", fid='" + fid + '\'' +
-                ", path='" + path + '\'' +
-                ", source='" + source + '\'' +
-                ", style='" + style + '\'' +
-                ", status='" + status + '\'' +
                 ", siteid='" + siteid + '\'' +
                 ", default_show='" + default_show + '\'' +
-                ", icon='" + icon + '\'' +
                 ", id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", num='" + num + '\'' +
@@ -92,7 +111,6 @@ public class NewsChannelBean implements Comparable<NewsChannelBean>, Serializabl
         this.default_show = default_show;
     }
 
-    private int type = TYPE_NORMAL;
 
     public int getType() {
         return type;

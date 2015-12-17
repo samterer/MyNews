@@ -15,6 +15,7 @@ public class DBHelper {
     private DbUtils bianminListDbUtils;//便民列表数据库
     private DbUtils zhuantiListDbUtils;//专题列表数据库
     private DbUtils pushListDbUtils;//新闻列表数据库
+    private DbUtils channelDbUtils;//频道,TAG数据库
 
     private DbUtils logDbUtils;
 
@@ -47,6 +48,8 @@ public class DBHelper {
                 , dbPath, App.userLogDb);
         pushListDbUtils = DbUtils.create(context
                 , dbPath, App.pushListDb);
+        channelDbUtils = DbUtils.create(context
+                , dbPath, App.channelDb);
     }
 
     public static synchronized DBHelper getInstance(Context context) {
@@ -93,5 +96,9 @@ public class DBHelper {
 
     public DbUtils getPushListDbUtils() {
         return pushListDbUtils;
+    }
+
+    public DbUtils getChannelDbUtils() {
+        return channelDbUtils;
     }
 }

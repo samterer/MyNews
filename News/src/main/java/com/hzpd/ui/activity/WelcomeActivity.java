@@ -17,6 +17,7 @@ import com.hzpd.modle.UserBean;
 import com.hzpd.modle.db.AlbumBeanDB;
 import com.hzpd.modle.db.AlbumItemBeanDB;
 import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.db.NewsChannelBeanDB;
 import com.hzpd.modle.db.PushBeanDB;
 import com.hzpd.modle.db.VideoItemBeanDb;
 import com.hzpd.modle.db.ZhuantiBeanDB;
@@ -31,7 +32,6 @@ import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
-import com.hzpd.utils.SerializeUtil;
 import com.hzpd.utils.db.NewsListDbTask;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -44,7 +44,6 @@ import com.lidroid.xutils.util.LogUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -105,6 +104,7 @@ public class WelcomeActivity extends MWBaseActivity {
             newsListDb.count(ZhuantiBeanDB.class);
             newsListDb.count(NewsBeanDB.class);
             newsListDb.count(PushBeanDB.class);
+            newsListDb.count(NewsChannelBeanDB.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -143,73 +143,43 @@ public class WelcomeActivity extends MWBaseActivity {
                 new RequestCallBack<File>() {
                     @Override
                     public void onSuccess(ResponseInfo<File> responseInfo) {
-                        String json = App.getFileContext(responseInfo.result);
+                        try {
+                            String json = App.getFileContext(responseInfo.result);
 //							LogUtils.e("WelcomeActivity数据源问题--->"+json);
-                        if (json != null) {
-                            Log.i("", "channel-->" + json);
-                            JSONObject obj = FjsonUtil.parseObject(json);
-                            if (null == obj) {
-                                return;
-                            }
+                            if (json != null) {
+                                Log.i("", "channel-->" + json);
+                                JSONObject obj = FjsonUtil.parseObject(json);
+                                if (null == obj) {
+                                    return;
+                                }
 
-                            // 读取json，获取频道信息
-                            JSONArray array = obj.getJSONArray("data");
-                            List<NewsChannelBean> newestChannels = JSONArray
-                                    .parseArray(array.toJSONString(),
-                                            NewsChannelBean.class);
-                            for (int i = 0; i < newestChannels.size(); i++) {
-                                NewsChannelBean newsChannelBean = newestChannels.get(i);
-                                newsChannelBean.getCnname();
-                            }
+                                // 读取json，获取频道信息
+                                JSONArray array = obj.getJSONArray("data");
+                                List<NewsChannelBean> newestChannels = JSONArray
+                                        .parseArray(array.toJSONString(),
+                                                NewsChannelBean.class);
+                                for (int i = 0; i < newestChannels.size(); i++) {
+                                    NewsChannelBean newsChannelBean = newestChannels.get(i);
+                                    newsChannelBean.getCnname();
+                                }
 
-                            // 读取频道信息的本地缓存
-                            SerializeUtil<List<NewsChannelBean>> serializeUtil = new SerializeUtil<List<NewsChannelBean>>();
-                            List<NewsChannelBean> cacheChannels = serializeUtil
-                                    .readyDataToFile(channelCacheFile.getAbsolutePath());
-
-
-
-                            // 如果没有缓存
-                            if (null == cacheChannels || cacheChannels.size() < 1) {
-
-                                if (newestChannels != null && newestChannels.size() > 0) {
-                                    for (int i = 0; i < newestChannels.size(); i++) {
-                                        String default_show = newestChannels.get(i).getDefault_show();
-                                        if (default_show.equals("0")) {
-                                            newestChannels.remove(i);
-                                            --i;
-                                        }
-                                    }
+                                List<NewsChannelBeanDB> dbs = null;
+                                dbs = dbHelper.getChannelDbUtils().findAll(NewsChannelBeanDB.class);
+                                // 如果没有缓存
+                                if (null == dbs || dbs.size() < 1) {
                                     addLocalChannels(newestChannels);
-                                    // 缓存频道信息到SD卡上
-                                    serializeUtil.writeDataToFile(newestChannels, channelCachePath);
-                                }
-                            } else { // 如果有缓存
-                                HashMap<String, NewsChannelBean> channelMap = new HashMap<String, NewsChannelBean>();
-                                for (NewsChannelBean stb : newestChannels) {
-                                    channelMap.put(stb.getTid(), stb);
-                                }
-
-                                for (int i = 0; i < cacheChannels.size(); i++) {
-                                    // 缓存的频道信息
-                                    NewsChannelBean cacheChannel = cacheChannels.get(i);
-                                    // 最新获取的频道信息
-                                    NewsChannelBean newestChannel = channelMap.get(cacheChannel.getTid());
-
-                                    if (null != newestChannel) {
-                                        // 最新的数据中有和缓存中对应的频道，则更新频道信息
-                                        cacheChannel.setStyle(newestChannel.getStyle());
-                                        cacheChannel.setCnname(newestChannel.getCnname());
-                                    } else {
-                                        // 最新的数据中没有和缓存中对应的频道，删除该频道信息
-                                        cacheChannels.remove(i);
-                                        --i;
+                                    dbs = new ArrayList<>();
+                                    for (NewsChannelBean bean : newestChannels) {
+                                        dbs.add(new NewsChannelBeanDB(bean));
                                     }
+                                    dbHelper.getChannelDbUtils().saveAll(dbs);
+                                    SPUtil.updateChannel();
+                                } else { // 如果有缓存
+                                    //TODO
                                 }
-                                addLocalChannels(cacheChannels);
-                                // 更新后信息再次保存到SD卡中
-                                serializeUtil.writeDataToFile(cacheChannels, channelCachePath);
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                         if (!exists) {
                             loadMainUI();

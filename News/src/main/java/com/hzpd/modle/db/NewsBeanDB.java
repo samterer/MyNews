@@ -5,15 +5,15 @@ import android.text.TextUtils;
 import com.hzpd.modle.NewsBean;
 import com.lidroid.xutils.db.annotation.Column;
 import com.lidroid.xutils.db.annotation.Table;
-import com.lidroid.xutils.db.annotation.Unique;
 
 
 @Table(name = "newslist")
 public class NewsBeanDB extends BaseDB implements Comparable<NewsBeanDB> {
 
-    @Unique
     @Column(column = "nid")
     private int nid;
+    @Column(column = "tagId")
+    private String tagId;
     @Column(column = "authorname")
     private String authorname;
     @Column(column = "title")
@@ -39,34 +39,6 @@ public class NewsBeanDB extends BaseDB implements Comparable<NewsBeanDB> {
     @Column(column = "sort_order")
     private String sort_order;//": "1736823498",
 
-    @Override
-    public String toString() {
-        return "NewsBeanDB{" +
-                "nid=" + nid +
-                ", authorname='" + authorname + '\'' +
-                ", title='" + title + '\'' +
-                ", sid='" + sid + '\'' +
-                ", tid='" + tid + '\'' +
-                ", outline='" + outline + '\'' +
-                ", type='" + type + '\'' +
-                ", update_time='" + update_time + '\'' +
-                ", json_url='" + json_url + '\'' +
-                ", imgs='" + imgs + '\'' +
-                ", rtype='" + rtype + '\'' +
-                ", comcount='" + comcount + '\'' +
-                ", sort_order='" + sort_order + '\'' +
-                ", subjectsort='" + subjectsort + '\'' +
-                ", status='" + status + '\'' +
-                ", comflag='" + comflag + '\'' +
-                ", isreaded=" + isreaded +
-                ", columnid='" + columnid + '\'' +
-                ", copyfrom='" + copyfrom + '\'' +
-                ", fav='" + fav + '\'' +
-                ", attname='" + attname + '\'' +
-                ", like='" + like + '\'' +
-                ", unlike='" + unlike + '\'' +
-                '}';
-    }
 
     @Column(column = "subjectsort")
     private String subjectsort;//": "1736823498",
@@ -88,6 +60,14 @@ public class NewsBeanDB extends BaseDB implements Comparable<NewsBeanDB> {
     private String like;
     @Column(column = "unlike")
     private String unlike;
+
+    public String getTagId() {
+        return tagId;
+    }
+
+    public void setTagId(String tagId) {
+        this.tagId = tagId;
+    }
 
     public String getAuthorname() {
         return authorname;

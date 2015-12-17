@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -85,7 +84,6 @@ import com.hzpd.utils.TUtils;
 import com.hzpd.utils.showwebview.MyJavascriptInterface;
 import com.joy.update.Utils;
 import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.HttpException;
@@ -96,7 +94,6 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -187,6 +184,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     private boolean isTheme;
     private View transparent_layout_id;
+    private View details_tag_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,6 +199,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         }
         App.getInstance().setProfileTracker(callback);
         setContentView(R.layout.news_details_layout);
+        //显示tag订阅相关
+        details_tag_layout=findViewById(R.id.details_tag_layout);
+
         initViews();
         getThisIntent();
         try {
@@ -1018,6 +1019,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     public static final String CONTENT_START = "<!-- content_start -->";
     public static final String BASE_URL = "file:///android_asset/news/?random=20151615";
     public static final String HEAD = "<html><head>" + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n"
+            + " <meta name=\"viewport\"\n" +
+            "          content=\"width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes\"/>"
             + "<style>@font-face {font-family: 'kievit';src: url('file:///android_asset/fonts/KievitPro-Regular.otf');}</style>"
             + "<link rel=\"stylesheet\" type=\"text/css\" href=\"android.css\" />\n"
             + "<script type=\"text/javascript\" src=\"android.js\" ></script>"

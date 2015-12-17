@@ -19,7 +19,6 @@
     <string name="video_layout_loading">正在缓冲...</string>
     <string name="init_decoders">正在進行第一次檔案解壓縮...</string>
     <string name="update_cencal">(點擊取消下載)</string>
-    <string name="rf_co_des">%1$s客戶端 V %2$s\n技術支持  慧度科技 99cms.cn</string>
     <string name="shared_img">shared_img</string>
     <string name="shared_appdownload">shared_appdownload</string>
     <string name="shared_site">shared_site</string>
@@ -353,4 +352,6 @@
     <string name="discovery_name">發現</string>
     <string name="classify_name">分類</string>
     <string name="discovery_follow">訂閱</string>
+
+    <string name="follow_num">人訂閱</string>
 </resources>

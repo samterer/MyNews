@@ -16,16 +16,22 @@ import android.widget.Toast;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.DiscoveryItemBean;
 import com.hzpd.modle.NewsBean;
+import com.hzpd.modle.db.NewsChannelBeanDB;
+import com.hzpd.modle.event.TagEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.utils.CalendarUtil;
+import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
+import com.lidroid.xutils.exception.DbException;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
 
@@ -63,6 +69,7 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
         public ItemViewHolder(View v) {
             super(v);
         }
+
         ImageView discovery_iv_tag;
         TextView discovery_tag_name;
         TextView tv_subscribe;
@@ -102,21 +109,39 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View v) {
 //                Toast.makeText(context,"订阅",Toast.LENGTH_SHORT).show();
-                Log.i("DiscoveryItemNewAdapter","DiscoveryItemNewAdapter  viewHolder.tv_subscribe  onClick");
-                viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
-                viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.details_tv_check_color));
-                Drawable nav_up=context.getResources().getDrawable(R.drawable.discovery_image_select);
-                nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
-                viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+                Log.i("DiscoveryItemNewAdapter", "DiscoveryItemNewAdapter  viewHolder.tv_subscribe  onClick");
+                try {
+                    viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
+                    viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.details_tv_check_color));
+                    Drawable nav_up = context.getResources().getDrawable(R.drawable.discovery_image_select);
+                    nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+                    viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+                    viewHolder.tv_subscribe.setEnabled(false);
+                    EventBus.getDefault().post(new TagEvent(bean.getTag()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
         viewHolder.tag_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("DiscoveryItemNewAdapter","DiscoveryItemNewAdapter   viewHolder.tag_layout   onClick");
+                Log.i("DiscoveryItemNewAdapter", "DiscoveryItemNewAdapter   viewHolder.tag_layout   onClick");
             }
         });
-
+        if (SPUtil.checkTag(bean.getTag())) {
+            viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
+            viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.details_tv_check_color));
+            Drawable nav_up = context.getResources().getDrawable(R.drawable.discovery_image_select);
+            nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+            viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+        }else{
+            viewHolder.tv_subscribe.setBackgroundResource(R.drawable.discovery_item_corners_bg);
+            viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.pager_sliding_tab_indicator_color));
+            Drawable nav_up = context.getResources().getDrawable(R.drawable.discovery_image_nor);
+            nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+            viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+        }
 
         viewHolder.news_ll.removeAllViews();
         for (final NewsBean itembean : bean.getNews()) {

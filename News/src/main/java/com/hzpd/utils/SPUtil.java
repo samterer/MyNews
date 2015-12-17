@@ -27,7 +27,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.facebook.ads.NativeAd;
 import com.facebook.ads.NativeAdView;
 import com.hzpd.hflt.R;
+import com.hzpd.modle.TagBean;
 import com.hzpd.modle.UserBean;
+import com.hzpd.modle.db.NewsChannelBeanDB;
 import com.hzpd.ui.App;
 import com.joy.update.Utils;
 import com.lidroid.xutils.HttpUtils;
@@ -40,6 +42,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListe
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -48,6 +51,33 @@ import java.util.Random;
  */
 public class SPUtil {
     public static Random random = new Random(System.currentTimeMillis());
+
+    public static List<NewsChannelBeanDB> dbs;
+
+    public static boolean checkTag(TagBean tagBean) {
+        if (dbs == null) {
+            return false;
+        }
+        try {
+            for (NewsChannelBeanDB beanDB : dbs) {
+                if (beanDB.getDefault_show().equals("1") && tagBean.getId().equals(beanDB.getTagid())) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static void updateChannel() {
+        try {
+            if (dbs != null) dbs.clear();
+            dbs = DBHelper.getInstance(App.getInstance()).getChannelDbUtils().findAll(NewsChannelBeanDB.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public static String getCountry() {
         return PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString("CountryCode", "id");
@@ -284,6 +314,7 @@ public class SPUtil {
     private UserBean user;
 
     private SPUtil() {
+        updateChannel();
         msp = ACache.get(App.getInstance().getApplicationContext(), getCountry());
         AssetManager assetManager = App.getInstance()
                 .getApplicationContext().getAssets();

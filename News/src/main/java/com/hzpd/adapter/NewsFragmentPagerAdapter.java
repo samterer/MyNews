@@ -40,7 +40,8 @@ public class NewsFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public long getItemId(int position) {
-        return saveTitleList.get(position).getTid().hashCode();
+        NewsChannelBean bean = saveTitleList.get(position);
+        return ("tid:" + bean.getTid() + "#" + "tagid:" + bean.getId()).hashCode();
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -212,7 +213,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //TODO Adbean adbean = App.getInstance().channelADMap.get(channelbean.getTid());
         page = 1;
         mFlagRefresh = true;
         firstLoading = false;
@@ -256,6 +256,8 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     //新闻列表
     @Override
     public void getDbList() {
+
+
         newsListDbTask.findList(channelbean.getTid(), page, pageSize, new I_SetList<NewsBeanDB>() {
 
             @Override
@@ -295,10 +297,11 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("tid", channelbean.getTid());
+        params.addBodyParameter("tagId", channelbean.getId());
         params.addBodyParameter("Page", "" + page);
         params.addBodyParameter("PageSize", "" + pageSize);
         if (page == 1) {
-            String newTimew = App.getInstance().newTimeMap.get(channelbean.getTid());
+            String newTimew = App.getInstance().newTimeMap.get(channelbean.toString());
             newTimew = newTimew == null ? "" : newTimew;
             params.addBodyParameter("newTime", newTimew);
         }
@@ -379,7 +382,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                     adapter.appendData(list, mFlagRefresh, false);
                     background_empty.setVisibility(View.GONE);
                     if (page == 1) {
-                        App.getInstance().newTimeMap.put(channelbean.getTid(), obj.getString("newTime"));
+                        App.getInstance().newTimeMap.put(channelbean.toString(), obj.getString("newTime"));
                     }
                 }
 
@@ -407,9 +410,11 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         mFlagRefresh = false;
     }
 
-
     //获取幻灯
     private void getFlash() {
+        if (TextUtils.isEmpty(channelbean.getTid())) {
+            return;
+        }
         final File pageFile = App.getFile(newsItemPath + File.separator
                 + "channel_" + channelbean.getTid()
                 + File.separator + "flash");
@@ -452,7 +457,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         handlerList.add(httpHandler);
     }
 
-
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
@@ -471,7 +475,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 //            getDbList();
         }
     }
-
 
     //点击操作
     @Override

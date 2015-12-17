@@ -33,8 +33,6 @@ import java.util.List;
 
 public class ZY_DiscoveryItemFragment extends BaseFragment {
 
-    private PullToRefreshListView pushmsg_lv;
-    private DiscoveryItemAdapter adapter;
 
     private RecyclerView discovery_recyclerview;
     private DiscoveryItemNewAdapter newAdapter;
@@ -82,12 +80,10 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
                 if (200 == obj.getIntValue("code")) {
                     List<DiscoveryItemBean> mlist = FjsonUtil.parseArray(obj.getString("data")
                             , DiscoveryItemBean.class);
-                    Log.i("", "ZY_DiscoveryItemFragment" + mlist.toString());
                     if (null == mlist) {
                         return;
                     }
                     newAdapter.appendData(mlist, false);
-                    LogUtils.i("listsize-->" + mlist.size());
                 }
             }
 

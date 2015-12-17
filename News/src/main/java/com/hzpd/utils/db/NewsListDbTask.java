@@ -9,6 +9,7 @@ import com.hzpd.ui.App;
 import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.utils.DBHelper;
+import com.hzpd.utils.Log;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
@@ -28,6 +29,14 @@ public class NewsListDbTask {
             , I_SetList<NewsBeanDB> callBack) {
 
         NewsFindTask newsFindTask = new NewsFindTask(tid, page, pageSize, callBack);
+        newsFindTask.executeOnExecutor(App.executorService);
+    }
+
+    public void findisTagid(String tid
+            , int page, int pageSize
+            , I_SetList<NewsBeanDB> callBack) {
+
+        TagidFindTask newsFindTask = new TagidFindTask(tid, page, pageSize, callBack);
         newsFindTask.executeOnExecutor(App.executorService);
     }
 
@@ -120,6 +129,55 @@ public class NewsListDbTask {
 
     }
 
+    class TagidFindTask extends AsyncTask<String, String, List<NewsBeanDB>> {
+        private int page;
+        private int pageSize;
+        private String tid;
+        private I_SetList<NewsBeanDB> callBack;
+        private String sid;
+
+        public TagidFindTask(String tid
+                , int page, int pageSize
+                , I_SetList<NewsBeanDB> callBack) {
+            this(tid, page, pageSize, "0", callBack);
+        }
+
+        public TagidFindTask(String tid
+                , int page, int pageSize, String sid
+                , I_SetList<NewsBeanDB> callBack) {
+            super();
+            this.page = page - 1;
+            this.pageSize = pageSize;
+            this.callBack = callBack;
+            this.tid = tid;
+            this.sid = sid;
+        }
+
+        @Override
+        protected List<NewsBeanDB> doInBackground(String... params) {
+            List<NewsBeanDB> list = null;
+            try {
+                Selector selector = Selector.from(NewsBeanDB.class)
+                        .where("tid", "=", tid);
+                selector.orderBy("sort_order", true)
+                        .limit(pageSize)
+                        .offset(page * pageSize);
+                list = newsListDb.findAll(selector);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return list;
+        }
+
+        @Override
+        protected void onPostExecute(List<NewsBeanDB> result) {
+            if (null != callBack) {
+                callBack.setList(result);
+            }
+        }
+
+    }
+
     class NewsSaveTask extends AsyncTask<String, String, Boolean> {
         private I_Result callBack;
         private List<NewsBean> nbList;
@@ -140,6 +198,9 @@ public class NewsListDbTask {
             try {
                 List<NewsBeanDB> list = new ArrayList<NewsBeanDB>();
                 for (NewsBean nb : nbList) {
+                    if (nb.getNid() == null || "null".equals(nb.getNid())) {
+                        Log.e("test", nb);
+                    }
                     NewsBeanDB nbdb = new NewsBeanDB(nb);
                     list.add(nbdb);
                 }

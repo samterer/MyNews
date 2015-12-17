@@ -283,4 +283,6 @@
     <string name="discovery_name">Explore</string>
     <string name="classify_name">Category</string>
     <string name="discovery_follow">Follow</string>
+
+    <string name="follow_num">Follower</string>
 </resources>
