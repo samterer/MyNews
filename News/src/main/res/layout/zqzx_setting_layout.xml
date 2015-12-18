@@ -206,7 +206,7 @@
 
 
         <com.hzpd.ui.widget.FontTextView
-            android:id="@+id/setting_chosse_country"
+            android:id="@+id/setting_choose_country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"

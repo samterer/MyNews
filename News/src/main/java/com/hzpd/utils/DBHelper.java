@@ -32,18 +32,18 @@ public class DBHelper {
     private DBHelper(Context mContext) {
         this.context = mContext;
         Log.e("DBHelper", "DBHelper collectionDBUitls ");
-        dbPath = this.context.getDatabasePath(SPUtil.getCountry()).getAbsolutePath();
+        dbPath = this.context.getDatabasePath("cms").getAbsolutePath();
         collectionDBUitls = DbUtils.create(context
-                , dbPath, App.collectiondbname);
+                , dbPath, SPUtil.getCountry() + "" + App.collectiondbname);
         albumDBUitls = DbUtils.create(context
-                , dbPath, App.albumListDb);
+                , dbPath, SPUtil.getCountry() + "" + App.albumListDb);
         albumDBUitls.configAllowTransaction(true);
         videoDBUitls = DbUtils.create(context
-                , dbPath, App.videoListDb);
+                , dbPath, SPUtil.getCountry() + "" + App.videoListDb);
         videoDBUitls.configAllowTransaction(true);
 
         newsListDbUtils = DbUtils.create(context
-                , dbPath, App.newsListDb, 10, new DbUtils.DbUpgradeListener() {
+                , dbPath, SPUtil.getCountry() + "" + App.newsListDb, 10, new DbUtils.DbUpgradeListener() {
             @Override
             public void onUpgrade(DbUtils db, int oldVersion, int newVersion) {
                 try {
@@ -58,15 +58,15 @@ public class DBHelper {
             }
         });
         bianminListDbUtils = DbUtils.create(context
-                , dbPath, App.bianminListDb);
+                , dbPath, SPUtil.getCountry() + "" + App.bianminListDb);
         zhuantiListDbUtils = DbUtils.create(context
-                , dbPath, App.zhuantiListDb);
+                , dbPath, SPUtil.getCountry() + "" + App.zhuantiListDb);
         logDbUtils = DbUtils.create(context
-                , dbPath, App.userLogDb);
+                , dbPath, SPUtil.getCountry() + "" + App.userLogDb);
         pushListDbUtils = DbUtils.create(context
-                , dbPath, App.pushListDb);
+                , dbPath, SPUtil.getCountry() + "" + App.pushListDb);
         channelDbUtils = DbUtils.create(context
-                , dbPath, App.channelDb);
+                , dbPath, SPUtil.getCountry() + "" + App.channelDb);
     }
 
     public static synchronized DBHelper getInstance(Context context) {

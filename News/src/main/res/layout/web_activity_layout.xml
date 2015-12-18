@@ -6,6 +6,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_title_bar"
@@ -18,12 +19,12 @@
             android:layout_height="@dimen/main_title_bar"
             android:background="@drawable/title_bar_details_btn_selector_color">
 
-            <ImageView
-                android:layout_width="wrap_content"
+            <com.hzpd.ui.widget.FontTextView
+                android:id="@+id/news_url"
+                android:background="#ffffff"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/background_tab_pressed_select_back_details" />
+                android:textSize="14sp" />
 
         </RelativeLayout>
     </LinearLayout>
@@ -32,31 +33,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/zqzx_bg_light"
-        android:orientation="vertical">
-
-        <WebView
-            android:id="@+id/webview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layerType="software"
-            android:scrollbarStyle="outsideOverlay" />
-
-        <ImageView
-            android:id="@+id/background_empty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/zqzx_nonetwork" />
-
-        <ProgressBar
-            android:id="@+id/load_progress_bar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="2dp"
-            android:indeterminateOnly="false"
-            android:max="100"
-            android:progressDrawable="@drawable/progressbar_drawable"
-            android:visibility="visible" />
-
-    </FrameLayout>
+        android:orientation="vertical"></FrameLayout>
 </LinearLayout>

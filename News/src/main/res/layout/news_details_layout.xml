@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.hzpd.ui.widget.SwipeCloseLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -54,13 +55,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
-                        android:visibility="gone">
+                       >
 
                         <ImageView
+                            android:id="@+id/details_head_tag_img"
                             android:layout_width="29dp"
                             android:layout_height="29dp"
                             android:layout_gravity="center_vertical"
-                            android:background="#369bf0" />
+                            android:scaleType="centerCrop"
+                            android:background="@drawable/detail_head_tag_img" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -71,6 +74,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/details_head_tag_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Bloa"
@@ -78,39 +82,13 @@
                                 android:textSize="15sp" />
 
                             <TextView
+                                android:id="@+id/details_head_tag_num"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="5.2million people like"
                                 android:textColor="@color/white"
                                 android:textSize="10sp" />
                         </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="60dp"
-                            android:layout_height="26dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="20dp"
-                            android:background="@drawable/details_subscription_corners_bg"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginLeft="10dp"
-                                android:src="@drawable/editcolum_image" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginLeft="5dp"
-                                android:text="@string/discovery_follow"
-                                android:textColor="@color/white" />
-
-                        </LinearLayout>
-
 
                         <TextView
                             android:id="@+id/tv_subscribe"
@@ -332,5 +310,4 @@
 
     </LinearLayout>
 
-    <!--<include layout="@layout/transparent_layout" />-->
-</FrameLayout>
+</com.hzpd.ui.widget.SwipeCloseLayout>
