@@ -14,8 +14,6 @@ import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -108,7 +106,7 @@ public class ZQ_FeedBackActivity extends MBaseActivity {
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("Email", email);
         params.addBodyParameter("content", content);
-
+        SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST
                 , InterfaceJsonfile.feedback
                 , params

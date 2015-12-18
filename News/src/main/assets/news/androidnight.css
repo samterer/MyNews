@@ -1,11 +1,24 @@
 @charset "utf-8";
 /*此css适用于APP4.9+版本*/
 /*reset*/
-html, body {margin: 2px;padding: 0;border: 0;color:#ff0000;background:#222222}
-
-body {font-family: 'kievit';line-height:150%;overflow-x: hidden; padding: 10px; }
-
-img {margin:2px 0px;background:#efefef; width:98%;}
+html, body {
+font-family: 'kievit';
+    color:#000;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background:#222222
+    overflow-x: hidden;
+    overflow-y: auto;
+    line-height: 1.3em;
+}
+div, p, table, h1, h2, h3, h4, h5 {
+    overflow: hidden;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+}
+img {margin:2px 0px;background:#efefef; max-width:98%;}
 
 /*基本链接样式*/
 a{color:#3f51b5;text-decoration:none;border:none;outline:none;}

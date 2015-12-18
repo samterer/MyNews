@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.adapter.ClassifyItemAdapter;
 import com.hzpd.adapter.ClassifyItemListAdapter;
-import com.hzpd.adapter.SampleAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.TagBean;
 import com.hzpd.modle.event.ClassifItemEvent;
@@ -20,6 +19,7 @@ import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -91,6 +91,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("Page", Page + "");
         params.addBodyParameter("PageSize", pageSize + "");
+        SPUtil.addParams(params);
         httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.classify_top_url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -130,7 +131,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
         params.addBodyParameter("categoryId", id + "");
         params.addBodyParameter("Page", tPage + "");
         params.addBodyParameter("PageSize", tpageSize + "");
-
+        SPUtil.addParams(params);
         httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.classify_url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {

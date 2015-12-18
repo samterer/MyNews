@@ -27,6 +27,7 @@ import com.hzpd.custorm.CircleImageView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.ThirdLoginBean;
 import com.hzpd.modle.UserBean;
+import com.hzpd.modle.event.LoginOutEvent;
 import com.hzpd.ui.activity.MyCommentsActivity;
 import com.hzpd.ui.activity.MyPMColAvtivity;
 import com.hzpd.ui.activity.MyPushActivity;
@@ -60,6 +61,7 @@ import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+import de.greenrobot.event.EventBus;
 
 public class ZY_RightFragment extends BaseFragment {
     @Override
@@ -87,15 +89,14 @@ public class ZY_RightFragment extends BaseFragment {
     private TextView zy_rfrag_tv_login;
     @ViewInject(R.id.zy_rfrag_iv_login)
     private CircleImageView zy_rfrag_iv_login;
-
     private LoginQuitBR br;
-    private boolean isDay = true;
 
+    private boolean isDay = true;
     private CallbackManager callbackManager;
 
+    private TextView night_mode;
+
     private TextView version;
-
-
 
 
     @Override
@@ -104,11 +105,13 @@ public class ZY_RightFragment extends BaseFragment {
         try {
             view = inflater.inflate(R.layout.zy_rightfragment, container, false);
             ViewUtils.inject(this, view);
+            night_mode= (TextView) view.findViewById(R.id.night_mode);
             version = (TextView) view.findViewById(R.id.zy_version);
         } catch (Exception e) {
 
         }
 
+        EventBus.getDefault().register(this);
         return view;
     }
 
@@ -152,7 +155,7 @@ public class ZY_RightFragment extends BaseFragment {
         params.addBodyParameter("photo", tlb.getPhoto());
         params.addBodyParameter("third", tlb.getThird());
         params.addBodyParameter("is_ucenter", "0");
-
+        SPUtil.addParams(params);
         httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.thirdLogin, params,
                 new RequestCallBack<String>() {
                     @Override
@@ -209,11 +212,11 @@ public class ZY_RightFragment extends BaseFragment {
             }
         }
     };
-
+    final LoginManager loginManager = LoginManager.getInstance();
     private List<String> permissions = Arrays.asList("public_profile", "user_friends");
 
     @OnClick({R.id.zy_rfrag_ll_login, R.id.zy_rfrag_ll_comm, R.id.zy_rfrag_ll_collect, R.id.zy_rfrag_ll_push,
-            R.id.zy_rfrag_ll_setting, R.id.zy_rfrag_ll_feedback,R.id.zy_rfrag_ll_download,R.id.zy_rfrag_ll_night,R.id.zy_rfrag_ll_read})
+            R.id.zy_rfrag_ll_setting, R.id.zy_rfrag_ll_feedback, R.id.zy_rfrag_ll_download, R.id.zy_rfrag_ll_night, R.id.zy_rfrag_ll_read})
     private void rightClick(View v) {
         if (AvoidOnClickFastUtils.isFastDoubleClick())
             return;
@@ -245,59 +248,61 @@ public class ZY_RightFragment extends BaseFragment {
             }
             break;
             case R.id.zy_rfrag_ll_feedback: {
-                mIntent.setClass(activity,ZQ_FeedBackActivity.class);
+                mIntent.setClass(activity, ZQ_FeedBackActivity.class);
                 flag = true;
             }
             break;
             case R.id.zy_rfrag_ll_download: {
-               Toast.makeText(getActivity(),"暂无此功能。。。",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "暂无此功能。。。", Toast.LENGTH_SHORT).show();
             }
             break;
             case R.id.zy_rfrag_ll_night: {
-               Toast.makeText(getActivity(),"暂无此功能。。。",Toast.LENGTH_SHORT).show();
+                night_mode.setText(getResources().getString(R.string.day_mode));
+                Toast.makeText(getActivity(), "暂无此功能。。。", Toast.LENGTH_SHORT).show();
             }
             break;
             case R.id.zy_rfrag_ll_read: {
                 mIntent.setClass(activity, RecentlyReadActivity.class);
-                flag=true;
+                flag = true;
 //               Toast.makeText(getActivity(),"暂无此功能。。。",Toast.LENGTH_SHORT).show();
             }
             break;
             case R.id.zy_rfrag_ll_login: {
-                final LoginManager loginManager = LoginManager.getInstance();
+
                 if (null == spu.getUser()) {
 
                     loginManager.setDefaultAudience(DefaultAudience.FRIENDS);
                     loginManager.setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);
                     loginManager.logInWithReadPermissions(this, permissions);
-                } else {
-                    String logout = getResources().getString(
-                            R.string.com_facebook_loginview_log_out_action);
-                    String cancel = getResources().getString(
-                            R.string.com_facebook_loginview_cancel_action);
-                    String message;
-                    Profile profile = Profile.getCurrentProfile();
-                    if (profile != null && profile.getName() != null) {
-                        message = String.format(
-                                getResources().getString(
-                                        R.string.com_facebook_loginview_logged_in_as),
-                                profile.getName());
-                    } else {
-                        message = getResources().getString(
-                                R.string.com_facebook_loginview_logged_in_using_facebook);
-                    }
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setMessage(message)
-                            .setCancelable(true)
-                            .setPositiveButton(logout, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    loginManager.logOut();
-                                }
-                            })
-                            .setNegativeButton(cancel, null);
-                    builder.create().show();
                 }
+//                else {
+//                    String logout = getResources().getString(
+//                            R.string.com_facebook_loginview_log_out_action);
+//                    String cancel = getResources().getString(
+//                            R.string.com_facebook_loginview_cancel_action);
+//                    String message;
+//                    Profile profile = Profile.getCurrentProfile();
+//                    if (profile != null && profile.getName() != null) {
+//                        message = String.format(
+//                                getResources().getString(
+//                                        R.string.com_facebook_loginview_logged_in_as),
+//                                profile.getName());
+//                    } else {
+//                        message = getResources().getString(
+//                                R.string.com_facebook_loginview_logged_in_using_facebook);
+//                    }
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                    builder.setMessage(message)
+//                            .setCancelable(true)
+//                            .setPositiveButton(logout, new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//
+//                                    loginManager.logOut();
+//                                }
+//                            })
+//                            .setNegativeButton(cancel, null);
+//                    builder.create().show();
+//                }
             }
             break;
             default:
@@ -308,7 +313,6 @@ public class ZY_RightFragment extends BaseFragment {
             AAnim.ActivityStartAnimation(activity);
         }
     }
-
 
 
     public class LoginQuitBR extends BroadcastReceiver {
@@ -382,7 +386,12 @@ public class ZY_RightFragment extends BaseFragment {
         } catch (Exception e) {
 
         }
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+    public void onEventMainThread(LoginOutEvent loginOutEvent){
+        loginManager.logOut();
     }
 
 }

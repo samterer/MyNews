@@ -236,7 +236,7 @@ public class CommentListAdapter extends BaseAdapter {
                         params.addBodyParameter("type", "News");
                         params.addBodyParameter("nid", item.getCid());
                         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-
+                        SPUtil.addParams(params);
                         httpUtils.send(HttpRequest.HttpMethod.POST
                                 , InterfaceJsonfile.PRISE1//InterfaceApi.mPraise
                                 , params
@@ -323,7 +323,7 @@ public class CommentListAdapter extends BaseAdapter {
         params.addBodyParameter("type", "News");
         params.addBodyParameter("nid", cb.getCid());
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-
+        SPUtil.addParams(params);
         httpUtils.send(HttpRequest.HttpMethod.POST
                 , InterfaceJsonfile.PRISE1//InterfaceApi.mPraise
                 , params

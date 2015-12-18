@@ -216,6 +216,7 @@ public class MainActivity extends BaseActivity {
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("plat", "Android");
         params.addBodyParameter("version", "" + version);
+        SPUtil.addParams(params);
         HttpHandler httpHandler = httpUtils.send(HttpRequest.HttpMethod.POST
                 , InterfaceJsonfile.GET_VERSION
                 , params

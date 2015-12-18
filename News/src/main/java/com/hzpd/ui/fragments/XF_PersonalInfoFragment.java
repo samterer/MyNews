@@ -123,7 +123,7 @@ public class XF_PersonalInfoFragment extends BaseFragment {
         RequestParams params = new RequestParams();
         params.addBodyParameter("uid", uid);
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-
+        SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST
                 , InterfaceJsonfile.XF_USERINFO
                 , params
@@ -215,7 +215,7 @@ public class XF_PersonalInfoFragment extends BaseFragment {
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("page", page + "");
         params.addBodyParameter("pagesize", pagesize + "");
-
+        SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST
                 , InterfaceJsonfile.XF_MYCOMMENTS
                 , params

@@ -665,7 +665,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
         params.addBodyParameter("typeid", imgListBean.getPid());
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("data", imgListBean.getJson_url());
-
+        SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST
                 , InterfaceJsonfile.ADDCOLLECTION//InterfaceApi.addcollection
                 , params
@@ -853,7 +853,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("id", pid);
-
+        SPUtil.addParams(params);
         httpUtils.send(
                 HttpMethod.POST
                 , InterfaceJsonfile.bAlbum
@@ -962,7 +962,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("type", Constant.TYPE.AlbumA.toString());
         params.addBodyParameter("nids", imgListBean.getPid());
-
+        SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST
                 ,  InterfaceJsonfile.commentsConts
                 , params

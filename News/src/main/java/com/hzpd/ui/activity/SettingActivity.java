@@ -24,9 +24,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzpd.custorm.SlideSwitch;
 import com.hzpd.custorm.switchbutton.SwitchButton;
 import com.hzpd.hflt.R;
-import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.modle.UpdateBean;
 import com.hzpd.modle.event.FontSizeEvent;
+import com.hzpd.modle.event.LoginOutEvent;
 import com.hzpd.modle.event.RestartEvent;
 import com.hzpd.modle.event.SetThemeEvent;
 import com.hzpd.services.ClearCacheService;
@@ -43,7 +43,6 @@ import com.hzpd.utils.GetFileSizeUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
-import com.hzpd.utils.SerializeUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
@@ -61,12 +60,13 @@ import com.sithagi.countrycodepicker.CountryPicker;
 import com.sithagi.countrycodepicker.CountryPickerListener;
 
 import java.io.File;
-import java.util.List;
 import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import de.greenrobot.event.EventBus;
+
+import com.facebook.Profile;
 
 public class SettingActivity extends MBaseActivity {
     @Override
@@ -88,16 +88,7 @@ public class SettingActivity extends MBaseActivity {
     @ViewInject(R.id.setting_chosse_textsize)
     private FontTextView setting_chosse_textsize;
 
-    //字体大小设置
-    @ViewInject(R.id.zqzx_setting_rb1)
-    private RadioButton zqzx_setting_rb1;
-    @ViewInject(R.id.zqzx_setting_rb2)
-    private RadioButton zqzx_setting_rb2;
-    @ViewInject(R.id.zqzx_setting_rb3)
-    private RadioButton zqzx_setting_rb3;
 
-    @ViewInject(R.id.zqzx_setting_push)
-    private SlideSwitch zqzx_setting_push;
     @ViewInject(R.id.zqzx_setting_deletecache)
     private RelativeLayout zqzx_setting_deletecache;
     @ViewInject(R.id.zqzx_setting_feedback)
@@ -108,21 +99,13 @@ public class SettingActivity extends MBaseActivity {
     private RelativeLayout zqzx_setting_update;
     @ViewInject(R.id.zqzx_setting_tv_version)
     private FontTextView zqzx_setting_tv_version;
-
-    @ViewInject(R.id.rl_test)
-    private RelativeLayout rl_test;
-
-    @ViewInject(R.id.zqzx_setting_choose)
-    private RelativeLayout zqzx_setting_choose;
-    @ViewInject(R.id.setting_chosse_station)
-    private FontTextView setting_chosse_station;
     //站点设置
     @ViewInject(R.id.sb_use_listener)
     private SwitchButton sb_use_listener;
+
     private View loadingView;
+    private RelativeLayout zqzx_setting_login_out;
     private AlertDialog.Builder mDeleteDialog;
-
-
     private TextView setting_chosse_country;
 
     @Override
@@ -135,11 +118,14 @@ public class SettingActivity extends MBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         super.changeStatusBar();
+        loadingView = findViewById(R.id.app_progress_bar);
+        zqzx_setting_login_out = (RelativeLayout) findViewById(R.id.zqzx_setting_login_out);
+        if (spu.getUser() != null) {
+            zqzx_setting_login_out.setVisibility(View.VISIBLE);
+        }
 
         skin = new String[]{this.getResources().getString(R.string.skin_style_blue), this.getResources().getString(R.string.skin_style_red), "黑夜"};//"黑夜"
-
         switch (App.getInstance().getThemeName()) {
             case "0": {
                 setting_chosse_skin.setText(this.getResources().getString(R.string.skin_style_blue));
@@ -158,63 +144,38 @@ public class SettingActivity extends MBaseActivity {
         textSize = new String[]{this.getResources().getString(R.string.settings_option_font_large), this.getResources().getString(R.string.settings_option_font_medium), this.getResources().getString(R.string.settings_option_font_small)};//"Besar", "Sedang", "Kecil"
         zqzx_setting_skin.setOnClickListener(new ChooseSkinClickListener());
 
-        loadingView = findViewById(R.id.app_progress_bar);
         stitle_tv_content.setText(R.string.title_settings);
 
+        //设置字体大小
         switch (spu.getTextSize()) {
             case CODE.textSize_big: {
-                zqzx_setting_rb1.setChecked(true);
                 setting_chosse_textsize.setText(getString(R.string.settings_option_font_large));
             }
             break;
             case CODE.textSize_normal: {
-                zqzx_setting_rb2.setChecked(true);
                 setting_chosse_textsize.setText(getString(R.string.settings_option_font_medium));
             }
             break;
             case CODE.textSize_small: {
-                zqzx_setting_rb3.setChecked(true);
                 setting_chosse_textsize.setText(getString(R.string.settings_option_font_small));
             }
             break;
         }
-
-
         zqzx_setting_textsize.setOnClickListener(new TextSizeAlertClickListener());
 
-
-        //弹出站点选择单选框
-        zqzx_setting_choose.setOnClickListener(new AlertClickListener());
-
-        Object obj = SharePreferecesUtils.getParam(SettingActivity.this, "STATION", "def");
-        String station = obj.toString();
-        if (station == null || station.equals("def")) {
-            setting_chosse_station.setText("Indonesia");
-        } else if (station.equals("yn")) {
-            setting_chosse_station.setText("Indonesia");
-        } else if (station.equals("tw")) {
-            setting_chosse_station.setText("test");
-        }
-
-
-//		获取当前状态
-        LogUtils.e("spu.getOffTuiSong()" + spu.getOffTuiSong());
+        //推送获取当前状态
+        Log.i("", "spu.getOffTuiSong()" + spu.getOffTuiSong());
         if (spu.getOffTuiSong()) {
-            LogUtils.e("设置");
-            zqzx_setting_push.setState(true);
-//            zqzx_setting_push.setSelected(true);
+            LogUtils.e("设置推送状态");
             sb_use_listener.setChecked(true);
         } else {
-            zqzx_setting_push.setState(false);
-//            zqzx_setting_push.setSelected(false);
             sb_use_listener.setChecked(false);
-
         }
+        //推送消息
         sb_use_listener.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                android.util.Log.i("设置", "isChecked--->" + isChecked);
                 if (isChecked) {
                     pushSwitch(isChecked);
                 } else {
@@ -222,31 +183,13 @@ public class SettingActivity extends MBaseActivity {
                 }
             }
         });
-//		推送消息
-        zqzx_setting_push.setSlideListener(new SlideSwitch.SlideListener() {
-                                               @Override
-                                               public void open() {
-                                                   pushSwitch(true);
-                                                   LogUtils.e("pushSwitch" + true);
-                                               }
 
-                                               @Override
-                                               public void close() {
-                                                   pushSwitch(false);
-                                                   LogUtils.e("pushSwitch" + false);
-                                               }
-                                           }
+        //获取版本信息
+        zqzx_setting_tv_version.setText(App.getInstance().getVersionName());
 
-        );
-
-        zqzx_setting_tv_version.setText(App.getInstance().
-
-                        getVersionName()
-
-        );
-
+        //设置国家
         setting_chosse_country = (TextView) findViewById(R.id.setting_chosse_country);
-        Object country_Name = SharePreferecesUtils.getParam(SettingActivity.this, "CountryPicker", "Indonesia");
+        Object country_Name = SharePreferecesUtils.getParam(SettingActivity.this, "CountryName", "Indonesia");
         setting_chosse_country.setText("" + country_Name.toString());
         findViewById(R.id.zqzx_setting_choose_country).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -256,20 +199,15 @@ public class SettingActivity extends MBaseActivity {
 
                     @Override
                     public void onSelectCountry(String name, String code, String dialCode) {
-                        Toast.makeText(
-                                SettingActivity.this,
-                                "Country Name: " + name + " - Code: " + code
-                                        + " - Currency: "
-                                        + CountryPicker.getCurrencyCode(code) + " - Dial Code: " + dialCode,
-                                Toast.LENGTH_SHORT).show();
-
+                        Log.i("Setting", "CountryName:" + name + "\nCode: " + code + "\nCurrency: " + CountryPicker.getCurrencyCode(code) + "\nDial Code: " + dialCode);
                         setting_chosse_country.setText("" + name);
-                        SharePreferecesUtils.setParam(SettingActivity.this, "CountryPicker", name);
-                        activity.startService(new Intent(activity, ClearCacheService.class));
+                        SharePreferecesUtils.setParam(SettingActivity.this, "CountryName", name);
+//                        activity.startService(new Intent(activity, ClearCacheService.class));
                         SPUtil.setCountry(code);
-//                        重新设置
+//                      重新设置
                         EventBus.getDefault().post(new RestartEvent());
                         restartApplication();
+                        finish();
                         picker.dismiss();
                     }
                 });
@@ -279,14 +217,6 @@ public class SettingActivity extends MBaseActivity {
         });
 
         getCacheSize();
-    }
-
-
-    //修改频道缓存配置，清除缓存时不删除频道
-    private String getChannelInfoCacheSavePath() {
-        return App.getInstance().getAllDiskCacheDir()
-                + File.separator
-                + App.mTitle;
     }
 
     private void restartApplication() {
@@ -314,10 +244,10 @@ public class SettingActivity extends MBaseActivity {
                             @Override
                             public void gotResult(int arg0, String arg1,
                                                   Set<String> arg2) {
-                                LogUtils.i("arg0-->" + arg0 + " arg1-->" + arg1);
+                                Log.i("", "arg0-->" + arg0 + " arg1-->" + arg1);
                                 if (arg2 != null) {
                                     for (String s : arg2) {
-                                        LogUtils.i("arg2->" + s);
+                                        Log.i("", "arg2->" + s);
                                     }
                                 }
                             }
@@ -357,13 +287,6 @@ public class SettingActivity extends MBaseActivity {
                     setting_chosse_skin.setText(skin[which]);
                     Log.e("which", "which" + which);
                     App.getInstance().setThemeName("" + which);
-//                    if (App.getInstance().getThemeName().equals("1") && which != 1) {
-//                        App.getInstance().setThemeName("3");
-//                    } else if (App.getInstance().getThemeName().equals("1") && which != 2) {
-//                        App.getInstance().setThemeName("4");
-//                    } else {
-//                        App.getInstance().setThemeName("" + which);
-//                    }
                     EventBus.getDefault().post(new SetThemeEvent());
                     stitle_tv_content.postDelayed(new Runnable() {
                         @Override
@@ -400,64 +323,9 @@ public class SettingActivity extends MBaseActivity {
     }
 
 
-    //	设置字体大小
-    @OnClick({R.id.zqzx_setting_rb1, R.id.zqzx_setting_rb2,
-            R.id.zqzx_setting_rb3})
-    private void onRadioCheck(View v) {
-        FontSizeEvent event = new FontSizeEvent();
-        switch (v.getId()) {
-            case R.id.zqzx_setting_rb1: {
-                zqzx_setting_rb1.setChecked(true);
-                spu.setTextSize(CODE.textSize_big);
-                event.setFontSize(CODE.textSize_big);
-            }
-            break;
-            case R.id.zqzx_setting_rb2: {
-                zqzx_setting_rb2.setChecked(true);
-                spu.setTextSize(CODE.textSize_normal);
-                event.setFontSize(CODE.textSize_normal);
-            }
-            break;
-            case R.id.zqzx_setting_rb3: {
-                zqzx_setting_rb3.setChecked(true);
-                spu.setTextSize(CODE.textSize_small);
-                event.setFontSize(CODE.textSize_small);
-            }
-            break;
-        }
-
-        EventBus.getDefault().post(event);
-    }
-
-
     private String[] areas = new String[]{"Indonesia"};
     private String[] areas1 = new String[]{"def"};
 
-    /**
-     * 菜单弹出窗口
-     */
-    class AlertClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            new AlertDialog.Builder(SettingActivity.this).setTitle(getString(R.string.language)).setItems(areas, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    if (areas1[which].equals(SharePreferecesUtils.getParam(SettingActivity.this, StationConfig.STATION, "def").toString())) {
-                        Log.e("areas1", "areas1" + areas1[which]);
-                        return;
-                    }
-                    setting_chosse_station.setText(areas[which]);
-                    SharePreferecesUtils.setParam(SettingActivity.this, StationConfig.STATION, areas1[which]);
-                    activity.startService(new Intent(activity, ClearCacheService.class));
-                    DataCleanManager.cleanCustomCache(App.getInstance().getAllDiskCacheDir()
-                            + File.separator
-                            + App.mTitle);
-                    EventBus.getDefault().post(new RestartEvent());
-                    finish();
-                    dialog.dismiss();
-                }
-            }).show();
-        }
-    }
 
     public void getCacheSize() {
         GetFileSizeUtil fz = GetFileSizeUtil.getInstance();
@@ -540,6 +408,38 @@ public class SettingActivity extends MBaseActivity {
         finish();
     }
 
+    @OnClick(R.id.zqzx_setting_login_out)
+    private void loginOut(View v) {
+        String logout = getResources().getString(
+                R.string.com_facebook_loginview_log_out_action);
+        String cancel = getResources().getString(
+                R.string.com_facebook_loginview_cancel_action);
+        String message;
+        Profile profile = Profile.getCurrentProfile();
+        if (profile != null && profile.getName() != null) {
+            message = String.format(
+                    getResources().getString(
+                            R.string.com_facebook_loginview_logged_in_as),
+                    profile.getName());
+        } else {
+            message = getResources().getString(
+                    R.string.com_facebook_loginview_logged_in_using_facebook);
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(message)
+                .setCancelable(true)
+                .setPositiveButton(logout, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        EventBus.getDefault().post(new LoginOutEvent());
+                        finish();
+                    }
+                })
+                .setNegativeButton(cancel, null);
+        builder.create().show();
+    }
+
+
     @OnClick(R.id.zqzx_setting_update)
     private void checkUpdate(View v) {
         if (AvoidOnClickFastUtils.isFastDoubleClick()) {
@@ -551,11 +451,10 @@ public class SettingActivity extends MBaseActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        Log.e("test", "version--->" + version);
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("plat", "Android");
         params.addBodyParameter("version", "" + version);
-        Log.e("test", "GET_VERSION--->" + InterfaceJsonfile.GET_VERSION);
+        SPUtil.addParams(params);
         httpUtils.send(HttpRequest.HttpMethod.POST
                 , InterfaceJsonfile.GET_VERSION
                 , params

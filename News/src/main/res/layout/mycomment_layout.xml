@@ -15,77 +15,98 @@
         <include layout="@layout/stitle_layout" />
 
         <FrameLayout
-            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_gravity="center">
 
                 <LinearLayout
-                    android:id="@+id/mycomments_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="10dp"
-                    android:visibility="gone">
-
-                    <com.hzpd.ui.widget.FontTextView
-                        android:id="@+id/mycoms_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:padding="10dp"
-                        android:text="我的评论数"
-                        android:textSize="16sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.1px"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:background="@drawable/light_color_line" />
-                </LinearLayout>
-
-
-                <!--android:divider="@color/zqzx_bg_dark"
-                        android:dividerHeight="1px"-->
-                <ListView
-                    android:layout_gravity="center"
-                    android:id="@+id/list_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:cacheColorHint="@android:color/transparent"
-                    android:descendantFocusability="blocksDescendants"
-                    android:divider="@color/zqzx_bg_dark"
-                    android:dividerHeight="0dp"
-                    android:fastScrollEnabled="false"
-                    android:listSelector="@android:color/transparent"
-                    android:scrollbarThumbVertical="@drawable/base_list_scrollbar_handle"
-                    android:scrollbarTrackVertical="@color/transparent"
-                    android:scrollbars="vertical" />
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/mycomments_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp"
+                        android:visibility="gone">
 
-            <ImageView
-                android:id="@+id/pushmsg_tv_empty"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/zqzx_nonetwork" />
+                        <com.hzpd.ui.widget.FontTextView
+                            android:id="@+id/mycoms_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:padding="10dp"
+                            android:text="我的评论数"
+                            android:textSize="16sp" />
 
-            <com.mingle.widget.LoadingView
-                android:id="@+id/loadView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                app:loadingText="@string/load_more_loading" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.1px"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:background="@drawable/light_color_line" />
+                    </LinearLayout>
 
-            <include layout="@layout/transparent_layout" />
+                    <!--android:divider="@color/zqzx_bg_dark"
+                            android:dividerHeight="1px"-->
+                    <ListView
+                        android:id="@+id/list_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:cacheColorHint="@android:color/transparent"
+                        android:descendantFocusability="blocksDescendants"
+                        android:divider="@color/zqzx_bg_dark"
+                        android:dividerHeight="0dp"
+                        android:fastScrollEnabled="false"
+                        android:listSelector="@android:color/transparent"
+                        android:scrollbarThumbVertical="@drawable/base_list_scrollbar_handle"
+                        android:scrollbarTrackVertical="@color/transparent"
+                        android:scrollbars="vertical" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/pushmsg_tv_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/zqzx_nonetwork" />
+
+                <com.mingle.widget.LoadingView
+                    android:id="@+id/loadView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    app:loadingText="@string/load_more_loading" />
+
+                <include layout="@layout/transparent_layout" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/app_progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:background="@color/white">
+
+                <ProgressBar
+                    style="@style/loadingProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+
+            </FrameLayout>
         </FrameLayout>
+
+
     </LinearLayout>
 
 

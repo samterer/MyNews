@@ -59,7 +59,7 @@
     <string name="prompt_floors">%1$d floors</string>
     <string name="prompt_votes">%1$d votes</string>
     <string name="prompt_comment_belong_post">Original text:%1$s</string>
-    <string name="prompt_column_subscribe">Column Option</string>
+    <string name="prompt_column_subscribe">Channel Option</string>
     <string name="prompt_my_msg">Push</string>
     <string name="prompt_clear_cache_dialog_title">Confirm to clear cache</string>
     <string name="prompt_clear_cache_dialog_msg">Picture information may need requesting again after deleted</string>
@@ -283,6 +283,12 @@
     <string name="discovery_name">Explore</string>
     <string name="classify_name">Category</string>
     <string name="discovery_follow">Follow</string>
-
     <string name="follow_num">Follower</string>
+    <string name="offline_mode">Offline Mode</string>
+    <string name="night_mode">Night Mode</string>
+    <string name="day_mode">Day Mode</string>
+
+
+
+
 </resources>

@@ -49,7 +49,7 @@
     <color name="zqzx_bg_light">#f4f4f4</color>
     <color name="zqzx_font_dark">#231815</color>
     <color name="zqzx_font_normal">#595757</color>
-    <color name="zqzx_font_light">#b5b5b7</color>
+    <color name="zqzx_font_light">#f0f0f0</color>
     <color name="zqzx_font_set_title">#242424</color>
     <color name="zqzx_font_set_normal">#707070</color>
     <color name="main_tag">#bbb</color>
@@ -77,7 +77,7 @@
     <color name="nav_title_unselected_new">#DC9990</color>
 
     <!-- color -->
-    <color name="toolbar_bg">#fff0f0f0</color>
+    <color name="toolbar_bg">#f0f0f0</color>
     <color name="grey_color">#F6F6F6</color>
 
     <color name="tag_select">#ececec</color>
@@ -130,6 +130,10 @@
 
 
 
+
+    <color name="main_title">#0177d9</color>
+    <color name="details_main_title">#0177d9</color>
+    <color name="details_main_back">#369bf0</color>
     <color name="pager_sliding_tab_indicator_color">#129aee</color>
     <color name="pager_sliding_tab_text_color">#8a8a8a</color>
     <color name="pager_sliding_tab_text_selected_color">#129aee</color>

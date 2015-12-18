@@ -35,6 +35,42 @@ public class NewsDetailBean implements Serializable {
     private String videoid;//": "",
     private String[] tag;
     private List<NewsBean> ref;
+    private String source;
+
+    @Override
+    public String toString() {
+        return "NewsDetailBean{" +
+                "nid='" + nid + '\'' +
+                ", tid='" + tid + '\'' +
+                ", title='" + title + '\'' +
+                ", copyfrom='" + copyfrom + '\'' +
+                ", update_time='" + update_time + '\'' +
+                ", comcount='" + comcount + '\'' +
+                ", content='" + content + '\'' +
+                ", outline='" + outline + '\'' +
+                ", realtion='" + realtion + '\'' +
+                ", video=" + video +
+                ", pic=" + pic +
+                ", link='" + link + '\'' +
+                ", authorname='" + authorname + '\'' +
+                ", vote=" + vote +
+                ", type='" + type + '\'' +
+                ", audiourl='" + audiourl + '\'' +
+                ", videoid='" + videoid + '\'' +
+                ", tag=" + Arrays.toString(tag) +
+                ", ref=" + ref +
+                ", source='" + source + '\'' +
+                ", fav='" + fav + '\'' +
+                '}';
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
 
     public NewsDetailBean() {
     }
@@ -67,32 +103,6 @@ public class NewsDetailBean implements Serializable {
 
     public void setRef(List<NewsBean> ref) {
         this.ref = ref;
-    }
-
-    @Override
-    public String toString() {
-        return "NewsDetailBean{" +
-                "nid='" + nid + '\'' +
-                ", tid='" + tid + '\'' +
-                ", title='" + title + '\'' +
-                ", copyfrom='" + copyfrom + '\'' +
-                ", update_time='" + update_time + '\'' +
-                ", comcount='" + comcount + '\'' +
-                ", content='" + content + '\'' +
-                ", outline='" + outline + '\'' +
-                ", realtion='" + realtion + '\'' +
-                ", video=" + video +
-                ", pic=" + pic +
-                ", link='" + link + '\'' +
-                ", authorname='" + authorname + '\'' +
-                ", vote=" + vote +
-                ", type='" + type + '\'' +
-                ", audiourl='" + audiourl + '\'' +
-                ", videoid='" + videoid + '\'' +
-                ", tag=" + Arrays.toString(tag) +
-                ", ref=" + ref +
-                ", fav='" + fav + '\'' +
-                '}';
     }
 
     public String[] getTag() {

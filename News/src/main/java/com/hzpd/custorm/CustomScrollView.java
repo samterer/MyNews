@@ -11,7 +11,6 @@ import android.widget.ListView;
 import android.widget.Scroller;
 
 import com.avatarqing.loadmore.lib.LoadMoreContainerBase;
-import com.hzpd.ui.interfaces.OnScrollChangeListener;
 import com.hzpd.utils.Log;
 
 /**
@@ -61,7 +60,6 @@ public class CustomScrollView extends ViewGroup {
             mWebView = (CustomWebView) getChildAt(0);
             mListViewContainer = (ViewGroup) getChildAt(1);
             mListView = (ListView) mListViewContainer.getChildAt(0);
-            mWebView.setOnScrollChangeListener(mOnScrollChangeListener);
         } else {
             throw new IllegalStateException("There must be two child");
         }
@@ -287,25 +285,6 @@ public class CustomScrollView extends ViewGroup {
         }
         invalidate();
     }
-
-    private OnScrollChangeListener mOnScrollChangeListener = new OnScrollChangeListener() {
-        @Override
-        public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-            if (mListViewContainer.getVisibility() == VISIBLE && v == mWebView) {
-                if (!mHasMoved && isWebViewScrolledAtEnd()) {
-                    // 让ListView滚动一点出来
-                    if (!mScroller.isFinished()) {
-                        mScroller.forceFinished(true);
-                    }
-                    int startY = mWebView.getTop();
-                    int dy = -10;
-                    int duration = 400;
-                    mScroller.startScroll(0, startY, 0, dy, duration);
-                    invalidate();
-                }
-            }
-        }
-    };
 
 
     private int clampMag(int value, int absMin, int absMax) {

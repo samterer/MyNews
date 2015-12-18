@@ -213,6 +213,7 @@ public class WelcomeActivity extends MWBaseActivity {
             params.addBodyParameter("tagIndex", "1");
             params.addBodyParameter("pageIndex", "1");
         }
+        SPUtil.addParams(params);
         HttpHandler httpHandler = httpUtils.send(HttpRequest.HttpMethod.POST
                 , InterfaceJsonfile.CHANNEL_RECOMMEND
                 , params

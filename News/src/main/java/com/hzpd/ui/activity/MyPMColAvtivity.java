@@ -18,7 +18,6 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.adapter.CollectionAdapter;
 import com.hzpd.adapter.PushmsgAdapter;
@@ -28,7 +27,6 @@ import com.hzpd.modle.CollectionJsonBean;
 import com.hzpd.modle.Jsonbean;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsItemBeanForCollection;
-import com.hzpd.modle.PushmsgBean;
 import com.hzpd.modle.VideoItemBean;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
@@ -36,6 +34,7 @@ import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
@@ -313,7 +312,7 @@ public class MyPMColAvtivity extends MBaseActivity {
             params.addBodyParameter("page", Page + "");
             params.addBodyParameter("pagesize", PageSize + "");
             params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-
+            SPUtil.addParams(params);
             httpUtils.send(HttpMethod.POST
                     , InterfaceJsonfile.COLLECTIONLIST//InterfaceApi.collection
                     , params
@@ -398,12 +397,12 @@ public class MyPMColAvtivity extends MBaseActivity {
 
                     //网络获取
                     if (spu.getUser() != null) {
-                        RequestParams pa = RequestParamsUtils.getParamsWithU();
-                        pa.addBodyParameter("id", cb.getId());
-
+                        RequestParams params = RequestParamsUtils.getParamsWithU();
+                        params.addBodyParameter("id", cb.getId());
+                        SPUtil.addParams(params);
                         httpUtils.send(HttpMethod.POST
                                 , InterfaceJsonfile.DELETECOLLECTION//InterfaceApi.deletecollection
-                                , pa
+                                , params
                                 , new RequestCallBack<String>() {
 
 

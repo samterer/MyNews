@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/details_more"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="10dp"
     android:background="@color/main_activity_background_color"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="10dp">
 
     <com.hzpd.ui.widget.FontTextView
         android:id="@+id/details_explain"
@@ -31,14 +30,15 @@
         android:gravity="center"
         android:text="@string/details_lv_4"
         android:textColor="@color/details_tv_check_color"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="@dimen/margin_10"
         android:layout_marginRight="@dimen/margin_10"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -48,7 +48,6 @@
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:background="@drawable/news_details_praise">
-
 
             <TextView
                 android:id="@+id/tv_one"
@@ -119,15 +118,14 @@
         android:id="@+id/ad_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#f5f5f5"
         android:layout_marginTop="@dimen/margin_10"
+        android:background="#f5f5f5"
         android:visibility="gone">
 
         <FrameLayout
             android:id="@+id/ad_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            ></FrameLayout>
+            android:layout_height="wrap_content"></FrameLayout>
 
     </LinearLayout>
 
@@ -136,11 +134,10 @@
         android:id="@+id/rl_related"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="@color/white"
         android:orientation="vertical"
-        android:layout_marginTop="10dp"
         android:visibility="gone">
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -212,9 +209,9 @@
         android:layout_below="@+id/rl_related"
         android:layout_marginTop="10dp"
         android:background="@color/white"
-        android:paddingBottom="10dp"
         android:orientation="vertical"
-        >
+        android:paddingBottom="10dp"
+        android:visibility="gone">
 
         <View
             android:layout_width="match_parent"

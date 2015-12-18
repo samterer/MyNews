@@ -7,27 +7,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.hzpd.adapter.DiscoveryItemAdapter;
 import com.hzpd.adapter.DiscoveryItemNewAdapter;
 import com.hzpd.hflt.R;
-import com.hzpd.modle.CollectionJsonBean;
 import com.hzpd.modle.DiscoveryItemBean;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
-import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
-import com.lidroid.xutils.util.LogUtils;
 
 import java.util.List;
 
@@ -70,6 +64,7 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("Page", Page + "");
         params.addBodyParameter("PageSize", pageSize + "");
+        SPUtil.addParams(params);
         httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.discovery_url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {

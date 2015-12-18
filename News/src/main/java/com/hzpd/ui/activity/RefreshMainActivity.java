@@ -23,6 +23,7 @@ import com.hzpd.modle.CollectionJsonBean;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SystemBarTintManager;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -199,7 +200,7 @@ public class RefreshMainActivity extends MBaseActivity {
             params.addBodyParameter("page", Page + "");
             params.addBodyParameter("pagesize", PageSize + "");
             params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-
+            SPUtil.addParams(params);
             httpUtils.send(HttpRequest.HttpMethod.POST
                     , InterfaceJsonfile.COLLECTIONLIST//InterfaceApi.collection
                     , params

@@ -256,9 +256,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     //新闻列表
     @Override
     public void getDbList() {
-
-
-        newsListDbTask.findList(channelbean.getTid(), page, pageSize, new I_SetList<NewsBeanDB>() {
+        newsListDbTask.findList(channelbean, page, pageSize, new I_SetList<NewsBeanDB>() {
 
             @Override
             public void setList(List<NewsBeanDB> list) {
@@ -305,6 +303,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             newTimew = newTimew == null ? "" : newTimew;
             params.addBodyParameter("newTime", newTimew);
         }
+        SPUtil.addParams(params);
         isLoading = true;
         HttpHandler httpHandler = httpUtils.send(HttpMethod.POST
                 , InterfaceJsonfile.NEWSLIST
@@ -376,7 +375,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                             adapter.removeOld();
                         }
                     }
-                    if (list.size() == pageSize) {
+                    if (list.size() >= pageSize) {
                         adapter.showLoading = true;
                     }
                     adapter.appendData(list, mFlagRefresh, false);

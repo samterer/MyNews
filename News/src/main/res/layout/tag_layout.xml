@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@color/zqzx_bg_lgrey"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/details_back_btn" />
+                android:src="@drawable/webview_prev_mz" />
 
         </RelativeLayout>
 
@@ -40,13 +44,21 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/prompt_column_subscribe"
-            android:textColor="@color/white"
+            android:textColor="@color/item_title"
             android:textSize="20sp" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/line_height"
-        android:background="#e0e0e0"
-        android:visibility="gone"/>
+        android:background="#e0e0e0"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recylerlist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?fragment_main_backgroup"
+        android:cacheColorHint="@null"
+        android:scrollbars="none" />
+
 </LinearLayout>

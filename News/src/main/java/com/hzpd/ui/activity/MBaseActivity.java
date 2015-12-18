@@ -2,13 +2,17 @@ package com.hzpd.ui.activity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.hzpd.custorm.SwipeBackLayout;
 import com.hzpd.hflt.R;
@@ -17,6 +21,7 @@ import com.hzpd.utils.AAnim;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
+import com.hzpd.utils.SystemBarTintManager;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.http.HttpHandler;
 
@@ -32,7 +37,7 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
 
     private ActivityLifecycleAction action = new ActivityLifecycleAction(this);
 
-    protected SwipeBackLayout layout;
+//    protected SwipeBackLayout layout;
 
     protected HttpUtils httpUtils;
     protected SPUtil spu;//
@@ -64,9 +69,9 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
 
 //        setTheme(android.R.style.Theme_Translucent_NoTitleBar);//不能删
 
-        layout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
-                R.layout.base, null);
-        layout.attachToActivity(this);
+//        layout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
+//                R.layout.base, null);
+//        layout.attachToActivity(this);
         activity = this;
         fm = getSupportFragmentManager();
 //        changeStatusBar();
@@ -78,20 +83,20 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
     }
 
     public void changeStatusBar() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            setTranslucentStatus(true);
-//            //透明状态栏
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-////            //透明导航栏
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-//        }
-//        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-//        tintManager.setStatusBarTintEnabled(true);
-//        TypedValue typedValue = new TypedValue();
-//        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
-//        int color = typedValue.data;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
+            //透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            //透明导航栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
+        int color = typedValue.data;
 //        tintManager.setStatusBarTintResource(R.color.transparent);
-//        tintManager.setStatusBarTintResource(R.color.red);
+        tintManager.setStatusBarTintResource(R.color.details_main_title);
 //        tintManager.setStatusBarTintColor(color);
     }
 

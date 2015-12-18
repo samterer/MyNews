@@ -32,6 +32,7 @@ import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -273,7 +274,7 @@ public class ZQ_PersonalInfoFragment extends BaseFragment {
 		RequestParams params = RequestParamsUtils.getParams();
 		params.addBodyParameter("token", spu.getUser().getToken());
 		params.addBodyParameter("avatar", CipherUtils.base64Encode(photo));
-
+		SPUtil.addParams(params);
 		httpUtils.send(HttpMethod.POST
 				, InterfaceJsonfile.CHANGEPINFO//InterfaceApi.modify_gender
 				, params

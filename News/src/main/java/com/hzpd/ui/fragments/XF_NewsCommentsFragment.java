@@ -29,6 +29,7 @@ import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.Log;
+import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -205,7 +206,7 @@ public class XF_NewsCommentsFragment extends BaseFragment {
         params.addBodyParameter("json_url", bean.getJsonUrl());
 //		params.addBodyParameter("smallimg", bean.getImgUrl());
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-
+        SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST
                 , InterfaceJsonfile.PUBLISHCOMMENT// InterfaceApi.mSendComment
                 , params
@@ -255,7 +256,7 @@ public class XF_NewsCommentsFragment extends BaseFragment {
         params.addBodyParameter("json_url", bean.getJsonUrl());
 //		params.addBodyParameter("smallimg", bean.getImgUrl());
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-
+        SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST
                 , InterfaceJsonfile.PUBLISHCOMMENT// InterfaceApi.mSendComment
                 , params

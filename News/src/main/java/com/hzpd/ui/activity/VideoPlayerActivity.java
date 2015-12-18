@@ -222,6 +222,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
     private void getVideoItemBean(String vid) {
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("vid", vid);
+        SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST, InterfaceJsonfile.videoItem, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -303,7 +304,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
         params.addBodyParameter("typeid", vib.getVid());
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("data", vib.getJson_url());
-
+        SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST, InterfaceJsonfile.ADDCOLLECTION// InterfaceApi.addcollection
                 , params, new RequestCallBack<String>() {
             @Override
@@ -351,6 +352,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
             params.addBodyParameter("uid", spu.getUser().getUid());
             params.addBodyParameter("typeid", vib.getVid());
             params.addBodyParameter("type", "3");
+            SPUtil.addParams(params);
             httpUtils.send(HttpMethod.POST, InterfaceJsonfile.ISCELLECTION, params, new RequestCallBack<String>() {
                 @Override
                 public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -749,6 +751,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
         params.addBodyParameter("type", Constant.TYPE.VideoA.toString());
         params.addBodyParameter("nids", vib.getVid());
         HttpUtils httpUtils = SPUtil.getHttpUtils();
+        SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST, InterfaceJsonfile.commentsConts, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {

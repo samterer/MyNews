@@ -48,6 +48,8 @@ public class MyCommentsActivity extends MBaseActivity {
     private TextView xf_pinfo_tv_regtime;//注册时间
     private TextView xf_pinfo_tv_levelup;//升级提示
 
+    private View  app_progress_bar;
+
     @Override
     public String getAnalyticPageName() {
         return AnalyticUtils.SCREEN.myComment;
@@ -77,6 +79,7 @@ public class MyCommentsActivity extends MBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mycomment_layout);
+        app_progress_bar=findViewById(R.id.app_progress_bar);
         ViewUtils.inject(this);
         if (App.getInstance().getThemeName().equals("3")) {
             transparent_layout_id.setVisibility(View.VISIBLE);
@@ -86,18 +89,6 @@ public class MyCommentsActivity extends MBaseActivity {
         super.changeStatusBar();
         stitle_tv_content.setText(R.string.comment_mine);
         listView = (ListView) findViewById(R.id.list_view);
-        listView.setEmptyView(pushmsg_tv_empty);
-        adapter = new MycommentsAdapter(this);
-        listView.setAdapter(adapter);
-
-        listView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Page = 1;
-                getInfoFromServer();
-            }
-        }, 600);
-
         LayoutInflater infla = LayoutInflater.from(activity);
         View headView = infla.inflate(R.layout.my_comment_headview, null);
         headView.findViewById(R.id.xf_pinfo_iv_back).setVisibility(View.GONE);
@@ -118,6 +109,20 @@ public class MyCommentsActivity extends MBaseActivity {
         xf_pinfo_tv_levelup = (TextView) headView.findViewById(R.id.xf_pinfo_tv_levelup);
         listView.addHeaderView(headView);
 
+        listView.setEmptyView(pushmsg_tv_empty);
+        adapter = new MycommentsAdapter(this);
+        listView.setAdapter(adapter);
+
+        listView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Page = 1;
+                getInfoFromServer();
+            }
+        }, 600);
+
+
+
         getUserInfoFromServer();
 
     }
@@ -137,7 +142,7 @@ public class MyCommentsActivity extends MBaseActivity {
         RequestParams params = new RequestParams();
         params.addBodyParameter("uid", "" + spu.getUser().getUid());
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-
+        SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST
                 , InterfaceJsonfile.XF_USERINFO
                 , params
@@ -223,14 +228,14 @@ public class MyCommentsActivity extends MBaseActivity {
         params.addBodyParameter("Page", Page + "");
         params.addBodyParameter("PageSize", PageSize + "");
         params.addBodyParameter("session", "");
-//        params.addBodyParameter("siteid", siteid);
-//		LogUtils.e("url"+myComm_url);
+        SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST
                 , myComm_url
                 , params
                 , new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                app_progress_bar.setVisibility(View.GONE);
                 LogUtils.i("data-->" + responseInfo.result);
                 JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
 
@@ -268,6 +273,7 @@ public class MyCommentsActivity extends MBaseActivity {
             @Override
             public void onFailure(HttpException error, String msg) {
                 if (!mFlagRefresh) {
+                    app_progress_bar.setVisibility(View.GONE);
                     Page--;
                 }
             }

@@ -30,6 +30,7 @@ import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -158,7 +159,7 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
         params.addBodyParameter("content", content);
         params.addBodyParameter("Page", "" + page);
         params.addBodyParameter("PageSize", "" + pageSize);
-
+        SPUtil.addParams(params);
         HttpHandler httpHandler = httpUtils.send(HttpMethod.POST
                 , InterfaceJsonfile.SEARCH
                 , params

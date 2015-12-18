@@ -16,6 +16,7 @@ import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -123,7 +124,7 @@ public class ZQ_RegisterFragment_New extends BaseFragment {
         params.addBodyParameter("password", pwd);
         params.addBodyParameter("email", email);
 //		params.addBodyParameter("email", "");
-
+        SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST, InterfaceJsonfile.REGISTER// InterfaceApi.mRegister
                 , params, new RequestCallBack<String>() {
             @Override

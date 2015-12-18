@@ -33,6 +33,7 @@ import com.hzpd.modle.db.NewsChannelBeanDB;
 import com.hzpd.ui.App;
 import com.joy.update.Utils;
 import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.util.LogUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -68,6 +69,18 @@ public class SPUtil {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static NewsChannelBeanDB getTag(TagBean tagBean) {
+        if (dbs == null) {
+            return null;
+        }
+        for (NewsChannelBeanDB beanDB : dbs) {
+            if (tagBean.getId().equals(beanDB.getTagid())) {
+                return beanDB;
+            }
+        }
+        return null;
     }
 
     public static void updateChannel() {
@@ -179,8 +192,16 @@ public class SPUtil {
         return httpUtils;
     }
 
-    public static void addParams(Context context) {
-
+    public static void addParams(RequestParams params) {
+        Context context = App.getInstance();
+        params.addBodyParameter(COUNTRY, getCountry());
+        params.addBodyParameter(UUID, Utils.getDeviceUUID(context));
+        params.addBodyParameter(ANDROID_ID, Utils.getAndroidId(context));
+        params.addBodyParameter(IMEI, Utils.getIMEI(context));
+        params.addBodyParameter(LAUGUAGE, Utils.getLanguage(context));
+        params.addBodyParameter(VERSION_CODE, "" + Utils.getVersionCode(context));
+        params.addBodyParameter(PACKAGE_NAME_SELF, context.getPackageName());
+        params.addBodyParameter(IS_ROM, "" + Utils.isRomVersion(context));
     }
 
     /**
@@ -569,4 +590,64 @@ public class SPUtil {
             }
         }
     }
+
+    /**
+     */
+    public static final String IS_ROM = "is_rom";
+    /**
+     * 用户设备唯一标识，如00000000-54b3-e7c7-0000-000046bffd97
+     */
+    public static final String UUID = "uuid";
+    /**
+     * 语言代码，如en、zh
+     */
+    public static final String LAUGUAGE = "language";
+    /**
+     * 国家代码，如CN
+     */
+    public static final String COUNTRY = "country";
+    /**
+     * 屏幕分辨率，如720*1080
+     */
+    public static final String SCREEN_RESOLUTION = "screen_type";
+    /**
+     * 设备制造商名称，如Xiaomi
+     */
+    public static final String MANUFACTURE = "manufacture";
+    /**
+     * 设备型号，如MI 1S
+     */
+    public static final String MODEL = "model";
+    /**
+     * 系统版本号，如21（代表Android5.0）
+     */
+    public static final String OS_VERSION = "android_version";
+    /**
+     * 手机SIM卡运营商
+     */
+    public static final String SIM_OPERATOR = "operator";
+    /**
+     * 手机卡IMSI
+     */
+    public static final String IMSI = "imsi";
+    /**
+     * 手机卡IMEI
+     */
+    public static final String IMEI = "imei";
+    /**
+     * Android ID
+     */
+    public static final String ANDROID_ID = "android_id";
+    /**
+     * 本机是否安装了GooglePlay
+     */
+    public static final String HAS_GOOGLE_MARKET = "has_google_market";
+    /**
+     * 当前应用自身包名
+     */
+    public static final String PACKAGE_NAME_SELF = "packageNameSelf";
+    /**
+     * 版本号
+     */
+    public static final String VERSION_CODE = "ver_code";
 }

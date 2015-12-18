@@ -21,6 +21,7 @@ import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.db.ZhuantiDetailListDbTask;
 import com.lidroid.xutils.exception.HttpException;
@@ -130,7 +131,7 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
         params.addBodyParameter("sid", nb.getNid());
         params.addBodyParameter("page", "" + page);
         params.addBodyParameter("pagesize", "" + pageSize);
-
+        SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST
                 , InterfaceJsonfile.SUBJECTCOLUMNSLIST
                 , params
@@ -221,7 +222,7 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
         params.addBodyParameter("Page", "" + page);
         params.addBodyParameter("PageSize", "" + pageSize);
         params.addBodyParameter("update_time", spu.getCacheUpdatetime());
-
+        SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST
                 , InterfaceJsonfile.NEWSLIST
                 , params

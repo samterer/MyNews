@@ -35,6 +35,7 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -200,7 +201,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         App.getInstance().setProfileTracker(callback);
         setContentView(R.layout.news_details_layout);
         //显示tag订阅相关
-        details_tag_layout=findViewById(R.id.details_tag_layout);
+        details_tag_layout = findViewById(R.id.details_tag_layout);
 
         initViews();
         getThisIntent();
@@ -229,6 +230,23 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        super.changeStatusBar();
+    }
+
+    private View view;
+    private TextView details_title_name;
+    private TextView details_source_time;
+    private TextView details_time;
+    private LinearLayout details_head_title_layout;
+
+    public void setDetailsHead(View view) {
+        this.view = view;
+        details_head_title_layout = (LinearLayout) view.findViewById(R.id.details_head_title_layout);
+        details_title_name = (TextView) view.findViewById(R.id.details_title_name);
+        details_source_time = (TextView) view.findViewById(R.id.details_source);
+        details_time = (TextView) view.findViewById(R.id.details_time);
+
     }
 
     public void setWebview(WebView webView) {
@@ -264,8 +282,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        details_more_check = (FontTextView) headView.findViewById(R.id.details_more_check);
+        details_more_check = (TextView) headView.findViewById(R.id.details_more_check);
         rl_related = (LinearLayout) headView.findViewById(R.id.rl_related);
         ll_tag = (LinearLayout) headView.findViewById(R.id.ll_tag);
         llayout = (LinearLayout) headView.findViewById(R.id.llayout);
@@ -306,13 +323,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             }
         });
 
-        TextView details_more_check = (TextView) headView.findViewById(R.id.details_more_check);
-        details_more_check.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Toast.makeText(NewsDetailActivity.this, "lihat sumber", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         mRelativeLayoutTitleRoot = (RelativeLayout) findViewById(R.id.news_detail_layout);
         mBack = findViewById(R.id.news_detail_bak);
@@ -378,6 +388,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         FacebookSharedUtil.showShares(mBean.getTitle(), mBean.getLink(), imgurl, this);
                     }
 
+                    ll_rob.setVisibility(View.GONE);
                     //显示
                     latestList = new ArrayList<CommentzqzxBean>();
                     CommentzqzxBean bean = new CommentzqzxBean();
@@ -467,11 +478,12 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         super.onDestroy();
     }
 
+
     private LinearLayout ll_tag;
     private LinearLayout llayout;
     private LinearLayout ll_rob;
     private LinearLayout rl_related;
-    private FontTextView details_more_check;
+    private TextView details_more_check;
     private FontTextView details_explain;
     private View background_emptyl;
     private android.view.animation.Animation animation;
@@ -493,13 +505,13 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         recyclerView.setLayoutManager(layoutManager);
         adapter = new NewsDetailAdapter(this);
         recyclerView.setAdapter(adapter);
-        details_tv_subscribe= (TextView) findViewById(R.id.details_tv_subscribe);
+        details_tv_subscribe = (TextView) findViewById(R.id.details_tv_subscribe);
         details_tv_subscribe.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 details_tv_subscribe.setBackgroundResource(R.drawable.discovery_item_corners_bg);
                 details_tv_subscribe.setTextColor(getResources().getColor(R.color.details_tv_check_color));
-                Drawable nav_up=getResources().getDrawable(R.drawable.discovery_image_select);
+                Drawable nav_up = getResources().getDrawable(R.drawable.discovery_image_select);
                 nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
                 details_tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
             }
@@ -656,7 +668,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         params.addBodyParameter("nid", nb.getNid());
         params.addBodyParameter("num", "" + num);
         //like unlike
-
+        SPUtil.addParams(params);
         HttpHandler httpHandler = httpUtils.send(HttpMethod.POST, InterfaceJsonfile.News_Price// InterfaceApi.addcollection
                 , params, new RequestCallBack<String>() {
             @Override
@@ -804,6 +816,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         params.addBodyParameter("photo", tlb.getPhoto());
         params.addBodyParameter("third", tlb.getThird());
         params.addBodyParameter("is_ucenter", "0");
+        SPUtil.addParams(params);
         HttpHandler httpHandler = httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.thirdLogin, params,
                 new RequestCallBack<String>() {
                     @Override
@@ -1044,21 +1057,21 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     // 对内容做特殊处理
     private String processContent(String content) {
-        String localTime = CalendarUtil.loaclTime(nb.getUpdate_time());
-        Log.e("localTime", "head  localTime" + localTime);
-        int start = content.indexOf(CONTENT_START) + CONTENT_START.length();
-        Log.e("head", "head  length--->" + start);
-        String head = "";
-        if (start > 10) {
-            head = content.substring(0, start);
-            head = head.substring(0, start - 45);
-            localTime = localTime + DIV + " " + CONTENT_START;
-            Log.e("test", "head " + head);
-            head = head + localTime;
-            content = content.substring(start);
-        }
-        Log.e("head", "head  --->" + head);
-        int headStart = head.indexOf(DIV) + DIV.length();
+//        String localTime = CalendarUtil.loaclTime(nb.getUpdate_time());
+//        Log.e("localTime", "head  localTime" + localTime);
+//        int start = content.indexOf(CONTENT_START) + CONTENT_START.length();
+//        Log.e("head", "head  length--->" + start);
+//        String head = "";
+//        if (start > 10) {
+//            head = content.substring(0, start);
+//            head = head.substring(0, start - 45);
+//            localTime = localTime + DIV + " " + CONTENT_START;
+//            Log.e("test", "head " + head);
+//            head = head + localTime;
+//            content = content.substring(start);
+//        }
+//        Log.e("head", "head  --->" + head);
+//        int headStart = head.indexOf(DIV) + DIV.length();
         content = content.replaceAll("<style>[^/]*?</style>", " ");
         content = content.replaceAll("style=\"[^\"]*?\"", " ");
         content = content.replaceAll("style='[^']*?'", " ");
@@ -1071,7 +1084,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         content = content.replaceAll("height=\"[^\"]*?\"", "");
         content = content.replaceAll("height='[^']*?'", "");
 
-        return head + content;
+        return content;
     }
 
     private LayoutInflater mLayoutInflater;
@@ -1117,6 +1130,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         params.addBodyParameter("nid", mBean.getNid());
         params.addBodyParameter("type", "News");
         params.addBodyParameter("siteid", siteid);
+        SPUtil.addParams(params);
         String url = mLatestComm_url;
         HttpHandler httpHandler = httpUtils.send(HttpMethod.POST
                 , url
@@ -1177,6 +1191,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     //获取详细信息
     private void getNewsDetails() {
+        //TODO  获取详细信息
         try {
             File pageFile = App.getFile(detailPathRoot + "detail_" + nb.getNid());
             //从缓存中获取
@@ -1185,6 +1200,13 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     String data = App.getFileContext(pageFile);
                     JSONObject obj = JSONObject.parseObject(data);
                     mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
+                    if (mBean!=null){
+                        details_head_title_layout.setVisibility(View.VISIBLE);
+                        details_title_name.setText("" + nb.getTitle());
+                        details_source_time.setText("" + nb.getCopyfrom());
+                        String localTime = CalendarUtil.loaclTime(nb.getUpdate_time());
+                        details_time.setText("" + localTime);
+                    }
                     int textSize = spu.getTextSize();
                     setupWebView(textSize);
                     mRoot.setVisibility(View.VISIBLE);
@@ -1207,9 +1229,18 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     if (mBean.getTag() != null) {
                         rl_related.setVisibility(View.VISIBLE);
                         ll_tag.setVisibility(View.VISIBLE);
-                        Log.e("tag", "从缓存中获取tag--->" + mBean.getTag().toString());
                     } else {
-                        Log.e("tag", "从缓存中获取tag--->null");
+
+                    }
+                    if (mBean.getSource() != null) {
+                        details_more_check.setVisibility(View.VISIBLE);
+                        details_more_check.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(NewsDetailActivity.this, "原文", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
                     }
                     getLatestComm();
                     return;
@@ -1264,12 +1295,28 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         }
                         try {
                             mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
+                            if (mBean!=null){
+                                details_head_title_layout.setVisibility(View.VISIBLE);
+                                details_title_name.setText("" + nb.getTitle());
+                                details_source_time.setText("" + nb.getCopyfrom());
+                                String localTime = CalendarUtil.loaclTime(nb.getUpdate_time());
+                                details_time.setText("" + localTime);
+                            }
                             int textSize = spu.getTextSize();
                             setupWebView(textSize);
                             if ((mBean.getRef() != null && mBean.getRef().size() > 0) || (mBean.getTag() != null) && mBean.getTag().length > 0) {
                                 rl_related.setVisibility(View.VISIBLE);
                                 addRelatedNewsView();
                                 addRelatedTagView();
+                            }
+                            if (mBean.getSource() != null) {
+                                details_more_check.setVisibility(View.VISIBLE);
+                                details_more_check.setOnClickListener(new OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Toast.makeText(NewsDetailActivity.this, "原文", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             }
 
                         } catch (Exception e) {
@@ -1844,9 +1891,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             params.addBodyParameter("typeid", nb.getNid());
             params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
             params.addBodyParameter("data", nb.getJson_url());
-
-            LogUtils.i("params-->" + params.toString());
-
+            SPUtil.addParams(params);
             HttpHandler httpHandler = httpUtils.send(HttpMethod.POST, InterfaceJsonfile.ADDCOLLECTION// InterfaceApi.addcollection
                     , params, new RequestCallBack<String>() {
                 @Override
@@ -1869,7 +1914,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             RequestParams params = RequestParamsUtils.getParamsWithU();
             params.addBodyParameter("typeid", nb.getNid());
             params.addBodyParameter("type", "1");
-
+            SPUtil.addParams(params);
             HttpHandler httpHandler = httpUtils.send(HttpMethod.POST, InterfaceJsonfile.ISCELLECTION, params, new RequestCallBack<String>() {
                 @Override
                 public void onSuccess(ResponseInfo<String> responseInfo) {

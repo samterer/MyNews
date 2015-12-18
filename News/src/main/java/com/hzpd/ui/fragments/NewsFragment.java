@@ -274,6 +274,7 @@ public class NewsFragment extends BaseFragment {
     public void onEventMainThread(ChangeChannelEvent event) {
         SPUtil.updateChannel();
         if (event.csl != null) {
+            SPUtil.updateChannel();
             pager.setOffscreenPageLimit(PAGE_LIMIT);
             mList = event.csl.getSaveTitleList();
             adapter.sortChannel(mList);
@@ -287,12 +288,20 @@ public class NewsFragment extends BaseFragment {
     public void onEventMainThread(TagEvent event) {
         try {
             TagBean tagBean = event.bean;
-            NewsChannelBeanDB beanDB = new NewsChannelBeanDB(tagBean);
-            beanDB.setDefault_show("1");
-            NewsChannelBean bean = new NewsChannelBean(beanDB);
-            dbHelper.getChannelDbUtils().save(beanDB);
-            SPUtil.updateChannel();
-            mList.add(1, bean);
+            if (SPUtil.checkTag(tagBean)) {
+                return;
+            }
+            NewsChannelBeanDB beanDB = SPUtil.getTag(tagBean);
+            if (beanDB == null) {
+                beanDB = new NewsChannelBeanDB(tagBean);
+                beanDB.setDefault_show("1");
+                dbHelper.getChannelDbUtils().save(beanDB);
+                SPUtil.updateChannel();
+            } else {
+                beanDB.setDefault_show("1");
+                dbHelper.getChannelDbUtils().update(beanDB);
+            }
+            mList.add(1, new NewsChannelBean(beanDB));
             adapter.sortChannel(mList);
             pager.setCurrentItem(1);
             tabStrip.notifyDataSetChanged();

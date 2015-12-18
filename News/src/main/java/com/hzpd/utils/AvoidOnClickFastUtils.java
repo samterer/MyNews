@@ -11,7 +11,7 @@ public class AvoidOnClickFastUtils {
     public static boolean isFastDoubleClick() {
         long time = System.currentTimeMillis();
         long timeD = time - lastClickTime;
-        if (0 < timeD && timeD < 800) {
+        if (0 < timeD && timeD < 1200) {
             return true;
         }
         lastClickTime = time;

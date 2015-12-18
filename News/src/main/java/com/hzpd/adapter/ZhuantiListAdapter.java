@@ -113,7 +113,7 @@ public class ZhuantiListAdapter extends ListBaseAdapter<NewsBean> {
 
 		RequestParams params = new RequestParams();
 		params.addBodyParameter("nids", nid);
-
+		SPUtil.addParams(params);
 		HttpUtils httpUtils = SPUtil.getHttpUtils();
 		httpUtils.send(HttpMethod.POST
 				, InterfaceJsonfile.SITEID

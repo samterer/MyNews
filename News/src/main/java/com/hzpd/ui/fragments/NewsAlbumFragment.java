@@ -33,6 +33,7 @@ import com.hzpd.utils.DataCleanManager;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.db.AlbumListDbTask;
 import com.lidroid.xutils.ViewUtils;
@@ -204,7 +205,7 @@ public class NewsAlbumFragment extends BaseFragment implements I_Control {
 		params.addBodyParameter("Page", "" + page);
 		params.addBodyParameter("PageSize", "" + pageSize);
 		params.addBodyParameter("update_time", spu.getCacheUpdatetime());
-
+		SPUtil.addParams(params);
 		httpUtils.send(HttpMethod.POST
 				, InterfaceJsonfile.ALBUMLIST
 				, params

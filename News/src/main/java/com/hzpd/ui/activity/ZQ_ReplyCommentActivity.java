@@ -21,6 +21,7 @@ import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SystemBarTintManager;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
@@ -126,7 +127,7 @@ public class ZQ_ReplyCommentActivity extends MBaseActivity {
         params.addBodyParameter("nid", bean);
         params.addBodyParameter("content", content);
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-
+        SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST
                 , InterfaceJsonfile.PUBLISHCOMMENTCOMENT// InterfaceApi.mSendComment
                 , params, new RequestCallBack<String>() {

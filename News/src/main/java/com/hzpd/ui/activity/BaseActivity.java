@@ -47,7 +47,7 @@ public class BaseActivity extends FragmentActivity implements AnalyticCallback {
         super.onCreate(null);
         action.onCreate(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        changeStatus();
+        changeStatus();
         fm = getSupportFragmentManager();
     }
 
@@ -67,6 +67,7 @@ public class BaseActivity extends FragmentActivity implements AnalyticCallback {
         getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
         int color = typedValue.data;
         tintManager.setStatusBarTintColor(color);
+        tintManager.setStatusBarTintResource(R.color.main_title);
     }
 
     private Interpolator interp = new Interpolator() {

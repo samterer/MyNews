@@ -66,6 +66,7 @@ public class InitService extends IntentService {
         // 请求网络，获取开屏图片信息
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("siteid", siteid);
+        SPUtil.addParams(params);
         ResponseStream rs = null;
         try {
             rs = httpUtils.sendSync(HttpMethod.POST, mAdPic_url, params);
@@ -159,7 +160,7 @@ public class InitService extends IntentService {
             RequestParams params = RequestParamsUtils.getParams();
             params.addBodyParameter("uid", uid);
             params.addBodyParameter("json", json);
-
+            SPUtil.addParams(params);
             ResponseStream rs = httpUtils.sendSync(HttpMethod.POST, InterfaceJsonfile.USER_LOG, params);
             String str = rs.readString();
             if (!TextUtils.isEmpty(str)) {

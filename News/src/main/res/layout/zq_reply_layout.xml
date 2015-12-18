@@ -34,7 +34,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/webview_prev_mz" />
+                        android:src="@drawable/details_back_btn" />
 
                 </RelativeLayout>
 
@@ -47,31 +47,23 @@
                     android:layout_toRightOf="@+id/news_detail_bak"
                     android:layout_weight="1"
                     android:text="@string/comment"
-                    android:textColor="@color/item_title"
+                    android:textColor="@color/white"
                     android:textSize="20sp" />
 
                 <LinearLayout
                     android:id="@+id/zq_reply_tv_send"
-                    android:layout_width="@dimen/main_title_bar"
+                    android:layout_width="60dp"
                     android:layout_height="@dimen/main_title_bar"
                     android:layout_gravity="center"
-                    android:gravity="center"
-                    android:background="?m_background_tab_pressed">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/zq_reply_send_iv_select"
-                        android:visibility="gone"/>
+                    android:background="?m_background_tab_pressed"
+                    android:gravity="center">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="完成"
-
-                        />
-
+                        android:text="@string/prompt_send"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -178,6 +170,7 @@
                     </RelativeLayout>
                 </RelativeLayout>
 
+
                 <include layout="@layout/transparent_layout" />
             </FrameLayout>
 
@@ -187,4 +180,19 @@
 
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/app_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="3dp"
+        android:background="#65ffffff"
+        android:visibility="gone">
+
+        <ProgressBar
+            style="@style/loadingProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
 </FrameLayout>

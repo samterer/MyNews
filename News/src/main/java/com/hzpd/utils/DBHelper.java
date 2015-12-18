@@ -3,8 +3,10 @@ package com.hzpd.utils;
 import android.app.Activity;
 import android.content.Context;
 
+import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.ui.App;
 import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.exception.DbException;
 
 public class DBHelper {
     private DbUtils collectionDBUitls;//本地收藏数据库
@@ -25,9 +27,11 @@ public class DBHelper {
     private Context context;
 
 
+    public DbUtils testDb;
+
     private DBHelper(Context mContext) {
         this.context = mContext;
-        Log.e("test", "DBHelper collectionDBUitls ");
+        Log.e("DBHelper", "DBHelper collectionDBUitls ");
         dbPath = this.context.getDatabasePath(SPUtil.getCountry()).getAbsolutePath();
         collectionDBUitls = DbUtils.create(context
                 , dbPath, App.collectiondbname);
@@ -39,7 +43,20 @@ public class DBHelper {
         videoDBUitls.configAllowTransaction(true);
 
         newsListDbUtils = DbUtils.create(context
-                , dbPath, App.newsListDb);
+                , dbPath, App.newsListDb, 10, new DbUtils.DbUpgradeListener() {
+            @Override
+            public void onUpgrade(DbUtils db, int oldVersion, int newVersion) {
+                try {
+                    Log.e("DBHelper", "DbUtils " + oldVersion + ":" + newVersion);
+                    if (newVersion > oldVersion) {
+                        db.dropTable(NewsBeanDB.class);
+                        Log.e("DBHelper", "DbUtils Update DropTable ");
+                    }
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         bianminListDbUtils = DbUtils.create(context
                 , dbPath, App.bianminListDb);
         zhuantiListDbUtils = DbUtils.create(context

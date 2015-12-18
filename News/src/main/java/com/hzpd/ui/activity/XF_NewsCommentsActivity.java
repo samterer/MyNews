@@ -24,6 +24,7 @@ import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SystemBarTintManager;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -157,8 +158,8 @@ public class XF_NewsCommentsActivity extends MBaseActivity {
 
         params.addBodyParameter("nid", bean.getId());
         params.addBodyParameter("type", bean.getType());
-
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+        SPUtil.addParams(params);
         httpUtils.send(HttpRequest.HttpMethod.POST
                 , InterfaceJsonfile.CHECKCOMMENT
                 , params

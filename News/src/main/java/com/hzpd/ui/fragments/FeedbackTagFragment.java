@@ -181,7 +181,7 @@ public class FeedbackTagFragment extends AnalyticBaseDialogFragment implements V
         params.addBodyParameter("siteid", "1");
         params.addBodyParameter("rate", "" + rate);
         params.addBodyParameter("content", content);
-
+        SPUtil.addParams(params);
         HttpUtils httpUtils = SPUtil.getHttpUtils();
         httpUtils.send(HttpRequest.HttpMethod.POST
                 , feedback_url

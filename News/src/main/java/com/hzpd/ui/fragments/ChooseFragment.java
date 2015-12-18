@@ -334,7 +334,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
 
     //新闻列表
     public void getDbList() {
-        newsListDbTask.findList(channelbean.getTid(), page, pageSize, new I_SetList<NewsBeanDB>() {
+        newsListDbTask.findList(channelbean, page, pageSize, new I_SetList<NewsBeanDB>() {
             @Override
             public void setList(List<NewsBeanDB> list) {
                 if (!isAdded()) {
@@ -383,7 +383,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
             params.addBodyParameter("tagIndex", "" + tagIndex);
             params.addBodyParameter("pageIndex", "" + pageIndex);
         }
-
+        SPUtil.addParams(params);
         httpUtils.send(HttpRequest.HttpMethod.POST
                 , InterfaceJsonfile.CHANNEL_RECOMMEND
                 , params
@@ -437,6 +437,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
             params.addBodyParameter("tagIndex", "" + tagIndex);
             params.addBodyParameter("pageIndex", "" + pageIndex);
         }
+        SPUtil.addParams(params);
         httpUtils.send(HttpRequest.HttpMethod.POST
                 , InterfaceJsonfile.CHANNEL_RECOMMEND_NEW
                 , params

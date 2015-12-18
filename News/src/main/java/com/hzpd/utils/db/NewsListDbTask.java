@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.hzpd.modle.NewsBean;
+import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.ui.App;
 import com.hzpd.ui.interfaces.I_Result;
@@ -24,11 +25,11 @@ public class NewsListDbTask {
         newsListDb = DBHelper.getInstance(context).getNewsListDbUtils();
     }
 
-    public void findList(String tid
+    public void findList(NewsChannelBean channelbean
             , int page, int pageSize
             , I_SetList<NewsBeanDB> callBack) {
 
-        NewsFindTask newsFindTask = new NewsFindTask(tid, page, pageSize, callBack);
+        NewsFindTask newsFindTask = new NewsFindTask(channelbean, page, pageSize, callBack);
         newsFindTask.executeOnExecutor(App.executorService);
     }
 
@@ -61,7 +62,6 @@ public class NewsListDbTask {
         }
     }
 
-
     public void isRead(String nid, I_Result callBack) {
         NewsIsReadedTask newsIsReadTask = new NewsIsReadedTask(nid, callBack);
         newsIsReadTask.executeOnExecutor(App.executorService);
@@ -84,23 +84,24 @@ public class NewsListDbTask {
         private int page;
         private int pageSize;
         private String tid;
+        private NewsChannelBean channelbean;
         private I_SetList<NewsBeanDB> callBack;
         private String sid;
 
-        public NewsFindTask(String tid
+        public NewsFindTask(NewsChannelBean channelbean
                 , int page, int pageSize
                 , I_SetList<NewsBeanDB> callBack) {
-            this(tid, page, pageSize, "0", callBack);
+            this(channelbean, page, pageSize, "0", callBack);
         }
 
-        public NewsFindTask(String tid
+        public NewsFindTask(NewsChannelBean channelbean
                 , int page, int pageSize, String sid
                 , I_SetList<NewsBeanDB> callBack) {
             super();
             this.page = page - 1;
             this.pageSize = pageSize;
             this.callBack = callBack;
-            this.tid = tid;
+            this.channelbean = channelbean;
             this.sid = sid;
         }
 
@@ -108,8 +109,18 @@ public class NewsListDbTask {
         protected List<NewsBeanDB> doInBackground(String... params) {
             List<NewsBeanDB> list = null;
             try {
+
+                Selector TagidSelector = Selector.from(NewsBeanDB.class)
+                        .where("tagId", "=", channelbean.getId());
+                TagidSelector.orderBy("sort_order", true)
+                        .limit(pageSize)
+                        .offset(page * pageSize);
+                newsListDb.findAll(TagidSelector);
+
+
+
                 Selector selector = Selector.from(NewsBeanDB.class)
-                        .where("tid", "=", tid);
+                        .where("tid", "=", channelbean.getTid());
                 selector.orderBy("sort_order", true)
                         .limit(pageSize)
                         .offset(page * pageSize);

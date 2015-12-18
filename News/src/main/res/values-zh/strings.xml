@@ -359,4 +359,8 @@
     <string name="discovery_follow">订阅</string>
 
     <string name="follow_num">人订阅</string>
+
+    <string name="offline_mode">离线阅读</string>
+    <string name="night_mode">夜间模式</string>
+    <string name="day_mode">日间模式</string>
 </resources>

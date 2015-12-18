@@ -47,66 +47,7 @@
             android:background="@drawable/bbs_modle_jt"
             android:gravity="center_vertical" />
     </RelativeLayout>
-
     <!--字体大小-->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/setting_item_selector"
-        android:padding="10dip"
-        android:visibility="gone">
-
-        <com.hzpd.ui.widget.FontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dip"
-            android:text="@string/settings_font"
-            android:textColor="@color/zqzx_font_set_title"
-            android:textSize="20sp" />
-
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dip"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/zqzx_setting_rb1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@drawable/zq_textradiobtn_selector"
-                android:checked="false"
-                android:text="@string/settings_option_font_large"
-                android:textColor="@color/zqzx_font_set_normal"
-                android:textSize="18sp" />
-
-            <RadioButton
-                android:id="@+id/zqzx_setting_rb2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:button="@drawable/zq_textradiobtn_selector"
-                android:text="@string/settings_option_font_medium"
-                android:textColor="@color/zqzx_font_set_normal"
-                android:textSize="18sp" />
-
-            <RadioButton
-                android:id="@+id/zqzx_setting_rb3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@drawable/zq_textradiobtn_selector"
-                android:text="@string/settings_option_font_small"
-                android:textColor="@color/zqzx_font_set_normal"
-                android:textSize="18sp" />
-        </RadioGroup>
-    </RelativeLayout>
-    <!--字体大小2-->
     <RelativeLayout
         android:id="@+id/zqzx_setting_textsize"
         android:layout_width="match_parent"
@@ -176,14 +117,6 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp" />
 
-        <com.hzpd.custorm.SlideSwitch xmlns:slideswitch="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/zqzx_setting_push"
-            android:layout_width="60dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:visibility="gone"
-            slideswitch:shape="circle"
-            slideswitch:themeColor="@color/zqzx_green" />
 
     </RelativeLayout>
     <!--微博绑定-->
@@ -294,46 +227,6 @@
 
     </RelativeLayout>
 
-    <!--站点设置2-->
-    <RelativeLayout
-        android:id="@+id/zqzx_setting_choose"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="?zqzx_onclik_setting_item"
-        android:padding="10dip"
-        android:visibility="gone">
-
-        <com.hzpd.ui.widget.FontTextView
-            android:id="@+id/setting_station"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dip"
-            android:text="@string/language"
-            android:textColor="?zqzx_setting_item_text"
-            android:textSize="20sp" />
-
-        <com.hzpd.ui.widget.FontTextView
-            android:id="@+id/setting_chosse_station"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/choose_station_iv"
-            android:text="Indonesia"
-            android:textColor="?zqzx_setting_item_right_text"
-            android:textSize="20sp" />
-
-        <ImageView
-            android:id="@+id/choose_station_iv"
-            android:layout_width="10dp"
-            android:layout_height="15dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/bbs_modle_jt"
-            android:gravity="center_vertical" />
-    </RelativeLayout>
     <!--反馈消息-->
     <RelativeLayout
         android:id="@+id/zqzx_setting_feedback"
@@ -421,13 +314,13 @@
             android:textSize="20sp" />
     </RelativeLayout>
 
-    <!--测试-->
+    <!--检查更新-->
     <RelativeLayout
-        android:id="@+id/rl_test"
+        android:id="@+id/zqzx_setting_login_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/setting_item_selector"
+        android:background="?zqzx_onclik_setting_item"
         android:padding="10dp"
         android:visibility="gone">
 
@@ -436,11 +329,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
             android:gravity="center_vertical"
-            android:text="test"
-            android:textColor="@color/zqzx_font_set_title"
+            android:text="@string/prompt_logout"
+            android:textColor="?zqzx_setting_item_text"
             android:textSize="20sp" />
 
     </RelativeLayout>
-
 
 </LinearLayout>
