@@ -224,6 +224,7 @@ public class InterfaceJsonfile {
     public static final String discovery_url = PATH_ROOT + "/Tag/discovery";
     public static final String classify_top_url = PATH_ROOT + "/Tag/category";
     public static final String classify_url = PATH_ROOT + "/Tag/tagList";
+    public static final String tag_news_url = PATH_ROOT + "/Tag/news";
 
 
 }

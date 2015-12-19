@@ -151,4 +151,5 @@
     <color name="search_position_2">#73BCFF</color>
     <color name="search_position_3">#99d22b</color>
 
+    <color name="webview_url_color">#333333</color>
 </resources>

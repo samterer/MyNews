@@ -15,6 +15,7 @@ import com.hzpd.modle.DiscoveryItemBean;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.exception.HttpException;
@@ -23,6 +24,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ZY_DiscoveryItemFragment extends BaseFragment {
@@ -36,6 +38,9 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
         return AnalyticUtils.SCREEN.leftMenu;
     }
 
+    boolean addLoading = false;
+    private int lastVisibleItem;
+    private LinearLayoutManager vlinearLayoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,11 +49,31 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
             view = inflater.inflate(R.layout.zy_discovery_item_fragment, container, false);
             discovery_recyclerview = (RecyclerView) view.findViewById(R.id.discovery_recyclerview);
             //设置布局管理器
-            LinearLayoutManager vlinearLayoutManager = new LinearLayoutManager(getActivity());
+            vlinearLayoutManager = new LinearLayoutManager(getActivity());
             vlinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             discovery_recyclerview.setLayoutManager(vlinearLayoutManager);
             newAdapter = new DiscoveryItemNewAdapter(getContext());
             discovery_recyclerview.setAdapter(newAdapter);
+
+            discovery_recyclerview.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == newAdapter.getItemCount()) {
+                        newAdapter.setShowLoading(true);
+                        Page++;
+                        getDiscoveryServer();
+                    }
+                }
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    lastVisibleItem = vlinearLayoutManager.findLastVisibleItemPosition();
+                }
+            });
+
             getDiscoveryServer();
         } catch (Exception e) {
 
@@ -78,6 +103,17 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
                     if (null == mlist) {
                         return;
                     }
+                    Log.i("mlist", "mlist" + mlist.size());
+
+                    for (int i = 0; i < mlist.size(); i++) {
+
+                        if (mlist.get(i).getNews() == null || mlist.get(i).getNews().size() < 1) {
+                            DiscoveryItemBean bean = mlist.get(i);
+                            mlist.remove(bean);
+                            i--;
+                        }
+                    }
+                    Log.i("mlist", "mlist" + mlist.size());
                     newAdapter.appendData(mlist, false);
                 }
             }

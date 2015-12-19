@@ -33,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/webview_prev_mz" />
+                    android:src="@drawable/details_back_btn" />
 
             </RelativeLayout>
 
@@ -47,9 +47,11 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/corners_bg"
                     android:gravity="center_vertical"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
                     android:orientation="horizontal">
 
 
@@ -74,7 +76,7 @@
                         android:paddingRight="0dp"
                         android:textColorHint="#cccccc"
                         android:textCursorDrawable="@null"
-                        android:textSize="14sp" />
+                        android:textSize="12sp" />
 
                     <ImageView
                         android:id="@+id/search_cancel"
@@ -91,10 +93,7 @@
                     android:layout_height="1dp"
                     android:background="#7481ca"
                     android:visibility="gone">
-
                 </View>
-
-
             </LinearLayout>
 
             <RelativeLayout

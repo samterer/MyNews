@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,8 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
 
     private int Page = 1;
     private int pageSize = 10;
+    private int lastVisibleItem;
+    private LinearLayoutManager vlinearLayoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,12 +72,34 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
 
             vRecyclerView = (RecyclerView) view.findViewById(R.id.id_recyclerview_vertical);
             //设置布局管理器
-            LinearLayoutManager vlinearLayoutManager = new LinearLayoutManager(getActivity());
+            vlinearLayoutManager = new LinearLayoutManager(getActivity());
             vlinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             vRecyclerView.setLayoutManager(vlinearLayoutManager);
             sampleAdapter = new ClassifyItemListAdapter(getActivity());
             //设置适配器
             vRecyclerView.setAdapter(sampleAdapter);
+
+            vRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == sampleAdapter.getItemCount()) {
+                        sampleAdapter.setShowLoading(true);
+                        vPage++;
+                        if(!TextUtils.isEmpty(id)){
+                            Log.i("vRecyclerView","vRecyclerView"+id);
+                        }
+                        getClassifyVerServer(id);
+                    }
+                }
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    lastVisibleItem = vlinearLayoutManager.findLastVisibleItemPosition();
+                }
+            });
 
 
         } catch (Exception e) {
@@ -108,8 +133,9 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
 
                     adapter.appendData(mlist);
                     LogUtils.i("listsize-->" + mlist.size());
-
-                    getClassifyVerServer(mlist.get(0).getId());
+                    isClearOld = true;
+                    id=mlist.get(0).getId();
+                    getClassifyVerServer(id);
                 }
             }
 
@@ -119,22 +145,23 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
         });
     }
 
-//    categoryId , int , 必选 ，  tag大类ID
+    //    categoryId , int , 必选 ，  tag大类ID
 //    page , int ,可选， 页码，默认值：1
 //    pageSize , int ，可选， 每页数量，默认值：10
-    private int tPage=1;
-    private int tpageSize=10;
+    private int vPage = 1;
+    private int tpageSize = 10;
     private boolean isClearOld;
 
     private void getClassifyVerServer(String id) {
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("categoryId", id + "");
-        params.addBodyParameter("Page", tPage + "");
+        params.addBodyParameter("Page", vPage + "");
         params.addBodyParameter("PageSize", tpageSize + "");
         SPUtil.addParams(params);
         httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.classify_url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                sampleAdapter.setShowLoading(false);
                 JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
                 if (null == obj) {
                     return;
@@ -146,14 +173,14 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
                         return;
                     }
                     Log.i("getClassifyVerServer", "getClassifyVerServer" + mlist.toString());
-
-                    sampleAdapter.appendData(mlist,isClearOld);
+                    sampleAdapter.appendData(mlist, isClearOld);
                     LogUtils.i("listsize-->" + mlist.size());
                 }
             }
 
             @Override
             public void onFailure(HttpException e, String s) {
+                sampleAdapter.setShowLoading(false);
             }
         });
     }
@@ -169,10 +196,12 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
     }
 
+    private String id;
+
     public void onEventMainThread(ClassifItemEvent event) {
-        String id = event.getId();
+        id = event.getId();
         Log.i("onEventMainThread", "onEventMainThread  id-->" + id);
-        isClearOld=true;
+        isClearOld = true;
         getClassifyVerServer(id);
     }
 

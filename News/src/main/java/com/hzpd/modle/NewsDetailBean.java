@@ -3,7 +3,6 @@ package com.hzpd.modle;
 import android.text.Html;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,33 +35,6 @@ public class NewsDetailBean implements Serializable {
     private List<TagBean> tag;
     private List<NewsBean> ref;
     private String source;
-
-    @Override
-    public String toString() {
-        return "NewsDetailBean{" +
-                "nid='" + nid + '\'' +
-                ", tid='" + tid + '\'' +
-                ", title='" + title + '\'' +
-                ", copyfrom='" + copyfrom + '\'' +
-                ", update_time='" + update_time + '\'' +
-                ", comcount='" + comcount + '\'' +
-                ", content='" + content + '\'' +
-                ", outline='" + outline + '\'' +
-                ", realtion='" + realtion + '\'' +
-                ", video=" + video +
-                ", pic=" + pic +
-                ", link='" + link + '\'' +
-                ", authorname='" + authorname + '\'' +
-                ", vote=" + vote +
-                ", type='" + type + '\'' +
-                ", audiourl='" + audiourl + '\'' +
-                ", videoid='" + videoid + '\'' +
-                ", tag=" + tag.toString() +
-                ", ref=" + ref +
-                ", source='" + source + '\'' +
-                ", fav='" + fav + '\'' +
-                '}';
-    }
 
     public String getSource() {
         return source;

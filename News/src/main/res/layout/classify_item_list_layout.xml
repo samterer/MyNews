@@ -6,17 +6,17 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/classify_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp">
+        android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/classify_item"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="15dp">
 
             <ImageView
                 android:id="@+id/id_index_gallery_item_image"
@@ -30,24 +30,25 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_15"
+                android:gravity="center_vertical"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/id_index_gallery_item_text"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:text="some"
+                    android:layout_height="wrap_content"
+                    android:text="name"
                     android:textColor="#333333"
                     android:textSize="16dp" />
 
                 <TextView
                     android:id="@+id/id_index_gallery_item_num_text"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="some"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:text="null"
                     android:textColor="#333333"
                     android:textSize="12dp" />
             </LinearLayout>
@@ -73,9 +74,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/line_height"
-        android:layout_marginRight="16dp"
         android:layout_marginLeft="16dp"
-        android:background="#f0f0f0"/>
+        android:layout_marginRight="16dp"
+        android:background="#f0f0f0" />
 
 
 </LinearLayout>

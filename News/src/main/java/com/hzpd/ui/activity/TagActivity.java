@@ -4,19 +4,33 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hzpd.adapter.NewsItemListViewAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
+import com.hzpd.modle.TagBean;
 import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.ui.widget.RecyclerViewPauseOnScrollListener;
+import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.DBHelper;
+import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
+import com.hzpd.utils.RequestParamsUtils;
+import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.exception.DbException;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
+import com.lidroid.xutils.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,57 +38,106 @@ import java.util.List;
 public class TagActivity extends MBaseActivity implements View.OnClickListener {
 
     private TextView stitle_tv_content;
-
     private RecyclerView recylerlist;
     private NewsItemListViewAdapter adapter;
-
+    private int page = 1;
+    private int pageSize = 10;
+    boolean addLoading = false;
+    private LinearLayoutManager layoutManager;
+    private int lastVisibleItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tag_layout);
         super.changeStatusBar();
-        stitle_tv_content = (TextView) findViewById(R.id.stitle_tv_content);
-        stitle_tv_content.setText(getResources().getString(R.string.recently_read));
-        findViewById(R.id.stitle_ll_back).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.news_detail_bak).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
 
+        getIntentContent();
+
+        getNewsServer();
+
         recylerlist = (RecyclerView) findViewById(R.id.recylerlist);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager =new LinearLayoutManager(this);
         recylerlist.setLayoutManager(layoutManager);
         adapter = new NewsItemListViewAdapter(TagActivity.this, this);
-//        recylerlist = search_listview_id.getRefreshableView();
         recylerlist.setAdapter(adapter);
+        recylerlist.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
-        try {
-            List<NewsBeanDB> list = DBHelper.getInstance(this).getNewsListDbUtils().findAll(Selector
-                    .from(NewsBeanDB.class)
-                    .where("isreaded", "=", "1")
-                    .orderBy("id", true));
-
-            if (null != list) {
-                Log.i("isreaded", "isreaded" + list + ":::" + list.size());
-                List<NewsBean> nblist = new ArrayList<>();
-                for (int i=0;i<list.size();i++) {
-                    NewsBean bean = new NewsBean(list.get(i));
-//                    Log.i("MyPushActivity", "MyPushActivity" + bean.getNid());
-                    nblist.add(bean);
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.getItemCount()) {
+//                    adapter.setShowLoading(true);
+                    addLoading=true;
+                    adapter.showLoading=true;
+                    page++;
+                    Log.i("","");
+                    getNewsServer();
                 }
-                adapter.appendData(nblist, false, false);
-            } else {
-
             }
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-
-
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+                if (addLoading && !adapter.showLoading) {
+                    addLoading = false;
+                    int count = adapter.getItemCount();
+                    adapter.showLoading = true;
+                    adapter.notifyItemInserted(count);
+                }
+            }
+        });
     }
 
+    private void getNewsServer() {
+        RequestParams params = RequestParamsUtils.getParamsWithU();
+        params.addBodyParameter("tagId", tagBean.getId() + "");
+        params.addBodyParameter("page", page + "");
+        params.addBodyParameter("pageSize", pageSize + "");
+        SPUtil.addParams(params);
+        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.tag_news_url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                adapter.showLoading=false;
+                JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
+                if (null == obj) {
+                    return;
+                }
+                if (200 == obj.getIntValue("code")) {
+                    List<NewsBean> mlist = FjsonUtil.parseArray(obj.getString("data")
+                            , NewsBean.class);
+                    if (null == mlist) {
+                        return;
+                    }
+                    adapter.appendData(mlist, false, false);
+                    if (mlist.size() >= pageSize) {
+                        adapter.showLoading = true;
+                    }
+                    LogUtils.i("listsize-->" + mlist.size());
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                adapter.showLoading=false;
+
+            }
+        });
+    }
+
+    private TagBean tagBean;
+
+    public void getIntentContent() {
+        Intent intent = getIntent();
+        tagBean = (TagBean) intent.getSerializableExtra("tagbean");
+        Log.i("TagActivity", "TagActivity  TagBean--->" + tagBean);
+    }
 
     @Override
     public void onClick(View view) {
@@ -115,4 +178,6 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
         activity.startActivityForResult(mIntent, 0);
         AAnim.ActivityStartAnimation(this);
     }
+
+
 }

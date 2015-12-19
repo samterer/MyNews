@@ -35,7 +35,6 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -63,6 +62,7 @@ import com.hzpd.modle.NewsItemBeanForCollection;
 import com.hzpd.modle.ReplayBean;
 import com.hzpd.modle.ThirdLoginBean;
 import com.hzpd.modle.UserBean;
+import com.hzpd.modle.event.TagEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.dialog.FontsizePop;
 import com.hzpd.ui.widget.CustomRecyclerView;
@@ -105,6 +105,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+
 public class NewsDetailActivity extends MBaseActivity implements OnClickListener, AdListener {
 
     private static CallbackManager callbackManager = CallbackManager.Factory.create();
@@ -126,7 +128,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         return null;
     }
 
-    //    private  String BASEURL = InterfaceJsonfile.ROOT + "index.php?s=/Public/newsview/nid/";
     private String BASEURL = "index.php?s=/Public/newsview/nid/";
 
     public final static String IMG_PREFIX = "com.hzpd.provider.imageprovider";
@@ -1210,7 +1211,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     String data = App.getFileContext(pageFile);
                     JSONObject obj = JSONObject.parseObject(data);
                     mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
-                    Log.i("mBean", "mBean" + mBean.toString());
                     setContents();
                     getLatestComm();
                     return;
@@ -1265,11 +1265,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         }
                         try {
                             mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
-                            Log.i("mBean", "mBean" + mBean.toString());
-
                             setContents();
-
-
                         } catch (Exception e) {
                             e.printStackTrace();
                             return;
@@ -1316,7 +1312,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 loadingView.setVisibility(View.GONE);
             }
         }, 500);
-        if ((mBean.getRef() != null && mBean.getRef().size() > 0) || (mBean.getTag() != null) && mBean.getTag().size() > 0) {
+        if ((mBean.getRef() != null && mBean.getRef().size() > 0) || (mBean.getTag() != null && mBean.getTag().size() > 0)) {
             details_tag_layout.setVisibility(View.VISIBLE);
             if (mBean.getTag().size() > 0) {
                 details_head_tag_name.setVisibility(View.VISIBLE);
@@ -1329,7 +1325,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                             , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Personal_center_News));
                 }
                 details_head_tag_name.setText(mBean.getTag().get(0).getName());
+                EventBus.getDefault().post(new TagEvent(mBean.getTag().get(0)));
             }
+
+
             rl_related.setVisibility(View.VISIBLE);
             ll_tag.setVisibility(View.VISIBLE);
             addRelatedNewsView();

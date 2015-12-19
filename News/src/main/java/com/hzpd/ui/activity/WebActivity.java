@@ -11,6 +11,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.hzpd.hflt.R;
 import com.hzpd.ui.App;
@@ -40,6 +41,7 @@ public class WebActivity extends MBaseActivity {
             finish();
         }
         initViews();
+        urlView.setText(url);
     }
 
     @Override
@@ -56,9 +58,11 @@ public class WebActivity extends MBaseActivity {
     private ProgressBar load_progress_bar;
     private View background_empty;
     private View backView;
+    private TextView urlView;
 
     private void initViews() {
         webView = (WebView) findViewById(R.id.webview);
+        urlView = (TextView) findViewById(R.id.news_url);
         load_progress_bar = (ProgressBar) findViewById(R.id.load_progress_bar);
         background_empty = findViewById(R.id.background_empty);
         backView = findViewById(R.id.news_detail_bak);

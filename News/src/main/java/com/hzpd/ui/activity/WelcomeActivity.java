@@ -125,23 +125,33 @@ public class WelcomeActivity extends MWBaseActivity {
                             String json = App.getFileContext(responseInfo.result);
 //							LogUtils.e("WelcomeActivity数据源问题--->"+json);
                             if (json != null) {
-                                Log.i("", "channel-->" + json);
                                 JSONObject obj = FjsonUtil.parseObject(json);
                                 if (null == obj) {
+                                    if (!exists) {
+                                        loadMainUI();
+                                    }
                                     return;
                                 }
-
-                                // 读取json，获取频道信息
-                                JSONArray array = obj.getJSONArray("data");
-                                List<NewsChannelBean> newestChannels = JSONArray
-                                        .parseArray(array.toJSONString(),
-                                                NewsChannelBean.class);
-                                for (int i = 0; i < newestChannels.size(); i++) {
-                                    NewsChannelBean newsChannelBean = newestChannels.get(i);
-                                    newsChannelBean.getCnname();
-                                }
-
+                                List<NewsChannelBean> newestChannels = new ArrayList<>();
                                 List<NewsChannelBeanDB> dbs = null;
+                                try {
+                                    if (obj.getIntValue("code") == 200) {
+                                        // 读取json，获取频道信息
+                                        JSONArray array = obj.getJSONArray("data");
+                                        newestChannels = JSONArray
+                                                .parseArray(array.toJSONString(),
+                                                        NewsChannelBean.class);
+                                        for (int i = 0; i < newestChannels.size(); i++) {
+                                            NewsChannelBean newsChannelBean = newestChannels.get(i);
+                                            newsChannelBean.getCnname();
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                if (newestChannels == null) {
+                                    newestChannels = new ArrayList<>();
+                                }
                                 dbs = dbHelper.getChannelDbUtils().findAll(NewsChannelBeanDB.class);
                                 // 如果没有缓存
                                 if (null == dbs || dbs.size() < 1) {
@@ -153,9 +163,36 @@ public class WelcomeActivity extends MWBaseActivity {
                                     }
                                     dbHelper.getChannelDbUtils().saveAll(dbs);
                                     SPUtil.updateChannel();
-                                } else { // 如果有缓存
-                                    Log.i("Welcome", "如果有缓存"+dbs.size());
+                                } else if (newestChannels.size() > 0) { // 如果有缓存
+                                    Log.i("Welcome", "如果有缓存" + dbs.size());
                                     //TODO
+                                    boolean change = false;
+                                    for (int ii = 0; ii < dbs.size(); ii++) {
+                                        NewsChannelBeanDB beanDB = dbs.get(ii);
+                                        boolean delete = true;
+                                        if (!TextUtils.isEmpty(beanDB.getTid()) && beanDB.getType() != NewsChannelBean.TYPE_RECOMMEND) {
+                                            for (NewsChannelBean bean : newestChannels) {
+                                                if (bean.getTid().equals(beanDB.getTid())) {
+                                                    delete = false;
+                                                    newestChannels.remove(bean);
+                                                    break;
+                                                }
+                                            }
+                                            if (delete) {
+                                                change = true;
+                                                dbs.remove(beanDB);
+                                                --ii;
+                                            }
+                                        }
+                                    }
+                                    if (change || newestChannels.size() > 0) {
+                                        for (NewsChannelBean bean : newestChannels) {
+                                            dbs.add(new NewsChannelBeanDB(bean));
+                                        }
+                                        dbHelper.getChannelDbUtils().deleteAll(NewsChannelBeanDB.class);
+                                        dbHelper.getChannelDbUtils().saveAll(dbs);
+                                        SPUtil.updateChannel();
+                                    }
                                 }
                             }
                         } catch (Exception e) {
@@ -195,14 +232,14 @@ public class WelcomeActivity extends MWBaseActivity {
         }
         SPUtil.addParams(params);
         HttpHandler httpHandler = httpUtils.send(HttpRequest.HttpMethod.POST
-                , InterfaceJsonfile.CHANNEL_RECOMMEND
+                , InterfaceJsonfile.CHANNEL_RECOMMEND_NEW
                 , params
                 , new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 final JSONObject obj = FjsonUtil
                         .parseObject(responseInfo.result);
-                if (null != obj) {
+                if (null != obj && obj.getIntValue("code") == 200) {
                     try {
                         App.getInstance().newTime = obj.getString("newTime");
                         App.getInstance().oldTime = obj.getString("oldTime");

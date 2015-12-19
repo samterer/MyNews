@@ -1,9 +1,12 @@
 package com.hzpd.modle;
 
+import java.io.Serializable;
+
 /**
  * Created by taoshuang on 2015/12/9.
  */
-public class TagBean {
+public class TagBean implements Serializable{
+    private static final long serialVersionUID = 1L;
     private String icon;
     private String id;
     private String name;

@@ -8,50 +8,97 @@
     android:orientation="vertical">
 
 
+    <!--标题-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/main_title_bar"
-        android:background="?title_bar_color"
+        android:layout_height="@dimen/details_title_bar"
+        android:background="@color/main_title"
         android:orientation="horizontal">
-        <!--@color/toolbar_bg-->
-        <ImageView
-            android:id="@+id/stitle_ll_back1"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/main_title_bar"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/background_tab_pressed_selector"
-            android:visibility="gone" />
 
+        <!--返回按钮-->
         <RelativeLayout
-            android:id="@+id/stitle_ll_back"
-            android:layout_width="@dimen/main_title_bar"
-            android:layout_height="@dimen/main_title_bar"
-            android:background="?m_background_tab_pressed">
+            android:id="@+id/news_detail_bak"
+            android:layout_width="@dimen/details_title_bar"
+            android:layout_height="@dimen/details_title_bar"
+            android:background="@drawable/title_bar_details_btn_selector_color">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/webview_prev_mz" />
+                android:src="@drawable/details_back_btn" />
 
         </RelativeLayout>
 
+        <!--显示tag View-->
+        <LinearLayout
+            android:id="@+id/details_tag_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
-        <com.hzpd.ui.widget.FontTextView
-            android:id="@+id/stitle_tv_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="@string/prompt_column_subscribe"
-            android:textColor="@color/item_title"
-            android:textSize="20sp" />
+            <ImageView
+                android:id="@+id/details_head_tag_img"
+                android:layout_width="29dp"
+                android:layout_height="29dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/detail_head_tag_img"
+                android:scaleType="centerCrop" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/details_head_tag_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bloa"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/details_head_tag_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5.2million people like"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/details_tv_subscribe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/details_subscription_corners_bg"
+                android:drawableLeft="@drawable/editcolum_image"
+                android:drawablePadding="3dp"
+                android:paddingBottom="3dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="3dp"
+                android:text="@string/discovery_follow"
+                android:textColor="@color/white" />
+
+
+        </LinearLayout>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/line_height"
-        android:background="#e0e0e0"/>
+        android:background="#e0e0e0"
+        android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recylerlist"
