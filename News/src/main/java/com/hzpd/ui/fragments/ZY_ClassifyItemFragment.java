@@ -87,8 +87,9 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
                     if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == sampleAdapter.getItemCount()) {
                         sampleAdapter.setShowLoading(true);
                         vPage++;
-                        if(!TextUtils.isEmpty(id)){
-                            Log.i("vRecyclerView","vRecyclerView"+id);
+                        isClearOld = false;
+                        if (!TextUtils.isEmpty(id)) {
+                            Log.i("vRecyclerView", "vRecyclerView" + id);
                         }
                         getClassifyVerServer(id);
                     }
@@ -133,8 +134,8 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
 
                     adapter.appendData(mlist);
                     LogUtils.i("listsize-->" + mlist.size());
-                    isClearOld = true;
-                    id=mlist.get(0).getId();
+//                    isClearOld = true;
+                    id = mlist.get(0).getId();
                     getClassifyVerServer(id);
                 }
             }
@@ -153,6 +154,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
     private boolean isClearOld;
 
     private void getClassifyVerServer(String id) {
+        Log.i("getClassifyVerServer", "getClassifyVerServer id:" + id + "\nvPage:" + vPage + "\ntpageSize:" + tpageSize);
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("categoryId", id + "");
         params.addBodyParameter("Page", vPage + "");
@@ -172,9 +174,10 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
                     if (null == mlist) {
                         return;
                     }
+                    Log.i("getClassifyVerServer", "getClassifyVerServer vPage:::" + vPage);
                     Log.i("getClassifyVerServer", "getClassifyVerServer" + mlist.toString());
                     sampleAdapter.appendData(mlist, isClearOld);
-                    LogUtils.i("listsize-->" + mlist.size());
+                    Log.i("getClassifyVerServer", "getClassifyVerServer listsize:::" + mlist.size());
                 }
             }
 
@@ -202,6 +205,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
         id = event.getId();
         Log.i("onEventMainThread", "onEventMainThread  id-->" + id);
         isClearOld = true;
+        vPage = 1;
         getClassifyVerServer(id);
     }
 

@@ -352,9 +352,12 @@
     <string name="discovery_name">發現</string>
     <string name="classify_name">分類</string>
     <string name="discovery_follow">訂閱</string>
+    <string name="discovery_followed">已訂</string>
 
     <string name="follow_num">人訂閱</string>
     <string name="offline_mode">離線閱讀</string>
     <string name="night_mode">夜間模式</string>
     <string name="day_mode">日間模式</string>
+
+    <string name="look_over">查看</string>
 </resources>

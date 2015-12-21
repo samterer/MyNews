@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.LinearLayout;
 
 import com.hzpd.hflt.R;
 import com.hzpd.ui.activity.NewsDetailActivity;
@@ -56,11 +55,10 @@ public class NewsDetailAdapter extends RecyclerView.Adapter {
                 viewHolder = new HeadViewHolder(viewHead);
                 break;
             case TYPE_WEBVIEW:
-                WebView webView = (WebView) LayoutInflater.from(context).inflate(R.layout.webview_layout, parent, false);
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                webView.setLayoutParams(layoutParams);
+                ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.webview_layout, parent, false);
+                WebView webView = (WebView) viewGroup.findViewById(R.id.webview);
                 (context).setWebview(webView);
-                viewHolder = new WebViewHolder(webView);
+                viewHolder = new WebViewHolder(viewGroup);
                 break;
             case TYPE_ITEM:
                 FixedListView view = new FixedListView(context);

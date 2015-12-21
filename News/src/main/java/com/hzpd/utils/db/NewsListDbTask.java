@@ -118,7 +118,6 @@ public class NewsListDbTask {
                 newsListDb.findAll(TagidSelector);
 
 
-
                 Selector selector = Selector.from(NewsBeanDB.class)
                         .where("tid", "=", channelbean.getTid());
                 selector.orderBy("sort_order", true)
@@ -218,8 +217,12 @@ public class NewsListDbTask {
 
                 for (NewsBeanDB nbdb : list) {
                     try {
-                        newsListDb.delete(NewsBeanDB.class
-                                , WhereBuilder.b("nid", "=", nbdb.getNid()));
+                        List<NewsBeanDB> temp = newsListDb.findAll(Selector.from(NewsBeanDB.class).where("nid", "=", nbdb.getNid()));
+                        if (temp != null && temp.size() > 0) {
+                            NewsBeanDB newsBeanDB = temp.get(0);
+                            nbdb.setIsreaded(newsBeanDB.getIsreaded());
+                        }
+                        newsListDb.delete(NewsBeanDB.class, WhereBuilder.b("nid", "=", nbdb.getNid()));
                         newsListDb.save(nbdb);
                         flag = true;
                     } catch (Exception e) {

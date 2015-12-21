@@ -66,6 +66,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp"
+            android:layout_marginRight="@dimen/margin_15"
             android:text="@string/discovery_follow"
             android:textColor="@color/pager_sliding_tab_indicator_color" />
 

@@ -17,19 +17,16 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.DiscoveryItemBean;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.TagBean;
-import com.hzpd.modle.db.NewsChannelBeanDB;
 import com.hzpd.modle.event.TagEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.TagActivity;
 import com.hzpd.utils.CalendarUtil;
-import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.exception.DbException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -183,12 +180,14 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                     Drawable nav_up = context.getResources().getDrawable(R.drawable.discovery_image_select);
                     nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
                     viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+                    viewHolder.tv_subscribe.setText(context.getString(R.string.discovery_followed));
                 } else {
                     viewHolder.tv_subscribe.setBackgroundResource(R.drawable.discovery_item_corners_bg);
                     viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.pager_sliding_tab_indicator_color));
                     Drawable nav_up = context.getResources().getDrawable(R.drawable.discovery_image_nor);
                     nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
                     viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+                    viewHolder.tv_subscribe.setText(context.getString(R.string.discovery_follow));
                 }
 
                 viewHolder.news_ll.removeAllViews();
@@ -259,7 +258,7 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                     vi.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(context, "" + itembean.getNid(), Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(context, "" + itembean.getNid(), Toast.LENGTH_SHORT).show();
                             Intent mIntent = new Intent(context, NewsDetailActivity.class);
                             mIntent.putExtra("newbean", itembean);
                             mIntent.putExtra("from", "newsitem");

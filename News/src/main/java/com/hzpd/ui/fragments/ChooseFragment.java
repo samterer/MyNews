@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.CustomSwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -69,7 +70,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
     private NewsChannelBean channelbean;//本频道
     private NewsListDbTask newsListDbTask; //新闻列表数据库
     private boolean isRefresh = true;//是否首次加载
-    private SwipeRefreshLayout mSwipeRefreshWidget;
+    private CustomSwipeRefreshLayout mSwipeRefreshWidget;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private ChooseAdapter adapter;
@@ -170,7 +171,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         update_counts = (TextView) view.findViewById(R.id.update_counts);
         floatingView.setOnClickListener(this);
         ViewHelper.setAlpha(floatingView, 0.7f);
-        mSwipeRefreshWidget = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
+        mSwipeRefreshWidget = (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
 //        mSwipeRefreshWidget.setLayoutMode();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recylerlist);
 
@@ -591,62 +592,6 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
 
     }
 
-//    @Override
-//    public void onClick(View v) {
-//        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
-//            return;
-//        }
-//        switch (v.getId()) {
-//            case R.id.floating_button:
-//                if (!isRefresh) {
-//                    mRecyclerView.scrollToPosition(0);
-//                    mSwipeRefreshWidget.setRefreshing(true);
-//                    pageIndex = 1;
-//                    ++tagIndex;
-//                    page = 1;
-//                    getServerList("");
-//                    v.setAnimation(animation);
-//                    v.startAnimation(animation);
-//                    return;
-//                }
-//        }
-//
-//        TextView title = (TextView) v.findViewById(R.id.newsitem_title);
-//        if (null != title) {
-//            title.setTextColor(getResources().getColor(R.color.grey_font));
-//        }
-//        Log.e("isRefresh", "isRefresh--->" + isRefresh);
-//        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
-//            return;
-//        }
-//        try {
-//            if (!isRefresh && v == floatingView) {
-//                mRecyclerView.scrollToPosition(0);
-//                mSwipeRefreshWidget.setRefreshing(true);
-//                pageIndex = 1;
-//                ++tagIndex;
-//                page = 1;
-//                getServerList("");
-//                v.setAnimation(animation);
-//                v.startAnimation(animation);
-//                return;
-//            }
-//            if (v.getTag() instanceof NewsBean) {
-//                NewsBean nb = (NewsBean) v.getTag();
-//                Intent mIntent = new Intent();
-//                mIntent.putExtra("newbean", nb);
-//                mIntent.putExtra("from", "chooseItem");
-//                adapter.setReadedId(nb.getNid());
-//                //1新闻
-//                mIntent.setClass(v.getContext(), NewsDetailActivity.class);
-//                v.getContext().startActivity(mIntent);
-//                AAnim.ActivityStartAnimation(getActivity());
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
 
     public void onEventMainThread(FontSizeEvent event) {
         adapter.setFontSize(event.getFontSize());

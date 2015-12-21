@@ -296,10 +296,12 @@
     <string name="discovery_name">Temukan</string>
     <string name="classify_name">Kategori</string>
     <string name="discovery_follow">Pilih</string>
+    <string name="discovery_followed">Pilihan</string>
     <string name="follow_num">Pembaca</string>
     <string name="offline_mode">Baca Luar Jaringan</string>
-    <string name="night_mode">Mode Malam</string>
-    <string name="day_mode">Mode Normal</string>
+    <string name="night_mode">Malam</string>
+    <string name="day_mode">Normal</string>
+    <string name="look_over">Lihat</string>
 
 
 

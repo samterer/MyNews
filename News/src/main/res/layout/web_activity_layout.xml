@@ -28,14 +28,16 @@
         </RelativeLayout>
 
         <com.hzpd.ui.widget.FontTextView
-            android:background="@drawable/url_text_background"
-            android:ellipsize="none"
-            android:textColor="@color/webview_url_color"
-            android:gravity="center"
-            android:singleLine="true"
             android:id="@+id/news_url"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/main_title_bar"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/url_text_background"
+            android:ellipsize="none"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="@color/webview_url_color"
             android:textSize="14sp" />
     </LinearLayout>
 

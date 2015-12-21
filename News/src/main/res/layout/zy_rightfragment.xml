@@ -235,7 +235,7 @@
                 <LinearLayout
                     android:id="@+id/zy_rfrag_ll_download"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="?zqzx_onclik_setting_item"
                     android:gravity="center"
@@ -249,13 +249,14 @@
 
                     <com.hzpd.ui.widget.FontTextView
                         style="@style/personal_item_text"
+                        android:maxLines="1"
                         android:text="@string/offline_mode" />
                 </LinearLayout>
                 <!--模式-->
                 <LinearLayout
                     android:id="@+id/zy_rfrag_ll_night"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="?zqzx_onclik_setting_item"
                     android:gravity="center"
@@ -270,6 +271,7 @@
                     <com.hzpd.ui.widget.FontTextView
                         android:id="@+id/night_mode"
                         style="@style/personal_item_text"
+                        android:maxLines="1"
                         android:text="@string/night_mode" />
                 </LinearLayout>
                 <!--设置-->
@@ -277,7 +279,7 @@
                     android:id="@+id/zy_rfrag_ll_feedback"
                     android:layout_width="0dp"
                     android:background="?zqzx_onclik_setting_item"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical"
@@ -290,13 +292,14 @@
 
                     <com.hzpd.ui.widget.FontTextView
                         style="@style/personal_item_text"
+                        android:maxLines="1"
                         android:text="@string/settings_feedback" />
                 </LinearLayout>
                 <!--设置-->
                 <LinearLayout
                     android:id="@+id/zy_rfrag_ll_setting"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="?zqzx_onclik_setting_item"
                     android:gravity="center"

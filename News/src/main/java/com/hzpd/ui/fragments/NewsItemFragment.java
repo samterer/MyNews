@@ -3,6 +3,7 @@ package com.hzpd.ui.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.CustomSwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -100,7 +101,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     private HashMap<String, NativeAd> ads = new HashMap<>();
     private TextView update_counts;
 
-    private SwipeRefreshLayout mSwipeRefreshWidget;
+    private CustomSwipeRefreshLayout mSwipeRefreshWidget;
     private RecyclerView mRecyclerView;
 
     NewsItemListViewAdapter.CallBack callBack;
@@ -154,7 +155,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 mSwipeRefreshWidget.setRefreshing(true);
             }
         });
-        mSwipeRefreshWidget = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
+        mSwipeRefreshWidget = (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recylerlist);
 
         TypedValue typedValue1 = new TypedValue();
@@ -175,7 +176,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 isRefreshCounts = false; //TODO hide
             }
         });
-        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {

@@ -60,6 +60,7 @@ import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsDetailBean;
 import com.hzpd.modle.NewsItemBeanForCollection;
 import com.hzpd.modle.ReplayBean;
+import com.hzpd.modle.TagBean;
 import com.hzpd.modle.ThirdLoginBean;
 import com.hzpd.modle.UserBean;
 import com.hzpd.modle.event.TagEvent;
@@ -211,6 +212,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         details_head_tag_img = (ImageView) findViewById(R.id.details_head_tag_img);
         details_head_tag_name = (TextView) findViewById(R.id.details_head_tag_name);
         details_head_tag_num = (TextView) findViewById(R.id.details_head_tag_num);
+        details_tv_subscribe = (TextView) findViewById(R.id.details_tv_subscribe);
+
 
         initViews();
         getThisIntent();
@@ -479,7 +482,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             App.getInstance().setProfileTracker(null);
             nb = null;
             mWebView = null;
-            mRoot.removeAllViews();
+            swipeCloseLayout.removeAllViews();
             mRoot = null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -515,17 +518,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         recyclerView.setLayoutManager(layoutManager);
         adapter = new NewsDetailAdapter(this);
         recyclerView.setAdapter(adapter);
-        details_tv_subscribe = (TextView) findViewById(R.id.details_tv_subscribe);
-        details_tv_subscribe.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                details_tv_subscribe.setBackgroundResource(R.drawable.discovery_item_corners_bg);
-                details_tv_subscribe.setTextColor(getResources().getColor(R.color.details_tv_check_color));
-                Drawable nav_up = getResources().getDrawable(R.drawable.discovery_image_select);
-                nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
-                details_tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
-            }
-        });
 
 
     }
@@ -1292,6 +1284,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         }
     }
 
+    private boolean isTagSelect;
+
     private void setContents() {
         if (mBean != null) {
             details_head_title_layout.setVisibility(View.VISIBLE);
@@ -1312,27 +1306,81 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 loadingView.setVisibility(View.GONE);
             }
         }, 500);
-        if ((mBean.getRef() != null && mBean.getRef().size() > 0) || (mBean.getTag() != null && mBean.getTag().size() > 0)) {
+
+        if ((mBean.getTag() != null && mBean.getTag().size() > 0)) {
+            Log.i("NewsDetails", "NewsDtails  mBean.getTag()--->" + mBean.getTag());
+            details_head_tag_name.setText(mBean.getTag().get(0).getName());
+            Log.i("NewsDetails", "NewsDtails  mBean.getTag().get(0).getName()--->" + mBean.getTag().get(0).getName());
             details_tag_layout.setVisibility(View.VISIBLE);
-            if (mBean.getTag().size() > 0) {
-                details_head_tag_name.setVisibility(View.VISIBLE);
-                if (mBean.getTag().get(0).getNum() != null) {
-                    details_head_tag_num.setVisibility(View.VISIBLE);
-                }
-                if (mBean.getTag().get(0).getIcon() != null) {
-                    details_head_tag_img.setVisibility(View.VISIBLE);
-                    SPUtil.displayImage(mBean.getTag().get(0).getIcon(), details_head_tag_img
-                            , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Personal_center_News));
-                }
-                details_head_tag_name.setText(mBean.getTag().get(0).getName());
-                EventBus.getDefault().post(new TagEvent(mBean.getTag().get(0)));
+            details_head_tag_name.setVisibility(View.VISIBLE);
+
+
+            if (SPUtil.checkTag(mBean.getTag().get(0))) {
+                details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
+//                    Drawable nav_up = getResources().getDrawable(R.drawable.discovery_details_image_select);
+//                    nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+                details_tv_subscribe.setCompoundDrawables(null, null, null, null);
+                details_tv_subscribe.setText(getString(R.string.discovery_followed));
+                details_tv_subscribe.setText(getString(R.string.look_over));
+                isTagSelect = true;
+            } else {
+                details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
+                Drawable nav_up = getResources().getDrawable(R.drawable.editcolum_image);
+                nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+                details_tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+                isTagSelect = false;
             }
 
+            details_tv_subscribe.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("NewsDetails", "NewsDetails-->" + isTagSelect);
+                    if (isTagSelect) {
+                        details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
+                        Intent intent = new Intent(NewsDetailActivity.this, TagActivity.class);
+                        TagBean tagBean = mBean.getTag().get(0);
+                        intent.putExtra("tagbean", tagBean);
+                        startActivity(intent);
+                        isTagSelect = false;
+                    } else {
+                        details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
+//                        Drawable nav_up = getResources().getDrawable(R.drawable.discovery_details_image_select);
+//                        nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+                        details_tv_subscribe.setCompoundDrawables(null, null, null, null);
+                        EventBus.getDefault().post(new TagEvent(mBean.getTag().get(0)));
+                        details_tv_subscribe.setText(getString(R.string.look_over));
+                        isTagSelect = true;
+                    }
+                }
+            });
 
+            if (mBean.getTag().get(0).getIcon() != null) {
+                details_head_tag_img.setVisibility(View.VISIBLE);
+                SPUtil.displayImage(mBean.getTag().get(0).getIcon(), details_head_tag_img
+                        , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Personal_center_News));
+            } else {
+                details_head_tag_img.setVisibility(View.GONE);
+            }
+            rl_related.setVisibility(View.VISIBLE);
+            ll_tag.setVisibility(View.VISIBLE);
+            addRelatedTagView();
+
+//            if (mBean.getTag().get(0).getNum() != null) {
+//                if (Integer.parseInt(mBean.getTag().get(0).getName()) > 0) {
+//                    details_head_tag_num.setVisibility(View.VISIBLE);
+//                    details_head_tag_num.setText(mBean.getTag().get(0).getName() + R.string.follow_num);
+//                } else {
+//                    details_head_tag_num.setVisibility(View.GONE);
+//                }
+//            }
+
+        }
+
+        if (mBean.getRef() != null && mBean.getRef().size() > 0) {
             rl_related.setVisibility(View.VISIBLE);
             ll_tag.setVisibility(View.VISIBLE);
             addRelatedNewsView();
-            addRelatedTagView();
+//            addRelatedTagView();
         }
         if (mBean.getTag() != null) {
             rl_related.setVisibility(View.VISIBLE);

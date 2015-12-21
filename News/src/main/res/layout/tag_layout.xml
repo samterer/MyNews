@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/zqzx_bg_lgrey"
@@ -7,105 +7,131 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-
-    <!--标题-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/details_title_bar"
-        android:background="@color/main_title"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:background="@color/zqzx_bg_lgrey"
+        android:clipToPadding="true"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
 
-        <!--返回按钮-->
-        <RelativeLayout
-            android:id="@+id/news_detail_bak"
-            android:layout_width="@dimen/details_title_bar"
-            android:layout_height="@dimen/details_title_bar"
-            android:background="@drawable/title_bar_details_btn_selector_color">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/details_back_btn" />
-
-        </RelativeLayout>
-
-        <!--显示tag View-->
+        <!--标题-->
         <LinearLayout
-            android:id="@+id/details_tag_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/details_title_bar"
+            android:background="@color/main_title"
+            android:orientation="horizontal">
+
+            <!--返回按钮-->
+            <RelativeLayout
+                android:id="@+id/news_detail_bak"
+                android:layout_width="@dimen/details_title_bar"
+                android:layout_height="@dimen/details_title_bar"
+                android:background="@drawable/title_bar_details_btn_selector_color">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/details_back_btn" />
+
+            </RelativeLayout>
+
+            <!--显示tag View-->
+            <LinearLayout
+                android:id="@+id/details_tag_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/details_head_tag_img"
+                    android:layout_width="29dp"
+                    android:layout_height="29dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/detail_head_tag_img"
+                    android:scaleType="centerCrop" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/details_head_tag_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bloa"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                         />
+
+                    <TextView
+                        android:id="@+id/details_head_tag_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5.2million people like"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/details_tv_subscribe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/details_subscription_corners_bg"
+                    android:drawableLeft="@drawable/editcolum_image"
+                    android:drawablePadding="3dp"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="3dp"
+                    android:text="@string/discovery_follow"
+                    android:textColor="@color/white" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_height"
+            android:background="#e0e0e0"
+            android:visibility="gone" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recylerlist"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:background="?fragment_main_backgroup"
+            android:cacheColorHint="@null"
+            android:scrollbars="none" />
 
-            <ImageView
-                android:id="@+id/details_head_tag_img"
-                android:layout_width="29dp"
-                android:layout_height="29dp"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/detail_head_tag_img"
-                android:scaleType="centerCrop" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/details_head_tag_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Bloa"
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/details_head_tag_num"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="5.2million people like"
-                    android:textColor="@color/white"
-                    android:textSize="10sp"
-                    android:visibility="gone" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/details_tv_subscribe"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/details_subscription_corners_bg"
-                android:drawableLeft="@drawable/editcolum_image"
-                android:drawablePadding="3dp"
-                android:paddingBottom="3dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="3dp"
-                android:text="@string/discovery_follow"
-                android:textColor="@color/white" />
-
-
-        </LinearLayout>
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/line_height"
-        android:background="#e0e0e0"
-        android:visibility="gone"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recylerlist"
+
+    <!-- 没有数据-->
+    <FrameLayout
+        android:id="@+id/news_nonetwork"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?fragment_main_backgroup"
-        android:cacheColorHint="@null"
-        android:scrollbars="none" />
+        android:background="#ffffff"
+        android:visibility="gone">
 
-</LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/zqzx_nonetwork" />
+    </FrameLayout>
+</FrameLayout>
