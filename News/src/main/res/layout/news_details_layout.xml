@@ -249,7 +249,6 @@
             </RelativeLayout>
 
 
-            <!--分享-->
             <ImageView
                 android:id="@+id/newdetail_comment"
                 android:layout_width="35dp"

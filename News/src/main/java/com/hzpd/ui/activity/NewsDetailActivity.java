@@ -15,6 +15,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -159,6 +160,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private TextView newdetail_tv_comm;// 评论
     private ImageView newdetail_fontsize;// 字体
     private ImageView newdetail_share;// 分享
+    private ImageView newdetail_comment;//评论页
     private ImageView newdetail_collection;// 收藏
     private ImageView newdetail_more;//更多
     private RelativeLayout mRelativeLayoutTitleRoot;
@@ -273,6 +275,11 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         ad_layout = (ViewGroup) headView.findViewById(R.id.ad_layout);
         ad_view = (ViewGroup) headView.findViewById(R.id.ad_view);
         mCommentListView.addHeaderView(headView);
+
+
+//        View footView = mLayoutInflater.inflate(R.layout.details_foot_layout, null);
+//        mCommentListView.addFooterView(footView);
+
         mCommentListView.setAdapter(mCommentListAdapter);
         mCommentListView.setVisibility(View.GONE);
         details_explain = (FontTextView) headView.findViewById(R.id.details_explain);
@@ -343,6 +350,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         newdetail_tv_comm = (TextView) findViewById(R.id.newdetail_tv_comm);
         newdetail_fontsize = (ImageView) findViewById(R.id.newdetail_fontsize);
         newdetail_share = (ImageView) findViewById(R.id.newdetail_share);
+        newdetail_comment = (ImageView) findViewById(R.id.newdetail_comment);
         newdetail_collection = (ImageView) findViewById(R.id.newdetail_collection);
         newdetail_more = (ImageView) findViewById(R.id.newdetail_more);
         news_detail_nonetwork = findViewById(R.id.news_detail_nonetwork);
@@ -353,6 +361,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         newdetail_tv_comm.setOnClickListener(this);
         newdetail_fontsize.setOnClickListener(this);
         newdetail_share.setOnClickListener(this);
+        newdetail_comment.setOnClickListener(this);
         newdetail_collection.setOnClickListener(this);
         newdetail_more.setOnClickListener(this);
 
@@ -373,6 +382,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 getNewsDetails();
             }
         });
+
+
         getNewsDetails();
         initCommentListView();
         Log.e("test", "10 " + System.currentTimeMillis());
@@ -749,6 +760,27 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     if (skipComment()) return;
                 }
                 break;
+                case R.id.newdetail_comment: {
+                // 跳转到评论页
+                    if (nb == null) {
+                        return;
+                    }
+                    Log.i("newdetail_comment", "newdetail_comment  1");
+                    String smallimg = "";
+                    if (null != nb.getImgs() && nb.getImgs().length > 0) {
+                        smallimg = nb.getImgs()[0];
+                    }
+                    ReplayBean bean = new ReplayBean(nb.getNid(), nb.getTitle(), "News", nb.getJson_url(), smallimg, nb.getComcount());
+                    Intent intent = new Intent(this, XF_NewsCommentsActivity.class);
+                    intent.putExtra("replay", bean);
+                    startActivity(intent);
+                    Log.i("newdetail_comment", "newdetail_comment   2");
+//                    Intent intent = new Intent(NewsDetailActivity.this, XF_NewsCommentsActivity.class);
+//                    intent.putExtra("News_nid",nb.getNid());
+//                    startActivity(intent);
+//                    AAnim.ActivityStartAnimation(NewsDetailActivity.this);
+                }
+                break;
                 case R.id.newdetail_share: {
                     try {
                         if (mBean == null) {
@@ -1116,27 +1148,25 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
 
     private volatile int mCurPage = 1;
-    private int mPageSize = 20;
+    private int mPageSize = 10;
 
 
     //查看评论
     private void getLatestComm() {
+        //TODO 评论
         Log.e("test", "getLatestComm ");
         if (mBean == null) {
             return;
         }
-        String siteid = InterfaceJsonfile.SITEID;
-        String mLatestComm_url = InterfaceJsonfile.CHECKCOMMENT;
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("Page", "" + mCurPage);
         params.addBodyParameter("PageSize", "" + mPageSize);
         params.addBodyParameter("nid", mBean.getNid());
         params.addBodyParameter("type", "News");
-        params.addBodyParameter("siteid", siteid);
+        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         SPUtil.addParams(params);
-        String url = mLatestComm_url;
         HttpHandler httpHandler = httpUtils.send(HttpMethod.POST
-                , url
+                , InterfaceJsonfile.CHECKCOMMENT
                 , params
                 , new RequestCallBack<String>() {
             @Override
@@ -1148,7 +1178,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     parseCommentJson(responseInfo.result);
                 }
 
-                mCurPage++;
             }
 
 
@@ -1167,10 +1196,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             } catch (Exception e) {
                 return;
             }
-            boolean hasMore = false;
             if (obj != null && 200 == obj.getIntValue("code")) {
                 Log.e("test", "getLatestComm   200");
-
                 ll_rob.setVisibility(View.GONE);
                 latestList = (ArrayList<CommentzqzxBean>) JSONArray.parseArray(
                         obj.getString("data"), CommentzqzxBean.class);
@@ -1178,14 +1205,11 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 Log.e("test", "test--->" + latestList.toString());
                 // 添加数据到Adpater
                 mCommentListAdapter.appendData(latestList);
-                hasMore = true;
             } else {
-                hasMore = false;
                 if (mCurPage <= 1) {
                     ll_rob.setVisibility(View.VISIBLE);
                 }
             }
-            boolean emptyResult = (mCommentListAdapter == null || mCommentListAdapter.isEmpty());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1389,10 +1413,14 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
         }
         if (mBean.getSource() != null) {
+            Log.i("mBean.getSource()", "mBean.getSource()--->" + mBean.getSource());
             details_more_check.setVisibility(View.VISIBLE);
             details_more_check.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+                        return;
+                    }
                     Intent intent = new Intent(NewsDetailActivity.this, WebActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra(WebActivity.KEY_URL, mBean.getSource());

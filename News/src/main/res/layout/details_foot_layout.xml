@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_activity_background_color"
+    android:orientation="vertical"
+    android:paddingBottom="10dp">
+
+    <com.hzpd.ui.widget.FontTextView
+        android:id="@+id/details_more_check"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/margin_10"
+        android:layout_marginRight="@dimen/margin_10"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/details_news_source_selector"
+        android:gravity="center"
+        android:text="@string/details_lv_4"
+        android:textColor="@color/details_tv_check_color"
+        android:textSize="18sp"
+        />
+
+
+</LinearLayout>

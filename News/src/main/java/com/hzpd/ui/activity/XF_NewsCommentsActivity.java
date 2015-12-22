@@ -46,118 +46,82 @@ public class XF_NewsCommentsActivity extends MBaseActivity {
     private PullToRefreshListView pushmsg_lv;
     @ViewInject(R.id.pushmsg_tv_empty)
     private ImageView pushmsg_tv_empty;
-
     private int Page = 1;
     private static final int PageSize = 15;
     private boolean mFlagRefresh;
-
     private MyCommentListAdapter myCommentListAdapter;
 
-    private ReplayBean bean;
+    private String nid;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.newscomments_layout);
         ViewUtils.inject(this);
-        changeStatus();
-        Bundle bundle = getIntent().getExtras();
-        bean = (ReplayBean) bundle.getSerializable("reply");
-//        Bundle args = new Bundle();
-//        args.putSerializable("reply", bean);
-        LogUtils.e("bean" + bean.getId() + bean.getType());
-
-        stitle_tv_content.setText(R.string.comment_item_new);
-        pushmsg_lv.setEmptyView(pushmsg_tv_empty);
-        pushmsg_lv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-
-        pushmsg_lv.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pushmsg_lv.setRefreshing(true);
-            }
-        }, 500);
-
-        myCommentListAdapter = new MyCommentListAdapter();
-        pushmsg_lv.setAdapter(myCommentListAdapter);
-        pushmsg_lv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                LogUtils.i("下拉刷新");
-                refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_pull_label));
-                Page = 1;
-                mFlagRefresh = true;
-                getInfoFromServer();
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                //上拉加载
-                LogUtils.i("上拉加载");
-                refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_from_bottom_pull_label));
-                Page++;
-                mFlagRefresh = false;
-                getInfoFromServer();
-            }
-        });
-
-        pushmsg_lv.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pushmsg_lv.setRefreshing(false);
-            }
-        }, 600);
-        pushmsg_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (view.getTag() instanceof MyCommentListAdapter.ViewHolder) {
-                    MyCommentListAdapter.ViewHolder viewHolder = (MyCommentListAdapter.ViewHolder) view.getTag();
-                    Intent mIntent = new Intent();
-                    mIntent.putExtra("uid", viewHolder.userId); //TODO
-                    mIntent.setClass(activity, XF_PInfoActivity.class);
-                    startActivity(mIntent);
-                }
-            }
-        });
+//        nid = getIntent().getStringExtra("News_nid");
+//        LogUtils.e("nid--->" + nid);
+//
+//        stitle_tv_content.setText(R.string.comment_item_new);
+//        pushmsg_lv.setEmptyView(pushmsg_tv_empty);
+//        pushmsg_lv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+//
+//        pushmsg_lv.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                pushmsg_lv.setRefreshing(true);
+//            }
+//        }, 500);
+//
+//        myCommentListAdapter = new MyCommentListAdapter();
+//        pushmsg_lv.setAdapter(myCommentListAdapter);
+//        pushmsg_lv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+//            @Override
+//            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+//                LogUtils.i("下拉刷新");
+//                refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_pull_label));
+//                Page = 1;
+//                mFlagRefresh = true;
+//                getInfoFromServer();
+//            }
+//
+//            @Override
+//            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+//                //上拉加载
+//                LogUtils.i("上拉加载");
+//                refreshView.getLoadingLayoutProxy().setPullLabel(getString(R.string.pull_to_refresh_from_bottom_pull_label));
+//                Page++;
+//                mFlagRefresh = false;
+//                getInfoFromServer();
+//            }
+//        });
+//
+//        pushmsg_lv.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                pushmsg_lv.setRefreshing(false);
+//            }
+//        }, 600);
+//        pushmsg_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                if (view.getTag() instanceof MyCommentListAdapter.ViewHolder) {
+//                    MyCommentListAdapter.ViewHolder viewHolder = (MyCommentListAdapter.ViewHolder) view.getTag();
+//                    Intent mIntent = new Intent();
+//                    mIntent.putExtra("uid", viewHolder.userId); //TODO
+//                    mIntent.setClass(activity, XF_PInfoActivity.class);
+//                    startActivity(mIntent);
+//                }
+//            }
+//        });
     }
 
-    private void changeStatus() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true);
-            //透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //透明导航栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
-
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(true);
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
-        int color = typedValue.data;
-        tintManager.setStatusBarTintColor(color);
-    }
-
-    @TargetApi(19)
-    private void setTranslucentStatus(boolean on) {
-        Window win = getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
-    }
 
     private void getInfoFromServer() {
         RequestParams params = RequestParamsUtils.getParamsWithU();
         params.addBodyParameter("PageSize", PageSize + "");
         params.addBodyParameter("Page", Page + "");
-
-        params.addBodyParameter("nid", bean.getId());
-        params.addBodyParameter("type", bean.getType());
+        params.addBodyParameter("nid", nid);
+        params.addBodyParameter("type", "News");
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         SPUtil.addParams(params);
         httpUtils.send(HttpRequest.HttpMethod.POST

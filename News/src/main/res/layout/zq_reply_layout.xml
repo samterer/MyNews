@@ -172,27 +172,28 @@
 
 
                 <include layout="@layout/transparent_layout" />
-            </FrameLayout>
 
+                <FrameLayout
+                    android:id="@+id/app_progress_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="3dp"
+                    android:background="#65ffffff"
+                    android:visibility="gone">
+
+                    <ProgressBar
+                        style="@style/loadingProgressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" />
+
+                </FrameLayout>
+            </FrameLayout>
 
         </LinearLayout>
 
 
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/app_progress_bar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="3dp"
-        android:background="#65ffffff"
-        android:visibility="gone">
 
-        <ProgressBar
-            style="@style/loadingProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-
-    </FrameLayout>
 </FrameLayout>

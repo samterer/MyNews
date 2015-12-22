@@ -79,6 +79,9 @@
             android:name="com.hzpd.ui.activity.TagActivity"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name="com.hzpd.ui.activity.XF_NewsCommentsActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name="com.hzpd.ui.activity.NewsAlbumActivity"
             android:screenOrientation="portrait">
             <intent-filter>
