@@ -31,7 +31,6 @@ import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
-import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.db.NewsListDbTask;
 import com.lidroid.xutils.ViewUtils;
@@ -46,7 +45,7 @@ import java.util.Random;
 
 public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
-    public static final String AD_KEY = "1902056863352757_1942167249341718"; // "1902056863352757_1922349784656798" "1902056863352757_1942167249341718 ;
+    public static final String AD_KEY = "1902056863352757_1942167249341718";
     public static final int STEP = 10;
     public static final int MAX_POSITION = 80;
 
@@ -91,19 +90,19 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         if (ads == null) {
             return;
         }
-        Log.e("test", "nextAdPosition " + nextAdPosition);
+//        Log.e("test", "nextAdPosition " + nextAdPosition);
         final NativeAd nativeAd = new NativeAd(context.getApplicationContext(), AD_KEY);
         ads.put("" + nextAdPosition, nativeAd);
         final int adPos = nextAdPosition;
         nativeAd.setAdListener(new AdListener() {
             @Override
             public void onError(Ad ad, AdError adError) {
-                Log.e("test", "onError->" + nextAdPosition + ": " + adError.getErrorMessage());
+//                Log.e("test", "onError->" + nextAdPosition + ": " + adError.getErrorMessage());
             }
 
             @Override
             public void onAdLoaded(Ad ad) {
-                Log.e("test", "onAdLoaded->" + nextAdPosition + ": " + nativeAd);
+//                Log.e("test", "onAdLoaded->" + nextAdPosition + ": " + nativeAd);
                 try {
                     if (!isAdd) {
                         return;

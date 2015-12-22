@@ -20,7 +20,6 @@ import com.hzpd.services.InitService;
 import com.hzpd.ui.App;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.ui.fragments.NewsFragment;
-import com.hzpd.ui.fragments.WebviewFragment;
 import com.hzpd.ui.fragments.ZY_DiscoveryFragment;
 import com.hzpd.ui.fragments.ZY_RightFragment;
 import com.hzpd.url.InterfaceJsonfile;
@@ -173,12 +172,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (currentFrag instanceof WebviewFragment) {
-            if (((WebviewFragment) currentFrag).canback()) {
-                return;
-            }
-        }
-
         //退出程序
         ExitApplication.exit(this);
     }

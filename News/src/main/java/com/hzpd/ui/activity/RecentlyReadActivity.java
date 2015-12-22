@@ -4,14 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.hzpd.adapter.NewsItemListViewAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
-import com.hzpd.modle.NewsItemBeanForCollection;
 import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
@@ -100,7 +98,7 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
         } else if ("2".equals(nb.getRtype())) {
             mIntent.setClass(this, NewsAlbumActivity.class);
         } else if ("3".equals(nb.getRtype())) {
-            mIntent.setClass(this, HtmlActivity.class);//直播界面
+            mIntent.setClass(this, NewsDetailActivity.class);//TODO 直播界面
         } else if ("4".equals(nb.getRtype())) {
             mIntent.setClass(this, ZhuanTiActivity.class);
         } else if ("5".equals(nb.getRtype())) {
@@ -109,7 +107,7 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
 //					mIntent.setClass(getActivity(),VideoPlayerActivity.class);
             mIntent.setClass(this, NewsDetailActivity.class);
         } else if ("7".equals(nb.getRtype())) {
-            mIntent.setClass(this, HtmlActivity.class);
+            mIntent.setClass(this, NewsDetailActivity.class);
         } else {
             return;
         }

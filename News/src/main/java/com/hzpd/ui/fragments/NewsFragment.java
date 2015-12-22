@@ -161,7 +161,6 @@ public class NewsFragment extends BaseFragment {
                 main_no_news.setVisibility(View.GONE);
                 app_progress_bar.setVisibility(View.GONE);
             }
-            LogUtils.i("mList-->" + mList.size());
             adapter = new NewsFragmentPagerAdapter(fm);
             pager.setAdapter(adapter);
             adapter.sortChannel(mList);
@@ -282,6 +281,7 @@ public class NewsFragment extends BaseFragment {
         }
         if (event.position != -1) {
             pager.setCurrentItem(event.position);
+            adapter.setSelectedPosition(event.position);
         }
     }
 
@@ -291,6 +291,7 @@ public class NewsFragment extends BaseFragment {
             if (SPUtil.checkTag(tagBean)) {
                 return;
             }
+            pager.setOffscreenPageLimit(PAGE_LIMIT);
             NewsChannelBeanDB beanDB = SPUtil.getTag(tagBean);
             if (beanDB == null) {
                 beanDB = new NewsChannelBeanDB(tagBean);
@@ -301,9 +302,13 @@ public class NewsFragment extends BaseFragment {
                 beanDB.setDefault_show("1");
                 dbHelper.getChannelDbUtils().update(beanDB);
             }
-            mList.add(1, new NewsChannelBean(beanDB));
+            if (mList.size() > 2) {
+                mList.add(2, new NewsChannelBean(beanDB));
+            } else {
+                mList.add(1, new NewsChannelBean(beanDB));
+            }
             adapter.sortChannel(mList);
-            pager.setCurrentItem(1);
+            pager.setCurrentItem(2);
             tabStrip.notifyDataSetChanged();
         } catch (Exception e) {
             e.printStackTrace();

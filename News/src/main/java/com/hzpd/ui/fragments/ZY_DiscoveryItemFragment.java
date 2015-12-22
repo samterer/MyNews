@@ -15,7 +15,6 @@ import com.hzpd.modle.DiscoveryItemBean;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
-import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.exception.HttpException;
@@ -24,7 +23,6 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ZY_DiscoveryItemFragment extends BaseFragment {
@@ -38,7 +36,6 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
         return AnalyticUtils.SCREEN.leftMenu;
     }
 
-    boolean addLoading = false;
     private int lastVisibleItem;
     private LinearLayoutManager vlinearLayoutManager;
 
@@ -62,7 +59,7 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
                     super.onScrollStateChanged(recyclerView, newState);
                     if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == newAdapter.getItemCount()) {
                         newAdapter.setShowLoading(true);
-                        Page++;
+
                         getDiscoveryServer();
                     }
                 }
@@ -98,12 +95,12 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
                     return;
                 }
                 if (200 == obj.getIntValue("code")) {
+                    Page++;
                     List<DiscoveryItemBean> mlist = FjsonUtil.parseArray(obj.getString("data")
                             , DiscoveryItemBean.class);
                     if (null == mlist) {
                         return;
                     }
-                    Log.i("mlist", "mlist" + mlist.size());
 
                     for (int i = 0; i < mlist.size(); i++) {
 
@@ -113,7 +110,6 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
                             i--;
                         }
                     }
-                    Log.i("mlist", "mlist" + mlist.size());
                     newAdapter.appendData(mlist, false);
                 }
             }

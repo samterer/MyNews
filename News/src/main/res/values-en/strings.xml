@@ -285,7 +285,7 @@
     <string name="discovery_follow">Follow</string>
     <string name="discovery_followed">Followed</string>
     <string name="follow_num">Follower</string>
-    <string name="offline_mode">Offline Mode</string>
+    <string name="offline_mode">Offline</string>
     <string name="night_mode">Night</string>
     <string name="day_mode">Day</string>
 

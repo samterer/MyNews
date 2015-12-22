@@ -8,9 +8,9 @@ package com.hzpd.url;
 public class InterfaceJsonfile {
 
     //印尼
-    public static final String host1 = "http://v2.nutnote.com";
+//    public static final String host1 = "http://v2.nutnote.com";
     //本地测试
-//    public static final String host1 = "http://10.80.3.123/cmsv2";
+    public static final String host1 = "http://10.80.3.123/cmsv2";
 
     // ========================================
     public static final String PATH_ROOT = host1 + "/api.php?s=";

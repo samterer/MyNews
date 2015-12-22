@@ -3,16 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:clipToPadding="true"
-    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <include layout="@layout/stitle_layout" />
+    <include layout="@layout/stitle_layout"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/zhuanti_item_sv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrHeaderSubTextColor="@color/zqzx_font_light"
+        ptr:ptrHeaderTextColor="@color/zqzx_font_dark">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,15 +26,15 @@
                 android:id="@+id/zhuanti_topview_myroot"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/zqzx_bg_normal"
                 android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/zhuanti_header_iv"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="100dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/default_bg" />
+                    android:background="@color/black"
+                    />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -40,7 +43,7 @@
                     android:orientation="horizontal"
                     android:padding="20dp">
 
-                    <com.hzpd.ui.widget.FontTextView
+                    <TextView
                         android:id="@+id/zhuanti_tv_title"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -50,9 +53,10 @@
                         android:gravity="center_vertical"
                         android:textColor="@color/zqzx_font_normal"
                         android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:text="12313123123"
+                        android:textStyle="bold"/>
 
-                    <com.hzpd.ui.widget.FontTextView
+                    <TextView
                         android:id="@+id/zhuanti_tv_con"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -60,9 +64,10 @@
                         android:background="@drawable/zq_special_greyborder_shape"
                         android:ellipsize="end"
                         android:maxLines="1"
+                        android:text="12313123123"
                         android:textColor="@color/zqzx_font_light"
                         android:textSize="14sp"
-                        android:visibility="invisible" />
+                        android:visibility="invisible"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -82,16 +87,15 @@
                 android:scrollbarThumbVertical="@drawable/base_list_scrollbar_handle"
                 android:scrollbarTrackVertical="@color/transparent"
                 android:scrollbars="vertical"
-                android:smoothScrollbar="true" />
+                android:smoothScrollbar="true"/>
 
             <ImageView
                 android:id="@+id/zhuanti_item_iv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ccc"
-                android:contentDescription="@null"
-                android:padding="@dimen/nonetworkpadding" />
+                android:background="@color/google_blue"
+                android:padding="@dimen/nonetworkpadding"/>
         </LinearLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 
 </LinearLayout>

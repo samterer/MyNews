@@ -2,15 +2,13 @@ package com.hzpd.adapter;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.ui.fragments.ChooseFragment;
-import com.hzpd.ui.fragments.NewsAlbumFragment;
 import com.hzpd.ui.fragments.NewsItemFragment;
-import com.hzpd.ui.fragments.VideoListFragment;
-import com.hzpd.ui.fragments.ZhuantiFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +43,11 @@ public class NewsFragmentPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
+    @Override
     public int getCount() {
         return saveTitleList.size();
     }
@@ -57,8 +60,18 @@ public class NewsFragmentPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return super.isViewFromObject(view, object);
+    }
+
+    @Override
     public Object instantiateItem(ViewGroup container, int position) {
         return super.instantiateItem(container, position);
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        super.destroyItem(container, position, object);
     }
 
     boolean changed = false;
@@ -82,15 +95,6 @@ public class NewsFragmentPagerAdapter extends FragmentPagerAdapter {
         switch (ncb.getType()) {
             case NewsChannelBean.TYPE_RECOMMEND:
                 fragment = new ChooseFragment(ncb);
-                break;
-            case NewsChannelBean.TYPE_IMAGE_ALBUM:
-                fragment = new NewsAlbumFragment();
-                break;
-            case NewsChannelBean.TYPE_VIDEO:
-                fragment = new VideoListFragment();
-                break;
-            case NewsChannelBean.TYPE_SUBJECT:
-                fragment = new ZhuantiFragment();
                 break;
             default:
                 fragment = new NewsItemFragment(ncb);

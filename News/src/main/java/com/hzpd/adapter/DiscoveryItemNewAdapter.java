@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hzpd.hflt.R;
 import com.hzpd.modle.DiscoveryItemBean;
@@ -77,9 +76,8 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
     public int getItemCount() {
         int count = list.size();
         if (showLoading) {
-            count = list.size() + 1;
+            count = count + 1;
         }
-
         return count;
     }
 

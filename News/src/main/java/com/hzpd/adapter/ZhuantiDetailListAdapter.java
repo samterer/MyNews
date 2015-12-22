@@ -1,19 +1,20 @@
 package com.hzpd.adapter;
 
 import android.app.Activity;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.SubjectItemColumnsBean;
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
+import com.hzpd.utils.DisplayOptionFactory;
+import com.hzpd.utils.DisplayOptionFactory.OptionTp;
+import com.hzpd.utils.SPUtil;
+import com.hzpd.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -21,19 +22,23 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
-public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
+public class ZhuantiDetailListAdapter extends BaseAdapter {
 
     private Activity context;
     private LayoutInflater inflater;
     private ImageLoader mImageLoader;
 
-    private LinkedHashMap<SubjectItemColumnsBean, List<NewsBean>> columnList = new LinkedHashMap<>();
-    View.OnClickListener onClickListener;
+    private float fontSize = 0;// 字体大小
 
-    public ZhuantiDetailListAdapter(Activity context, View.OnClickListener onClickListener) {
+    private LinkedHashMap<SubjectItemColumnsBean, List<NewsBean>> columnList;
+
+    public ZhuantiDetailListAdapter(Activity context) {
         this.context = context;
-        this.onClickListener = onClickListener;
         this.inflater = LayoutInflater.from(context);
+        mImageLoader = ImageLoader.getInstance();
+        columnList = new LinkedHashMap<SubjectItemColumnsBean, List<NewsBean>>();
+
+        fontSize = SPUtil.getInstance().getTextSize();
     }
 
     public void appendData(SubjectItemColumnsBean column, List<NewsBean> list,
@@ -56,193 +61,12 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
         columnList.clear();
     }
 
-
-    final static int TYPE_HEAD = 0x10;
-    final static int TYPE_CLOUMN_HEAD = 0x11;
-
-    final static int TYPE_THREEPIC = 0x13;
-    final static int TYPE_LEFTPIC = 0x14;
-    final static int TYPE_BIGPIC = 0x15;
-    final static int TYPE_LARGE = 0x16;
-
-    public class HeadViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
-        TextView textView;
-
-        public HeadViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-    public class ColumnViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
-
-        public ColumnViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-
-    //三联图
-    private class VHThree extends RecyclerView.ViewHolder {
-        @ViewInject(R.id.newsitem_title)
-        private TextView newsitem_title;
-        @ViewInject(R.id.news_3_tv_time)
-        private TextView tv3;
-        @ViewInject(R.id.news_3_item1)
-        private ImageView img0;
-        @ViewInject(R.id.news_3_item2)
-        private ImageView img1;
-        @ViewInject(R.id.news_3_item3)
-        private ImageView img2;
-        @ViewInject(R.id.newsitem_foot)
-        private ImageView newsitem_foot;
-        @ViewInject(R.id.newsitem_comments)
-        private TextView newsitem_comments;
-        @ViewInject(R.id.newsitem_source)
-        private TextView newsitem_source;
-        @ViewInject(R.id.newsitem_collectcount)
-        private TextView newsitem_collectcount;
-        @ViewInject(R.id.item_type_iv)
-        private ImageView item_type_iv;
-
-        public VHThree(View v) {
-            super(v);
-            ViewUtils.inject(this, v);
-            v.setOnClickListener(onClickListener);
-        }
-    }
-
-    //左边图片，右title，评论，时间，脚标
-    private class VHLeftPic extends RecyclerView.ViewHolder {
-        @ViewInject(R.id.newsitem_title)
-        private TextView newsitem_title;
-        @ViewInject(R.id.nli_foot)
-        private ImageView nli_foot;
-        //		来源
-        @ViewInject(R.id.newsitem_source)
-        private TextView newsitem_source;
-        //		收藏数
-        @ViewInject(R.id.newsitem_collectcount)
-        private TextView newsitem_collectcount;
-        //		评论数
-        @ViewInject(R.id.newsitem_commentcount)
-        private TextView newsitem_commentcount;
-        @ViewInject(R.id.newsitem_time)
-        private TextView newsitem_time;
-        @ViewInject(R.id.newsitem_img)
-        private ImageView newsitem_img;
-        @ViewInject(R.id.newsitem_unlike)
-        private ImageView newsitem_unlike;
-        @ViewInject(R.id.item_type_iv)
-        private ImageView item_type_iv;
-        @ViewInject(R.id.ll_tag)
-        private LinearLayout ll_tag;
-
-        public VHLeftPic(View v) {
-            super(v);
-            ViewUtils.inject(this, v);
-            v.setOnClickListener(onClickListener);
-        }
-    }
-
-    //大图
-    private class VHLargePic extends RecyclerView.ViewHolder {
-        @ViewInject(R.id.newsitem_title)
-        private TextView newsitem_title;
-        @ViewInject(R.id.nli_foot)
-        private ImageView nli_foot;
-        //		来源
-        @ViewInject(R.id.newsitem_source)
-        private TextView newsitem_source;
-        //		收藏数
-        @ViewInject(R.id.newsitem_collectcount)
-        private TextView newsitem_collectcount;
-        //		评论数
-        @ViewInject(R.id.newsitem_commentcount)
-        private TextView newsitem_commentcount;
-        @ViewInject(R.id.newsitem_time)
-        private TextView newsitem_time;
-        @ViewInject(R.id.newsitem_img)
-        private ImageView newsitem_img;
-        @ViewInject(R.id.newsitem_unlike)
-        private ImageView newsitem_unlike;
-        @ViewInject(R.id.item_type_iv)
-        private ImageView item_type_iv;
-
-        public VHLargePic(View v) {
-            super(v);
-            ViewUtils.inject(this, v);
-            v.setOnClickListener(onClickListener);
-        }
-    }
-
-    private class VHBigPic extends RecyclerView.ViewHolder {
-
-        @ViewInject(R.id.news_big_item1)
-        private ImageView news_big_item1;
-
-
-        public VHBigPic(View v) {
-            super(v);
-            ViewUtils.inject(this, v);
-            v.setOnClickListener(onClickListener);
-        }
-    }
-
-
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        switch (viewType) {
-            case TYPE_HEAD:
-                return new HeadViewHolder(new View(context));
-            default:
-                return new HeadViewHolder(new View(context));
-        }
-    }
-
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (position == 0) {
-            return TYPE_HEAD;
-        }
-        int columnCounts = 1;
-        Set<SubjectItemColumnsBean> sets = columnList.keySet();
-        for (SubjectItemColumnsBean sicb : sets) {
-            if (position == columnCounts) {
-                return TYPE_CLOUMN_HEAD;
-            } else {
-                columnCounts += 1;
-                List<NewsBean> nbList = columnList.get(sicb);
-                if (null != nbList && nbList.size() > 0) {
-                    columnCounts += nbList.size();
-                    if (position < columnCounts) {
-                        NewsBean bean = nbList.get(position);
-                        if ("4".equals(bean.getType())) {
-                            return TYPE_THREEPIC;
-                        } else if ("10".equals(bean.getType())) {
-                            return TYPE_BIGPIC;
-                        } else if ("99".equals(bean.getType())) {
-                            return TYPE_LARGE;
-                        } else {
-                            return TYPE_LEFTPIC;
-                        }
-                    }
-                }
-            }
-        }
-        return TYPE_HEAD;
-    }
-
-    @Override
-    public int getItemCount() {
-        int columnCounts = 1;
-        if (!columnList.isEmpty()) {
+    public int getCount() {
+        if (0 == columnList.size()) {
+            return 0;
+        } else {
+            int columnCounts = 0;
             Set<SubjectItemColumnsBean> sets = columnList.keySet();
             for (SubjectItemColumnsBean sicb : sets) {
                 columnCounts += 1;
@@ -251,8 +75,114 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
                     columnCounts += nbList.size();
                 }
             }
+            return columnCounts;
         }
-        return columnCounts;
+
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        int columnCounts = 0;
+        Set<SubjectItemColumnsBean> sets = columnList.keySet();
+        for (SubjectItemColumnsBean sicb : sets) {
+            if (position == columnCounts) {
+                return 0;
+            } else {
+                columnCounts += 1;
+                List<NewsBean> nbList = columnList.get(sicb);
+                if (null != nbList && nbList.size() > 0) {
+                    columnCounts += nbList.size();
+                    if (position < columnCounts) {
+                        return 1;
+                    }
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        NewsBean nb = null;
+        int columnCounts = 0;
+        Set<SubjectItemColumnsBean> sets = columnList.keySet();
+        for (SubjectItemColumnsBean sicb : sets) {
+            if (position == columnCounts) {
+                return sicb.getCname();
+            } else {
+                columnCounts += 1;
+                List<NewsBean> nbList = columnList.get(sicb);
+                if (null != nbList && nbList.size() > 0) {
+                    if (position >= columnCounts
+                            && position < columnCounts + nbList.size()) {
+                        nb = nbList.get((position - columnCounts)
+                                % nbList.size());
+                        break;
+                    }
+                    columnCounts += nbList.size();
+                }
+            }
+        }
+
+        return nb;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        int type = getItemViewType(position);
+        if (null == convertView) {
+            if (0 == type) {
+                convertView = inflater.inflate(R.layout.zhuanti_column_item,
+                        parent, false);
+            } else {
+                convertView = inflater.inflate(R.layout.lehuo_list_item_layout,
+                        parent, false);
+            }
+        }
+
+        if (0 == type) {
+            TextView zhuanti_tv_column = ViewHolder.get(convertView,
+                    R.id.zhuanti_tv_column);
+            String title = (String) getItem(position);
+            zhuanti_tv_column.setText("" + title);
+        } else {
+            TextView title = ViewHolder
+                    .get(convertView, R.id.lehuo_content_txt);
+            TextView sj = ViewHolder.get(convertView, R.id.lehuo_sj_txt);
+            ImageView img = ViewHolder.get(convertView, R.id.lehuo_img_id);
+
+            NewsBean nb = (NewsBean) getItem(position);
+
+            String s[] = nb.getImgs();
+            String simg = "";
+            if (null != s && s.length > 0) {
+                simg = s[0];
+            }
+            mImageLoader.displayImage(simg, img,
+                    DisplayOptionFactory.getOption(OptionTp.Big));
+
+            title.setTextSize(fontSize);
+            title.setText(nb.getTitle());
+            sj.setText(nb.getUpdate_time());
+        }
+
+        return convertView;
+    }
+
+    public void setFontSize(float fontSize) {
+        this.fontSize = fontSize;
     }
 
 }

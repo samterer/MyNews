@@ -21,7 +21,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshRecyclerView;
 import com.hzpd.adapter.NewsItemListViewAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
-import com.hzpd.ui.activity.HtmlActivity;
 import com.hzpd.ui.activity.NewsAlbumActivity;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.ZhuanTiActivity;
@@ -247,7 +246,7 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
         } else if ("2".equals(nb.getRtype())) {
             mIntent.setClass(getActivity(), NewsAlbumActivity.class);
         } else if ("3".equals(nb.getRtype())) {
-            mIntent.setClass(getActivity(), HtmlActivity.class);//直播界面
+            mIntent.setClass(getActivity(), NewsDetailActivity.class);//直播界面
         } else if ("4".equals(nb.getRtype())) {
             mIntent.setClass(getActivity(), ZhuanTiActivity.class);
         } else if ("5".equals(nb.getRtype())) {
@@ -256,7 +255,7 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
 //					mIntent.setClass(getActivity(),VideoPlayerActivity.class);
             mIntent.setClass(getActivity(), NewsDetailActivity.class);
         } else if ("7".equals(nb.getRtype())) {
-            mIntent.setClass(getActivity(), HtmlActivity.class);
+            mIntent.setClass(getActivity(), NewsDetailActivity.class);
         } else {
             return;
         }

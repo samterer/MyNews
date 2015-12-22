@@ -7,20 +7,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hzpd.custorm.CircleImageView;
-import com.hzpd.custorm.UserCommPostView;
 import com.hzpd.hflt.R;
-import com.hzpd.modle.MyCommentBean;
-import com.hzpd.modle.MycommentsBean;
-import com.hzpd.modle.MycommentsitemBean;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.VideoItemBean;
 import com.hzpd.modle.XF_CommentBean;
 import com.hzpd.modle.XF_UserCommNewsBean;
 import com.hzpd.modle.XF_UserCommentsBean;
-import com.hzpd.ui.activity.HtmlActivity;
 import com.hzpd.ui.activity.NewsAlbumActivity;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.VideoPlayerActivity;
@@ -106,7 +100,7 @@ public class XF_UserCommentsAdapter extends ListBaseAdapter<XF_UserCommentsBean>
                     flag = true;
                 } else if ("3".equals(myCommentBean.getType())
                         || "7".equals(myCommentBean.getType())) {
-                    intent.setClass(context, HtmlActivity.class);
+                    intent.setClass(context, NewsDetailActivity.class);
 
                     NewsBean nb = new NewsBean();
                     nb.setNid(myCommentBean.getNid());

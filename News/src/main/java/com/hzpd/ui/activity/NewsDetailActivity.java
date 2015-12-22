@@ -765,20 +765,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     if (nb == null) {
                         return;
                     }
-                    Log.i("newdetail_comment", "newdetail_comment  1");
-                    String smallimg = "";
-                    if (null != nb.getImgs() && nb.getImgs().length > 0) {
-                        smallimg = nb.getImgs()[0];
-                    }
-                    ReplayBean bean = new ReplayBean(nb.getNid(), nb.getTitle(), "News", nb.getJson_url(), smallimg, nb.getComcount());
-                    Intent intent = new Intent(this, XF_NewsCommentsActivity.class);
-                    intent.putExtra("replay", bean);
-                    startActivity(intent);
-                    Log.i("newdetail_comment", "newdetail_comment   2");
-//                    Intent intent = new Intent(NewsDetailActivity.this, XF_NewsCommentsActivity.class);
-//                    intent.putExtra("News_nid",nb.getNid());
-//                    startActivity(intent);
-//                    AAnim.ActivityStartAnimation(NewsDetailActivity.this);
+                    Intent commentsIntent=new Intent(this,XF_NewsCommentsActivity.class);
+                    commentsIntent.putExtra("News_nid",nb.getNid());
+                    startActivity(commentsIntent);
+                    AAnim.ActivityStartAnimation(NewsDetailActivity.this);
                 }
                 break;
                 case R.id.newdetail_share: {
@@ -1092,21 +1082,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     // 对内容做特殊处理
     private String processContent(String content) {
-//        String localTime = CalendarUtil.loaclTime(nb.getUpdate_time());
-//        Log.e("localTime", "head  localTime" + localTime);
-//        int start = content.indexOf(CONTENT_START) + CONTENT_START.length();
-//        Log.e("head", "head  length--->" + start);
-//        String head = "";
-//        if (start > 10) {
-//            head = content.substring(0, start);
-//            head = head.substring(0, start - 45);
-//            localTime = localTime + DIV + " " + CONTENT_START;
-//            Log.e("test", "head " + head);
-//            head = head + localTime;
-//            content = content.substring(start);
-//        }
-//        Log.e("head", "head  --->" + head);
-//        int headStart = head.indexOf(DIV) + DIV.length();
+        
+        content = content.replaceAll("<script[^/]*?</script>", " ");
+        content = content.replaceAll("<script[^/]*?</script>", " ");
+
         content = content.replaceAll("<style>[^/]*?</style>", " ");
         content = content.replaceAll("style=\"[^\"]*?\"", " ");
         content = content.replaceAll("style='[^']*?'", " ");

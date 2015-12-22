@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -72,7 +73,7 @@ public class WebActivity extends MBaseActivity {
                 finish();
             }
         });
-        load_progress_bar.postDelayed(runnable, 50);
+        //load_progress_bar.postDelayed(runnable, 50);
         load_progress_bar.setProgress(0);
         webView.loadUrl(url);
         WebSettings webSettings = webView.getSettings();
@@ -110,11 +111,23 @@ public class WebActivity extends MBaseActivity {
                 super.onPageFinished(view, url);
                 background_empty.setVisibility(View.GONE);
                 wProgress = 100;
+                load_progress_bar.setVisibility(View.GONE);
             }
 
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
                 handler.proceed();
+            }
+        });
+
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                if (newProgress > progress) {
+                    progress = newProgress;
+                    load_progress_bar.setProgress(progress);
+                }
             }
         });
     }

@@ -15,7 +15,6 @@ import com.hzpd.modle.MycommentsBean;
 import com.hzpd.modle.MycommentsitemBean;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.VideoItemBean;
-import com.hzpd.ui.activity.HtmlActivity;
 import com.hzpd.ui.activity.NewsAlbumActivity;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.VideoPlayerActivity;
@@ -124,7 +123,7 @@ public class MycommentsAdapter extends ListBaseAdapter<MycommentsBean> {
                     flag = true;
                 } else if ("3".equals(myCommentBean.getType())
                         || "7".equals(myCommentBean.getType())) {
-                    intent.setClass(context, HtmlActivity.class);
+                    intent.setClass(context, NewsDetailActivity.class);
 
                     NewsBean nb = new NewsBean();
                     nb.setNid(myCommentBean.getNid());

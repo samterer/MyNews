@@ -27,7 +27,6 @@ import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.event.FontSizeEvent;
 import com.hzpd.modle.event.UpdateNewsBeanDbEvent;
 import com.hzpd.ui.App;
-import com.hzpd.ui.activity.HtmlActivity;
 import com.hzpd.ui.activity.NewsAlbumActivity;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.VideoPlayerActivity;
@@ -499,16 +498,15 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         } else if ("2".equals(nb.getRtype())) {
             mIntent.setClass(getActivity(), NewsAlbumActivity.class);
         } else if ("3".equals(nb.getRtype())) {
-            mIntent.setClass(getActivity(), HtmlActivity.class);//直播界面
+            mIntent.setClass(getActivity(), NewsDetailActivity.class);//直播界面
         } else if ("4".equals(nb.getRtype())) {
             mIntent.setClass(getActivity(), ZhuanTiActivity.class);
         } else if ("5".equals(nb.getRtype())) {
             mIntent.setClass(getActivity(), NewsDetailActivity.class);
         } else if ("6".equals(nb.getRtype())) {
             mIntent.setClass(getActivity(), VideoPlayerActivity.class);
-//            mIntent.setClass(getActivity(), NewsDetailActivity.class);
         } else if ("7".equals(nb.getRtype())) {
-            mIntent.setClass(getActivity(), HtmlActivity.class);
+            mIntent.setClass(getActivity(), NewsDetailActivity.class);
         } else if ("9".equals(nb.getRtype())) {
             mIntent.setClass(getActivity(), XF_NewsHtmlDetailActivity.class);
         } else {

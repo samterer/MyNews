@@ -210,7 +210,7 @@ public class MyPMColAvtivity extends MBaseActivity {
             intent.putExtra("vib", vib);
             flag = true;
         } else if ("4".equals(cb.getType())) {
-            intent.setClass(MyPMColAvtivity.this, HtmlActivity.class);
+            intent.setClass(MyPMColAvtivity.this, NewsDetailActivity.class);
             NewsBean nb = new NewsBean();
             nb.setCopyfrom(cdb.getCopyfrom());
             nb.setFav(cdb.getFav());
