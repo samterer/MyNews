@@ -9,7 +9,8 @@
         android:id="@+id/view_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@drawable/details_lv_dotted_line1" />
+        android:background="@drawable/details_lv_dotted_line1"
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/line"
