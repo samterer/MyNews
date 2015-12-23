@@ -10,16 +10,27 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.SubjectItemColumnsBean;
+import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.ui.App;
+import com.hzpd.ui.interfaces.I_Result;
+import com.hzpd.utils.CalendarUtil;
+import com.hzpd.utils.DBHelper;
+import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.Log;
+import com.hzpd.utils.SPUtil;
+import com.hzpd.utils.db.NewsListDbTask;
 import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,8 +40,18 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
 
     private Activity context;
     private LayoutInflater inflater;
-    private ImageLoader mImageLoader;
-    private String a;
+    final static int TYPE_HEAD = 0x10;
+    final static int TYPE_CLOUMN_HEAD = 0x11;
+
+    final static int TYPE_THREEPIC = 0x13;
+    final static int TYPE_LEFTPIC = 0x14;
+    final static int TYPE_BIGPIC = 0x15;
+    final static int TYPE_LARGE = 0x16;
+
+    private HashSet<String> readedNewsSet;
+    private NewsListDbTask newsListDbTask;
+    DBHelper dbHelper;
+
 
     private LinkedHashMap<SubjectItemColumnsBean, List<NewsBean>> columnList = new LinkedHashMap<>();
     View.OnClickListener onClickListener;
@@ -42,6 +63,61 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
         this.onClickListener = onClickListener;
         this.inflater = LayoutInflater.from(context);
         this.nb = nb;
+        readedNewsSet = new HashSet<String>();
+        newsListDbTask = new NewsListDbTask(context);
+        dbHelper = DBHelper.getInstance(context);
+    }
+
+    public void setReadedId(String nid) {
+        readedNewsSet.add(nid);
+
+        try {
+            NewsBeanDB nbdb = new NewsBeanDB();
+            nbdb.setNid(Integer.parseInt(nid));
+            nbdb.setIsreaded(1);
+            dbHelper.getNewsListDbUtils().update(nbdb
+                    , WhereBuilder.b("nid", "=", nid)
+                    , "isreaded");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        isAdd = false;
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        isAdd = true;
+    }
+
+    boolean isAdd = true;
+
+    public void getReaded(List<NewsBean> list) {
+        if (null == list) {
+            return;
+        }
+        for (final NewsBean bean : list) {
+
+            newsListDbTask.isRead(bean.getNid(), new I_Result() {
+                @Override
+                public void setResult(Boolean flag) {
+                    try {
+                        if (isAdd && flag) {
+                            readedNewsSet.add(bean.getNid());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     }
 
     public void appendData(SubjectItemColumnsBean column, List<NewsBean> list,
@@ -56,6 +132,7 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
             }
         }
         oldList.addAll(list);
+        getReaded(list);
         columnList.put(column, oldList);
 
     }
@@ -64,14 +141,6 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
         columnList.clear();
     }
 
-
-    final static int TYPE_HEAD = 0x10;
-    final static int TYPE_CLOUMN_HEAD = 0x11;
-
-    final static int TYPE_THREEPIC = 0x13;
-    final static int TYPE_LEFTPIC = 0x14;
-    final static int TYPE_BIGPIC = 0x15;
-    final static int TYPE_LARGE = 0x16;
 
     public class HeadViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
@@ -217,19 +286,39 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
                 ColumnViewHolder columnViewHolder = new ColumnViewHolder(columnView);
                 columnViewHolder.textView = (TextView) columnView.findViewById(R.id.zhuanti_tv_column);
                 return columnViewHolder;
+            case TYPE_THREEPIC://三张连图
+                View threePic = inflater.inflate(
+                        R.layout.news_3_item_layout, parent, false);
+                VHThree threeHolder = new VHThree(threePic);
+                return threeHolder;
+            case TYPE_LEFTPIC://普通
+                View leftPicView = inflater.inflate(
+                        R.layout.news_list_item_layout, parent, false);
+                VHLeftPic leftHolder = new VHLeftPic(leftPicView);
+                return leftHolder;
+            case TYPE_BIGPIC:
+
+                return null;
+            case TYPE_LARGE://大图
+                View largeView = inflater.inflate(
+                        R.layout.news_large_item_layout, parent, false);
+                VHLargePic largeHolder = new VHLargePic(largeView);
+                return largeHolder;
             default:
                 return new HeadViewHolder(new Button(context));
         }
     }
 
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        int type = getItemViewType(position);
+
+    public Object getItem(int position) {
+        if (position == 0) {
+            return null;
+        }
         int columnCounts = 1;
         Set<SubjectItemColumnsBean> sets = columnList.keySet();
         for (SubjectItemColumnsBean sicb : sets) {
             if (position == columnCounts) {
-                Log.i("", "" + sicb.getCname());
+                return sicb.getCname();
             } else {
                 columnCounts += 1;
                 int start = columnCounts;
@@ -238,24 +327,28 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
                     columnCounts += nbList.size();
                     if (position < columnCounts) {
                         NewsBean bean = nbList.get(position - start);
-                        if ("4".equals(bean.getType())) {
-                            Log.i("", "" + bean.getType());
-                        } else if ("10".equals(bean.getType())) {
-                            Log.i("", "" + bean.getType());
-                        } else if ("99".equals(bean.getType())) {
-                            Log.i("", "" + bean.getType());
-                        } else {
-                            Log.i("", "" + bean.getType());
-                        }
+                        return bean;
                     }
                 }
             }
         }
+        return null;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        int type = getItemViewType(position);
         switch (type) {
             case TYPE_HEAD: {
                 HeadViewHolder headViewHolder = (HeadViewHolder) holder;
                 if (!TextUtils.isEmpty(nb.getTitle()))
                     headViewHolder.textView.setText(nb.getTitle());
+                String imgs[] = nb.getImgs();
+                String img = "";
+                if (null != imgs && imgs.length > 0) {
+                    img = imgs[0];
+                }
+                SPUtil.displayImage(img, headViewHolder.imageView, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
             }
             break;
             case TYPE_BIGPIC: {
@@ -264,18 +357,267 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
             break;
             case TYPE_CLOUMN_HEAD: {
                 ColumnViewHolder columnViewHolder = (ColumnViewHolder) holder;
+                columnViewHolder.textView.setText(getItem(position).toString() + "");
+            }
+            break;
+            case TYPE_LEFTPIC: {
+                NewsBean bean = (NewsBean) getItem(position);
+
+                holder.itemView.setTag(bean);
+                VHLeftPic vhLeftPic = (VHLeftPic) holder;
+//                vhLeftPic.newsitem_title.setTextSize(fontSize);
+                vhLeftPic.newsitem_title.setText(bean.getTitle());
+                vhLeftPic.newsitem_title.setTextColor(App.getInstance()
+                        .getResources().getColor(R.color.item_title));
+                if (readedNewsSet.contains(bean.getNid())) {
+                    vhLeftPic.newsitem_title.setTextColor(App.getInstance()
+                            .getResources().getColor(R.color.grey_font));
+                } else {
+                    vhLeftPic.newsitem_title.setTextColor(App.getInstance()
+                            .getResources().getColor(R.color.item_title));
+                }
+                SPUtil.setAtt(vhLeftPic.item_type_iv, bean.getAttname());
+
+                String fav = bean.getFav();
+                if (!TextUtils.isEmpty(fav)) {
+
+                    int fav_counts = Integer.parseInt(fav);
+                    if (fav_counts > 0) {
+                        vhLeftPic.newsitem_collectcount.setVisibility(View.VISIBLE);
+                        vhLeftPic.newsitem_collectcount.setText(fav_counts + "");
+                    } else {
+                        vhLeftPic.newsitem_collectcount.setVisibility(View.GONE);
+                    }
+                } else {
+                    vhLeftPic.newsitem_collectcount.setVisibility(View.GONE);
+                }
+
+                String from = bean.getCopyfrom();
+                if (!TextUtils.isEmpty(from)) {
+                    vhLeftPic.newsitem_source.setVisibility(View.VISIBLE);
+                    vhLeftPic.newsitem_source.setText(from);
+                } else {
+                    vhLeftPic.newsitem_source.setVisibility(View.GONE);
+                }
+
+                String comcount = bean.getComcount();
+                if (!TextUtils.isEmpty(comcount)) {
+                    int counts = Integer.parseInt(comcount);
+                    if (counts > 0) {
+                        vhLeftPic.newsitem_commentcount.setVisibility(View.VISIBLE);
+                        bean.setComcount(counts + "");
+                        vhLeftPic.newsitem_commentcount.setText(counts + "");
+                    } else {
+                        vhLeftPic.newsitem_commentcount.setVisibility(View.GONE);
+                    }
+                } else {
+                    vhLeftPic.newsitem_commentcount.setVisibility(View.GONE);
+                }
+
+
+                if (CalendarUtil.friendlyTime(bean.getUpdate_time(), context) == null) {
+                    vhLeftPic.newsitem_time.setText("");
+                } else {
+                    vhLeftPic.newsitem_time.setText(CalendarUtil.friendlyTime(bean.getUpdate_time(), context));
+                }
+
+
+                vhLeftPic.newsitem_img.setVisibility(View.VISIBLE);
+                vhLeftPic.nli_foot.setVisibility(View.GONE);
+
+                vhLeftPic.newsitem_unlike.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(context, "不喜欢", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                if ("1".equals(bean.getType())) {
+                    vhLeftPic.newsitem_img.setVisibility(View.GONE);
+                }
+
+                if (bean.getSid() != null && !"0".equals(bean.getSid())) {
+                    vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_issue);
+                    vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
+                }
+                SPUtil.setRtype(bean.getRtype(), vhLeftPic.nli_foot);
+
+                vhLeftPic.newsitem_img.setImageResource(R.drawable.default_bg);
+
+                if (vhLeftPic.newsitem_img.getVisibility() == View.VISIBLE
+                        && null != bean.getImgs()
+                        && bean.getImgs().length > 0) {
+                    vhLeftPic.newsitem_title.setPadding(App.px_15dp, 0, 0, 0);
+                    vhLeftPic.ll_tag.setPadding(App.px_15dp, 0, 0, 0);
+                    SPUtil.displayImage(bean.getImgs()[0], vhLeftPic.newsitem_img,
+                            DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                } else {
+                    vhLeftPic.newsitem_img.setVisibility(View.GONE);
+                    vhLeftPic.newsitem_title.setPadding(0, 0, 0, App.px_15dp);
+                    vhLeftPic.ll_tag.setPadding(0, 0, 0, 0);
+                }
+
 
             }
             break;
             case TYPE_LARGE: {
+                NewsBean bean = (NewsBean) getItem(position);
+                holder.itemView.setTag(bean);
+                VHLargePic vhLargePic = (VHLargePic) holder;
+                vhLargePic.newsitem_title.setText(bean.getTitle());
+                vhLargePic.newsitem_title.setTextColor(App.getInstance()
+                        .getResources().getColor(R.color.item_title));
+                if (readedNewsSet.contains(bean.getNid())) {
+                    vhLargePic.newsitem_title.setTextColor(App.getInstance()
+                            .getResources().getColor(R.color.grey_font));
+                } else {
+                    vhLargePic.newsitem_title.setTextColor(App.getInstance()
+                            .getResources().getColor(R.color.item_title));
+                }
 
-            }
-            break;
-            case TYPE_LEFTPIC: {
+                SPUtil.setAtt(vhLargePic.item_type_iv, bean.getAttname());
 
+                String fav = bean.getFav();
+                if (!TextUtils.isEmpty(fav)) {
+                    int fav_counts = Integer.parseInt(fav);
+                    if (fav_counts > 0) {
+                        vhLargePic.newsitem_collectcount.setVisibility(View.VISIBLE);
+                        vhLargePic.newsitem_collectcount.setText(fav_counts + "");
+                    } else {
+                        vhLargePic.newsitem_collectcount.setVisibility(View.GONE);
+                    }
+                } else {
+                    vhLargePic.newsitem_collectcount.setVisibility(View.GONE);
+                }
+                String from = bean.getCopyfrom();
+                if (!TextUtils.isEmpty(from)) {
+                    vhLargePic.newsitem_source.setVisibility(View.GONE);
+                } else {
+                    vhLargePic.newsitem_source.setText(from);
+                    vhLargePic.newsitem_source.setVisibility(View.VISIBLE);
+                }
+                String comcount = bean.getComcount();
+                if (!TextUtils.isEmpty(comcount)) {
+                    int counts = Integer.parseInt(comcount);
+                    if (counts > 0) {
+                        vhLargePic.newsitem_commentcount.setVisibility(View.VISIBLE);
+                        bean.setComcount(counts + "");
+                        vhLargePic.newsitem_commentcount.setText(counts + "");
+                    } else {
+                        vhLargePic.newsitem_commentcount.setVisibility(View.GONE);
+                    }
+                } else {
+                    vhLargePic.newsitem_commentcount.setVisibility(View.GONE);
+                }
+
+
+                if (CalendarUtil.friendlyTime(bean.getUpdate_time(), context) == null) {
+                    vhLargePic.newsitem_time.setText("");
+                } else {
+                    vhLargePic.newsitem_time.setText(CalendarUtil.friendlyTime(bean.getUpdate_time(), context));
+                }
+
+                vhLargePic.newsitem_img.setVisibility(View.VISIBLE);
+                vhLargePic.nli_foot.setVisibility(View.GONE);
+
+                vhLargePic.newsitem_unlike.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(context, "不喜欢", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                if (!"0".equals(bean.getSid())) {
+                    vhLargePic.nli_foot.setImageResource(R.drawable.zq_subscript_issue);
+                    vhLargePic.nli_foot.setVisibility(View.VISIBLE);
+                }
+                SPUtil.setRtype(bean.getRtype(), vhLargePic.nli_foot);
+
+                if (vhLargePic.newsitem_img.getVisibility() == View.VISIBLE
+                        && null != bean.getImgs()
+                        && bean.getImgs().length > 0) {
+                    SPUtil.displayImage(bean.getImgs()[0], vhLargePic.newsitem_img,
+                            DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                } else {
+                    SPUtil.displayImage("", vhLargePic.newsitem_img,
+                            DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                }
             }
             break;
             case TYPE_THREEPIC: {
+                NewsBean bean = (NewsBean) getItem(position);
+
+                VHThree vhThree = (VHThree) holder;
+                holder.itemView.setTag(bean);
+                vhThree.newsitem_title.setText(bean.getTitle());
+                vhThree.newsitem_title.setTextColor(App.getInstance()
+                        .getResources().getColor(R.color.item_title));
+                if (readedNewsSet.contains(bean.getNid())) {
+                    vhThree.newsitem_title.setTextColor(App.getInstance()
+                            .getResources().getColor(R.color.grey_font));
+                } else {
+                    vhThree.newsitem_title.setTextColor(App.getInstance()
+                            .getResources().getColor(R.color.item_title));
+                }
+
+                vhThree.img0.setImageResource(R.drawable.default_bg);
+                vhThree.img1.setImageResource(R.drawable.default_bg);
+                vhThree.img2.setImageResource(R.drawable.default_bg);
+                String from = bean.getCopyfrom();
+                if (!TextUtils.isEmpty(from)) {
+                    vhThree.newsitem_source.setVisibility(View.VISIBLE);
+                    vhThree.newsitem_source.setText(from);
+                } else {
+                    vhThree.newsitem_source.setVisibility(View.GONE);
+                }
+
+                String fav = bean.getFav();
+                if (!TextUtils.isEmpty(fav)) {
+                    int fav_counts = Integer.parseInt(fav);
+                    if (fav_counts > 0) {
+                        vhThree.newsitem_collectcount.setVisibility(View.VISIBLE);
+                        vhThree.newsitem_collectcount.setText(fav_counts + "");
+                    } else {
+                        vhThree.newsitem_collectcount.setVisibility(View.GONE);
+                    }
+                } else {
+                    vhThree.newsitem_collectcount.setVisibility(View.GONE);
+                }
+                String comcount = bean.getComcount();
+                if (!TextUtils.isEmpty(comcount)) {
+                    int counts = Integer.parseInt(comcount);
+                    if (counts > 0) {
+                        vhThree.newsitem_comments.setVisibility(View.VISIBLE);
+                        bean.setComcount(counts + "");
+                        vhThree.newsitem_comments.setText(counts + "");
+                    } else {
+                        vhThree.newsitem_comments.setVisibility(View.GONE);
+                    }
+                } else {
+                    vhThree.newsitem_comments.setVisibility(View.GONE);
+                }
+
+
+                SPUtil.setAtt(vhThree.item_type_iv, bean.getAttname());
+                vhThree.tv3.setText(CalendarUtil.friendlyTime(bean.getUpdate_time(), context));
+
+                String s[] = bean.getImgs();
+                if (s.length == 1) {
+                    SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                    SPUtil.displayImage("", vhThree.img1, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                    SPUtil.displayImage("", vhThree.img2, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                } else if (s.length == 2) {
+                    SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                    SPUtil.displayImage(s[1], vhThree.img1, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                    SPUtil.displayImage("", vhThree.img2, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                } else if (s.length > 2) {
+                    SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                    SPUtil.displayImage(s[1], vhThree.img1, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                    SPUtil.displayImage(s[2], vhThree.img2, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                }
+
+                vhThree.newsitem_foot.setVisibility(View.GONE);
+                SPUtil.setRtype(bean.getRtype(), vhThree.newsitem_foot);
 
             }
             break;
@@ -332,5 +674,6 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
         }
         return columnCounts;
     }
+
 
 }

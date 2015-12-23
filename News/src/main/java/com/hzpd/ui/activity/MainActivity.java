@@ -50,7 +50,8 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 
-public class MainActivity extends BaseActivity {
+public class
+        MainActivity extends BaseActivity {
 
     public final static String TAG = "NEWS";
 

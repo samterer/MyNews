@@ -2,6 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
     android:background="?fragment_main_backgroup">
 
     <LinearLayout
@@ -65,7 +67,7 @@
             android:background="?fragment_main_backgroup"
             android:cacheColorHint="@null"
             android:scrollbars="none"
-            android:visibility="gone" />
+          />
 
 
         <ListView
@@ -85,7 +87,7 @@
             android:scrollbarTrackVertical="@color/transparent"
             android:scrollbars="vertical"
             android:smoothScrollbar="true"
-            />
+            android:visibility="gone" />
 
 
     </LinearLayout>
@@ -98,7 +100,7 @@
         android:layout_gravity="center"
         android:paddingBottom="60dp"
         android:src="@drawable/zqzx_nonetwork"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/update_counts"

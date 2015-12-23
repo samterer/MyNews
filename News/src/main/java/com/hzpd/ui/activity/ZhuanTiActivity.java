@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.SubjectItemColumnsBean;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.utils.AAnim;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
@@ -39,9 +41,11 @@ import de.greenrobot.event.EventBus;
 public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
 
     private static final String tag = "ZhuanTiActivity";
+    private View stitle_ll_back;
+    private TextView stitle_tv_content;
 
-//        private ZhuantiDetailListAdapter adapter;
-    private ZhuantiDetailListAdapter2 adapter;
+        private ZhuantiDetailListAdapter adapter;
+//    private ZhuantiDetailListAdapter2 adapter;
     private String from;
     private int page = 1;
     private int pageSize = 10;//
@@ -60,6 +64,12 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
         super.changeStatusBar();
         getIntentData();//获取传值
 
+        stitle_ll_back=findViewById(R.id.stitle_ll_back);
+        stitle_ll_back.setOnClickListener(this);
+        stitle_tv_content= (TextView) findViewById(R.id.stitle_tv_content);
+        stitle_tv_content.setText(getString(R.string.prompt_subject));
+
+
         View headView= LayoutInflater.from(this).inflate(R.layout.subject_detail_head_layout,null);
         zhuanti_header_iv = (ImageView) headView.findViewById(R.id.zhuanti_header_iv);
         zhuanti_tv_title = (TextView) headView.findViewById(R.id.zhuanti_tv_title);
@@ -75,13 +85,43 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
         SPUtil.displayImage(img, zhuanti_header_iv, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
         zhuanti_tv_title.setText(nb.getTitle());
         zhuanti_item_listview.addHeaderView(headView);
-        adapter = new ZhuantiDetailListAdapter2(activity);
-        zhuanti_item_listview.setAdapter(adapter);
+//        adapter = new ZhuantiDetailListAdapter2(activity);
+//        zhuanti_item_listview.setAdapter(adapter);
+        zhuanti_item_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                NewsBean newsBean = null;
+                int type = adapter.getItemViewType(position);
+                if (0 == type) {
+                    return;
+                } else {
+                    newsBean = (NewsBean) adapter.getItem(position);
+                }
+
+                if (null == newsBean) {
+                    Log.i("","nb null");
+                    return;
+                }
+
+                String detailId = nb.getNid();
+
+                Log.i("", "detailId-->" + detailId);
+
+                Intent in = new Intent(ZhuanTiActivity.this, NewsDetailActivity.class);
+                in.putExtra("newbean", newsBean);
+                in.putExtra("from", "news");
+
+                startActivity(in);
+                AAnim.ActivityStartAnimation(ZhuanTiActivity.this);
+            }
+        });
+
+
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
         mRecyclerView.setLayoutManager(layoutManager);
-//        adapter = new ZhuantiDetailListAdapter(activity, null,nb);
-//        mRecyclerView.setAdapter(adapter);
+        adapter = new ZhuantiDetailListAdapter(activity, null,nb);
+        mRecyclerView.setAdapter(adapter);
         getColumns();
 
     }
@@ -196,12 +236,14 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()){
+            case R.id.stitle_ll_back:{
+                finish();
+            }
+            break;
+        }
     }
 
 
-    @OnClick(R.id.stitle_ll_back)
-    private void goback(View v) {
-        finish();
-    }
+
 }

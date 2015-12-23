@@ -17,6 +17,7 @@ import com.hzpd.ui.App;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -188,6 +189,7 @@ public class ZhuantiDetailListAdapter2 extends BaseAdapter {
             ll_tag.setPadding(App.px_15dp, 0, 0, 0);
 
             TextView newsitem_source = ViewHolder.get(convertView, R.id.newsitem_source);
+            Log.i("nb.getCopyfrom()","nb.getCopyfrom()"+nb.getCopyfrom());
             if (!TextUtils.isEmpty(nb.getCopyfrom())) {
                 newsitem_source.setText(nb.getCopyfrom());
             } else {

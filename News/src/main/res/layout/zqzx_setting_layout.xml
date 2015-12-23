@@ -9,7 +9,7 @@
     <!--标题-->
     <include layout="@layout/stitle_layout" />
 
-    <!--字体大小2-->
+    <!--换肤-->
     <RelativeLayout
         android:id="@+id/zqzx_setting_skin"
         android:layout_width="match_parent"

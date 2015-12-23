@@ -85,7 +85,7 @@
     <string name="prompt_my_msg">Pesan</string>
     <string name="prompt_clear_cache_dialog_title">Konfirmasi bersihan cache</string>
     <string name="prompt_clear_cache_dialog_msg">Informasi gambar dibutuhkan kembali setelah dihapus</string>
-    <string name="prompt_subject">topik Spesial</string>
+    <string name="prompt_subject">Topik Spesial</string>
     <string name="prompt_feedback">Feedback</string>
     <string name="prompt_activity_period">Waktu:%1$s~%2$s</string>
     <string name="prompt_start_lottery">Mengundi</string>

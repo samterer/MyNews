@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,8 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.ThirdLoginBean;
 import com.hzpd.modle.UserBean;
 import com.hzpd.modle.event.LoginOutEvent;
+import com.hzpd.modle.event.SetThemeEvent;
+import com.hzpd.ui.App;
 import com.hzpd.ui.activity.MyCommentsActivity;
 import com.hzpd.ui.activity.MyPMColAvtivity;
 import com.hzpd.ui.activity.MyPushActivity;
@@ -97,6 +100,7 @@ public class ZY_RightFragment extends BaseFragment {
     private TextView night_mode;
 
     private TextView version;
+    private ImageView image_skin_mode;
 
 
     @Override
@@ -105,8 +109,9 @@ public class ZY_RightFragment extends BaseFragment {
         try {
             view = inflater.inflate(R.layout.zy_rightfragment, container, false);
             ViewUtils.inject(this, view);
-            night_mode= (TextView) view.findViewById(R.id.night_mode);
+            night_mode = (TextView) view.findViewById(R.id.night_mode);
             version = (TextView) view.findViewById(R.id.zy_version);
+            image_skin_mode = (ImageView) view.findViewById(R.id.image_skin_mode);
         } catch (Exception e) {
 
         }
@@ -182,7 +187,6 @@ public class ZY_RightFragment extends BaseFragment {
                 });
     }
 
-
     ProfileTracker profileTracker = new ProfileTracker() {
         @Override
         protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
@@ -212,8 +216,11 @@ public class ZY_RightFragment extends BaseFragment {
             }
         }
     };
+
+
     final LoginManager loginManager = LoginManager.getInstance();
     private List<String> permissions = Arrays.asList("public_profile", "user_friends");
+    private boolean isChangeSkin;
 
     @OnClick({R.id.zy_rfrag_ll_login, R.id.zy_rfrag_ll_comm, R.id.zy_rfrag_ll_collect, R.id.zy_rfrag_ll_push,
             R.id.zy_rfrag_ll_setting, R.id.zy_rfrag_ll_feedback, R.id.zy_rfrag_ll_download, R.id.zy_rfrag_ll_night, R.id.zy_rfrag_ll_read})
@@ -257,8 +264,20 @@ public class ZY_RightFragment extends BaseFragment {
             }
             break;
             case R.id.zy_rfrag_ll_night: {
-                night_mode.setText(getResources().getString(R.string.day_mode));
-                Toast.makeText(getActivity(), "暂无此功能。。。", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "修改中。。。", Toast.LENGTH_SHORT).show();
+                if (isChangeSkin) {
+                    night_mode.setText(getResources().getString(R.string.night_mode));
+                    image_skin_mode.setImageResource(R.drawable.personal_icon_night);
+                    App.getInstance().setThemeName("" + 0);
+                    EventBus.getDefault().post(new SetThemeEvent());
+                    isChangeSkin = false;
+                } else {
+                    night_mode.setText(getResources().getString(R.string.day_mode));
+                    image_skin_mode.setImageResource(R.drawable.personal_icon_day);
+                    App.getInstance().setThemeName("" + 2);
+                    EventBus.getDefault().post(new SetThemeEvent());
+                    isChangeSkin = true;
+                }
             }
             break;
             case R.id.zy_rfrag_ll_read: {
@@ -390,7 +409,7 @@ public class ZY_RightFragment extends BaseFragment {
         super.onDestroy();
     }
 
-    public void onEventMainThread(LoginOutEvent loginOutEvent){
+    public void onEventMainThread(LoginOutEvent loginOutEvent) {
         loginManager.logOut();
     }
 
