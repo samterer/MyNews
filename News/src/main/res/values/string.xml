@@ -5,6 +5,15 @@
     <string name="feedback_hint_suggestion">Bantu kami untuk lebih baik !</string>
     <string name="feedback_rating">Nilai</string>
     <!-- 翻译 -->
+    <!-- 本地更新 -->
+    <string name="local_update_now">Update</string>
+    <string name="local_update_later">Nanti</string>
+    <string name="local_update_install">Instal Sekarang</string>
+    <string name="local_downloading_ticker">Update Link App</string>
+    <string name="local_downloading">Download Update... %1$s </string>
+    <string name="local_update_latest">Versi saat ini adalah yang terbaru</string>
+    <string name="local_update_check">Check Update</string>
+
     <string name="recommend">REKOMENDASI</string>
     <string name="comment_ok">komen berhasil</string>
     <string name="search_none">"Maaf, tidak dapat menemukan “%1$s” yet"</string>
@@ -302,9 +311,7 @@
     <string name="night_mode">Malam</string>
     <string name="day_mode">Normal</string>
     <string name="look_over">Lihat</string>
-
-
-
-
+    <string name="default_county">Indonesia</string>
+    <string name="select_country">Select country or region</string>
 
 </resources>

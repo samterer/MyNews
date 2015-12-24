@@ -1,4 +1,4 @@
-package com.joy.update;
+package com.news.update;
 
 /**
  * 本地更新通知

@@ -1,4 +1,4 @@
-package com.joy.update;
+package com.news.update;
 
 
 import android.graphics.Bitmap;

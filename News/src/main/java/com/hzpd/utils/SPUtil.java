@@ -15,11 +15,14 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
@@ -31,10 +34,10 @@ import com.hzpd.modle.TagBean;
 import com.hzpd.modle.UserBean;
 import com.hzpd.modle.db.NewsChannelBeanDB;
 import com.hzpd.ui.App;
-import com.joy.update.Utils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.util.LogUtils;
+import com.news.update.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -107,6 +110,20 @@ public class SPUtil {
         }
     }
 
+    public static String getCountryName() {
+        return PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString("CountryName",App.getInstance().getString(R.string.default_county) );
+    }
+    public static void setCountryName(String country) {
+        if (!TextUtils.isEmpty(country)) {
+            country = country.toLowerCase();
+            PreferenceManager.getDefaultSharedPreferences(App.getInstance()).edit().putString("CountryName", country).commit();
+
+            SharePreferecesUtils.init();
+            getInstance().msp = ACache.get(App.getInstance().getApplicationContext(), getCountry());
+            DBHelper.setInstance(App.getInstance());
+        }
+    }
+
 
     public static View getRandomAdView(Context context, NativeAd nativeAd) {
         View view = null;
@@ -145,6 +162,10 @@ public class SPUtil {
             ads.clear();
         }
     }
+
+    public static LinearLayout.LayoutParams NORMAL;
+    public static LinearLayout.LayoutParams LARGE;
+
 
     public static Typeface typeFace;
     public static Typeface typeFaceTitle;
@@ -345,6 +366,11 @@ public class SPUtil {
         typeFaceRoboto = Typeface.createFromAsset(assetManager, "fonts/Roboto-Regular.ttf");
         titleTypeFace = Typeface.createFromAsset(assetManager, "fonts/BRLNSR.TTF");
         imageAnimation = AnimationUtils.loadAnimation(App.getInstance().getApplicationContext(), R.anim.image_anim);
+        DisplayMetrics metrics = App.getInstance().getResources().getDisplayMetrics();
+        int normal = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 65, metrics);
+        int larger = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 75, metrics);
+        NORMAL = new LinearLayout.LayoutParams(normal, normal);
+        LARGE = new LinearLayout.LayoutParams(larger, larger);
     }
 
     public static synchronized SPUtil getInstance() {

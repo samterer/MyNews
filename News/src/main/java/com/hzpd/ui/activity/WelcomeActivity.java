@@ -33,6 +33,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.LogUtils;
+import com.news.update.UpdateService;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -77,6 +78,9 @@ public class WelcomeActivity extends MWBaseActivity {
         Intent service = new Intent(this, InitService.class);
         service.setAction(InitService.InitAction);
         this.startService(service);
+        // 更新服务
+        service = new Intent(this, UpdateService.class);
+        this.startService(service);
         Log.d(getLogTag(), "");
     }
 
@@ -84,7 +88,6 @@ public class WelcomeActivity extends MWBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
     }
-
 
     public void loadMainUI() {
         done++;
@@ -269,31 +272,6 @@ public class WelcomeActivity extends MWBaseActivity {
 
     //	直接添加本地频道
     private void addLocalChannels(List<NewsChannelBean> list) {
-
-//        NewsChannelBean channelSubject = new NewsChannelBean();
-//        channelSubject.setTid("" + NewsChannelBean.TYPE_SUBJECT);
-//        channelSubject.setType(NewsChannelBean.TYPE_SUBJECT);
-//        channelSubject.setCnname(getString(R.string.menu_subject));
-//        if (!list.contains(channelSubject)) {
-//            list.add(0, channelSubject);
-//            Log.d(getLogTag(), "add channelSubject");
-//        }
-//        NewsChannelBean channelVideo = new NewsChannelBean();
-//        channelVideo.setTid("" + NewsChannelBean.TYPE_VIDEO);
-//        channelVideo.setType(NewsChannelBean.TYPE_VIDEO);
-//        channelVideo.setCnname(getString(R.string.menu_video));
-//        if (!list.contains(channelVideo)) {
-//            list.add(0, channelVideo);
-//            Log.d(getLogTag(), "add channelVideo");
-//        }
-//        NewsChannelBean channelImageAlbum = new NewsChannelBean();
-//        channelImageAlbum.setTid("" + NewsChannelBean.TYPE_IMAGE_ALBUM);
-//        channelImageAlbum.setType(NewsChannelBean.TYPE_IMAGE_ALBUM);
-//        channelImageAlbum.setCnname(getString(R.string.menu_album));
-//        if (!list.contains(channelImageAlbum)) {
-//            list.add(0, channelImageAlbum);
-//            Log.d(getLogTag(), "add channelImageAlbum");
-//        }
 
 
         NewsChannelBean channelRecommend = new NewsChannelBean();

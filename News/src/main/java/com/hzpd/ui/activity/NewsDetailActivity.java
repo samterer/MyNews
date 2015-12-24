@@ -15,7 +15,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -64,6 +63,7 @@ import com.hzpd.modle.ReplayBean;
 import com.hzpd.modle.TagBean;
 import com.hzpd.modle.ThirdLoginBean;
 import com.hzpd.modle.UserBean;
+import com.hzpd.modle.db.UserLog;
 import com.hzpd.modle.event.TagEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.dialog.FontsizePop;
@@ -76,6 +76,7 @@ import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CODE;
 import com.hzpd.utils.CalendarUtil;
+import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.GetFileSizeUtil;
@@ -86,7 +87,6 @@ import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.showwebview.MyJavascriptInterface;
-import com.joy.update.Utils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
@@ -98,6 +98,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
+import com.news.update.Utils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -228,11 +229,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             }
 
             loadingView = findViewById(R.id.app_progress_bar);
-            // ----------------------
             initNew();
-            BASEURL = InterfaceJsonfile.ROOT + "index.php?s=/Public/newsview/nid/";
-            // 适配器设置
-//            mCommentListAdapter = new CommentListAdapter();
             mCommentListAdapter = new CommentListAdapter(nb.getNid());
         } catch (NumberFormatException e) {
             e.printStackTrace();
@@ -761,12 +758,12 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 }
                 break;
                 case R.id.newdetail_comment: {
-                // 跳转到评论页
+                    // 跳转到评论页
                     if (nb == null) {
                         return;
                     }
-                    Intent commentsIntent=new Intent(this,XF_NewsCommentsActivity.class);
-                    commentsIntent.putExtra("News_nid",nb.getNid());
+                    Intent commentsIntent = new Intent(this, XF_NewsCommentsActivity.class);
+                    commentsIntent.putExtra("News_nid", nb.getNid());
                     startActivity(commentsIntent);
                     AAnim.ActivityStartAnimation(NewsDetailActivity.this);
                 }
@@ -1082,7 +1079,11 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     // 对内容做特殊处理
     private String processContent(String content) {
-        
+        content = content.replaceAll("data-src=", "src=");
+        content = content.replaceAll("data-origin=", "src=");
+        content = content.replaceAll("src=\"//", "src=\"http://");
+        content = content.replaceAll("src='//", "src='http://");
+
         content = content.replaceAll("<script[^/]*?</script>", " ");
         content = content.replaceAll("<script[^/]*?</script>", " ");
 
@@ -1334,28 +1335,57 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 isTagSelect = false;
             }
 
-            details_tv_subscribe.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.i("NewsDetails", "NewsDetails-->" + isTagSelect);
-                    if (isTagSelect) {
-                        details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
-                        Intent intent = new Intent(NewsDetailActivity.this, TagActivity.class);
-                        TagBean tagBean = mBean.getTag().get(0);
-                        intent.putExtra("tagbean", tagBean);
-                        startActivity(intent);
-                        isTagSelect = false;
-                    } else {
-                        details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
+            if (Utils.isNetworkConnected(this)) {
+
+                details_tv_subscribe.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.i("NewsDetails", "NewsDetails-->" + isTagSelect);
+                        if (isTagSelect) {
+                            details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
+                            Intent intent = new Intent(NewsDetailActivity.this, TagActivity.class);
+                            TagBean tagBean = mBean.getTag().get(0);
+                            intent.putExtra("tagbean", tagBean);
+                            startActivity(intent);
+                            isTagSelect = false;
+                        } else {
+                            details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
 //                        Drawable nav_up = getResources().getDrawable(R.drawable.discovery_details_image_select);
 //                        nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
-                        details_tv_subscribe.setCompoundDrawables(null, null, null, null);
-                        EventBus.getDefault().post(new TagEvent(mBean.getTag().get(0)));
-                        details_tv_subscribe.setText(getString(R.string.look_over));
-                        isTagSelect = true;
+                            details_tv_subscribe.setCompoundDrawables(null, null, null, null);
+                            EventBus.getDefault().post(new TagEvent(mBean.getTag().get(0)));
+                            details_tv_subscribe.setText(getString(R.string.look_over));
+                            RequestParams params = RequestParamsUtils.getParamsWithU();
+                            params.addBodyParameter("uid", spu.getUser().getUid() + "");
+                            params.addBodyParameter("tagId", mBean.getTag().get(0).getId() + "");
+                            SPUtil.addParams(params);
+
+                            HttpHandler httpHandler = httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.tag_click_url, params, new RequestCallBack<String>() {
+                                @Override
+                                public void onSuccess(ResponseInfo<String> responseInfo) {
+                                    JSONObject obj = null;
+                                    try {
+                                        obj = JSONObject.parseObject(responseInfo.result);
+                                    } catch (Exception e) {
+                                        return;
+                                    }
+                                    if (200 == obj.getIntValue("code")) {
+
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(HttpException error, String msg) {
+                                    LogUtils.i("isCollection failed");
+                                }
+                            });
+                            handlerList.add(httpHandler);
+                            isTagSelect = true;
+                        }
                     }
-                }
-            });
+                });
+            }
+
 
             if (mBean.getTag().get(0).getIcon() != null) {
                 details_head_tag_img.setVisibility(View.VISIBLE);
@@ -1369,7 +1399,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             addRelatedTagView();
 
 //            if (mBean.getTag().get(0).getNum() != null) {
-//                if (Integer.parseInt(mBean.getTag().get(0).getName()) > 0) {
+//                if (Integer.parseInt(mBean.getTag().get(0).getName()) > 1) {
 //                    details_head_tag_num.setVisibility(View.VISIBLE);
 //                    details_head_tag_num.setText(mBean.getTag().get(0).getName() + R.string.follow_num);
 //                } else {
@@ -1975,7 +2005,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     // 是否收藏
     private void isCollection() {
         if (null != spu.getUser()) {
-            String station = SharePreferecesUtils.getParam(NewsDetailActivity.this, StationConfig.STATION, "def").toString();
             RequestParams params = RequestParamsUtils.getParamsWithU();
             params.addBodyParameter("typeid", nb.getNid());
             params.addBodyParameter("type", "1");
@@ -2064,8 +2093,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             if (null != nb && !TextUtils.isEmpty(nb.getNid())) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(enterTime);
-//                DBHelper.getInstance(getApplicationContext()).getLogDbUtils()
-//                        .save(new UserLog(nb.getNid(), SPUtil.format(calendar), (int) ((System.currentTimeMillis() - enterTime) / 1000)));
+                DBHelper.getInstance(getApplicationContext()).getLogDbUtils()
+                        .save(new UserLog(nb.getNid(), SPUtil.format(calendar), (int) ((System.currentTimeMillis() - enterTime) / 1000)));
             }
         } catch (Exception e) {
         }

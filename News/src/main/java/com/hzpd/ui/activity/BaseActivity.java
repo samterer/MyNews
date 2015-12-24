@@ -15,8 +15,6 @@ import com.hzpd.hflt.R;
 import com.hzpd.ui.App;
 import com.hzpd.ui.fragments.ZY_RightFragment;
 import com.hzpd.utils.SystemBarTintManager;
-import com.shangc.slidingmenu.lib.SlidingMenu;
-import com.shangc.slidingmenu.lib.app.SlidingFragmentActivity;
 
 import org.common.lib.analytics.ActivityLifecycleAction;
 import org.common.lib.analytics.AnalyticCallback;
@@ -36,13 +34,10 @@ public class BaseActivity extends FragmentActivity implements AnalyticCallback {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (App.getInstance().getThemeName().equals("1")) {
-            setTheme(R.style.ThemeRed);
-        } else if (App.getInstance().getThemeName().equals("2")) {
+        if (App.getInstance().getThemeName().equals("2")) {
             setTheme(R.style.ThemeNight);
         } else {
             setTheme(R.style.ThemeDefault);
-//            setTheme(R.style.ThemeNight);
         }
         super.onCreate(null);
         action.onCreate(this);
@@ -67,7 +62,7 @@ public class BaseActivity extends FragmentActivity implements AnalyticCallback {
         getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
         int color = typedValue.data;
         tintManager.setStatusBarTintColor(color);
-        tintManager.setStatusBarTintResource(R.color.main_title);
+//        tintManager.setStatusBarTintResource(R.color.main_title);
     }
 
     private Interpolator interp = new Interpolator() {

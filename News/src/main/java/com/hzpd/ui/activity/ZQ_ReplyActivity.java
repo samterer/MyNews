@@ -69,7 +69,7 @@ public class ZQ_ReplyActivity extends MBaseActivity {
         setContentView(R.layout.zq_reply_layout);
 
         loadingView = findViewById(R.id.app_progress_bar);
-        rl_share1= (RelativeLayout) findViewById(R.id.rl_share1);
+        rl_share1 = (RelativeLayout) findViewById(R.id.rl_share1);
         rl_share1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,6 +120,9 @@ public class ZQ_ReplyActivity extends MBaseActivity {
 
     @OnClick({R.id.zq_reply_tv_cancle, R.id.zq_reply_tv_send, R.id.zq_reply_share_iv, R.id.zq_reply_share_iv1, R.id.stitle_ll_back})
     private void click(View view) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+            return;
+        }
 
         switch (view.getId()) {
             case R.id.stitle_ll_back:
@@ -167,43 +170,43 @@ public class ZQ_ReplyActivity extends MBaseActivity {
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST
-                ,  InterfaceJsonfile.PUBLISHCOMMENT// InterfaceApi.mSendComment
+                , InterfaceJsonfile.PUBLISHCOMMENT// InterfaceApi.mSendComment
                 , params, new RequestCallBack<String>() {
-                    @Override
-                    public void onFailure(HttpException arg0, String arg1) {
-                        Log.i("msg", arg1);
-                        loadingView.setVisibility(View.GONE);
-                        TUtils.toast(getString(R.string.toast_server_no_response));
-                    }
+            @Override
+            public void onFailure(HttpException arg0, String arg1) {
+                Log.i("msg", arg1);
+                loadingView.setVisibility(View.GONE);
+                TUtils.toast(getString(R.string.toast_server_no_response));
+            }
 
-                    @Override
-                    public void onSuccess(ResponseInfo<String> arg0) {
-                        LogUtils.i("news-comment-->" + arg0.result);
-                        loadingView.setVisibility(View.GONE);
-                        JSONObject obj = null;
-                        try {
-                            obj = JSONObject.parseObject(arg0.result);
-                        } catch (Exception e) {
-                            return;
-                        }
+            @Override
+            public void onSuccess(ResponseInfo<String> arg0) {
+                LogUtils.i("news-comment-->" + arg0.result);
+                loadingView.setVisibility(View.GONE);
+                JSONObject obj = null;
+                try {
+                    obj = JSONObject.parseObject(arg0.result);
+                } catch (Exception e) {
+                    return;
+                }
 
-                        if (200 == obj.getIntValue("code")) {
-                            setComcountsId(bean.getId(), comcount);
-                            TUtils.toast(getString(R.string.comment_ok));
-                            EventBus.getDefault().post(new UpdateNewsBeanDbEvent("Update_OK"));
-                            Intent resultIntent = new Intent();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("result", content);
-                            bundle.putBoolean("isShare", isShare);
-                            resultIntent.putExtras(bundle);
-                            setResult(RESULT_OK, resultIntent);
-                            EventUtils.sendComment(activity);
-                            finish();
-                        } else {
-                            TUtils.toast(getString(R.string.toast_fail_to_comment));
-                        }
-                    }
-                });
+                if (200 == obj.getIntValue("code")) {
+                    setComcountsId(bean.getId(), comcount);
+                    TUtils.toast(getString(R.string.comment_ok));
+                    EventBus.getDefault().post(new UpdateNewsBeanDbEvent("Update_OK"));
+                    Intent resultIntent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("result", content);
+                    bundle.putBoolean("isShare", isShare);
+                    resultIntent.putExtras(bundle);
+                    setResult(RESULT_OK, resultIntent);
+                    EventUtils.sendComment(activity);
+                    finish();
+                } else {
+                    TUtils.toast(getString(R.string.toast_fail_to_comment));
+                }
+            }
+        });
     }
 
     public void setComcountsId(String nid, String comcount) {

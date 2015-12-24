@@ -71,7 +71,7 @@ import java.util.List;
 
 public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.OnPreparedListener {
 
-    private static final String BASEURL = InterfaceJsonfile.ROOT + "index.php?s=/Public/videoview/id/";
+    private static final String BASEURL = InterfaceJsonfile.PATH_ROOT + "/Public/videoview/id/";
 
     @ViewInject(R.id.surface_view)
     private VideoView mVideoView;

@@ -57,24 +57,17 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         action.onCreate(this);
-        if (App.getInstance().getThemeName().equals("1")) {
-            setTheme(R.style.ThemeRed);
-        } else if (App.getInstance().getThemeName().equals("2")) {
+        if (App.getInstance().getThemeName().equals("2")) {
             setTheme(R.style.ThemeNight);
         } else {
             setTheme(R.style.ThemeDefault_2);
 //            setTheme(R.style.ThemeNight);
         }
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-
 //        setTheme(android.R.style.Theme_Translucent_NoTitleBar);//不能删
 
-//        layout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
-//                R.layout.base, null);
-//        layout.attachToActivity(this);
         activity = this;
         fm = getSupportFragmentManager();
-//        changeStatusBar();
         httpUtils = SPUtil.getHttpUtils();
         spu = SPUtil.getInstance();
         startMills = System.currentTimeMillis();
@@ -95,9 +88,8 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
         TypedValue typedValue = new TypedValue();
         getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
         int color = typedValue.data;
-//        tintManager.setStatusBarTintResource(R.color.transparent);
-        tintManager.setStatusBarTintResource(R.color.details_main_title);
-//        tintManager.setStatusBarTintColor(color);
+        tintManager.setStatusBarTintColor(color);
+//        tintManager.setStatusBarTintResource(R.color.details_main_title);
     }
 
     @TargetApi(19)

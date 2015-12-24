@@ -1,10 +1,11 @@
-package com.joy.update;
+package com.news.update;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.hzpd.utils.Log;
+import com.lidroid.xutils.http.RequestParams;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -294,12 +295,17 @@ public class ChaConfig {
 		return pty;
 	}
 
-	public  Map<String, String> getRequestParams() {
-		Map<String, String> paramsMap = new HashMap<>();
-		List<NameValuePair> params = getNameValues();
-		for (NameValuePair pair : params) {
-			paramsMap.put(pair.getName(), pair.getValue());
-		}
-		return paramsMap;
-	}
+    public Map<String, String> getRequestParams() {
+        Map<String, String> paramsMap = new HashMap<>();
+        List<NameValuePair> params = getNameValues();
+        for (NameValuePair pair : params) {
+            paramsMap.put(pair.getName(), pair.getValue());
+        }
+        return paramsMap;
+    }
+
+    public void addRequestParams(RequestParams requestParams) {
+        List<NameValuePair> params = getNameValues();
+        requestParams.addBodyParameter(params);
+    }
 }

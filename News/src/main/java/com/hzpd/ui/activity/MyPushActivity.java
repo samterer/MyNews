@@ -14,6 +14,7 @@ import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.DBHelper;
+import com.hzpd.utils.Log;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.exception.DbException;
 
@@ -57,11 +58,9 @@ public class MyPushActivity extends MBaseActivity implements View.OnClickListene
                 List<NewsBean> nblist = new ArrayList<>();
                 for (int i=0;i<list.size();i++) {
                     NewsBean bean = new NewsBean(list.get(i));
-//                    Log.i("MyPushActivity", "MyPushActivity" + bean.getNid());
                     nblist.add(bean);
+                    Log.i("MyPushActivity", "MyPushActivity" + nblist.toString());
                 }
-
-               
                 adapter.appendData(nblist, false, false);
             } else {
 

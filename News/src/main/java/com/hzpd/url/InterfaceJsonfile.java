@@ -8,13 +8,10 @@ package com.hzpd.url;
 public class InterfaceJsonfile {
 
     //印尼
-//    public static final String host1 = "http://v2.nutnote.com";
+    public static final String PATH_ROOT = "http://v2.nutnote.com/api.php?s=";
+    public static final String S3 = "http://v2.nutnote.com/";
     //本地测试
-    public static final String host1 = "http://10.80.3.123/cmsv2";
-
-    // ========================================
-    public static final String PATH_ROOT = host1 + "/api.php?s=";
-    public static final String ROOT = host1 + "/";
+//    public static final String PATH_ROOT = "http://10.80.3.123/cmsv2/api.php?s=";
 
     public static final String SITE = "hflt";//
     public static final String SITEID = "1";//
@@ -35,19 +32,19 @@ public class InterfaceJsonfile {
     //S_1. 添加浏览量（/Stat/setView）POST
     public static final String XF_BROWSE = PATH_ROOT + "/Stat/setView";
     // H5 图文直播地址
-    public static final String HTMLURL = ROOT + "api.php?s=/Livemsg/view/lid/";
+    public static final String HTMLURL = PATH_ROOT + "api.php?s=/Livemsg/view/lid/";
     // ========================================
     //推荐频道数据接口
     public static final String CHANNEL_RECOMMEND = PATH_ROOT + "/ChooseNews/getChoosedNews";
 
     // 频道列表
-    public static final String CHANNELLIST = ROOT + "cms_json/#country#/" + SITE + "/common/type/";// +{$type}(News,Lohas,Album)";
+    public static final String CHANNELLIST = S3 + "cms_json/#country#/" + SITE + "/common/type/";// +{$type}(News,Lohas,Album)";
     // 广告
     public static final String mAdPic = PATH_ROOT + "/Version/getAd"; //TODO getAdNew
     // 缓存
     public static final String CACHE = PATH_ROOT + "/News/getAppCache";
     // 幻灯
-    public static final String FLASH = ROOT + "cms_json/#country#/" + SITE + "/common/flash/";
+    public static final String FLASH = S3 + "cms_json/#country#/" + SITE + "/common/flash/";
 
     // 新闻列表
     public static final String NEWSLIST = PATH_ROOT + "/News/getNewsLastList";
@@ -116,7 +113,7 @@ public class InterfaceJsonfile {
     // 自浏览器打开获取新闻详情
     public static final String bnewsItem = PATH_ROOT + "/News/getNewsItem";
     // 自浏览器打开获取图集详情
-    public static final String bAlbum = ROOT + "api.php?s=/Photo/getPhotoInfoByPID";
+    public static final String bAlbum = PATH_ROOT + "/Photo/getPhotoInfoByPID";
     // 查看新闻评论次数
     public static final String commentsConts = PATH_ROOT + "/Stat/getStat";
 
@@ -127,14 +124,14 @@ public class InterfaceJsonfile {
     public static final String html5 = PATH_ROOT + "/H5extend/getH5List";
 
     // 专题数目
-    public static final String subjectNum = ROOT + "api.php?s=/Subject/getSubjectNewsNumv2";
+    public static final String subjectNum = PATH_ROOT + "/Subject/getSubjectNewsNumv2";
     // 视频条目
-    public static final String videoItem = ROOT + "api.php?s=/Video/getVideoItem";
+    public static final String videoItem = PATH_ROOT + "/Video/getVideoItem";
 
     // 专题列表页
     public static final String SUBJECTLIST = NEWSLIST;
     // 专题栏目列表
-    public static final String SUBJECTCOLUMNSLIST = ROOT + "api.php?s=/Subject/getAllColumns";
+    public static final String SUBJECTCOLUMNSLIST = PATH_ROOT + "/Subject/getAllColumns";
     // 投诉爆料列表
     public static final String TSBLLIST = PATH_ROOT + "/Tipoffs/getTipoffsList";
     // 投诉爆料详情
@@ -219,6 +216,7 @@ public class InterfaceJsonfile {
     public static final String classify_top_url = PATH_ROOT + "/Tag/category";
     public static final String classify_url = PATH_ROOT + "/Tag/tagList";
     public static final String tag_news_url = PATH_ROOT + "/Tag/news";
+    public static final String tag_click_url = PATH_ROOT + "/Tag/attention";
 
 
 }

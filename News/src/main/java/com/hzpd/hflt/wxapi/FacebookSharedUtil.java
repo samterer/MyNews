@@ -29,7 +29,7 @@ public class FacebookSharedUtil {
 
     public static void showImgShares(String title, String imagePath, String nid, final Context context) {
         ShareDialog shareDialog = new ShareDialog((Activity) context);
-        String link = InterfaceJsonfile.ROOT + "index.php?s=/Public/photoview/id/" + nid;
+        String link = InterfaceJsonfile.PATH_ROOT + "/Public/photoview/id/" + nid;
         ShareLinkContent shareContent = new ShareLinkContent.Builder()
                 .setContentTitle(title)
                 .setImageUrl(!TextUtils.isEmpty(imagePath) ? Uri.parse(imagePath) : null)

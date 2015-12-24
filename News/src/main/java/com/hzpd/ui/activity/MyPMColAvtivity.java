@@ -166,7 +166,7 @@ public class MyPMColAvtivity extends MBaseActivity {
 
         if (AvoidOnClickFastUtils.isFastDoubleClick())
             return;
-        CollectionJsonBean cb = (CollectionJsonBean) colladAdapter.getItem(position - 1);
+        CollectionJsonBean cb = (CollectionJsonBean) colladAdapter.getItem(position );
         CollectionDataBean cdb = cb.getData();
         Intent intent = new Intent();
         intent.putExtra("from", "collection");

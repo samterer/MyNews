@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.DiscoveryItemBean;
 import com.hzpd.modle.NewsBean;
@@ -20,12 +21,22 @@ import com.hzpd.modle.event.TagEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.TagActivity;
+import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.Log;
+import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
+import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
+import com.lidroid.xutils.util.LogUtils;
+import com.news.update.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +51,8 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
     final static int TYPE_NORMAL = 0xCC;
     final static int TYPE_LOADING = 0xDD;
     public boolean showLoading = false;
+    protected HttpUtils httpUtils;
+    private SPUtil spu;
 
     public void setShowLoading(boolean showLoading) {
         this.showLoading = showLoading;
@@ -50,6 +63,8 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
         list = new ArrayList<>();
+        httpUtils = SPUtil.getHttpUtils();
+        spu = SPUtil.getInstance();
     }
 
     public void appendData(List<DiscoveryItemBean> data, boolean isClearOld) {
@@ -143,30 +158,74 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                             , viewHolder.discovery_iv_tag
                             , DisplayOptionFactory.getOption(OptionTp.Personal_center_News));
                 }
-                viewHolder.tv_subscribe.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                if (Utils.isNetworkConnected(context)) {
+                    viewHolder.tv_subscribe.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 //                Toast.makeText(context,"订阅",Toast.LENGTH_SHORT).show();
-                        Log.i("DiscoveryItemNewAdapter", "DiscoveryItemNewAdapter  viewHolder.tv_subscribe  onClick");
-                        try {
-                            viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
-                            viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.details_tv_check_color));
-                            Drawable nav_up = context.getResources().getDrawable(R.drawable.discovery_image_select);
-                            nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
-                            viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
-                            viewHolder.tv_subscribe.setEnabled(false);
-                            EventBus.getDefault().post(new TagEvent(bean.getTag()));
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            Log.i("DiscoveryItemNewAdapter", "DiscoveryItemNewAdapter  viewHolder.tv_subscribe  onClick");
+                            try {
+                                viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
+                                viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.details_tv_check_color));
+                                Drawable nav_up = context.getResources().getDrawable(R.drawable.discovery_image_select);
+                                nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+                                viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+                                viewHolder.tv_subscribe.setEnabled(false);
+                                EventBus.getDefault().post(new TagEvent(bean.getTag()));
+                                viewHolder.tv_subscribe.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+//                Toast.makeText(context, "订阅。。。", Toast.LENGTH_SHORT).show();
+                                        viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
+                                        viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.details_tv_check_color));
+                                        Drawable nav_up = context.getResources().getDrawable(R.drawable.discovery_image_select);
+                                        nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+                                        viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+                                        EventBus.getDefault().post(new TagEvent(bean.getTag()));
+                                        RequestParams params = RequestParamsUtils.getParamsWithU();
+                                        if (spu.getUser().getUid()!=null){
+                                            params.addBodyParameter("uid", spu.getUser().getUid() + "");
+                                        }
+                                        params.addBodyParameter("tagId", bean.getTag().getId() + "");
+                                        SPUtil.addParams(params);
+
+                                        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.tag_click_url, params, new RequestCallBack<String>() {
+                                            @Override
+                                            public void onSuccess(ResponseInfo<String> responseInfo) {
+                                                JSONObject obj = null;
+                                                try {
+                                                    obj = JSONObject.parseObject(responseInfo.result);
+                                                } catch (Exception e) {
+                                                    return;
+                                                }
+                                                if (200 == obj.getIntValue("code")) {
+
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(HttpException error, String msg) {
+                                                LogUtils.i("isCollection failed");
+                                            }
+                                        });
+                                        Log.i("viewHolder.tv_subscribe", "viewHolder.tv_subscribe");
+                                    }
+                                });
+
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                });
+                    });
+                }
+
                 viewHolder.tag_layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Log.i("DiscoveryItemNewAdapter", "DiscoveryItemNewAdapter   viewHolder.tag_layout   onClick");
-                        Intent intent=new Intent(context, TagActivity.class);
-                        TagBean tagBean=bean.getTag();
+                        Intent intent = new Intent(context, TagActivity.class);
+                        TagBean tagBean = bean.getTag();
                         intent.putExtra("tagbean", tagBean);
                         context.startActivity(intent);
 

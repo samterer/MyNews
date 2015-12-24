@@ -67,7 +67,6 @@ public class App extends Application {
     private static App mInstance = null;
 
     public static boolean isStartApp = false;//app是否已经启动
-    public List<UserLog> userLogs = new ArrayList<>();
 
     private SPUtil spu;
     public static SparseArray<Menu_Item_Bean> menuList;

@@ -5,6 +5,8 @@
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
+    <!--标题-->
+    <include layout="@layout/stitle_layout" />
 
     <FrameLayout
         android:id="@+id/xf_pinfo_fm"

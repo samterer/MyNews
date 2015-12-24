@@ -14,10 +14,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.handmark.pulltorefresh.library.PullToRefreshRecyclerView;
 import com.hzpd.adapter.NewsItemListViewAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
@@ -28,6 +24,7 @@ import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
@@ -46,7 +43,6 @@ import java.util.List;
 public class MySearchFragment extends BaseFragment implements View.OnClickListener {
 
     @ViewInject(R.id.search_listview_id)
-    private PullToRefreshRecyclerView search_listview_id;
     private RecyclerView recyclerView;
 
     private NewsItemListViewAdapter adapter;
@@ -108,45 +104,45 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
+    private int lastVisibleItem;
+    private LinearLayoutManager layoutManager;
+    NewsItemListViewAdapter.CallBack callBack;
+    boolean addLoading = false;
+
     private void init() {
         con = getArguments().getString(SEARCH_KEY);
         isRefresh = getArguments().getBoolean(is_Refresh);
-        search_listview_id.setMode(Mode.DISABLED);
-        recyclerView = search_listview_id.getRefreshableView();
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         adapter = new NewsItemListViewAdapter(activity, this);
-        recyclerView = search_listview_id.getRefreshableView();
         recyclerView.setAdapter(adapter);
-//        recyclerView.addItemDecoration(itemDecoration);
-        padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
-        search_listview_id.setOnRefreshListener(new OnRefreshListener2<RecyclerView>() {
-            @Override
-            public void onPullDownToRefresh(
-                    PullToRefreshBase<RecyclerView> refreshView) {
-                if (null == con || "".equals(con)) {
-                    TUtils.toast(getString(R.string.toast_input_content));
-                    search_listview_id.setMode(Mode.DISABLED);
-                    return;
-                }
-                isRefresh = true;
-                page = 1;
-                getSearchData(con);
-            }
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
 
             @Override
-            public void onPullUpToRefresh(
-                    PullToRefreshBase<RecyclerView> refreshView) {
-
-                if (null == con || "".equals(con)) {
-                    TUtils.toast(getString(R.string.toast_input_content));
-                    return;
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+                if (addLoading && !adapter.showLoading) {
+                    addLoading = false;
+                    int count = adapter.getItemCount();
+                    adapter.showLoading = true;
+                    adapter.notifyItemInserted(count);
                 }
-                isRefresh = false;
-                page++;
-                getSearchData(con);
             }
         });
+
+        callBack = new NewsItemListViewAdapter.CallBack() {
+            @Override
+            public void loadMore() {
+                Log.i("loadMore", "loadMore");
+                getSearchData(con);
+            }
+        };
+        adapter.callBack = callBack;
+
+//        recyclerView.addItemDecoration(itemDecoration);
+        padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
         getSearchData(con);
     }
 
@@ -168,7 +164,6 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
                 if (!isAdded()) {
                     return;
                 }
-                search_listview_id.onRefreshComplete();
                 loadingView.setVisibility(View.GONE);
                 JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
                 if (null == obj) {
@@ -177,7 +172,8 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
                 }
 
                 if (200 == obj.getIntValue("code")) {
-
+                    page++;
+                    addLoading = true;
                     List<NewsBean> l = FjsonUtil.parseArray(
                             obj.getString("data"), NewsBean.class);
                     if (null == l) {
@@ -187,14 +183,17 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
                     LogUtils.i("l size-->" + l.size() + ":::" + l.get(0).toString());
 //                    recyclerView.setAdapter(null);
 //                    adapter.clear();
-                    adapter.appendData(l, isRefresh, false);
-
+                    adapter.appendData(l, false, false);
+                    if (page > 1 && adapter.showLoading) {
+                        int count = adapter.getItemCount();
+                        adapter.showLoading = false;
+                        adapter.notifyItemRemoved(count);
+                    }
                     if (l.size() < pageSize) {
                         LogUtils.i("PULL_FROM_START");
-                        search_listview_id.setMode(Mode.PULL_FROM_START);
                     } else {
                         LogUtils.i("both");
-                        search_listview_id.setMode(Mode.BOTH);
+                        adapter.showLoading = true;
                     }
                     adapter.notifyDataSetChanged();
                 } else {
@@ -202,7 +201,6 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
                     if (!isRefresh) {
                         page--;
                     }
-                    search_listview_id.setMode(Mode.PULL_FROM_START);
                 }
             }
 
@@ -212,12 +210,10 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
                     return;
                 }
                 TUtils.toast(getString(R.string.toast_server_no_response));
-                search_listview_id.onRefreshComplete();
                 loadingView.setVisibility(View.GONE);
                 if (!isRefresh) {
                     page--;
                 }
-                search_listview_id.setMode(Mode.PULL_FROM_START);
             }
         });
         handlerList.add(httpHandler);

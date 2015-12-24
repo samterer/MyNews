@@ -6,14 +6,11 @@
     android:background="?fragment_main_backgroup">
 
 
-    <com.handmark.pulltorefresh.library.PullToRefreshRecyclerView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/search_listview_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/fragment_background"
-        app:ptrDrawable="@drawable/default_ptr_rotate"
-        app:ptrHeaderSubTextColor="@color/zqzx_font_light"
-        app:ptrHeaderTextColor="@color/pulltorefresh_font" />
+        android:divider="@color/fragment_background" />
 
     <FrameLayout
         android:id="@+id/app_progress_bar"

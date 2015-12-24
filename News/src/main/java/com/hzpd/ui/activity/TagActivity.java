@@ -29,6 +29,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.LogUtils;
+import com.news.update.Utils;
 
 import java.util.List;
 
@@ -69,22 +70,9 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
         recylerlist.setLayoutManager(layoutManager);
         adapter = new NewsItemListViewAdapter(TagActivity.this, this);
         recylerlist.setAdapter(adapter);
-//        adapter.showLoading = false;
-//        adapter.notifyDataSetChanged();
         recylerlist.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.getItemCount()) {
-////                    adapter.setShowLoading(true);
-//                    addLoading = true;
-//                    adapter.showLoading = true;
-//                    page++;
-//                    Log.i("", "");
-//                    getNewsServer();
-//                }
-//            }
+//
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -170,6 +158,7 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
     }
 
     private TagBean tagBean;
+    private boolean isFollowed;
 
     public void getIntentContent() {
         Intent intent = getIntent();
@@ -185,7 +174,7 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
             return;
         }
         details_head_tag_name.setText(tagBean.getName());
-        if (tagBean.getNum() != null && Integer.parseInt(tagBean.getNum()) != 0) {
+        if (tagBean.getNum() != null && Integer.parseInt(tagBean.getNum()) > 1) {
             details_head_tag_num.setVisibility(View.VISIBLE);
             details_head_tag_num.setText("" + tagBean.getNum() + " " + getString(R.string.follow_num));
         } else {
@@ -197,22 +186,54 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
             nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
             details_tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
             details_tv_subscribe.setText(getString(R.string.discovery_followed));
+            isFollowed=true;
         } else {
             details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
             Drawable nav_up = getResources().getDrawable(R.drawable.editcolum_image);
             nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
             details_tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+            isFollowed=false;
         }
-        details_tv_subscribe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
-                Drawable nav_up = getResources().getDrawable(R.drawable.discovery_details_image_select);
-                nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
-                details_tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
-                EventBus.getDefault().post(new TagEvent(tagBean));
-            }
-        });
+        if (Utils.isNetworkConnected(this)) {
+            details_tv_subscribe.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!isFollowed) {
+                        details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
+                        Drawable nav_up = getResources().getDrawable(R.drawable.discovery_details_image_select);
+                        nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+                        details_tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+                        EventBus.getDefault().post(new TagEvent(tagBean));
+                        RequestParams params = RequestParamsUtils.getParamsWithU();
+                        if (spu.getUser().getUid() != null) {
+                            params.addBodyParameter("uid", spu.getUser().getUid() + "");
+                        }
+                        params.addBodyParameter("tagId", tagBean.getId() + "");
+                        SPUtil.addParams(params);
+
+                        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.tag_click_url, params, new RequestCallBack<String>() {
+                            @Override
+                            public void onSuccess(ResponseInfo<String> responseInfo) {
+                                JSONObject obj = null;
+                                try {
+                                    obj = JSONObject.parseObject(responseInfo.result);
+                                } catch (Exception e) {
+                                    return;
+                                }
+                                if (200 == obj.getIntValue("code")) {
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(HttpException error, String msg) {
+                                LogUtils.i("isCollection failed");
+                            }
+                        });
+                    }
+                }
+            });
+        }
 
     }
 

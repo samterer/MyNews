@@ -41,7 +41,7 @@
     <color name="zqzx_txt_darkblue">#163e80</color>
     <color name="zqzx_bg_grey">#e4e4e4</color>
     <color name="zqzx_bg_lgrey">#fcfcfc</color>
-    <color name="zqzx_welcome_blue">#24adfc</color>
+    <color name="zqzx_welcome_blue">#ff24adfc</color>
     <color name="zqzx_comment_news1">#f5f5f5</color>
     <!-- 新皮肤 -->
     <color name="zqzx_bg_dark">#b5b5b6</color>

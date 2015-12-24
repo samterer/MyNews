@@ -84,13 +84,7 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/line_height"
-                    android:layout_above="@+id/zy_version"
-                    android:layout_marginLeft="@dimen/zy_right_margin_left"
-                    android:layout_marginRight="@dimen/zy_right_margin_left"
-                    android:background="@color/main_background_color" />
+                <View style="@style/line_layout" />
 
                 <!--评论-->
                 <LinearLayout
@@ -116,13 +110,7 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/line_height"
-                    android:layout_above="@+id/zy_version"
-                    android:layout_marginLeft="@dimen/zy_right_margin_left"
-                    android:layout_marginRight="@dimen/zy_right_margin_left"
-                    android:background="@color/main_background_color" />
+                <View style="@style/line_layout" />
 
                 <!--推送-->
                 <LinearLayout
@@ -148,13 +136,7 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/line_height"
-                    android:layout_above="@+id/zy_version"
-                    android:layout_marginLeft="@dimen/zy_right_margin_left"
-                    android:layout_marginRight="@dimen/zy_right_margin_left"
-                    android:background="@color/main_background_color" />
+                <View style="@style/line_layout" />
 
                 <!--推送-->
                 <LinearLayout
@@ -179,13 +161,7 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/line_height"
-                    android:layout_above="@+id/zy_version"
-                    android:layout_marginLeft="@dimen/zy_right_margin_left"
-                    android:layout_marginRight="@dimen/zy_right_margin_left"
-                    android:background="@color/main_background_color" />
+                <View style="@style/line_layout" />
 
                 <!--推送-->
                 <LinearLayout
@@ -209,7 +185,6 @@
                         android:text="应用推荐"
                         android:textSize="16sp" />
                 </LinearLayout>
-
 
 
                 <View
@@ -248,7 +223,9 @@
                         android:src="@drawable/personal_icon_offline" />
 
                     <com.hzpd.ui.widget.FontTextView
+                        android:id="@+id/choose_country"
                         style="@style/personal_item_text"
+                        android:ellipsize="end"
                         android:maxLines="1"
                         android:text="@string/offline_mode" />
                 </LinearLayout>
@@ -279,9 +256,9 @@
                 <LinearLayout
                     android:id="@+id/zy_rfrag_ll_feedback"
                     android:layout_width="0dp"
-                    android:background="?zqzx_onclik_setting_item"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:background="?zqzx_onclik_setting_item"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="12dp">

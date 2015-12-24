@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?fragment_main_backgroup"
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="31dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/xf_icon_ta"
+        android:visibility="gone" />
+    <!--android:background="#666666"-->
+    <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/xf_pinfo_lv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@android:color/transparent"
+        android:descendantFocusability="blocksDescendants"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:fadingEdge="none"
+        android:fastScrollEnabled="false"
+        android:focusableInTouchMode="true"
+        android:listSelector="@drawable/listview_selecter"
+        android:scrollbarThumbVertical="@drawable/base_list_scrollbar_handle"
+        android:scrollbarTrackVertical="@color/transparent"
+        android:scrollbars="vertical"
+        android:smoothScrollbar="true"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrHeaderSubTextColor="@color/grey_font"
+        ptr:ptrHeaderTextColor="@color/black" />
+
+</LinearLayout>

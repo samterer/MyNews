@@ -1,2 +1,2 @@
-channelId=yui
-gameId=iuy
+channelId=GooglePlay
+gameId=GooglePlay

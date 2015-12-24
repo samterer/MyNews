@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="230dp"
+        android:layout_height="200dp"
         android:background="?xf_login_bg_drawable">
 
         <ImageView
@@ -12,15 +12,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/background_tab_pressed_selector" />
+            android:src="@drawable/background_tab_pressed_selector"
+            android:visibility="gone"/>
 
         <com.hzpd.custorm.CircleImageView
             android:id="@+id/xf_pinfo_iv_avatar"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_below="@id/xf_pinfo_iv_back"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="48dp"
             android:src="@drawable/details_comment_user_avatar" />
 
         <com.hzpd.ui.widget.FontTextView

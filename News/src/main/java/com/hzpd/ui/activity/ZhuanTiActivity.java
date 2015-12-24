@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,13 +14,12 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.adapter.ZhuantiDetailListAdapter;
-import com.hzpd.adapter.ZhuantiDetailListAdapter2;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.SubjectItemColumnsBean;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
-import com.hzpd.utils.DisplayOptionFactory;
+import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
@@ -32,11 +29,8 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import java.util.List;
-
-import de.greenrobot.event.EventBus;
 
 public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
 
@@ -44,8 +38,8 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
     private View stitle_ll_back;
     private TextView stitle_tv_content;
 
-        private ZhuantiDetailListAdapter adapter;
-//    private ZhuantiDetailListAdapter2 adapter;
+    private ZhuantiDetailListAdapter adapter;
+    //    private ZhuantiDetailListAdapter2 adapter;
     private String from;
     private int page = 1;
     private int pageSize = 10;//
@@ -64,63 +58,24 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
         super.changeStatusBar();
         getIntentData();//获取传值
 
-        stitle_ll_back=findViewById(R.id.stitle_ll_back);
-        stitle_ll_back.setOnClickListener(this);
-        stitle_tv_content= (TextView) findViewById(R.id.stitle_tv_content);
-        stitle_tv_content.setText(getString(R.string.prompt_subject));
-
-
-        View headView= LayoutInflater.from(this).inflate(R.layout.subject_detail_head_layout,null);
-        zhuanti_header_iv = (ImageView) headView.findViewById(R.id.zhuanti_header_iv);
-        zhuanti_tv_title = (TextView) headView.findViewById(R.id.zhuanti_tv_title);
-
-        mRecyclerView = (RecyclerView)findViewById(R.id.recylerlist);
-        zhuanti_item_listview = (ListView) findViewById(R.id.zhuanti_item_listview);
-
-        String imgs[] = nb.getImgs();
-        String img = "";
-        if (null != imgs && imgs.length > 0) {
-            img = imgs[0];
-        }
-        SPUtil.displayImage(img, zhuanti_header_iv, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
-        zhuanti_tv_title.setText(nb.getTitle());
-        zhuanti_item_listview.addHeaderView(headView);
-//        adapter = new ZhuantiDetailListAdapter2(activity);
-//        zhuanti_item_listview.setAdapter(adapter);
-        zhuanti_item_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        stitle_ll_back = findViewById(R.id.stitle_ll_back);
+        stitle_ll_back.setOnClickListener(new OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                NewsBean newsBean = null;
-                int type = adapter.getItemViewType(position);
-                if (0 == type) {
-                    return;
-                } else {
-                    newsBean = (NewsBean) adapter.getItem(position);
-                }
-
-                if (null == newsBean) {
-                    Log.i("","nb null");
-                    return;
-                }
-
-                String detailId = nb.getNid();
-
-                Log.i("", "detailId-->" + detailId);
-
-                Intent in = new Intent(ZhuanTiActivity.this, NewsDetailActivity.class);
-                in.putExtra("newbean", newsBean);
-                in.putExtra("from", "news");
-
-                startActivity(in);
-                AAnim.ActivityStartAnimation(ZhuanTiActivity.this);
+            public void onClick(View v) {
+                finish();
             }
         });
+        stitle_tv_content = (TextView) findViewById(R.id.stitle_tv_content);
+        stitle_tv_content.setText(getString(R.string.prompt_subject));
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recylerlist);
+        zhuanti_item_listview = (ListView) findViewById(R.id.zhuanti_item_listview);
 
 
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
         mRecyclerView.setLayoutManager(layoutManager);
-        adapter = new ZhuantiDetailListAdapter(activity, null,nb);
+        adapter = new ZhuantiDetailListAdapter(activity, this, nb);
         mRecyclerView.setAdapter(adapter);
         getColumns();
 
@@ -230,20 +185,51 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
 
     @Override
     public void onDestroy() {
-        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
+    //点击操作
     @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.stitle_ll_back:{
-                finish();
-            }
-            break;
+    public void onClick(View view) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+            return;
         }
-    }
+        TextView title = (TextView) view.findViewById(R.id.newsitem_title);
+        if (null != title) {
+            title.setTextColor(getResources().getColor(R.color.grey_font));
+        }
 
+        NewsBean nb = (NewsBean) view.getTag();
+        Intent mIntent = new Intent();
+        mIntent.putExtra("newbean", nb);
+        mIntent.putExtra("from", "newsitem");
+        adapter.setReadedId(nb.getNid());
+        ////////////////////////////
+        //1新闻  2图集  3直播 4专题  5关联新闻 6视频
+//TODO 视频新闻
+        if ("1".equals(nb.getRtype())) {
+            mIntent.setClass(this, NewsDetailActivity.class);
+        } else if ("2".equals(nb.getRtype())) {
+            mIntent.setClass(this, NewsAlbumActivity.class);
+        } else if ("3".equals(nb.getRtype())) {
+            mIntent.setClass(this, NewsDetailActivity.class);//直播界面
+        } else if ("4".equals(nb.getRtype())) {
+            mIntent.setClass(this, ZhuanTiActivity.class);
+        } else if ("5".equals(nb.getRtype())) {
+            mIntent.setClass(this, NewsDetailActivity.class);
+        } else if ("6".equals(nb.getRtype())) {
+            mIntent.setClass(this, VideoPlayerActivity.class);
+        } else if ("7".equals(nb.getRtype())) {
+            mIntent.setClass(this, NewsDetailActivity.class);
+        } else if ("9".equals(nb.getRtype())) {
+            mIntent.setClass(this, XF_NewsHtmlDetailActivity.class);
+        } else {
+            return;
+        }
+
+        activity.startActivityForResult(mIntent, 0);
+        AAnim.ActivityStartAnimation(this);
+    }
 
 
 }

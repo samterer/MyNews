@@ -8,7 +8,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.BuildConfig;
 import com.hzpd.modle.UserBean;
+import com.hzpd.modle.db.AlbumBeanDB;
+import com.hzpd.modle.db.AlbumItemBeanDB;
+import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.db.PushBeanDB;
 import com.hzpd.modle.db.UserLog;
+import com.hzpd.modle.db.VideoItemBeanDb;
+import com.hzpd.modle.db.ZhuantiBeanDB;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.DBHelper;
@@ -16,9 +22,6 @@ import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
-import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.StationConfig;
-import com.joy.update.Utils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -26,6 +29,7 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseStream;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
+import com.news.update.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
@@ -53,8 +57,6 @@ public class InitService extends IntentService {
         super.onCreate();
         httpUtils = SPUtil.getHttpUtils();
         rootPath = App.getInstance().getJsonFileCacheRootDir();
-        String station = SharePreferecesUtils.getParam(this, StationConfig.STATION, "def").toString();
-
         siteid = InterfaceJsonfile.SITEID;
         CACHE_url = InterfaceJsonfile.CACHE;
         mAdPic_url = InterfaceJsonfile.mAdPic;
@@ -134,10 +136,27 @@ public class InitService extends IntentService {
         if (intent != null) {
             if (InitService.InitAction.equals(intent.getAction())) {
                 GetWelcomePicJson();
+                createDb();
             } else if (InitService.UserLogAction.equals(intent.getAction())) {
                 Log.e("test", "send use log");
                 sendUserLog();
             }
+        }
+    }
+
+    // 创建数据库
+    private void createDb() {
+        try {
+            DbUtils newsListDb = DBHelper.getInstance(getApplicationContext()).getNewsListDbUtils();
+            newsListDb.count(AlbumBeanDB.class);
+            newsListDb.count(AlbumItemBeanDB.class);
+            newsListDb.count(VideoItemBeanDb.class);
+            newsListDb.count(ZhuantiBeanDB.class);
+            newsListDb.count(NewsBeanDB.class);
+            newsListDb.count(PushBeanDB.class);
+            newsListDb.count(UserLog.class);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -153,7 +172,7 @@ public class InitService extends IntentService {
         final DbUtils dbUtils = DBHelper.getInstance(getApplicationContext()).getLogDbUtils();
         try {
             List<UserLog> logs = dbUtils.findAll(UserLog.class);
-            if (logs.isEmpty() || logs.size() < 20) {
+            if (logs == null || logs.isEmpty() || logs.size() < 20) {
                 return;
             }
             String json = FjsonUtil.toJsonString(logs);

@@ -59,8 +59,7 @@ import java.util.List;
 
 
 public class XF_NewsDetailFragment extends BaseFragment {
-    private static final String BASEURL = InterfaceJsonfile.ROOT
-            + "/index.php?s=/Public/newsview/nid/";
+    private static final String BASEURL = InterfaceJsonfile.PATH_ROOT + "/Public/newsview/nid/";
 
     private static final String HTMLURL = InterfaceJsonfile.PATH_ROOT + "/News/newsInfo2Html/nid/";
 
@@ -118,7 +117,7 @@ public class XF_NewsDetailFragment extends BaseFragment {
         if (null == nb) {
             return;
         }
-        Log.i("nb nid-->", nb.getNid() + ":::"+nb.getComcount());
+        Log.i("nb nid-->", nb.getNid() + ":::" + nb.getComcount());
         dbUtils = DbUtils.create(activity, App.getInstance()
                 .getJsonFileCacheRootDir(), App.collectiondbname);
         if ("0".equals(nb.getTid())) {
@@ -177,7 +176,7 @@ public class XF_NewsDetailFragment extends BaseFragment {
                             img = nb.getImgs()[0];
                         }
                         ReplayBean bean = new ReplayBean(nb.getNid(), nb.getTitle(),
-                                Constant.TYPE.News.toString(), nb.getJson_url(), img,nb.getComcount());
+                                Constant.TYPE.News.toString(), nb.getJson_url(), img, nb.getComcount());
 
                         ((XF_NewsHtmlDetailActivity) activity).toNewsComments(bean);
                         return true;
@@ -280,7 +279,7 @@ public class XF_NewsDetailFragment extends BaseFragment {
                         img = nb.getImgs()[0];
                     }
                     ReplayBean bean = new ReplayBean(nb.getNid(), nb.getTitle(),
-                            Constant.TYPE.News.toString(), nb.getJson_url(), img,nb.getComcount());
+                            Constant.TYPE.News.toString(), nb.getJson_url(), img, nb.getComcount());
 
                     ((XF_NewsHtmlDetailActivity) activity).toNewsComments(bean);
 

@@ -93,4 +93,19 @@ public class XF_UserInfoBean {
 		this.alias = alias;
 	}
 
+	@Override
+	public String toString() {
+		return "XF_UserInfoBean{" +
+				"uid='" + uid + '\'' +
+				", username='" + username + '\'' +
+				", nickname='" + nickname + '\'' +
+				", avatar_path='" + avatar_path + '\'' +
+				", sex='" + sex + '\'' +
+				", regtime='" + regtime + '\'' +
+				", exp='" + exp + '\'' +
+				", level='" + level + '\'' +
+				", alias='" + alias + '\'' +
+				", lastexp='" + lastexp + '\'' +
+				'}';
+	}
 }

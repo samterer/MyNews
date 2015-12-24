@@ -1,31 +1,38 @@
 package com.hzpd.ui.activity;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.TypedValue;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.View;
+import android.widget.TextView;
 
 import com.hzpd.hflt.R;
 import com.hzpd.ui.fragments.XF_PersonalInfoFragment;
-import com.hzpd.utils.SystemBarTintManager;
 import com.lidroid.xutils.ViewUtils;
 
 
 public class XF_PInfoActivity extends MBaseActivity {
 
     private XF_PersonalInfoFragment personalInfoFm;
+    private View stitle_ll_back;
+    private TextView stitle_tv_content;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.xf_pinfo_layout);
+        super.changeStatusBar();
         ViewUtils.inject(this);
-//        changeStatus();
+        stitle_ll_back = findViewById(R.id.stitle_ll_back);
+        stitle_ll_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        stitle_tv_content= (TextView) findViewById(R.id.stitle_tv_content);
+        stitle_tv_content.setText(getString(R.string.comment));
         Intent intent = getIntent();
         String uid = intent.getStringExtra("uid");
         personalInfoFm = new XF_PersonalInfoFragment();

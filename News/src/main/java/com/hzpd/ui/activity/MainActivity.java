@@ -1,19 +1,20 @@
 package com.hzpd.ui.activity;
 
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hzpd.adapter.MainPagerAdapter;
 import com.hzpd.custorm.DrawerArrowDrawable;
 import com.hzpd.custorm.MyViewPager;
 import com.hzpd.hflt.R;
-import com.hzpd.modle.UpdateBean;
 import com.hzpd.modle.event.RestartEvent;
 import com.hzpd.modle.event.SetThemeEvent;
 import com.hzpd.services.InitService;
@@ -22,28 +23,26 @@ import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.ui.fragments.NewsFragment;
 import com.hzpd.ui.fragments.ZY_DiscoveryFragment;
 import com.hzpd.ui.fragments.ZY_RightFragment;
-import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.ExitApplication;
-import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
-import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.news.update.DownloadService;
+import com.news.update.LocalUpdateDialogFragment;
+import com.news.update.LocalUpdateEvent;
+import com.news.update.UpdateUtils;
+import com.news.update.Utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +53,7 @@ public class
         MainActivity extends BaseActivity {
 
     public final static String TAG = "NEWS";
+    public final static String TAG_DIALOG = "NEWS_DIALOG";
 
     public MainActivity() {
         super();
@@ -84,7 +84,7 @@ public class
         super.finish();
     }
 
-    private View  login_bg;
+    private View login_bg;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,7 +93,7 @@ public class
         long start = System.currentTimeMillis();
         setContentView(R.layout.app_main);
         ViewUtils.inject(this);
-        login_bg=findViewById(R.id.login_bg);
+        login_bg = findViewById(R.id.login_bg);
         viewPager = (MyViewPager) findViewById(R.id.main_pager);
         adapter = new MainPagerAdapter(getSupportFragmentManager());
         fragments = new BaseFragment[3];
@@ -131,6 +131,7 @@ public class
         Intent intent = new Intent(this, InitService.class);
         intent.setAction(InitService.UserLogAction);
         startService(intent);
+        showLocalUpdateDialog(this);
     }
 
     public void onClickIndex(int index) {
@@ -198,49 +199,7 @@ public class
     protected HttpUtils httpUtils;
 
     private void checkVersion() {
-        if (httpUtils == null) {
-            httpUtils = SPUtil.getHttpUtils();
-        }
-        int version = 0;
-        try {
-            version = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("plat", "Android");
-        params.addBodyParameter("version", "" + version);
-        SPUtil.addParams(params);
-        HttpHandler httpHandler = httpUtils.send(HttpRequest.HttpMethod.POST
-                , InterfaceJsonfile.GET_VERSION
-                , params
-                , new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                if (responseInfo == null) {
-                    return;
-                }
-                JSONObject obj = FjsonUtil
-                        .parseObject(responseInfo.result);
-                if (obj == null) {
-                    return;
-                }
-                if (200 == obj.getIntValue("code")) {
-                    UpdateBean mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), UpdateBean.class);
-                    SPUtil.showNotification(mBean.getDescription(), getApplicationContext());
-                    SPUtil.updateDialog(mBean.getDescription(), MainActivity.this);
-                } else {
 
-                }
-
-            }
-
-            @Override
-            public void onFailure(HttpException error, String msg) {
-                Log.e("test", "onFailure");
-            }
-        });
-        handlerList.add(httpHandler);
     }
 
     @Override
@@ -260,6 +219,7 @@ public class
     public void onEventMainThread(SetThemeEvent event) {
         recreate();
     }
+
     private void restartApplication() {
         final Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -270,6 +230,127 @@ public class
     public void onEventMainThread(RestartEvent event) {
 //        restartApplication();
         finish();
+    }
+
+
+    public void onEventMainThread(LocalUpdateEvent event) {
+        Log.e("UPDATE", null);
+        showLocalUpdateDialog(this);
+    }
+
+    /**
+     * 弹出更新提示对话框
+     */
+    public static void showLocalUpdateDialog(FragmentActivity activity) {
+
+        if (LocalUpdateDialogFragment.shown) {
+            return;
+        }
+
+        SharedPreferences pref = activity.getSharedPreferences(
+                UpdateUtils.SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE);
+        try {
+            if (pref.getBoolean(UpdateUtils.KEY.KEY_SILENCE_INSTALL, false)) {
+                return;
+            }
+            long later = pref.getLong(UpdateUtils.KEY.UPDATE_LATER_TIME, 0L);
+            if (later > 10000) {
+                if (System.currentTimeMillis() - later > UpdateUtils.UPDATE_LATER_TIME) {
+                    pref.edit()
+                            .putLong(UpdateUtils.KEY.UPDATE_LATER_TIME, 0L)
+                            .apply();
+                } else {
+                    return;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (pref.getBoolean(UpdateUtils.KEY.KEY_HAS_NEW, false)) {
+                boolean forcing = pref.getBoolean(UpdateUtils.KEY.KEY_FORCING_UPDATE, false);
+
+                int versionCode = pref.getInt(UpdateUtils.KEY.KEY_VERSION_CODE, 0);
+                if (versionCode <= Utils.getVersionCode(activity)) {
+                    Log.e("update", "versionCode "
+                            + versionCode + ":" + Utils.getVersionCode(activity));
+                    pref.edit().putBoolean(UpdateUtils.KEY.KEY_HAS_NEW,
+                            false);
+                    return;
+                }
+
+                if (UpdateUtils.isRomVersion(activity.getApplicationContext())) {
+                    try {
+                        String dialogContent = pref.getString(UpdateUtils.KEY.KEY_DIALOG_CONTENT, "");
+                        LocalUpdateDialogFragment fragment = (LocalUpdateDialogFragment) Fragment.instantiate(activity, LocalUpdateDialogFragment.class.getName
+                                ());
+                        Bundle bundle = new Bundle();
+                        bundle.putString(LocalUpdateDialogFragment.DIALOG_CONTENT, dialogContent);
+                        bundle.putBoolean(LocalUpdateDialogFragment.FORCING, forcing);
+                        fragment.setArguments(bundle);
+                        fragment.show(activity.getSupportFragmentManager(), TAG_DIALOG);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return;
+                }
+
+
+                if (!forcing) {
+                    if (pref.getBoolean(UpdateUtils.KEY.IS_DOWNLOADING, false)
+                            || pref.getBoolean(UpdateUtils.KEY.IS_WIFI_DOWNLOADING, false)) {
+                        Log.e("update", " IS_DOWNLOADING ");
+                        return;
+                    }
+                }
+                boolean autoD = pref.getBoolean(UpdateUtils.KEY.KEY_AUTO_DOWNLOAD, false);
+                int cVersion = pref.getInt(UpdateUtils.KEY.COMPLETED_VERSION_CODE, 0);
+                Log.e("update", " autoD " + autoD);
+                if (autoD) {
+                    File root = Environment.getExternalStorageDirectory();
+                    if (root != null) {
+                        File fold = new File(root, UpdateUtils.PATH_SAVE);
+                        File target = new File(fold, UpdateUtils.getFileName(activity.getApplicationContext()));
+                        Intent intent = new Intent(activity, DownloadService.class);
+                        if (pref.getBoolean(UpdateUtils.KEY.KEY_MOBILE_AUTO, false)) {
+                            intent.putExtra(DownloadService.TAG, UpdateUtils.KEY.IS_DOWNLOADING);
+                        } else {
+                            intent.putExtra(DownloadService.TAG, UpdateUtils.KEY.IS_WIFI_DOWNLOADING);
+                        }
+                        if (!target.exists() || cVersion < versionCode) {
+                            Log.e("update", " target is not exists ");
+                            activity.startService(intent);
+                            if (!forcing) {
+                                return;
+                            }
+                        } else if (target.exists()) {
+                            String md5 = null;
+                            md5 = UpdateUtils.getHash(target.getAbsolutePath(), "MD5").toLowerCase();
+                            if (!md5.equals(pref.getString(UpdateUtils.KEY.KEY_MD5, ""))) {
+                                target.delete();
+                                pref.edit().putInt(UpdateUtils.KEY.COMPLETED_VERSION_CODE, 0).apply();
+                                activity.startService(intent);
+                                if (!forcing) {
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+                String dialogContent = pref.getString(UpdateUtils.KEY.KEY_DIALOG_CONTENT, "");
+                LocalUpdateDialogFragment fragment = (LocalUpdateDialogFragment) Fragment.instantiate(activity, LocalUpdateDialogFragment.class.getName
+                        ());
+                Bundle bundle = new Bundle();
+                bundle.putString(LocalUpdateDialogFragment.DIALOG_CONTENT, dialogContent);
+                bundle.putBoolean(LocalUpdateDialogFragment.FORCING, forcing);
+                bundle.putBoolean(LocalUpdateDialogFragment.AUTO_DOWNLOAD, autoD);
+                fragment.setArguments(bundle);
+                fragment.show(activity.getSupportFragmentManager(), TAG_DIALOG);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

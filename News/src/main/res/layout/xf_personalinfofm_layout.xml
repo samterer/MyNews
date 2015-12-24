@@ -14,24 +14,13 @@
         android:src="@drawable/xf_icon_ta"
         android:visibility="gone" />
     <!--android:background="#666666"-->
-    <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/xf_pinfo_lv"
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recylerlist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:cacheColorHint="@android:color/transparent"
-        android:descendantFocusability="blocksDescendants"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:fadingEdge="none"
-        android:fastScrollEnabled="false"
-        android:focusableInTouchMode="true"
-        android:listSelector="@drawable/listview_selecter"
-        android:scrollbarThumbVertical="@drawable/base_list_scrollbar_handle"
-        android:scrollbarTrackVertical="@color/transparent"
-        android:scrollbars="vertical"
-        android:smoothScrollbar="true"
-        ptr:ptrAnimationStyle="flip"
-        ptr:ptrHeaderSubTextColor="@color/grey_font"
-        ptr:ptrHeaderTextColor="@color/black" />
+        android:background="?fragment_main_backgroup"
+        android:cacheColorHint="@null"
+        android:scrollbars="none" />
 
 </LinearLayout>

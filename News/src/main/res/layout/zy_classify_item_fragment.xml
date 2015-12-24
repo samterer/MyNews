@@ -12,8 +12,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:background="@color/main_background_color"
-            android:layout_height="110dp">
+            android:layout_height="125dp"
+            android:background="@color/main_background_color">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/id_recyclerview_horizontal"
@@ -28,7 +28,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/line_height"
-            android:background="#e6e6e6"/>
+            android:background="#e6e6e6" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/id_recyclerview_vertical"
@@ -39,5 +39,18 @@
             android:scrollbars="none" />
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/progress_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="126dp"
+        android:background="@color/white">
+
+        <ProgressBar
+            style="@style/loadingProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
 </FrameLayout>

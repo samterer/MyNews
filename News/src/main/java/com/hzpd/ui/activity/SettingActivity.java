@@ -5,9 +5,10 @@ import android.app.AlertDialog.Builder;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,15 +16,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.alibaba.fastjson.JSONObject;
+import com.color.tools.mytools.TUtil;
 import com.facebook.Profile;
 import com.hzpd.custorm.switchbutton.SwitchButton;
 import com.hzpd.hflt.R;
-import com.hzpd.modle.UpdateBean;
 import com.hzpd.modle.event.FontSizeEvent;
 import com.hzpd.modle.event.LoginOutEvent;
 import com.hzpd.modle.event.RestartEvent;
@@ -31,27 +31,22 @@ import com.hzpd.modle.event.SetThemeEvent;
 import com.hzpd.services.ClearCacheService;
 import com.hzpd.ui.App;
 import com.hzpd.ui.widget.FontTextView;
-import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CODE;
-import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.GetFileSizeUtil;
 import com.hzpd.utils.Log;
-import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.news.update.CheckUpdateEvent;
+import com.news.update.UpdateService;
+import com.news.update.UpdateUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.sithagi.countrycodepicker.CountryPicker;
 import com.sithagi.countrycodepicker.CountryPickerListener;
@@ -73,25 +68,25 @@ public class SettingActivity extends MBaseActivity {
     private TextView stitle_tv_content;
 
     @ViewInject(R.id.zqzx_setting_skin)
-    private RelativeLayout zqzx_setting_skin;
+    private LinearLayout zqzx_setting_skin;
     @ViewInject(R.id.setting_chosse_skin)
     private TextView setting_chosse_skin;
 
 
     @ViewInject(R.id.zqzx_setting_textsize)
-    private RelativeLayout zqzx_setting_textsize;
+    private LinearLayout zqzx_setting_textsize;
     @ViewInject(R.id.setting_chosse_textsize)
     private FontTextView setting_chosse_textsize;
 
 
     @ViewInject(R.id.zqzx_setting_deletecache)
-    private RelativeLayout zqzx_setting_deletecache;
+    private LinearLayout zqzx_setting_deletecache;
     @ViewInject(R.id.zqzx_setting_feedback)
-    private RelativeLayout zqzx_setting_feedback;
+    private LinearLayout zqzx_setting_feedback;
     @ViewInject(R.id.zqzx_setting_cache)
     private FontTextView zqzx_setting_cache;
     @ViewInject(R.id.zqzx_setting_update)
-    private RelativeLayout zqzx_setting_update;
+    private LinearLayout zqzx_setting_update;
     @ViewInject(R.id.zqzx_setting_tv_version)
     private FontTextView zqzx_setting_tv_version;
     //站点设置
@@ -99,7 +94,7 @@ public class SettingActivity extends MBaseActivity {
     private SwitchButton sb_use_listener;
 
     private View loadingView;
-    private RelativeLayout zqzx_setting_login_out;
+    private LinearLayout zqzx_setting_login_out;
     private AlertDialog.Builder mDeleteDialog;
     private TextView setting_choose_country;
 
@@ -107,7 +102,7 @@ public class SettingActivity extends MBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zqzx_setting_layout);
-
+        EventBus.getDefault().register(this);
         try {
             ViewUtils.inject(this);
         } catch (Exception e) {
@@ -115,7 +110,7 @@ public class SettingActivity extends MBaseActivity {
         }
         super.changeStatusBar();
         loadingView = findViewById(R.id.app_progress_bar);
-        zqzx_setting_login_out = (RelativeLayout) findViewById(R.id.zqzx_setting_login_out);
+        zqzx_setting_login_out = (LinearLayout) findViewById(R.id.zqzx_setting_login_out);
         if (spu.getUser() != null) {
             zqzx_setting_login_out.setVisibility(View.VISIBLE);
         }
@@ -222,6 +217,7 @@ public class SettingActivity extends MBaseActivity {
 
     @Override
     protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -440,41 +436,19 @@ public class SettingActivity extends MBaseActivity {
         if (AvoidOnClickFastUtils.isFastDoubleClick()) {
             return;
         }
-        int version = 0;
-        try {
-            version = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        Intent intent = new Intent(this, UpdateService.class);
+        startService(intent);
+    }
+
+    public void onEventMainThread(CheckUpdateEvent event) {
+        Log.e("UPDATE", null);
+        SharedPreferences pref = getSharedPreferences(
+                UpdateUtils.SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE);
+        if (pref.getBoolean(UpdateUtils.KEY.KEY_SILENCE_INSTALL, false)) {
+            TUtil.toast(this, getString(R.string.update_no_version));
+        } else {
+            MainActivity.showLocalUpdateDialog(this);
         }
-        RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("plat", "Android");
-        params.addBodyParameter("version", "" + version);
-        SPUtil.addParams(params);
-        httpUtils.send(HttpRequest.HttpMethod.POST
-                , InterfaceJsonfile.GET_VERSION
-                , params
-                , new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                JSONObject obj = FjsonUtil
-                        .parseObject(responseInfo.result);
-                if (obj == null) {
-                    return;
-                }
-                if (200 == obj.getIntValue("code")) {
-                    UpdateBean mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), UpdateBean.class);
-                    SPUtil.updateDialog(mBean.getDescription(), SettingActivity.this);
-                } else {
-                    Toast.makeText(SettingActivity.this, getString(R.string.update_no_version), Toast.LENGTH_SHORT).show();
-                }
-
-            }
-
-            @Override
-            public void onFailure(HttpException error, String msg) {
-                Toast.makeText(SettingActivity.this, getString(R.string.toast_cannot_connect_to_server), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     /**

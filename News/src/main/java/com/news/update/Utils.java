@@ -1,4 +1,4 @@
-package com.joy.update;
+package com.news.update;
 
 import android.annotation.SuppressLint;
 import android.content.ClipData;

@@ -84,72 +84,6 @@
         <item name="android:windowBackground">@color/transparent</item>
     </style>
 
-    <style name="ThemeRed" parent="AppTheme">
-        <!-- MainActivity-->
-        <item name="title_bar_color">#eb413d</item>
-        <item name="title_bar_name_color">@color/white</item>
-        <item name="m_background_tab_pressed">@drawable/title_bar_btn_selector_red_color</item>
-
-        <item name="main_activity_color">@color/white</item>
-        <item name="fragment_main_backgroup">@color/fragment_background</item>
-        <item name="item_title">@color/item_title</item>
-        <item name="item_title_read">@color/grey_font</item>
-        <item name="item_tag">@color/main_tag</item>
-        <item name="news_item_btn_selector">@drawable/news_item_selector</item>
-        <item name="news_item_line_color">@color/subscribe_item_drag_bg</item>
-
-        <item name="xf_login_bg_drawable">@drawable/xf_login_bg_red</item>
-        <!--侧滑菜单-->
-        <item name="left_menu_fb_avatar">@drawable/zy_pic_main_info_profile_bg</item>
-        <item name="left_menu_fb_name">@color/white</item>
-        <item name="left_menu_item_name">@color/white</item>
-        <item name="left_menu_version_name">@color/white</item>
-        <item name="left_menu_version_line">@color/white</item>
-        <!-- newsfragment-->
-        <item name="fragment_main_psts_tabs_background">@color/white</item>
-        <item name="fragment_main_psts_tabs_indicator_color">
-            @color/pager_sliding_tab_text_selected_color
-        </item>
-        <item name="fragment_main_psts_tabs_text_color">@color/pager_sliding_tab_text_color</item>
-        <!-- choosefragment-->
-        <item name="fragment_choose_card_backgroup_color">#ffffff</item>
-        <item name="fragment_choose_btn_src_color">@drawable/floating_button_selector_red</item>
-        <!-- newitemfragment-->
-        <item name="fragment_news_item_falsh">@color/white</item>
-
-        <!-- newsdetail-->
-        <item name="newsdetail_fontsize_drawable">@drawable/details_font_selector_red</item>
-        <item name="newsdetail_share_drawable">@drawable/details_share_selector_red</item>
-        <item name="details_comment_pen_drawable">@drawable/details_comment_pen_selector_red</item>
-        <item name="button_comment_style_drawable">@drawable/button_comment_style_red</item>
-
-        <!--Setting-->
-        <item name="zqzx_setting_main_color">@color/grey_color</item>
-        <item name="zqzx_onclik_setting_item">@drawable/setting_item_selector</item>
-        <item name="setting_item_selector_color">@color/zqzx_font_light</item>
-        <item name="zqzx_setting_item_text">@color/zqzx_font_set_title</item>
-        <item name="zqzx_setting_item_right_text">@color/zqzx_font_set_normal</item>
-
-        <!-- FeedBack-->
-        <item name="zq_feedback_color">@color/zqzx_bg_normal</item>
-        <item name="zq_feedback_edit_color">@color/zqzx_font_normal</item>
-        <item name="zq_feedback_btn_color">@color/white</item>
-        <item name="zq_feedback_btn_submit">@drawable/zq_feedback_btn_selector_red</item>
-
-        <item name="fragment_search_background_color">@color/white</item>
-        <item name="search_content_background_color">@color/search_content_background</item>
-        <item name="search_key_head_text_color">@color/search_key_head_text</item>
-        <item name="search_history_item_color">@color/white</item>
-        <item name="my_comment_top_nickname">@color/white</item>
-        <item name="my_comment_top_regtime">#d0d7ff</item>
-        <item name="my_comment_news_title">#333</item>
-        <item name="my_comment_nickname">#8d8d8d</item>
-        <item name="my_comment_time">@color/time_color</item>
-        <item name="my_comment_news_selector">@drawable/my_comment_news_selector</item>
-        <item name="news_detail_rel_item_title">@color/black</item>
-
-    </style>
-
     <style name="ThemeNight" parent="AppTheme">
         <!-- MainActivity-->
         <item name="title_bar_color">#2e3b84</item>
@@ -365,7 +299,6 @@
         <item name="@android:windowExitAnimation">@anim/disappear</item>
     </style>
 
-
     <style name="MaterialProgressWheelStyle">
         <item name="android:layout_width">80dp</item>
         <item name="android:layout_height">80dp</item>
@@ -492,11 +425,55 @@
         <item name="android:background">@null</item>
     </style>
 
-
     <style name="personal_item_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">5dp</item>
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="setting_item_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?zqzx_onclik_setting_item</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">15dp</item>
+    </style>
+
+    <style name="setting_text">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/margin_10</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">?zqzx_setting_item_text</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="setting_img">
+        <item name="android:layout_width">10dp</item>
+        <item name="android:layout_height">15dp</item>
+        <item name="android:layout_marginRight">@dimen/margin_10</item>
+        <item name="android:background">@drawable/bbs_modle_jt</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="line_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/line_height</item>
+        <item name="android:layout_marginLeft">@dimen/margin_15</item>
+        <item name="android:layout_marginRight">@dimen/margin_15</item>
+        <item name="android:background">@color/main_background_color</item>
+    </style>
+
+    <style name="RippleStyleBtn">
+        <item name="rippleOverlay">@bool/ripple_overlay_btn_copy_gift_code</item>
+        <item name="rippleHover">@bool/ripple_hover_btn_copy_gift_code</item>
+        <item name="rippleDelayClick">@bool/ripple_delay_click_btn_copy_gift_code</item>
+        <item name="ripplePersistent">@bool/ripple_persistent_btn_copy_gift_code</item>
+        <item name="rippleDuration">@integer/ripple_duration_btn_copy_gift_code</item>
+        <item name="rippleFadeDuration">@integer/ripple_fade_duration_btn_copy_gift_code</item>
+        <item name="rippleAlpha">@dimen/ripple_alpha_btn_copy_gift_code</item>
+        <item name="rippleDimension">@dimen/ripple_dimen_btn_copy_gift_code</item>
+        <item name="rippleColor">@color/ripple_color_btn_copy_gift_code</item>
     </style>
 </resources>

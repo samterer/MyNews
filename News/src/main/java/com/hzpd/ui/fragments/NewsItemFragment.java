@@ -44,7 +44,7 @@ import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.db.NewsListDbTask;
-import com.joy.update.Utils;
+import com.news.update.Utils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.RequestParams;

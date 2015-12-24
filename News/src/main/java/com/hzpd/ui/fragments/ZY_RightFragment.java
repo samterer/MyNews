@@ -29,6 +29,7 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.ThirdLoginBean;
 import com.hzpd.modle.UserBean;
 import com.hzpd.modle.event.LoginOutEvent;
+import com.hzpd.modle.event.RestartEvent;
 import com.hzpd.modle.event.SetThemeEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.MyCommentsActivity;
@@ -47,6 +48,7 @@ import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
+import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -57,6 +59,8 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.sithagi.countrycodepicker.CountryPicker;
+import com.sithagi.countrycodepicker.CountryPickerListener;
 
 import java.util.Arrays;
 import java.util.List;
@@ -100,6 +104,7 @@ public class ZY_RightFragment extends BaseFragment {
     private TextView night_mode;
 
     private TextView version;
+    private TextView personal_item_text;
     private ImageView image_skin_mode;
 
 
@@ -112,6 +117,24 @@ public class ZY_RightFragment extends BaseFragment {
             night_mode = (TextView) view.findViewById(R.id.night_mode);
             version = (TextView) view.findViewById(R.id.zy_version);
             image_skin_mode = (ImageView) view.findViewById(R.id.image_skin_mode);
+            personal_item_text = (TextView) view.findViewById(R.id.choose_country);
+            String name=SPUtil.getCountryName();
+            personal_item_text.setText("" + name);
+
+            switch (App.getInstance().getThemeName()) {
+                case "0": {
+                    night_mode.setText(getResources().getString(R.string.night_mode));
+                    image_skin_mode.setImageResource(R.drawable.personal_icon_night);
+                    isChangeSkin = false;
+                }
+                break;
+                case "2": {
+                    night_mode.setText(getResources().getString(R.string.day_mode));
+                    image_skin_mode.setImageResource(R.drawable.personal_icon_day);
+                    isChangeSkin = true;
+                }
+                break;
+            }
         } catch (Exception e) {
 
         }
@@ -260,7 +283,26 @@ public class ZY_RightFragment extends BaseFragment {
             }
             break;
             case R.id.zy_rfrag_ll_download: {
-                Toast.makeText(getActivity(), "暂无此功能。。。", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "语言。。。", Toast.LENGTH_SHORT).show();
+                final CountryPicker picker = CountryPicker.newInstance(getActivity().getString(R.string.select_country));
+                picker.setListener(new CountryPickerListener() {
+
+                    @Override
+                    public void onSelectCountry(String name, String code, String dialCode) {
+                        Log.i("Setting", "CountryName:" + name + "\nCode: " + code + "\nCurrency: " + CountryPicker.getCurrencyCode(code) + "\nDial Code: " + dialCode);
+                        SharePreferecesUtils.setParam(getActivity(), "CountryName", name);
+//                        activity.startService(new Intent(activity, ClearCacheService.class));
+                        personal_item_text.setText("" + name);
+                        SPUtil.setCountry(code);
+                        SPUtil.setCountryName(name);
+//                      重新设置
+                        EventBus.getDefault().post(new RestartEvent());
+                        restartApplication();
+                        picker.dismiss();
+                    }
+                });
+
+                picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_CODE_PICKER");
             }
             break;
             case R.id.zy_rfrag_ll_night: {
@@ -294,34 +336,6 @@ public class ZY_RightFragment extends BaseFragment {
                     loginManager.setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);
                     loginManager.logInWithReadPermissions(this, permissions);
                 }
-//                else {
-//                    String logout = getResources().getString(
-//                            R.string.com_facebook_loginview_log_out_action);
-//                    String cancel = getResources().getString(
-//                            R.string.com_facebook_loginview_cancel_action);
-//                    String message;
-//                    Profile profile = Profile.getCurrentProfile();
-//                    if (profile != null && profile.getName() != null) {
-//                        message = String.format(
-//                                getResources().getString(
-//                                        R.string.com_facebook_loginview_logged_in_as),
-//                                profile.getName());
-//                    } else {
-//                        message = getResources().getString(
-//                                R.string.com_facebook_loginview_logged_in_using_facebook);
-//                    }
-//                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//                    builder.setMessage(message)
-//                            .setCancelable(true)
-//                            .setPositiveButton(logout, new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int which) {
-//
-//                                    loginManager.logOut();
-//                                }
-//                            })
-//                            .setNegativeButton(cancel, null);
-//                    builder.create().show();
-//                }
             }
             break;
             default:
@@ -333,6 +347,12 @@ public class ZY_RightFragment extends BaseFragment {
         }
     }
 
+
+    private void restartApplication() {
+        final Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage(getActivity().getPackageName());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
 
     public class LoginQuitBR extends BroadcastReceiver {
         @Override

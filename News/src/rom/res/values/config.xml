@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_fbid">1902056863352757</string>
-    <string name="jpush_key">fcdda60ec37234ffcf765e48</string>
     <bool name="isRom">true</bool>
 </resources>

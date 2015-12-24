@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.adapter.ClassifyItemAdapter;
@@ -22,6 +23,7 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
@@ -32,7 +34,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class ZY_ClassifyItemFragment extends BaseFragment {
+public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public String getAnalyticPageName() {
@@ -48,6 +50,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
     private int Page = 1;
     private int pageSize = 10;
     private int lastVisibleItem;
+    private FrameLayout progress_container;
     private LinearLayoutManager vlinearLayoutManager;
 
     @Override
@@ -60,12 +63,13 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
         View view = null;
         try {
             view = inflater.inflate(R.layout.zy_classify_item_fragment, container, false);
+            progress_container = (FrameLayout) view.findViewById(R.id.progress_container);
             hRecyclerView = (RecyclerView) view.findViewById(R.id.id_recyclerview_horizontal);
             //设置布局管理器
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             hRecyclerView.setLayoutManager(linearLayoutManager);
-            adapter = new ClassifyItemAdapter(getActivity());
+            adapter = new ClassifyItemAdapter(getActivity(), this);
             //设置适配器
             hRecyclerView.setAdapter(adapter);
             getClassifyHorServer();
@@ -75,7 +79,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
             vlinearLayoutManager = new LinearLayoutManager(getActivity());
             vlinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             vRecyclerView.setLayoutManager(vlinearLayoutManager);
-            sampleAdapter = new ClassifyItemListAdapter(getActivity());
+            sampleAdapter = new ClassifyItemListAdapter(getActivity(), this);
             //设置适配器
             vRecyclerView.setAdapter(sampleAdapter);
 
@@ -160,9 +164,10 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
         params.addBodyParameter("Page", vPage + "");
         params.addBodyParameter("PageSize", tpageSize + "");
         SPUtil.addParams(params);
-        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.classify_url, params, new RequestCallBack<String>() {
+        handler = httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.classify_url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                progress_container.setVisibility(View.GONE);
                 sampleAdapter.setShowLoading(false);
                 JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
                 if (null == obj) {
@@ -186,7 +191,10 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
                 sampleAdapter.setShowLoading(false);
             }
         });
+        handlerList.add(handler);
     }
+
+    HttpHandler handler;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -206,6 +214,15 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
         Log.i("onEventMainThread", "onEventMainThread  id-->" + id);
         isClearOld = true;
         vPage = 1;
+        progress_container.setVisibility(View.VISIBLE);
+        if (handler != null) {
+            if (handler.getState() == HttpHandler.State.LOADING || handler.getState() == HttpHandler.State.STARTED) {
+                handler.setRequestCallBack(null);
+                handler.cancel();
+            }
+            handlerList.remove(handler);
+            handler = null;
+        }
         getClassifyVerServer(id);
     }
 
@@ -218,4 +235,25 @@ public class ZY_ClassifyItemFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        try {
+            if (v.getTag() != null & v.getTag() instanceof ClassifyItemAdapter.ItemViewHolder) {
+                if (v.isSelected()) {
+                    return;
+                }
+                ClassifyItemAdapter.ItemViewHolder holder = (ClassifyItemAdapter.ItemViewHolder) v.getTag();
+                if (adapter.last != null) {
+                    adapter.last.classify_item.setSelected(false);
+                    adapter.last.mImg.setLayoutParams(SPUtil.NORMAL);
+                }
+                v.setSelected(true);
+                adapter.last = holder;
+                holder.mImg.setLayoutParams(SPUtil.LARGE);
+                EventBus.getDefault().post(new ClassifItemEvent("" + holder.tagBean.getId()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
