@@ -17,7 +17,6 @@ import android.os.Message;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.color.tools.mytools.TUtil;
@@ -66,33 +65,21 @@ public class SettingActivity extends MBaseActivity {
 
     @ViewInject(R.id.stitle_tv_content)
     private TextView stitle_tv_content;
-
     @ViewInject(R.id.zqzx_setting_skin)
     private LinearLayout zqzx_setting_skin;
     @ViewInject(R.id.setting_chosse_skin)
     private TextView setting_chosse_skin;
-
-
     @ViewInject(R.id.zqzx_setting_textsize)
     private LinearLayout zqzx_setting_textsize;
     @ViewInject(R.id.setting_chosse_textsize)
     private FontTextView setting_chosse_textsize;
-
-
-    @ViewInject(R.id.zqzx_setting_deletecache)
-    private LinearLayout zqzx_setting_deletecache;
-    @ViewInject(R.id.zqzx_setting_feedback)
-    private LinearLayout zqzx_setting_feedback;
     @ViewInject(R.id.zqzx_setting_cache)
     private FontTextView zqzx_setting_cache;
-    @ViewInject(R.id.zqzx_setting_update)
-    private LinearLayout zqzx_setting_update;
     @ViewInject(R.id.zqzx_setting_tv_version)
     private FontTextView zqzx_setting_tv_version;
     //站点设置
     @ViewInject(R.id.sb_use_listener)
     private SwitchButton sb_use_listener;
-
     private View loadingView;
     private LinearLayout zqzx_setting_login_out;
     private AlertDialog.Builder mDeleteDialog;
@@ -444,7 +431,9 @@ public class SettingActivity extends MBaseActivity {
         Log.e("UPDATE", null);
         SharedPreferences pref = getSharedPreferences(
                 UpdateUtils.SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE);
-        if (pref.getBoolean(UpdateUtils.KEY.KEY_SILENCE_INSTALL, false)) {
+        if (UpdateUtils.isRomVersion(this) && pref.getBoolean(UpdateUtils.KEY.KEY_SILENCE_INSTALL, false)) {
+            TUtil.toast(this, getString(R.string.update_no_version));;
+        } else if (!pref.getBoolean(UpdateUtils.KEY.KEY_HAS_NEW, false)) {
             TUtil.toast(this, getString(R.string.update_no_version));
         } else {
             MainActivity.showLocalUpdateDialog(this);

@@ -186,6 +186,7 @@
     <attr name="title_bar_color" format="reference|color" />
     <attr name="title_bar_name_color" format="reference|color" />
     <attr name="m_background_tab_pressed" format="reference|color" />
+    <attr name="main_line_color" format="reference|color" />
 
     <attr name="fragment_main_backgroup" format="reference|color" />
     <attr name="item_title" format="reference|color" />
@@ -193,6 +194,7 @@
     <attr name="item_tag" format="reference|color" />
     <attr name="news_item_btn_selector" format="reference|color"/>
     <attr name="news_item_line_color" format="reference|color"/>
+    <attr name="choose_fragment_bg" format="reference|color"/>
 
     <attr name="xf_login_bg_drawable" format="reference|color" />
 
@@ -224,12 +226,14 @@
     <attr name="setting_item_selector_color" format="reference" />
     <attr name="zqzx_setting_item_text" format="reference|color" />
     <attr name="zqzx_setting_item_right_text" format="reference|color" />
+    <attr name="zqzx_setting_line_color" format="reference|color" />
 
     <!-- FeedBack-->
     <attr name="zq_feedback_color" format="reference|color" />
     <attr name="zq_feedback_edit_color" format="reference|color" />
     <attr name="zq_feedback_btn_color" format="reference|color" />
     <attr name="zq_feedback_btn_submit" format="reference|color" />
+    <attr name="zq_feedetbg_shape_bg" format="reference|color" />
 
     <attr name="main_activity_color" format="reference|color" />
 
@@ -248,6 +252,10 @@
 
 
     <attr name="news_detail_rel_item_title" format="reference|color" />
+
+
+    <attr name="right_item_layout_bg" format="reference|color" />
+
 
 
 </resources>

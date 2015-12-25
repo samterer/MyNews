@@ -25,6 +25,7 @@ import com.facebook.login.DefaultAudience;
 import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 import com.hzpd.custorm.CircleImageView;
+import com.hzpd.hflt.BuildConfig;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.ThirdLoginBean;
 import com.hzpd.modle.UserBean;
@@ -98,7 +99,6 @@ public class ZY_RightFragment extends BaseFragment {
     private CircleImageView zy_rfrag_iv_login;
     private LoginQuitBR br;
 
-    private boolean isDay = true;
     private CallbackManager callbackManager;
 
     private TextView night_mode;
@@ -306,7 +306,9 @@ public class ZY_RightFragment extends BaseFragment {
             }
             break;
             case R.id.zy_rfrag_ll_night: {
-                Toast.makeText(getActivity(), "修改中。。。", Toast.LENGTH_SHORT).show();
+                if (BuildConfig.DEBUG){
+                    Toast.makeText(getActivity(), "修改中。。。", Toast.LENGTH_SHORT).show();
+                }
                 if (isChangeSkin) {
                     night_mode.setText(getResources().getString(R.string.night_mode));
                     image_skin_mode.setImageResource(R.drawable.personal_icon_night);

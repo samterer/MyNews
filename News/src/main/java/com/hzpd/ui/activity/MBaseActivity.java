@@ -8,13 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
-import com.hzpd.custorm.SwipeBackLayout;
 import com.hzpd.hflt.R;
 import com.hzpd.ui.App;
 import com.hzpd.utils.AAnim;

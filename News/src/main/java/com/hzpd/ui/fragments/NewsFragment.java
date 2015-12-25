@@ -94,11 +94,6 @@ public class NewsFragment extends BaseFragment {
                 AAnim.ActivityStartAnimation(getActivity());
             }
         });
-//        if (App.getInstance().getThemeName().equals("3")) {
-//            transparent_layout_id.setVisibility(View.VISIBLE);
-//        } else {
-//            transparent_layout_id.setVisibility(View.GONE);
-//        }
         return view;
     }
 

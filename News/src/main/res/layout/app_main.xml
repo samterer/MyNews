@@ -85,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="#fafafa"
+            android:background="?zqzx_setting_main_color"
             android:gravity="center"
             android:padding="3dp"
             android:orientation="horizontal">
@@ -115,7 +115,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
         <View
             android:id="@+id/login_bg"
             android:layout_width="match_parent"

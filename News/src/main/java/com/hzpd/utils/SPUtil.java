@@ -111,8 +111,9 @@ public class SPUtil {
     }
 
     public static String getCountryName() {
-        return PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString("CountryName",App.getInstance().getString(R.string.default_county) );
+        return PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString("CountryName", App.getInstance().getString(R.string.default_county));
     }
+
     public static void setCountryName(String country) {
         if (!TextUtils.isEmpty(country)) {
             country = country.toLowerCase();
@@ -129,17 +130,18 @@ public class SPUtil {
         View view = null;
 
         if (nativeAd != null) {
-            int value = random.nextInt(5);
+            int value = random.nextInt(10);
             NativeAdView.Type type;
             switch (value) {
                 case 1:
+                case 2:
+                case 3:
                     type = NativeAdView.Type.HEIGHT_100;
                     break;
-                case 2:
+                case 7:
+                case 8:
+                case 9:
                     type = NativeAdView.Type.HEIGHT_300;
-                    break;
-                case 3:
-                    type = NativeAdView.Type.HEIGHT_400;
                     break;
                 default:
                     type = NativeAdView.Type.HEIGHT_120;
@@ -367,7 +369,7 @@ public class SPUtil {
         titleTypeFace = Typeface.createFromAsset(assetManager, "fonts/BRLNSR.TTF");
         imageAnimation = AnimationUtils.loadAnimation(App.getInstance().getApplicationContext(), R.anim.image_anim);
         DisplayMetrics metrics = App.getInstance().getResources().getDisplayMetrics();
-        int normal = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 65, metrics);
+        int normal = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, metrics);
         int larger = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 75, metrics);
         NORMAL = new LinearLayout.LayoutParams(normal, normal);
         LARGE = new LinearLayout.LayoutParams(larger, larger);

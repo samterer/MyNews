@@ -1,2 +1,2 @@
-include ':News', ':mylibrary', 'MySilding', 'PullToRefreshLib', 'LoadMoreLib', ':CommonAnalyticsLib'
+include ':News',':CommonAnalyticsLib'
 

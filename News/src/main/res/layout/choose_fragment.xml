@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?fragment_main_backgroup">
+    android:background="?choose_fragment_bg">
 
 
     <android.support.v4.widget.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"

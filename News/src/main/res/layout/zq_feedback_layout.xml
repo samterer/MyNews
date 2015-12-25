@@ -7,67 +7,77 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?zq_feedback_color"
-        android:clipToPadding="true"
-        android:fitsSystemWindows="true"
         android:orientation="vertical">
 
         <include layout="@layout/stitle_layout" />
 
-        <EditText
-            android:id="@+id/zq_feedback_et_content"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/zq_feedetbg_shape"
-            android:gravity="left|top"
-            android:hint="@string/hint_feedback_at_content"
-            android:minLines="6"
-            android:textColor="?zq_feedback_edit_color"
-            android:textColorHint="?zq_feedback_edit_color"
-            android:textSize="16sp" />
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/zq_feedback_et_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="20dp"
+                    android:background="?zq_feedetbg_shape_bg"
+                    android:gravity="left|top"
+                    android:hint="@string/hint_feedback_at_content"
+                    android:minLines="6"
+                    android:textColor="?zq_feedback_edit_color"
+                    android:textColorHint="?zq_feedback_edit_color"
+                    android:textSize="16sp" />
 
 
-        <EditText
-            android:id="@+id/zq_feedback_et_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/zq_feedetbg_shape"
-            android:hint="@string/hint_feedback_at_email"
-            android:textColor="?zq_feedback_edit_color"
-            android:textColorHint="?zq_feedback_edit_color"
-            android:textSize="16sp" />
+                <EditText
+                    android:id="@+id/zq_feedback_et_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="?zq_feedetbg_shape_bg"
+                    android:hint="@string/hint_feedback_at_email"
+                    android:padding="5dp"
+                    android:textColor="?zq_feedback_edit_color"
+                    android:textColorHint="?zq_feedback_edit_color"
+                    android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/zq_feedback_btn_submit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:background="?zq_feedback_btn_submit"
-            android:text="@string/prompt_submit"
-            android:textColor="?zq_feedback_btn_color"
-            android:textSize="20sp" />
+                <Button
+                    android:id="@+id/zq_feedback_btn_submit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="?zq_feedback_btn_submit"
+                    android:text="@string/prompt_submit"
+                    android:textColor="?zq_feedback_btn_color"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#45000000" />
+            </FrameLayout>
+        </FrameLayout>
     </LinearLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#45000000" />
-    </FrameLayout>
 </FrameLayout>

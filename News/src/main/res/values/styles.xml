@@ -18,6 +18,7 @@
         <!-- MainActivity-->
         <item name="title_bar_color">@color/main_title</item>
         <item name="title_bar_name_color">@color/white</item>
+        <item name="main_line_color">#c8c8c8</item>
         <item name="m_background_tab_pressed">@drawable/title_bar_details_btn_selector_color</item>
 
         <item name="main_activity_color">@color/white</item>
@@ -27,7 +28,9 @@
         <item name="item_tag">@color/main_tag</item>
         <item name="news_item_btn_selector">@drawable/news_item_selector</item>
         <item name="news_item_line_color">@color/subscribe_item_drag_bg</item>
+        <item name="choose_fragment_bg">@color/fragment_background</item>
 
+        <item name="right_item_layout_bg">#f0f0f0</item>
 
         <item name="xf_login_bg_drawable">@drawable/xf_login_bg</item>
 
@@ -60,12 +63,14 @@
         <item name="setting_item_selector_color">@color/zqzx_font_light</item>
         <item name="zqzx_setting_item_text">@color/zqzx_font_set_title</item>
         <item name="zqzx_setting_item_right_text">@color/zqzx_font_set_normal</item>
+        <item name="zqzx_setting_line_color">@color/main_background_color</item>
 
         <!-- FeedBack-->
         <item name="zq_feedback_color">@color/zqzx_bg_normal</item>
         <item name="zq_feedback_edit_color">@color/zqzx_font_normal</item>
         <item name="zq_feedback_btn_color">@color/white</item>
         <item name="zq_feedback_btn_submit">@drawable/zq_feedback_btn_selector</item>
+        <item name="zq_feedetbg_shape_bg">@drawable/zq_feedetbg_shape</item>
 
         <item name="fragment_search_background_color">@color/white</item>
         <item name="search_content_background_color">@color/search_content_background</item>
@@ -88,15 +93,20 @@
         <!-- MainActivity-->
         <item name="title_bar_color">#2e3b84</item>
         <item name="title_bar_name_color">@color/white</item>
+        <item name="main_line_color">#1f1f1f</item>
         <item name="m_background_tab_pressed">@drawable/title_bar_btn_selector_color</item>
 
         <item name="main_activity_color">#222222</item>
         <item name="fragment_main_backgroup">#222222</item>
-        <item name="item_title">@color/white</item>
+        <item name="item_title">#6b7078</item>
         <item name="item_title_read">#656565</item>
         <item name="item_tag">@color/main_tag</item>
         <item name="news_item_btn_selector">@drawable/news_item_selector_night</item>
         <item name="news_item_line_color">#e6e6e6</item>
+        <item name="choose_fragment_bg">#1f1f1f</item>
+
+
+        <item name="right_item_layout_bg">#1f1f1f</item>
 
 
         <item name="xf_login_bg_drawable">@drawable/xf_login_bg</item>
@@ -108,8 +118,8 @@
         <item name="left_menu_version_line">@color/white</item>
         <!-- newsfragment-->
         <item name="fragment_main_psts_tabs_background">#222222</item>
-        <item name="fragment_main_psts_tabs_indicator_color">#b03e31</item>
-        <item name="fragment_main_psts_tabs_text_color">#606060</item>
+        <item name="fragment_main_psts_tabs_indicator_color">#0c6399</item>
+        <item name="fragment_main_psts_tabs_text_color">#8a8a8a</item>
         <!-- choosefragment-->
         <item name="fragment_choose_card_backgroup_color">#ffffff</item>
         <item name="fragment_choose_btn_src_color">@drawable/floating_button_selector</item>
@@ -126,14 +136,17 @@
         <item name="zqzx_setting_main_color">#222222</item>
         <item name="zqzx_onclik_setting_item">@drawable/setting_item_selector_night</item>
         <item name="setting_item_selector_color">@color/white</item>
-        <item name="zqzx_setting_item_text">@color/white</item>
-        <item name="zqzx_setting_item_right_text">@color/white</item>
+        <item name="zqzx_setting_item_text">#8d8d8d</item>
+        <item name="zqzx_setting_item_right_text">#8d8d8d</item>
+        <item name="zqzx_setting_line_color">#1f1f1f</item>
+
 
         <!-- FeedBack-->
         <item name="zq_feedback_color">#222222</item>
-        <item name="zq_feedback_edit_color">@color/zqzx_font_normal</item>
+        <item name="zq_feedback_edit_color">#a6a4b0</item>
         <item name="zq_feedback_btn_color">@color/white</item>
         <item name="zq_feedback_btn_submit">@drawable/zq_feedback_btn_selector</item>
+        <item name="zq_feedetbg_shape_bg">@drawable/zq_feedetbg_shape_night</item>
 
         <item name="fragment_search_background_color">#222222</item>
         <item name="search_content_background_color">@color/black</item>
@@ -411,7 +424,7 @@
     <style name="line_v">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0.1dip</item>
-        <item name="android:background">#c8c8c8</item>
+        <item name="android:background">?main_line_color</item>
     </style>
 
     <style name="main_tab_item2">
@@ -437,7 +450,10 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">?zqzx_onclik_setting_item</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:padding">15dp</item>
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_marginRight">15dp</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
     </style>
 
     <style name="setting_text">
@@ -462,7 +478,7 @@
         <item name="android:layout_height">@dimen/line_height</item>
         <item name="android:layout_marginLeft">@dimen/margin_15</item>
         <item name="android:layout_marginRight">@dimen/margin_15</item>
-        <item name="android:background">@color/main_background_color</item>
+        <item name="android:background">?zqzx_setting_line_color</item>
     </style>
 
     <style name="RippleStyleBtn">

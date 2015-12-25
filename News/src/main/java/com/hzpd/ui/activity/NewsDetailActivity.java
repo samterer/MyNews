@@ -220,6 +220,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
         initViews();
         getThisIntent();
+        if (nb != null && BuildConfig.DEBUG) {
+            TUtils.toast("nid=" + nb.getNid());
+        }
         try {
             load_progress_bar = (ProgressBar) findViewById(R.id.load_progress_bar);
             if (loading) {
@@ -273,12 +276,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         ad_view = (ViewGroup) headView.findViewById(R.id.ad_view);
         mCommentListView.addHeaderView(headView);
 
-
-//        View footView = mLayoutInflater.inflate(R.layout.details_foot_layout, null);
-//        mCommentListView.addFooterView(footView);
-
         mCommentListView.setAdapter(mCommentListAdapter);
         mCommentListView.setVisibility(View.GONE);
+        //请联系我们
         details_explain = (FontTextView) headView.findViewById(R.id.details_explain);
         String link = getResources().getString(R.string.details_lv_link);
         try {
@@ -298,47 +298,19 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         } catch (Exception e) {
             e.printStackTrace();
         }
-        details_more_check = (TextView) headView.findViewById(R.id.details_more_check);
-        rl_related = (LinearLayout) headView.findViewById(R.id.rl_related);
-        ll_tag = (LinearLayout) headView.findViewById(R.id.ll_tag);
-        llayout = (LinearLayout) headView.findViewById(R.id.llayout);
-        ll_rob = (LinearLayout) headView.findViewById(R.id.ll_rob);
-
-        headView.findViewById(R.id.details_tag).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
+        //新闻点赞
         ArticlePraise(headView);
-
         isDalNewsPraise();
-
-        ll_rob.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (null == spu.getUser()) {
-                    return;
-                }
-                if (null == nb) {
-                    return;
-                }
-                if (!"0".equals(nb.getComflag())) {
-                    String smallimg = "";
-                    if (null != nb.getImgs() && nb.getImgs().length > 0) {
-                        smallimg = nb.getImgs()[0];
-                    }
-                    ReplayBean bean = new ReplayBean(nb.getNid(), nb.getTitle(), "News", nb.getJson_url(), smallimg, nb.getComcount());
-                    Intent intent = new Intent(NewsDetailActivity.this, ZQ_ReplyActivity.class);
-                    intent.putExtra("replay", bean);
-                    startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
-                    AAnim.ActivityStartAnimation(activity);
-
-                }
-            }
-        });
-
+        //查看原文
+        details_more_check = (TextView) headView.findViewById(R.id.details_more_check);
+        //相关
+        rl_related = (LinearLayout) headView.findViewById(R.id.rl_related);
+        //相关tag
+        ll_tag = (LinearLayout) headView.findViewById(R.id.ll_tag);
+        //相关新闻
+        llayout = (LinearLayout) headView.findViewById(R.id.llayout);
+        //没有评论
+        ll_rob = (LinearLayout) headView.findViewById(R.id.ll_rob);
 
         mRelativeLayoutTitleRoot = (RelativeLayout) findViewById(R.id.news_detail_layout);
         mBack = findViewById(R.id.news_detail_bak);
@@ -1081,6 +1053,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private String processContent(String content) {
         content = content.replaceAll("data-src=", "src=");
         content = content.replaceAll("data-origin=", "src=");
+        content = content.replaceAll("data-lazy-src=", "src=");
         content = content.replaceAll("src=\"//", "src=\"http://");
         content = content.replaceAll("src='//", "src='http://");
 
@@ -1207,6 +1180,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     String data = App.getFileContext(pageFile);
                     JSONObject obj = JSONObject.parseObject(data);
                     mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
+                    if (mBean == null) {
+                        return;
+                    }
                     setContents();
                     getLatestComm();
                     return;
@@ -1261,6 +1237,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         }
                         try {
                             mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
+                            if (mBean == null) {
+                                return;
+                            }
                             setContents();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -1276,7 +1255,11 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 public void onFailure(HttpException error, String msg) {
                     showEmpty();
                     if (isResume) {
-                        TUtils.toast(getString(R.string.toast_cannot_connect_network));
+                        if (error.getExceptionCode() == 404) {
+                            TUtil.toast(NewsDetailActivity.this, getString(R.string.error_delete));
+                        } else {
+                            TUtils.toast(getString(R.string.toast_cannot_connect_network));
+                        }
                         AnalyticUtils.sendGaEvent(getApplicationContext(), AnalyticUtils.ACTION.networkErrorOnDetail, null, null, 0L);
                         AnalyticUtils.sendUmengEvent(getApplicationContext(), AnalyticUtils.ACTION.networkErrorOnDetail);
                     }
@@ -1291,19 +1274,12 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private boolean isTagSelect;
 
     private void setContents() {
-        if (mBean != null) {
-            details_head_title_layout.setVisibility(View.VISIBLE);
-            details_title_name.setText("" + nb.getTitle());
-            details_source_time.setText("" + nb.getCopyfrom());
-            String localTime = CalendarUtil.loaclTime(nb.getUpdate_time());
-            details_time.setText("" + localTime);
-        }
+        Log.i("setContents", "setContents" + mBean.toString());
         int textSize = spu.getTextSize();
         setupWebView(textSize);
         mRoot.setVisibility(View.VISIBLE);
         mButtomLayout1.setVisibility(View.VISIBLE);
         news_detail_nonetwork.setVisibility(View.GONE);
-
         loadingView.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -1311,18 +1287,61 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             }
         }, 500);
 
+        //新闻标题时间
+        if (mBean != null) {
+            details_head_title_layout.setVisibility(View.VISIBLE);
+            details_title_name.setText("" + nb.getTitle());
+            details_source_time.setText("" + nb.getCopyfrom());
+            String localTime = CalendarUtil.loaclTime(nb.getUpdate_time());
+            details_time.setText("" + localTime);
+        }
+
+        //查看原文
+        if (mBean.getSource() != null) {
+            Log.i("mBean.getSource()", "mBean.getSource()--->" + mBean.getSource());
+            details_more_check.setVisibility(View.VISIBLE);
+            details_more_check.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+                        return;
+                    }
+                    Intent intent = new Intent(NewsDetailActivity.this, WebActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra(WebActivity.KEY_URL, mBean.getSource());
+                    startActivity(intent);
+                }
+            });
+        }
+
+//        tag相关
         if ((mBean.getTag() != null && mBean.getTag().size() > 0)) {
             Log.i("NewsDetails", "NewsDtails  mBean.getTag()--->" + mBean.getTag());
-            details_head_tag_name.setText(mBean.getTag().get(0).getName());
-            Log.i("NewsDetails", "NewsDtails  mBean.getTag().get(0).getName()--->" + mBean.getTag().get(0).getName());
+            final TagBean tagBean = mBean.getTag().get(0);
+            rl_related.setVisibility(View.VISIBLE);
+            ll_tag.setVisibility(View.VISIBLE);
+            addRelatedTagView();
             details_tag_layout.setVisibility(View.VISIBLE);
-            details_head_tag_name.setVisibility(View.VISIBLE);
+            if (tagBean.getIcon() != null) {
+                details_head_tag_img.setVisibility(View.VISIBLE);
+                SPUtil.displayImage(mBean.getTag().get(0).getIcon(), details_head_tag_img
+                        , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Personal_center_News));
+            } else {
+                details_head_tag_img.setVisibility(View.GONE);
+            }
+            details_head_tag_name.setText(tagBean.getName());
+            if (tagBean.getNum() != null) {
+                int num = Integer.parseInt(tagBean.getNum());
+                if (num > 1) {
+                    details_head_tag_num.setVisibility(View.VISIBLE);
+                    details_head_tag_num.setText("" + num);
+                }
+            } else {
+                details_head_tag_num.setVisibility(View.GONE);
+            }
 
-
-            if (SPUtil.checkTag(mBean.getTag().get(0))) {
+            if (SPUtil.checkTag(tagBean)) {
                 details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
-//                    Drawable nav_up = getResources().getDrawable(R.drawable.discovery_details_image_select);
-//                    nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
                 details_tv_subscribe.setCompoundDrawables(null, null, null, null);
                 details_tv_subscribe.setText(getString(R.string.discovery_followed));
                 details_tv_subscribe.setText(getString(R.string.look_over));
@@ -1336,7 +1355,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             }
 
             if (Utils.isNetworkConnected(this)) {
-
                 details_tv_subscribe.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1344,22 +1362,20 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         if (isTagSelect) {
                             details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
                             Intent intent = new Intent(NewsDetailActivity.this, TagActivity.class);
-                            TagBean tagBean = mBean.getTag().get(0);
                             intent.putExtra("tagbean", tagBean);
                             startActivity(intent);
                             isTagSelect = false;
                         } else {
                             details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
-//                        Drawable nav_up = getResources().getDrawable(R.drawable.discovery_details_image_select);
-//                        nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
                             details_tv_subscribe.setCompoundDrawables(null, null, null, null);
                             EventBus.getDefault().post(new TagEvent(mBean.getTag().get(0)));
                             details_tv_subscribe.setText(getString(R.string.look_over));
                             RequestParams params = RequestParamsUtils.getParamsWithU();
-                            params.addBodyParameter("uid", spu.getUser().getUid() + "");
-                            params.addBodyParameter("tagId", mBean.getTag().get(0).getId() + "");
+                            if (spu.getUser() != null) {
+                                params.addBodyParameter("uid", spu.getUser().getUid());
+                            }
+                            params.addBodyParameter("tagId", mBean.getTag().get(0).getId());
                             SPUtil.addParams(params);
-
                             HttpHandler httpHandler = httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.tag_click_url, params, new RequestCallBack<String>() {
                                 @Override
                                 public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -1387,57 +1403,14 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             }
 
 
-            if (mBean.getTag().get(0).getIcon() != null) {
-                details_head_tag_img.setVisibility(View.VISIBLE);
-                SPUtil.displayImage(mBean.getTag().get(0).getIcon(), details_head_tag_img
-                        , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Personal_center_News));
-            } else {
-                details_head_tag_img.setVisibility(View.GONE);
-            }
-            rl_related.setVisibility(View.VISIBLE);
-            ll_tag.setVisibility(View.VISIBLE);
-            addRelatedTagView();
-
-//            if (mBean.getTag().get(0).getNum() != null) {
-//                if (Integer.parseInt(mBean.getTag().get(0).getName()) > 1) {
-//                    details_head_tag_num.setVisibility(View.VISIBLE);
-//                    details_head_tag_num.setText(mBean.getTag().get(0).getName() + R.string.follow_num);
-//                } else {
-//                    details_head_tag_num.setVisibility(View.GONE);
-//                }
-//            }
-
         }
 
         if (mBean.getRef() != null && mBean.getRef().size() > 0) {
             rl_related.setVisibility(View.VISIBLE);
             ll_tag.setVisibility(View.VISIBLE);
             addRelatedNewsView();
-//            addRelatedTagView();
         }
-        if (mBean.getTag() != null) {
-            rl_related.setVisibility(View.VISIBLE);
-            ll_tag.setVisibility(View.VISIBLE);
-        } else {
 
-        }
-        if (mBean.getSource() != null) {
-            Log.i("mBean.getSource()", "mBean.getSource()--->" + mBean.getSource());
-            details_more_check.setVisibility(View.VISIBLE);
-            details_more_check.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (AvoidOnClickFastUtils.isFastDoubleClick()) {
-                        return;
-                    }
-                    Intent intent = new Intent(NewsDetailActivity.this, WebActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(WebActivity.KEY_URL, mBean.getSource());
-                    startActivity(intent);
-                }
-            });
-
-        }
     }
 
     private void showEmpty() {
@@ -1813,8 +1786,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     //获取相关tag
     private void addRelatedTagView() {
-        if (mBean != null && mBean.getTag() != null) {
-            Log.e("tag", "addRelatedTagView tag--->" + mBean.getTag());
+        if (mBean.getTag() != null) {
             if (mBean.getTag().size() > 3) {
                 for (int i = 0; i < 3; i++) {
                     View view = LayoutInflater.from(this).inflate(R.layout.details_related_tag, null);

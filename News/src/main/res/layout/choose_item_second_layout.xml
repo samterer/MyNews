@@ -30,7 +30,7 @@
                 android:id="@+id/news_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="?news_item_btn_selector"
                 android:orientation="vertical">
 
                 <!--图片展示-->

@@ -57,6 +57,7 @@
                         android:orientation="horizontal"
                         android:visibility="gone">
 
+                        <!--tag图片-->
                         <ImageView
                             android:id="@+id/details_head_tag_img"
                             android:layout_width="29dp"
@@ -68,13 +69,13 @@
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_height="29dp"
+                            android:layout_height="34dp"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="1"
                             android:gravity="center_vertical"
                             android:orientation="vertical">
-
+                            <!--tag名称-->
                             <TextView
                                 android:id="@+id/details_head_tag_name"
                                 android:layout_width="wrap_content"
@@ -82,9 +83,8 @@
                                 android:layout_gravity="center_vertical"
                                 android:text="Bloa"
                                 android:textColor="@color/white"
-                                android:textSize="14sp"
-                                android:visibility="gone"/>
-
+                                android:textSize="14sp" />
+                            <!--tag订阅数-->
                             <TextView
                                 android:id="@+id/details_head_tag_num"
                                 android:layout_width="wrap_content"
@@ -97,6 +97,7 @@
                                 android:visibility="gone" />
                         </LinearLayout>
 
+                        <!--点击订阅-->
                         <TextView
                             android:id="@+id/details_tv_subscribe"
                             android:layout_width="wrap_content"
@@ -112,8 +113,6 @@
                             android:paddingTop="3dp"
                             android:text="@string/discovery_follow"
                             android:textColor="@color/white" />
-
-
                     </LinearLayout>
                 </LinearLayout>
 

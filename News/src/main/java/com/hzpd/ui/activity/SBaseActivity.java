@@ -3,6 +3,7 @@ package com.hzpd.ui.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import com.hzpd.utils.AAnim;
@@ -14,9 +15,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
-
-public class SBaseActivity extends SwipeBackActivity {
+public class SBaseActivity extends FragmentActivity {
 
 	protected ImageLoader mImageLoader;
 

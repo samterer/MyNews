@@ -18,6 +18,7 @@
         android:textColor="#aeaeae"
         android:textSize="14sp" />
 
+    <!--查看原文-->
     <com.hzpd.ui.widget.FontTextView
         android:id="@+id/details_more_check"
         android:layout_width="match_parent"
@@ -33,6 +34,7 @@
         android:textSize="18sp"
         android:visibility="gone" />
 
+    <!--//文章点赞-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -114,6 +116,7 @@
 
     </LinearLayout>
 
+    <!--//广告-->
     <LinearLayout
         android:id="@+id/ad_layout"
         android:layout_width="match_parent"

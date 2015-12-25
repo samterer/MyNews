@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,19 +18,19 @@ import com.hzpd.adapter.ClassifyItemListAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.TagBean;
 import com.hzpd.modle.event.ClassifItemEvent;
+import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
-import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
+import com.hzpd.utils.SharePreferecesUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
-import com.lidroid.xutils.util.LogUtils;
 
 import java.util.List;
 
@@ -72,7 +74,48 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
             adapter = new ClassifyItemAdapter(getActivity(), this);
             //设置适配器
             hRecyclerView.setAdapter(adapter);
-            getClassifyHorServer();
+            hRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        if (changing) {
+                            changing = false;
+                            first = 0;
+                            return;
+                        }
+                        try {
+                            int position = 0;
+                            do {
+                                View view = recyclerView.getChildAt(position);
+                                if (view == null) {
+                                    return;
+                                }
+                                Object tag = view.getTag();
+                                if (tag != null) {
+                                    ClassifyItemAdapter.ItemViewHolder holder = (ClassifyItemAdapter.ItemViewHolder) tag;
+                                    if (first == 0) {
+                                        first = holder.postion;
+                                    }
+                                    DisplayMetrics displayMetrics = App.getInstance().getResources().getDisplayMetrics();
+                                    int target = displayMetrics.widthPixels / 2;
+                                    if (view.getLeft() < target && view.getRight() > target) {
+                                        holder.classify_item.performClick();
+                                    }
+                                }
+                                ++position;
+                            } while (position < adapter.getItemCount());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                }
+            });
 
             vRecyclerView = (RecyclerView) view.findViewById(R.id.id_recyclerview_vertical);
             //设置布局管理器
@@ -83,7 +126,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
             //设置适配器
             vRecyclerView.setAdapter(sampleAdapter);
 
-            vRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            vRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -92,9 +135,6 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
                         sampleAdapter.setShowLoading(true);
                         vPage++;
                         isClearOld = false;
-                        if (!TextUtils.isEmpty(id)) {
-                            Log.i("vRecyclerView", "vRecyclerView" + id);
-                        }
                         getClassifyVerServer(id);
                     }
                 }
@@ -106,6 +146,9 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
                 }
             });
 
+            String json = (String) SharePreferecesUtils.getParam(getActivity(), KEY_CATEGERY, "{}");
+            parseJson(json);
+            getClassifyHorServer();
 
         } catch (Exception e) {
 
@@ -113,34 +156,23 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
         return view;
     }
 
+    final static String KEY_CATEGERY = "tag_category";
+
     /**
      * 获取水平数据
      */
     private void getClassifyHorServer() {
 
-        RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("Page", Page + "");
-        params.addBodyParameter("PageSize", pageSize + "");
+        final RequestParams params = RequestParamsUtils.getParamsWithU();
+        params.addBodyParameter("Page", String.valueOf(Page));
+        params.addBodyParameter("PageSize", String.valueOf(pageSize));
         SPUtil.addParams(params);
         httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.classify_top_url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
-                if (null == obj) {
-                    return;
-                }
-                if (200 == obj.getIntValue("code")) {
-                    List<TagBean> mlist = FjsonUtil.parseArray(obj.getString("data")
-                            , TagBean.class);
-                    if (null == mlist) {
-                        return;
-                    }
-
-                    adapter.appendData(mlist);
-                    LogUtils.i("listsize-->" + mlist.size());
-//                    isClearOld = true;
-                    id = mlist.get(0).getId();
-                    getClassifyVerServer(id);
+                parseJson(responseInfo.result);
+                if (isAdded()) {
+                    SharePreferecesUtils.setParam(getActivity(), KEY_CATEGERY, responseInfo.result);
                 }
             }
 
@@ -150,26 +182,31 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
         });
     }
 
-    //    categoryId , int , 必选 ，  tag大类ID
-//    page , int ,可选， 页码，默认值：1
-//    pageSize , int ，可选， 每页数量，默认值：10
-    private int vPage = 1;
-    private int tpageSize = 10;
-    private boolean isClearOld;
+    public void parseJson(String json) {
+        try {
+            JSONObject obj = FjsonUtil.parseObject(json);
+            if (null == obj) {
+                return;
+            }
+            if (200 == obj.getIntValue("code")) {
+                List<TagBean> mlist = FjsonUtil.parseArray(obj.getString("data")
+                        , TagBean.class);
+                if (null == mlist) {
+                    return;
+                }
+                adapter.appendData(mlist);
+                id = mlist.get(0).getId();
+                getClassifyVerServer(id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-    private void getClassifyVerServer(String id) {
-        Log.i("getClassifyVerServer", "getClassifyVerServer id:" + id + "\nvPage:" + vPage + "\ntpageSize:" + tpageSize);
-        RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("categoryId", id + "");
-        params.addBodyParameter("Page", vPage + "");
-        params.addBodyParameter("PageSize", tpageSize + "");
-        SPUtil.addParams(params);
-        handler = httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.classify_url, params, new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                progress_container.setVisibility(View.GONE);
-                sampleAdapter.setShowLoading(false);
-                JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
+    public void parseJsonTag(String json) {
+        try {
+            if (!TextUtils.isEmpty(json)) {
+                JSONObject obj = FjsonUtil.parseObject(json);
                 if (null == obj) {
                     return;
                 }
@@ -179,10 +216,44 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
                     if (null == mlist) {
                         return;
                     }
-                    Log.i("getClassifyVerServer", "getClassifyVerServer vPage:::" + vPage);
-                    Log.i("getClassifyVerServer", "getClassifyVerServer" + mlist.toString());
+                    progress_container.setVisibility(View.GONE);
+                    sampleAdapter.setShowLoading(false);
                     sampleAdapter.appendData(mlist, isClearOld);
-                    Log.i("getClassifyVerServer", "getClassifyVerServer listsize:::" + mlist.size());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //    categoryId , int , 必选 ，  tag大类ID
+//    page , int ,可选， 页码，默认值：1
+//    pageSize , int ，可选， 每页数量，默认值：10
+    private int vPage = 1;
+    private int tpageSize = 10;
+    private boolean isClearOld;
+
+    private void getClassifyVerServer(final String id) {
+        if (vPage == 1) {
+            String json = (String) SharePreferecesUtils.getParam(getActivity(), KEY_CATEGERY + id, "");
+            parseJsonTag(json);
+            releaseHandler();
+        }
+        RequestParams params = RequestParamsUtils.getParamsWithU();
+        params.addBodyParameter("categoryId", id);
+        params.addBodyParameter("Page", String.valueOf(vPage));
+        params.addBodyParameter("PageSize", String.valueOf(tpageSize));
+        SPUtil.addParams(params);
+        handler = httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.classify_url, params, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                progress_container.setVisibility(View.GONE);
+                sampleAdapter.setShowLoading(false);
+                parseJsonTag(responseInfo.result);
+                if (vPage == 1) {
+                    if (isAdded()) {
+                        SharePreferecesUtils.setParam(getActivity(), KEY_CATEGERY + id, responseInfo.result);
+                    }
                 }
             }
 
@@ -211,10 +282,14 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
 
     public void onEventMainThread(ClassifItemEvent event) {
         id = event.getId();
-        Log.i("onEventMainThread", "onEventMainThread  id-->" + id);
         isClearOld = true;
         vPage = 1;
         progress_container.setVisibility(View.VISIBLE);
+        releaseHandler();
+        getClassifyVerServer(id);
+    }
+
+    public void releaseHandler() {
         if (handler != null) {
             if (handler.getState() == HttpHandler.State.LOADING || handler.getState() == HttpHandler.State.STARTED) {
                 handler.setRequestCallBack(null);
@@ -223,7 +298,6 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
             handlerList.remove(handler);
             handler = null;
         }
-        getClassifyVerServer(id);
     }
 
     @Override
@@ -235,25 +309,48 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
         }
     }
 
+    boolean changing = false;
+    int first = 0;
+
     @Override
     public void onClick(View v) {
         try {
             if (v.getTag() != null & v.getTag() instanceof ClassifyItemAdapter.ItemViewHolder) {
+                ClassifyItemAdapter.ItemViewHolder holder = (ClassifyItemAdapter.ItemViewHolder) v.getTag();
                 if (v.isSelected()) {
+                    moveHead(holder);
                     return;
                 }
-                ClassifyItemAdapter.ItemViewHolder holder = (ClassifyItemAdapter.ItemViewHolder) v.getTag();
                 if (adapter.last != null) {
                     adapter.last.classify_item.setSelected(false);
                     adapter.last.mImg.setLayoutParams(SPUtil.NORMAL);
                 }
                 v.setSelected(true);
-                adapter.last = holder;
                 holder.mImg.setLayoutParams(SPUtil.LARGE);
+                moveHead(holder);
                 EventBus.getDefault().post(new ClassifItemEvent("" + holder.tagBean.getId()));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private int getTarget(ClassifyItemAdapter.ItemViewHolder holder) {
+        changing = true;
+        DisplayMetrics displayMetrics = App.getInstance().getResources().getDisplayMetrics();
+        int itemWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 95, displayMetrics);
+        int target = (displayMetrics.widthPixels - itemWidth) / 2;
+
+        if (adapter.last.postion >= first && holder.postion > adapter.last.postion) {
+            target += (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, displayMetrics);
+        }
+        return target;
+    }
+
+    private void moveHead(ClassifyItemAdapter.ItemViewHolder holder) {
+        int target = getTarget(holder);
+        int left = holder.itemView.getLeft();
+        adapter.last = holder;
+        hRecyclerView.smoothScrollBy(left - target, 0);
     }
 }

@@ -20,6 +20,12 @@
 -keep class com.hzpd.**{
      *;
 }
+-keep class com.joy.**{
+     *;
+}
+-keep class com.news.**{
+     *;
+}
 -keep class me.nereo.**{
      *;
 }
@@ -28,6 +34,10 @@
 }
 
 -keepclassmembers class com.hzpd.** {
+}
+-keepclassmembers class com.joy.** {
+}
+-keepclassmembers class com.news.** {
 }
 -keepclassmembers class me.nereo.** {
 }

@@ -34,6 +34,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.LogUtils;
 import com.news.update.UpdateService;
+import com.news.update.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -114,6 +115,10 @@ public class WelcomeActivity extends MWBaseActivity {
             exists = true;
             Log.e("loadMainUI()", "loadMainUI()");
             loadMainUI();
+        }
+        if (!Utils.isNetworkConnected(this)) {
+            loadMainUI();
+            return;
         }
         String urlChannelList = InterfaceJsonfile.CHANNELLIST + "News";
         String country = SPUtil.getCountry();
@@ -222,6 +227,10 @@ public class WelcomeActivity extends MWBaseActivity {
 
     //TODO 提前获取推荐频道第一页
     public void getChooseNewsJson() {
+        if (!Utils.isNetworkConnected(this)) {
+            loadMainUI();
+            return;
+        }
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("tid", "" + NewsChannelBean.TYPE_RECOMMEND);

@@ -152,4 +152,5 @@
     <color name="search_position_3">#99d22b</color>
 
     <color name="webview_url_color">#333333</color>
+    <color name="set_btn_bg">#606060</color>
 </resources>
