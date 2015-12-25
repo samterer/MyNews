@@ -77,11 +77,13 @@ public class NewsFragment extends BaseFragment {
     }
 
     private View main_top_search;
+    private View coverTop;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.news_fragment_main, container, false);
         ViewUtils.inject(this, view);
+        coverTop = view.findViewById(R.id.cover_top);
         main_top_search = view.findViewById(R.id.main_top_search);
         main_top_search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +96,11 @@ public class NewsFragment extends BaseFragment {
                 AAnim.ActivityStartAnimation(getActivity());
             }
         });
+        if (App.getInstance().getThemeName().equals("0")) {
+            coverTop.setVisibility(View.GONE);
+        } else {
+            coverTop.setVisibility(View.VISIBLE);
+        }
         return view;
     }
 

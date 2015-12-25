@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -144,11 +145,15 @@ public class LocalUpdateDialogFragment extends DialogFragment implements View.On
 
     private void checkStatus(View dialogView) {
         try {
+            dialogView.findViewById(R.id.progress_container).setVisibility(View.GONE);
             if (!UpdateUtils.isRomVersion(getActivity())) {
+                dialogView.findViewById(R.id.local_auto_download).setVisibility(View.GONE);
+                if (forcing) {
+                    dialogView.findViewById(R.id.layout__app_cancel).setVisibility(View.GONE);
+                }
                 return;
             }
 
-            dialogView.findViewById(R.id.progress_container).setVisibility(View.GONE);
             SharedPreferences prefs = getActivity().getSharedPreferences(UpdateUtils.SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE);
             if (getArguments().getBoolean(AUTO_DOWNLOAD)) {
                 dialogView.findViewById(R.id.local_update).setVisibility(View.GONE);
@@ -223,14 +228,21 @@ public class LocalUpdateDialogFragment extends DialogFragment implements View.On
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    if (UpdateUtils.isRomVersion(getActivity())) {
-                        Intent intent = new Intent(getActivity(), DownloadService.class);
-                        intent.putExtra(DownloadService.TAG, UpdateUtils.KEY.IS_DOWNLOADING);
-                        getActivity().startService(intent);
-                        Toast.makeText(getActivity(), R.string.local_update_ticker, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Intent intent = SPUtil.getIntent(getActivity());
-                        startActivity(intent);
+                    try {
+                        if (UpdateUtils.isRomVersion(getActivity())) {
+                            Intent intent = new Intent(getActivity(), DownloadService.class);
+                            intent.putExtra(DownloadService.TAG, UpdateUtils.KEY.IS_DOWNLOADING);
+                            getActivity().startService(intent);
+                            Toast.makeText(getActivity(), R.string.local_update_ticker, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Intent intent = SPUtil.getIntent(getActivity());
+                            startActivity(intent);
+                            NotificationManager nm = (NotificationManager) getActivity()
+                                    .getSystemService(Context.NOTIFICATION_SERVICE);
+                            nm.cancel(UpdateUtils.REQUEST_CODE);
+                        }
+                    } catch (Resources.NotFoundException e) {
+                        e.printStackTrace();
                     }
                     dismiss();
                     break;

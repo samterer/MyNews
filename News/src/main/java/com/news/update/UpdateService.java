@@ -184,7 +184,17 @@ public class UpdateService extends Service {
                             }
                         }
                         if (!UpdateUtils.isRomVersion(this)) {
-                            EventBus.getDefault().post(new LocalUpdateEvent(true));
+                            try {
+                                EventBus.getDefault().post(new CheckUpdateEvent());
+                                UpdateUtils.notifyUpdate(this);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                EventBus.getDefault().post(new LocalUpdateEvent(false));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             return;
                         }
                         try {

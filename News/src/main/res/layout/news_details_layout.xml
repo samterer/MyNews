@@ -30,7 +30,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/details_title_bar"
-                    android:background="@color/main_title"
+                    android:background="?title_bar_color"
                     android:orientation="horizontal">
 
                     <!--返回按钮-->
@@ -130,6 +130,7 @@
                         android:id="@+id/recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="?detail_recy_backgroup"
                         android:overScrollMode="ifContentScrolls"
                         android:scrollbarStyle="outsideOverlay"
                         android:scrollbars="vertical" />
@@ -150,7 +151,7 @@
                         android:id="@+id/app_progress_bar"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="3dp"
+                        android:layout_marginTop="0dp"
                         android:background="@color/white"
                         android:visibility="visible">
 
@@ -186,14 +187,14 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/background_tab_details_pressed_color" />
+            android:background="?discover_item_line_color" />
 
         <!-- 底部菜单 -->
         <LinearLayout
             android:id="@+id/news_detail_ll_bottom1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/main_background_color"
+            android:background="?zqzx_setting_main_color"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingBottom="5dp"

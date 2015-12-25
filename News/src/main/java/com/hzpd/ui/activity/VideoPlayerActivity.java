@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -42,8 +41,6 @@ import com.hzpd.modle.VideoItemBean;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
-import com.hzpd.utils.Constant;
-import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.GetFileSizeUtil;
 import com.hzpd.utils.Log;
@@ -51,7 +48,6 @@ import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
@@ -66,7 +62,6 @@ import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import java.io.File;
-import java.util.List;
 
 
 public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.OnPreparedListener {
@@ -121,101 +116,71 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
 
     @Override
     public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        setContentView(R.layout.video_view);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        ViewUtils.inject(this);
-        // -------初始化播放器--------------
-        // ~~~ 绑定事件
+        try {
+            super.onCreate(bundle);
+            setContentView(R.layout.video_view);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            ViewUtils.inject(this);
+            // -------初始化播放器--------------
+            // ~~~ 绑定事件
 
-        // ~~~ 绑定数据
-        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        mMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+            // ~~~ 绑定数据
+            mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            mMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
-        // 设置显示名称
-        mVideoView.setMediaController(new MediaController(this));
-        mVideoView.requestFocus();
-        mVideoView.setOnPreparedListener(this);
-        mVideoView.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (isPlaying()) {
-                    stopPlayer();
-                } else {
-                    startPlayer();
+            // 设置显示名称
+            mVideoView.setMediaController(new MediaController(this));
+            mVideoView.requestFocus();
+            mVideoView.setOnPreparedListener(this);
+            mVideoView.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (isPlaying()) {
+                        stopPlayer();
+                    } else {
+                        startPlayer();
+                    }
+                    return false;
                 }
-                return false;
+            });
+
+
+            if (false) {
+                mVideoView.setVideoURI(Uri.parse("http://10.80.3.123/cmsv2/Public/Uploads/video/1446794282887.mp4"));
+                return;
             }
-        });
+            // ~~~ 获取播放地址和标题
+            Intent intent = getIntent();
+            String action = intent.getAction();
 
-
-        if (false) {
-            mVideoView.setVideoURI(Uri.parse("http://10.80.3.123/cmsv2/Public/Uploads/video/1446794282887.mp4"));
-            return;
-        }
-        // ~~~ 获取播放地址和标题
-        Intent intent = getIntent();
-        String action = intent.getAction();
-
-        String vid = null;
-        if (null != action && Intent.ACTION_VIEW.equals(action)) {
-            Uri uri = intent.getData();
-            if (uri != null) {
-                vid = uri.getPath();
-                vid = vid.replace(File.separator, "");
-                from = "browser";
-            }
-        } else {
-            from = intent.getStringExtra("from");
-        }
-
-        if ("newsdetail".equals(from)) {
-            mPath = intent.getStringExtra("path");
-            mTitle = intent.getStringExtra("title");
-            LogUtils.i("gettitle");
-
-            LogUtils.i("video path:" + mPath);
-
-            LogUtils.i("vib null");
-            if (mPath.startsWith("http:")) {
-                mVideoView.setVideoURI(Uri.parse(mPath));
+            String vid = null;
+            if (null != action && Intent.ACTION_VIEW.equals(action)) {
+                Uri uri = intent.getData();
+                if (uri != null) {
+                    vid = uri.getPath();
+                    vid = vid.replace(File.separator, "");
+                    from = "browser";
+                }
             } else {
-                mVideoView.setVideoPath(mPath);
+                from = intent.getStringExtra("from");
             }
-
-        } else if ("videofragment".equals(from)) {
-            vib = (VideoItemBean) intent.getSerializableExtra("VideoItemBean");
-            videoPath = App.getInstance().getJsonFileCacheRootDir() + File.separator + "video";
-            LogUtils.i("getvib");
-
-            // videoview_collection.setVisibility(View.VISIBLE);
-            // videoview_share.setVisibility(View.VISIBLE);
-            //
-            getData();
-        } else if ("collection".equals(from)) {
-            vib = (VideoItemBean) intent.getSerializableExtra("vib");
-            videoPath = App.getInstance().getJsonFileCacheRootDir() + File.separator + "video";
-
-            // videoview_collection.setVisibility(View.VISIBLE);
-            // videoview_share.setVisibility(View.VISIBLE);
-
-            getData();
-        } else if ("newsitem".equals(from)) {
-            //
             NewsBean nb = (NewsBean) intent.getSerializableExtra("newbean");
-            vib = new VideoItemBean();
-            vib.setMainpic(nb.getImgs()[0]);
-            vib.setTitle(nb.getTitle());
-            vib.setTime(nb.getUpdate_time());
-            getVideo_ni(nb.getJson_url());
-        } else if ("browser".equals(from)) {
-            videoPath = App.getInstance().getJsonFileCacheRootDir() + File.separator + "video";
-            getVideoItemBean(vid);
+            if ("newsitem".equals(from)) {
+                vib = new VideoItemBean();
+                vib.setMainpic(nb.getImgs()[0]);
+                vib.setTitle(nb.getTitle());
+                vib.setTime(nb.getUpdate_time());
+                getVideo_ni(nb.getJson_url());
+            } else if ("browser".equals(from)) {
+                videoPath = App.getInstance().getJsonFileCacheRootDir() + File.separator + "video";
+                getVideoItemBean(vid);
+            }
+            // ---------------
+            videodetails_title_num.setText(String.valueOf(nb.getComcount()));
+            isCollection();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        // ---------------
-
-        isCollection();
-        getCommentsCounts();
     }
 
     // 来自浏览器
@@ -700,33 +665,37 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
                     new RequestCallBack<File>() {
                         @Override
                         public void onSuccess(ResponseInfo<File> responseInfo) {
-                            String data = App.getFileContext(responseInfo.result);
-                            LogUtils.i("result-->" + data);
-                            JSONObject obj = null;
                             try {
-                                obj = JSONObject.parseObject(data);
+                                String data = App.getFileContext(responseInfo.result);
+                                LogUtils.i("result-->" + data);
+                                JSONObject obj = null;
+                                try {
+                                    obj = JSONObject.parseObject(data);
+                                } catch (Exception e) {
+                                    responseInfo.result.delete();
+                                    e.printStackTrace();
+                                    TUtils.toast(getString(R.string.toast_cache_failed));
+                                    return;
+                                }
+                                vdib = JSONObject.parseObject(obj.getString("data"), VideoDetailBean.class);
+
+                                NewsJumpBean videobbean = new NewsJumpBean(jsonurl, obj.getString("data"));
+                                try {
+                                    dbHelper.getAlbumDBUitls().save(videobbean);
+                                } catch (DbException e) {
+                                    e.printStackTrace();
+                                }
+
+                                mTitle = vdib.getTitle();
+                                mPath = vdib.getVideourl();
+
+                                if (mPath.toLowerCase().startsWith("http")) {
+                                    mVideoView.setVideoURI(Uri.parse(mPath));
+                                } else {
+                                    mVideoView.setVideoPath(mPath);
+                                }
                             } catch (Exception e) {
-                                responseInfo.result.delete();
                                 e.printStackTrace();
-                                TUtils.toast(getString(R.string.toast_cache_failed));
-                                return;
-                            }
-                            vdib = JSONObject.parseObject(obj.getString("data"), VideoDetailBean.class);
-
-                            NewsJumpBean videobbean = new NewsJumpBean(jsonurl, obj.getString("data"));
-                            try {
-                                dbHelper.getAlbumDBUitls().save(videobbean);
-                            } catch (DbException e) {
-                                e.printStackTrace();
-                            }
-
-                            mTitle = vdib.getTitle();
-                            mPath = vdib.getVideourl();
-
-                            if (mPath.startsWith("http:")) {
-                                mVideoView.setVideoURI(Uri.parse(mPath));
-                            } else {
-                                mVideoView.setVideoPath(mPath);
                             }
 
                         }
@@ -740,55 +709,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
 
     }
 
-    private CommentsCountBean ccBean;// 评论数量，是否可评论
-
-    private void getCommentsCounts() {
-        if (null == vib) {
-            return;
-        }
-        EventUtils.sendReadAtical(activity);
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("type", Constant.TYPE.VideoA.toString());
-        params.addBodyParameter("nids", vib.getVid());
-        HttpUtils httpUtils = SPUtil.getHttpUtils();
-        SPUtil.addParams(params);
-        httpUtils.send(HttpMethod.POST, InterfaceJsonfile.commentsConts, params, new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                LogUtils.i("getCommentsCounts-->" + responseInfo.result);
-
-                JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
-                if (null == obj) {
-                    return;
-                }
-                if (200 == obj.getIntValue("code")) {
-
-                    List<CommentsCountBean> li = JSONObject.parseArray(obj.getString("data"), CommentsCountBean.class);
-                    if (null == li) {
-                        return;
-                    }
-                    for (CommentsCountBean cc : li) {
-                        if (vib.getVid().equals(cc.getNid())) {
-                            ccBean = cc;
-                            String snum = cc.getC_num();
-                            if (TextUtils.isDigitsOnly(snum)) {
-                                int count = Integer.parseInt(snum);
-                                if (count > 0) {
-                                    videodetails_title_comment.setVisibility(View.VISIBLE);
-                                    videodetails_title_num.setText(count + "");// 设置评论数量
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(HttpException error, String msg) {
-
-            }
-        });
-    }
+    private CommentsCountBean ccBean;// 评论数量，是否可评论 //TODO
 
     @Override
     public void finish() {

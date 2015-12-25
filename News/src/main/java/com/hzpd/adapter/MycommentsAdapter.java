@@ -27,13 +27,12 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
 
 public class MycommentsAdapter extends ListBaseAdapter<MycommentsBean> {
 
     private int size;
 
-    private boolean flag=false;
+    private boolean flag = false;
 
     public MycommentsAdapter(Activity c) {
         super(c);
@@ -45,16 +44,17 @@ public class MycommentsAdapter extends ListBaseAdapter<MycommentsBean> {
     }
 
     private static class ViewHolder {
-        @ViewInject(R.id.mycoms_img_id)
         ImageView mycoms_img_id;
-        @ViewInject(R.id.my_newdetails)
         LinearLayout my_newdetails;
-        @ViewInject(R.id.mycoms_content_txt)
         TextView mycoms_content_txt;
-        @ViewInject(R.id.mycoms_ll)
         LinearLayout mycoms_ll;
+
         public ViewHolder(View v) {
             ViewUtils.inject(this, v);
+            mycoms_img_id = (ImageView) v.findViewById(R.id.mycoms_img_id);
+            my_newdetails = (LinearLayout) v.findViewById(R.id.my_newdetails);
+            mycoms_content_txt = (TextView) v.findViewById(R.id.mycoms_content_txt);
+            mycoms_ll = (LinearLayout) v.findViewById(R.id.mycoms_ll);
         }
     }
 
@@ -76,11 +76,11 @@ public class MycommentsAdapter extends ListBaseAdapter<MycommentsBean> {
         final MyCommentBean myCommentBean = list.get(position).getContent();
         holder.mycoms_content_txt.setText(myCommentBean.getTitle());
         String[] imgs = myCommentBean.getImgs();
-        if (imgs.length >0) {
+        if (imgs.length > 0) {
             SPUtil.displayImage(myCommentBean.getImgs()[0]
                     , holder.mycoms_img_id
                     , DisplayOptionFactory.getOption(OptionTp.Personal_center_News));
-        }else {
+        } else {
             holder.mycoms_img_id.setImageResource(R.drawable.urlicon_loadingpicture_dynamic);
 //            holder.mycoms_img_id.setVisibility(View.GONE);
         }
@@ -110,7 +110,7 @@ public class MycommentsAdapter extends ListBaseAdapter<MycommentsBean> {
                     nb.setFav(myCommentBean.getFav());
                     nb.setComcount(myCommentBean.getComcount());
 //                    nb.setComcount("1");
-                    Log.e("test","test--->"+nb.toString());
+                    Log.e("test", "test--->" + nb.toString());
                     intent.putExtra("newbean", nb);
                     intent.putExtra("from", "mycomments");
                     flag = true;
@@ -161,8 +161,6 @@ public class MycommentsAdapter extends ListBaseAdapter<MycommentsBean> {
         });
 
 
-
-
         MycommentsBean bean = list.get(position);
 
         holder.mycoms_ll.removeAllViews();
@@ -180,9 +178,9 @@ public class MycommentsAdapter extends ListBaseAdapter<MycommentsBean> {
             SPUtil.displayImage(itembean.getAvatar_path()
                     , my_avatar
                     , DisplayOptionFactory.getOption(OptionTp.XF_Avatar));
-            mycomment_news.setText(""+itembean.getNickname());
+            mycomment_news.setText("" + itembean.getNickname());
             mycomments_itemc_tv_content.setText(itembean.getContent());
-            mycomments_itemc_tv_sj_txt.setText(CalendarUtil.friendlyTime1(itembean.getDateline(),context));
+            mycomments_itemc_tv_sj_txt.setText(CalendarUtil.friendlyTime1(itembean.getDateline(), context));
 //
             if ("-2".equals(itembean.getStatus())) {
                 cm_item_tv_comstate.setVisibility(View.VISIBLE);

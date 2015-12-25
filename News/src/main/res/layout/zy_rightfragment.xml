@@ -47,149 +47,163 @@
 
         </LinearLayout>
 
-        <!--展示框-->
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="5"
-            android:background="?right_item_layout_bg"
-            android:orientation="vertical">
+            android:layout_weight="5">
 
+
+            <!--展示框-->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:background="?right_item_layout_bg"
                 android:orientation="vertical">
-                <!-- 收藏-->
-                <LinearLayout
-                    android:id="@+id/zy_rfrag_ll_collect"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?zqzx_onclik_setting_item"
-                    android:padding="@dimen/zy_right_margin_left">
 
-                    <ImageView
-                        android:id="@+id/slidemeun_collection_iv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/personal_icon_collection" />
-
-                    <com.hzpd.ui.widget.FontTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:paddingLeft="@dimen/zy_right_margin_left"
-                        android:text="@string/prompt_collect"
-                        android:textColor="?zqzx_setting_item_text"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <View style="@style/line_layout" />
-
-                <!--评论-->
-                <LinearLayout
-                    android:id="@+id/zy_rfrag_ll_comm"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?zqzx_onclik_setting_item"
-                    android:padding="@dimen/zy_right_margin_left">
-
-                    <ImageView
-                        android:id="@+id/slidemeun_conmment_iv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/personal_icon_message" />
-
-                    <com.hzpd.ui.widget.FontTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:paddingLeft="@dimen/zy_right_margin_left"
-                        android:text="@string/comment_mine"
-                        android:textColor="?zqzx_setting_item_text"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <View style="@style/line_layout" />
-
-                <!--推送-->
-                <LinearLayout
-                    android:id="@+id/zy_rfrag_ll_push"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?zqzx_onclik_setting_item"
-                    android:padding="@dimen/zy_right_margin_left">
-
-                    <ImageView
-                        android:id="@+id/slidemeun_push_iv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/personal_icon_push" />
-
-                    <com.hzpd.ui.widget.FontTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:paddingLeft="@dimen/zy_right_margin_left"
-                        android:text="@string/prompt_my_msg"
-                        android:textColor="?zqzx_setting_item_text"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <View style="@style/line_layout" />
-
-                <!--推送-->
-                <LinearLayout
-                    android:id="@+id/zy_rfrag_ll_read"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?zqzx_onclik_setting_item"
-                    android:padding="@dimen/zy_right_margin_left">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/personal_icon_history" />
-
-                    <com.hzpd.ui.widget.FontTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:paddingLeft="@dimen/zy_right_margin_left"
-                        android:text="@string/recently_read"
-                        android:textColor="?zqzx_setting_item_text"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <View style="@style/line_layout" />
-
-                <!--推送-->
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:padding="@dimen/zy_right_margin_left"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <!-- 收藏-->
+                    <LinearLayout
+                        android:id="@+id/zy_rfrag_ll_collect"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/personal_icon_app" />
+                        android:background="?zqzx_onclik_setting_item"
+                        android:padding="@dimen/zy_right_margin_left">
 
-                    <com.hzpd.ui.widget.FontTextView
-                        android:layout_width="wrap_content"
+                        <ImageView
+                            android:id="@+id/slidemeun_collection_iv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/personal_icon_collection" />
+
+                        <com.hzpd.ui.widget.FontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:paddingLeft="@dimen/zy_right_margin_left"
+                            android:text="@string/prompt_collect"
+                            android:textColor="?zqzx_setting_item_text"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <View style="@style/line_layout" />
+
+                    <!--评论-->
+                    <LinearLayout
+                        android:id="@+id/zy_rfrag_ll_comm"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:paddingLeft="@dimen/zy_right_margin_left"
-                        android:text="应用推荐"
-                        android:textSize="16sp" />
+                        android:background="?zqzx_onclik_setting_item"
+                        android:padding="@dimen/zy_right_margin_left">
+
+                        <ImageView
+                            android:id="@+id/slidemeun_conmment_iv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/personal_icon_message" />
+
+                        <com.hzpd.ui.widget.FontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:paddingLeft="@dimen/zy_right_margin_left"
+                            android:text="@string/comment_mine"
+                            android:textColor="?zqzx_setting_item_text"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <View style="@style/line_layout" />
+
+                    <!--推送-->
+                    <LinearLayout
+                        android:id="@+id/zy_rfrag_ll_push"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?zqzx_onclik_setting_item"
+                        android:padding="@dimen/zy_right_margin_left">
+
+                        <ImageView
+                            android:id="@+id/slidemeun_push_iv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/personal_icon_push" />
+
+                        <com.hzpd.ui.widget.FontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:paddingLeft="@dimen/zy_right_margin_left"
+                            android:text="@string/prompt_my_msg"
+                            android:textColor="?zqzx_setting_item_text"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <View style="@style/line_layout" />
+
+                    <!--推送-->
+                    <LinearLayout
+                        android:id="@+id/zy_rfrag_ll_read"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?zqzx_onclik_setting_item"
+                        android:padding="@dimen/zy_right_margin_left">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/personal_icon_history" />
+
+                        <com.hzpd.ui.widget.FontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:paddingLeft="@dimen/zy_right_margin_left"
+                            android:text="@string/recently_read"
+                            android:textColor="?zqzx_setting_item_text"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <View style="@style/line_layout" />
+
+                    <!--推送-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:padding="@dimen/zy_right_margin_left"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/personal_icon_app" />
+
+                        <com.hzpd.ui.widget.FontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:paddingLeft="@dimen/zy_right_margin_left"
+                            android:text="应用推荐"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/line_height"
+                        android:layout_above="@+id/zy_version"
+                        android:background="#e6e6e6"
+                        android:visibility="gone" />
+
                 </LinearLayout>
-
 
                 <View
                     android:layout_width="match_parent"
@@ -198,147 +212,145 @@
                     android:background="#e6e6e6"
                     android:visibility="gone" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+                    <!--离线下载-->
+                    <LinearLayout
+                        android:id="@+id/zy_rfrag_ll_download"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="?zqzx_onclik_setting_item"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/personal_icon_offline" />
+
+                        <com.hzpd.ui.widget.FontTextView
+                            android:id="@+id/choose_country"
+                            style="@style/personal_item_text"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@string/offline_mode"
+                            android:textColor="?zqzx_setting_item_text" />
+                    </LinearLayout>
+                    <!--模式-->
+                    <LinearLayout
+                        android:id="@+id/zy_rfrag_ll_night"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="?zqzx_onclik_setting_item"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp">
+
+                        <ImageView
+                            android:id="@+id/image_skin_mode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/personal_icon_night" />
+
+                        <com.hzpd.ui.widget.FontTextView
+                            android:id="@+id/night_mode"
+                            style="@style/personal_item_text"
+                            android:maxLines="1"
+                            android:text="@string/night_mode"
+                            android:textColor="?zqzx_setting_item_text" />
+                    </LinearLayout>
+                    <!--设置-->
+                    <LinearLayout
+                        android:id="@+id/zy_rfrag_ll_feedback"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="?zqzx_onclik_setting_item"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/personal_icon_feedback" />
+
+                        <com.hzpd.ui.widget.FontTextView
+                            style="@style/personal_item_text"
+                            android:maxLines="1"
+                            android:text="@string/settings_feedback"
+                            android:textColor="?zqzx_setting_item_text" />
+                    </LinearLayout>
+                    <!--设置-->
+                    <LinearLayout
+                        android:id="@+id/zy_rfrag_ll_setting"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="?zqzx_onclik_setting_item"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp">
+
+                        <ImageView
+                            android:id="@+id/slidemeun_setting_iv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/personal_icon_setting" />
+
+                        <com.hzpd.ui.widget.FontTextView
+                            style="@style/personal_item_text"
+                            android:text="@string/title_settings"
+                            android:textColor="?zqzx_setting_item_text" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 版本号-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <View
+                        android:id="@+id/slidemenu_version_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.1dp"
+                        android:layout_above="@+id/zy_version"
+                        android:layout_marginBottom="6dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:background="@color/black" />
+
+                    <com.hzpd.ui.widget.FontTextView
+                        android:id="@+id/zy_version"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_name"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+
             </LinearLayout>
 
             <View
+                android:id="@+id/cover_top"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/line_height"
-                android:layout_above="@+id/zy_version"
-                android:background="#e6e6e6"
+                android:layout_height="match_parent"
+                android:background="#80111111"
                 android:visibility="gone" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="horizontal">
-                <!--离线下载-->
-                <LinearLayout
-                    android:id="@+id/zy_rfrag_ll_download"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="?zqzx_onclik_setting_item"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/personal_icon_offline" />
-
-                    <com.hzpd.ui.widget.FontTextView
-                        android:id="@+id/choose_country"
-                        style="@style/personal_item_text"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:text="@string/offline_mode"
-                        android:textColor="?zqzx_setting_item_text" />
-                </LinearLayout>
-                <!--模式-->
-                <LinearLayout
-                    android:id="@+id/zy_rfrag_ll_night"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="?zqzx_onclik_setting_item"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp">
-
-                    <ImageView
-                        android:id="@+id/image_skin_mode"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/personal_icon_night" />
-
-                    <com.hzpd.ui.widget.FontTextView
-                        android:id="@+id/night_mode"
-                        style="@style/personal_item_text"
-                        android:maxLines="1"
-                        android:text="@string/night_mode"
-                        android:textColor="?zqzx_setting_item_text" />
-                </LinearLayout>
-                <!--设置-->
-                <LinearLayout
-                    android:id="@+id/zy_rfrag_ll_feedback"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="?zqzx_onclik_setting_item"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/personal_icon_feedback" />
-
-                    <com.hzpd.ui.widget.FontTextView
-                        style="@style/personal_item_text"
-                        android:maxLines="1"
-                        android:text="@string/settings_feedback"
-                        android:textColor="?zqzx_setting_item_text" />
-                </LinearLayout>
-                <!--设置-->
-                <LinearLayout
-                    android:id="@+id/zy_rfrag_ll_setting"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="?zqzx_onclik_setting_item"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp">
-
-                    <ImageView
-                        android:id="@+id/slidemeun_setting_iv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/personal_icon_setting" />
-
-                    <com.hzpd.ui.widget.FontTextView
-                        style="@style/personal_item_text"
-                        android:text="@string/title_settings"
-                        android:textColor="?zqzx_setting_item_text" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- 版本号-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <View
-                    android:id="@+id/slidemenu_version_line"
-                    android:layout_width="match_parent"
-                    android:layout_height="0.1dp"
-                    android:layout_above="@+id/zy_version"
-                    android:layout_marginBottom="6dp"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"
-                    android:background="@color/black" />
-
-                <com.hzpd.ui.widget.FontTextView
-                    android:id="@+id/zy_version"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/app_name"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-
-        </LinearLayout>
+        </FrameLayout>
 
     </LinearLayout>
-
 
 </FrameLayout>

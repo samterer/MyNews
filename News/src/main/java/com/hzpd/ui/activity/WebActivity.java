@@ -74,6 +74,7 @@ public class WebActivity extends MBaseActivity {
             }
         });
         //load_progress_bar.postDelayed(runnable, 50);
+        load_progress_bar.setVisibility(View.VISIBLE);
         load_progress_bar.setProgress(0);
         webView.loadUrl(url);
         WebSettings webSettings = webView.getSettings();
@@ -97,7 +98,7 @@ public class WebActivity extends MBaseActivity {
             @Override
             public void onLoadResource(WebView view, String url) {
                 super.onLoadResource(view, url);
-                background_empty.setVisibility(View.GONE);
+                //background_empty.setVisibility(View.GONE);
             }
 
             @Override

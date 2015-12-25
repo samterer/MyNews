@@ -48,6 +48,9 @@ public class DownloadService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
+            if (!UpdateUtils.isRomVersion(this)) {
+                return START_NOT_STICKY;
+            }
             Log.e(TAG, intent);
             retry = 0;
             SharedPreferences.Editor editor = getSharedPreferences(UpdateUtils.SHARE_PREFERENCE_NAME, MODE_PRIVATE)

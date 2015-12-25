@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="swipe-back-layout-1.0">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/News/build/intermediates/exploded-aar/com.loopeer.android.thirdparty/swipe-back-layout/1.0/res" />
+      <root url="jar://$PROJECT_DIR$/News/build/intermediates/exploded-aar/com.loopeer.android.thirdparty/swipe-back-layout/1.0/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://D:/gradle-2.4/caches/modules-2/files-2.1/com.loopeer.android.thirdparty/swipe-back-layout/1.0/e6e889cc28f5eee28b061db23aab1d347da589e9/swipe-back-layout-1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

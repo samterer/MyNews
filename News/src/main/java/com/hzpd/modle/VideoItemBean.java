@@ -9,6 +9,7 @@ public class VideoItemBean implements Serializable {
 	private String title;
 	private String time;
 	private String mainpic;
+	private String videourl;
 	private String json_url;
 	private String copyfrom;//新闻来源
 	private String fav;//收藏数目

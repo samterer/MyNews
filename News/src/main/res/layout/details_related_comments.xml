@@ -3,7 +3,7 @@
     android:id="@+id/details_related_comments"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fragment_background"
+    android:background="?fragment_main_backgroup"
     android:orientation="vertical">
 
     <View
@@ -25,14 +25,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/details_bg_color"
+        android:background="?detail_related_news_bg"
         android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/details_bg_color"
+            android:background="?detail_related_news_head_bg"
             android:orientation="horizontal">
 
             <ImageView
@@ -47,12 +47,12 @@
 
             <com.hzpd.ui.widget.FontTextView
                 android:id="@+id/relate_news"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="5dp"
                 android:text="@string/details_lv_3"
-                android:textColor="@color/black"
+                android:textColor="#666666"
                 android:textSize="18sp" />
 
             <TextView

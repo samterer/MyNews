@@ -3,14 +3,14 @@
     android:id="@+id/root_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/fragment_background"
+    android:background="?fragment_main_backgroup"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/secondary_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="?details_news_comments"
         android:clipToPadding="false"
         android:paddingBottom="15dp"
         android:paddingLeft="10.0dip"
@@ -20,7 +20,7 @@
             android:id="@+id/line"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/line_height"
-            android:background="#fff5f5f5" />
+            android:background="?discover_item_line_color" />
 
         <com.hzpd.custorm.CircleImageView
             android:id="@+id/comment_user_icon"

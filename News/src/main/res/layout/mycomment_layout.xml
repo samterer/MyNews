@@ -94,7 +94,6 @@
                 android:id="@+id/app_progress_bar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="3dp"
                 android:background="@color/white">
 
                 <ProgressBar
@@ -104,6 +103,13 @@
                     android:layout_gravity="center" />
 
             </FrameLayout>
+
+            <View
+                android:id="@+id/cover_top"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#80111111"
+                android:visibility="gone" />
         </FrameLayout>
 
 

@@ -47,7 +47,6 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="3"
-                        android:textColor="?item_title"
                         android:textSize="15sp" />
 
                     <LinearLayout

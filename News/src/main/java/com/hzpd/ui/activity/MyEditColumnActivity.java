@@ -69,12 +69,19 @@ public class MyEditColumnActivity extends MBaseActivity {
 
     private ChannelSortedList csl;
     private boolean isEdit;
+    private View coverTop;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.editcolumn_my_layout);
+            coverTop = findViewById(R.id.cover_top);
+            if (App.getInstance().getThemeName().equals("0")) {
+                coverTop.setVisibility(View.GONE);
+            } else {
+                coverTop.setVisibility(View.VISIBLE);
+            }
             ViewUtils.inject(this);
             findViewById(R.id.ll_choose_channel).setOnClickListener(new View.OnClickListener() {
                 @Override

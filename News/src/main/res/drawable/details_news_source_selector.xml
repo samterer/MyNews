@@ -8,16 +8,23 @@
 
     <item android:state_pressed="true">
         <shape>
+            <stroke
+                android:width="0.1dp"
+                android:color="#f5f5f5" />
             <!-- 点击效果-->
-            <solid android:color="@color/details_bg_check_color" />
+            <solid android:color="@color/white" />
             <corners android:radius="20dp" />
         </shape>
     </item>
     <item>
         <shape>
+            <stroke
+                android:width="0.1dp"
+                android:color="#f5f5f5" />
             <solid android:color="@color/details_bg_check_color" />
             <corners android:radius="20dp" />
         </shape>
+
     </item>
 
 

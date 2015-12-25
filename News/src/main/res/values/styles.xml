@@ -23,7 +23,7 @@
 
         <item name="main_activity_color">@color/white</item>
         <item name="fragment_main_backgroup">@color/fragment_background</item>
-        <item name="item_title">@color/item_title</item>
+        <item name="item_title">#333333</item>
         <item name="item_title_read">@color/grey_font</item>
         <item name="item_tag">@color/main_tag</item>
         <item name="news_item_btn_selector">@drawable/news_item_selector</item>
@@ -87,6 +87,27 @@
         <item name="discover_fragment_recyclerview_color">@color/white</item>
         <item name="discover_item_spacing_color">@color/main_background_color</item>
         <item name="discover_item_line_color">#e6e6e6</item>
+        <item name="classify_item_first_bg_color">@color/white</item>
+        <item name="tag_subscribe_bg">@drawable/discovery_item_corners_bg</item>
+        <item name="detail_related_news_layout_bg">@color/main_activity_background_color</item>
+        <item name="details_news_source_selector_bg">@drawable/details_news_source_selector</item>
+        <item name="details_news_praise_bg">@drawable/news_details_praise</item>
+        <item name="detail_related_news_bg">@color/white</item>
+        <item name="detail_related_news_head_bg">@color/details_bg_color</item>
+        <item name="details_news_comments">@color/white</item>
+        <item name="detail_recy_backgroup">@color/details_bg_color</item>
+        <item name="main_search_bg">@drawable/corners_bg</item>
+        <item name="search_head_layout_bg">#f0f0f0</item>
+        <item name="search_history_layout_bg">@color/white</item>
+        <item name="editcolumn_line_bg">@color/main_background_color</item>
+        <item name="subscribe_text_bg">@drawable/subscribe_item_bg</item>
+        <item name="main_edit_bg">@drawable/corners_bg</item>
+        <item name="subscribe_textcolor">@color/subscribe_item_text_color</item>
+        <item name="editcolumn_tv_color">@color/item_title</item>
+        <item name="list_loading_color">@color/item_title</item>
+
+
+
     </style>
 
     <style name="ThemeDefault_2" parent="ThemeDefault">
@@ -97,20 +118,20 @@
         <!-- MainActivity-->
         <item name="title_bar_color">#2e3b84</item>
         <item name="title_bar_name_color">@color/white</item>
-        <item name="main_line_color">#1f1f1f</item>
+        <item name="main_line_color">@color/divider_line_color</item>
         <item name="m_background_tab_pressed">@drawable/title_bar_btn_selector_color</item>
 
-        <item name="main_activity_color">#222222</item>
-        <item name="fragment_main_backgroup">#222222</item>
-        <item name="item_title">#6b7078</item>
+        <item name="main_activity_color">@color/main_bg_night</item>
+        <item name="fragment_main_backgroup">@color/main_bg_night</item>
+        <item name="item_title">@color/white</item>
         <item name="item_title_read">#656565</item>
-        <item name="item_tag">@color/main_tag</item>
+        <item name="item_tag">#8d8d8d</item>
         <item name="news_item_btn_selector">@drawable/news_item_selector_night</item>
-        <item name="news_item_line_color">#1f1f1f</item>
-        <item name="choose_fragment_bg">#1f1f1f</item>
+        <item name="news_item_line_color">@color/divider_line_color</item>
+        <item name="choose_fragment_bg">@color/divider_line_color</item>
 
 
-        <item name="right_item_layout_bg">#1f1f1f</item>
+        <item name="right_item_layout_bg">@color/divider_line_color</item>
 
 
         <item name="xf_login_bg_drawable">@drawable/xf_login_bg</item>
@@ -121,7 +142,7 @@
         <item name="left_menu_version_name">@color/white</item>
         <item name="left_menu_version_line">@color/white</item>
         <!-- newsfragment-->
-        <item name="fragment_main_psts_tabs_background">#222222</item>
+        <item name="fragment_main_psts_tabs_background">@color/main_bg_night</item>
         <item name="fragment_main_psts_tabs_indicator_color">#0c6399</item>
         <item name="fragment_main_psts_tabs_text_color">#8a8a8a</item>
         <!-- choosefragment-->
@@ -137,25 +158,25 @@
         <item name="button_comment_style_drawable">@drawable/button_comment_style</item>
 
         <!--Setting-->
-        <item name="zqzx_setting_main_color">#222222</item>
+        <item name="zqzx_setting_main_color">@color/main_bg_night</item>
         <item name="zqzx_onclik_setting_item">@drawable/setting_item_selector_night</item>
         <item name="setting_item_selector_color">@color/white</item>
         <item name="zqzx_setting_item_text">#8d8d8d</item>
         <item name="zqzx_setting_item_right_text">#8d8d8d</item>
-        <item name="zqzx_setting_line_color">#1f1f1f</item>
+        <item name="zqzx_setting_line_color">@color/divider_line_color</item>
 
 
         <!-- FeedBack-->
-        <item name="zq_feedback_color">#222222</item>
+        <item name="zq_feedback_color">@color/main_bg_night</item>
         <item name="zq_feedback_edit_color">#a6a4b0</item>
         <item name="zq_feedback_btn_color">@color/white</item>
         <item name="zq_feedback_btn_submit">@drawable/zq_feedback_btn_selector</item>
         <item name="zq_feedetbg_shape_bg">@drawable/zq_feedetbg_shape_night</item>
 
-        <item name="fragment_search_background_color">#222222</item>
-        <item name="search_content_background_color">@color/black</item>
+        <item name="fragment_search_background_color">@color/main_bg_night</item>
+        <item name="search_content_background_color">@color/divider_line_color</item>
         <item name="search_key_head_text_color">@color/white</item>
-        <item name="search_history_item_color">#222222</item>
+        <item name="search_history_item_color">@color/main_bg_night</item>
         <item name="my_comment_news_title">@color/white</item>
         <item name="my_comment_top_nickname">@color/white</item>
         <item name="my_comment_top_regtime">@color/white</item>
@@ -163,10 +184,30 @@
         <item name="my_comment_time">@color/white</item>
         <item name="my_comment_news_selector">@drawable/my_comment_news_selector_night</item>
         <item name="news_detail_rel_item_title">@color/white</item>
-        <item name="discover_fragment_title">#222222</item>
-        <item name="discover_fragment_recyclerview_color">#1f1f1f</item>
-        <item name="discover_item_spacing_color">#1f1f1f</item>
-        <item name="discover_item_line_color">#1f1f1f</item>
+        <item name="discover_fragment_title">@color/main_bg_night</item>
+        <item name="discover_fragment_recyclerview_color">@color/divider_line_color</item>
+        <item name="discover_item_spacing_color">@color/divider_line_color</item>
+        <item name="discover_item_line_color">@color/divider_line_color</item>
+        <item name="classify_item_first_bg_color">@color/main_bg_night</item>
+        <item name="tag_subscribe_bg">@drawable/discovery_item_corners_bg_night</item>
+        <item name="detail_related_news_layout_bg">@color/main_bg_night</item>
+
+        <item name="details_news_source_selector_bg">@drawable/details_news_source_selector_night</item>
+        <item name="details_news_praise_bg">@drawable/news_details_praise_night</item>
+        <item name="detail_related_news_bg">@color/main_bg_night</item>
+        <item name="detail_related_news_head_bg">@color/main_bg_night</item>
+        <item name="details_news_comments">@color/main_bg_night</item>
+        <item name="detail_recy_backgroup">@color/main_bg_night</item>
+        <item name="main_search_bg">@drawable/corners_bg_night</item>
+        <item name="search_head_layout_bg">@color/divider_line_color</item>
+        <item name="search_history_layout_bg">@color/main_bg_night</item>
+        <item name="editcolumn_line_bg">@color/divider_line_color</item>
+        <item name="subscribe_text_bg">@drawable/subscribe_item_bg_night</item>
+        <item name="main_edit_bg">@drawable/edit_corners_bg_night</item>
+        <item name="subscribe_textcolor">@color/white</item>
+        <item name="editcolumn_tv_color">@color/bg</item>
+        <item name="list_loading_color">@color/white</item>
+
 
 
     </style>

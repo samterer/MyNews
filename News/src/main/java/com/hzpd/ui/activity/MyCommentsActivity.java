@@ -48,7 +48,7 @@ public class MyCommentsActivity extends MBaseActivity {
     private TextView xf_pinfo_tv_regtime;//注册时间
     private TextView xf_pinfo_tv_levelup;//升级提示
 
-    private View  app_progress_bar;
+    private View app_progress_bar;
 
     @Override
     public String getAnalyticPageName() {
@@ -74,12 +74,13 @@ public class MyCommentsActivity extends MBaseActivity {
     private MycommentsAdapter adapter;
     @ViewInject(R.id.transparent_layout_id)
     private View transparent_layout_id;
+    private View coverTop;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mycomment_layout);
-        app_progress_bar=findViewById(R.id.app_progress_bar);
+        app_progress_bar = findViewById(R.id.app_progress_bar);
         ViewUtils.inject(this);
         if (App.getInstance().getThemeName().equals("3")) {
             transparent_layout_id.setVisibility(View.VISIBLE);
@@ -87,6 +88,12 @@ public class MyCommentsActivity extends MBaseActivity {
             transparent_layout_id.setVisibility(View.GONE);
         }
         super.changeStatusBar();
+        coverTop = findViewById(R.id.cover_top);
+        if (App.getInstance().getThemeName().equals("0")) {
+            coverTop.setVisibility(View.GONE);
+        } else {
+            coverTop.setVisibility(View.VISIBLE);
+        }
         stitle_tv_content.setText(R.string.comment_mine);
         listView = (ListView) findViewById(R.id.list_view);
         LayoutInflater infla = LayoutInflater.from(activity);
@@ -120,7 +127,6 @@ public class MyCommentsActivity extends MBaseActivity {
                 getInfoFromServer();
             }
         }, 600);
-
 
 
         getUserInfoFromServer();

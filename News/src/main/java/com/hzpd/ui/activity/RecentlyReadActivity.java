@@ -11,6 +11,7 @@ import com.hzpd.adapter.NewsItemListViewAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.ui.App;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.DBHelper;
@@ -27,7 +28,7 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
 
     private RecyclerView recylerlist;
     private NewsItemListViewAdapter adapter;
-
+    private View coverTop;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,12 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
                 finish();
             }
         });
-
+        coverTop = findViewById(R.id.cover_top);
+        if (App.getInstance().getThemeName().equals("0")) {
+            coverTop.setVisibility(View.GONE);
+        } else {
+            coverTop.setVisibility(View.VISIBLE);
+        }
         recylerlist = (RecyclerView) findViewById(R.id.recylerlist);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recylerlist.setLayoutManager(layoutManager);
@@ -59,7 +65,7 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
             if (null != list) {
                 Log.i("isreaded", "isreaded" + list + ":::" + list.size());
                 List<NewsBean> nblist = new ArrayList<>();
-                for (int i=0;i<list.size();i++) {
+                for (int i = 0; i < list.size(); i++) {
                     NewsBean bean = new NewsBean(list.get(i));
 //                    Log.i("MyPushActivity", "MyPushActivity" + bean.getNid());
                     nblist.add(bean);

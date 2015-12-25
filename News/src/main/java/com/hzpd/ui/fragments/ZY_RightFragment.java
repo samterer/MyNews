@@ -1,9 +1,7 @@
 package com.hzpd.ui.fragments;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -106,7 +104,7 @@ public class ZY_RightFragment extends BaseFragment {
     private TextView version;
     private TextView personal_item_text;
     private ImageView image_skin_mode;
-
+    private View coverTop;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,9 +116,14 @@ public class ZY_RightFragment extends BaseFragment {
             version = (TextView) view.findViewById(R.id.zy_version);
             image_skin_mode = (ImageView) view.findViewById(R.id.image_skin_mode);
             personal_item_text = (TextView) view.findViewById(R.id.choose_country);
-            String name=SPUtil.getCountryName();
+            String name = SPUtil.getCountryName();
             personal_item_text.setText("" + name);
-
+            coverTop = view.findViewById(R.id.cover_top);
+            if (App.getInstance().getThemeName().equals("0")) {
+                coverTop.setVisibility(View.GONE);
+            } else {
+                coverTop.setVisibility(View.VISIBLE);
+            }
             switch (App.getInstance().getThemeName()) {
                 case "0": {
                     night_mode.setText(getResources().getString(R.string.night_mode));
@@ -306,7 +309,7 @@ public class ZY_RightFragment extends BaseFragment {
             }
             break;
             case R.id.zy_rfrag_ll_night: {
-                if (BuildConfig.DEBUG){
+                if (BuildConfig.DEBUG) {
                     Toast.makeText(getActivity(), "修改中。。。", Toast.LENGTH_SHORT).show();
                 }
                 if (isChangeSkin) {

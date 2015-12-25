@@ -6,6 +6,7 @@
     <string name="feedback_rating">Nilai</string>
     <!-- 翻译 -->
     <!-- 本地更新 -->
+    <string name="update_counts_head">has update</string>
     <string name="local_update_now">Update</string>
     <string name="local_update_later">Nanti</string>
     <string name="local_update_install">Instal Sekarang</string>

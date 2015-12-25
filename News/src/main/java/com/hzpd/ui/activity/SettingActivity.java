@@ -19,7 +19,6 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.color.tools.mytools.TUtil;
 import com.facebook.Profile;
 import com.hzpd.custorm.switchbutton.SwitchButton;
 import com.hzpd.hflt.R;
@@ -423,6 +422,14 @@ public class SettingActivity extends MBaseActivity {
         if (AvoidOnClickFastUtils.isFastDoubleClick()) {
             return;
         }
+        try {
+            getSharedPreferences(UpdateUtils.SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE)
+                    .edit()
+                    .putLong(UpdateUtils.KEY.UPDATE_LATER_TIME, 0L)
+                    .apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Intent intent = new Intent(this, UpdateService.class);
         startService(intent);
     }
@@ -432,9 +439,9 @@ public class SettingActivity extends MBaseActivity {
         SharedPreferences pref = getSharedPreferences(
                 UpdateUtils.SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE);
         if (UpdateUtils.isRomVersion(this) && pref.getBoolean(UpdateUtils.KEY.KEY_SILENCE_INSTALL, false)) {
-            TUtil.toast(this, getString(R.string.update_no_version));;
+            TUtils.toast(getString(R.string.update_no_version));
         } else if (!pref.getBoolean(UpdateUtils.KEY.KEY_HAS_NEW, false)) {
-            TUtil.toast(this, getString(R.string.update_no_version));
+            TUtils.toast(getString(R.string.update_no_version));
         } else {
             MainActivity.showLocalUpdateDialog(this);
         }

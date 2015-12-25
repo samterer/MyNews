@@ -48,11 +48,11 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/corners_bg"
+                    android:background="?main_search_bg"
                     android:gravity="center_vertical"
-                    android:paddingTop="3dp"
-                    android:paddingBottom="3dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp">
 
 
                     <ImageView
@@ -80,8 +80,9 @@
 
                     <ImageView
                         android:id="@+id/search_cancel"
-                        android:layout_width="40dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/margin_10"
                         android:background="?m_background_tab_pressed"
                         android:scaleType="centerInside"
                         android:src="@drawable/app_search_cancle" />
@@ -92,8 +93,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#7481ca"
-                    android:visibility="gone">
-                </View>
+                    android:visibility="gone"></View>
             </LinearLayout>
 
             <RelativeLayout
@@ -105,22 +105,33 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/main_title_search_select"
                     android:gravity="center"
-                    android:scaleType="centerInside" />
+                    android:scaleType="centerInside"
+                    android:src="@drawable/main_title_search_select" />
             </RelativeLayout>
         </LinearLayout>
 
     </FrameLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/line_height"
-        android:background="#e0e0e0" />
+        android:background="?zqzx_setting_line_color" />
+
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></FrameLayout>
+
+
+    <View
+        android:id="@+id/cover_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
+        android:background="#80111111"
+        android:visibility="gone" />
 </LinearLayout>

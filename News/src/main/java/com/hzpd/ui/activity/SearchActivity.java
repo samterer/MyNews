@@ -126,7 +126,12 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
         setContentView(R.layout.activity_search);
         findViewById(R.id.title_bar_applist_btn_back).setOnClickListener(this);
         editText = (AutoCompleteTextView) findViewById(R.id.search_src_text);
-
+        View coverTop = findViewById(R.id.cover_top);
+        if (App.getInstance().getThemeName().equals("0")) {
+            coverTop.setVisibility(View.GONE);
+        } else {
+            coverTop.setVisibility(View.VISIBLE);
+        }
         try {
             SPUtil.setFont(editText);
             String history = spu.getHistory();

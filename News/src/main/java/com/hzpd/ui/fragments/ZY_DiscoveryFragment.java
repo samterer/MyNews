@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.hzpd.adapter.MainPagerAdapter;
 import com.hzpd.hflt.R;
+import com.hzpd.ui.App;
 import com.hzpd.ui.activity.SearchActivity;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
@@ -31,12 +32,19 @@ public class ZY_DiscoveryFragment extends BaseFragment {
      */
     private int currentIndex = 0;
     private View[] tv_menu;
+    private View coverTop;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = null;
         try {
             view = inflater.inflate(R.layout.zy_discoveryfragment, container, false);
+            coverTop = view.findViewById(R.id.cover_top);
+            if (App.getInstance().getThemeName().equals("0")) {
+                coverTop.setVisibility(View.GONE);
+            } else {
+                coverTop.setVisibility(View.VISIBLE);
+            }
             main_top_search = view.findViewById(R.id.main_top_search);
             main_top_search.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -60,17 +60,6 @@ public class LastEditColumnAdapter extends BaseAdapter {
         return position;
     }
 
-    //	public int setClickable(NewsChannelBean stb){
-//		for(int i=0;i<list.size();i++){
-//			MyNewsChannelBean mncb=list.get(i);
-//			if(mncb.getNcb().getTid().equals(stb.getTid())){
-//				mncb.setClickable(true);
-//				notifyDataSetChanged();
-//				return i;
-//			}
-//		}
-//		return -1;
-//	}
     private boolean isEdit;
 
     public void isEditItem(boolean isEdit) {

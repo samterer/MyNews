@@ -1,7 +1,6 @@
 package com.hzpd.adapter;
 
 import android.app.Activity;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +11,13 @@ import android.widget.TextView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.CollectionDataBean;
 import com.hzpd.modle.CollectionJsonBean;
-import com.hzpd.modle.NewsBean;
 import com.hzpd.ui.App;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
 
 public class CollectionAdapter extends ListBaseAdapter<CollectionJsonBean> {
     private SPUtil spu;

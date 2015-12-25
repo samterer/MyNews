@@ -168,7 +168,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     // -------------------------
     private FontsizePop fontpop;
 
-
     App.Callback callback = new App.Callback() {
         @Override
         public void onSuccess(Profile currentProfile) {
@@ -216,7 +215,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         details_head_tag_name = (TextView) findViewById(R.id.details_head_tag_name);
         details_head_tag_num = (TextView) findViewById(R.id.details_head_tag_num);
         details_tv_subscribe = (TextView) findViewById(R.id.details_tv_subscribe);
-
 
         initViews();
         getThisIntent();
@@ -882,7 +880,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 }
                 if (!url.startsWith(HOT_NEWS) && !SPUtil.isImageUri(url)) {
                     try {
-                        Log.i("WebActivity", "WebActivity  url--->" + url);
+                        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+                            return true;
+                        }
                         Intent intent = new Intent(NewsDetailActivity.this, WebActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra(WebActivity.KEY_URL, url);
@@ -1032,6 +1032,13 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             + "<link rel=\"stylesheet\" type=\"text/css\" href=\"android.css\" />\n"
             + "<script type=\"text/javascript\" src=\"android.js\" ></script>"
             + "</head><body>";
+    public static final String HEAD_night = "<html><head>" + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n"
+            + " <meta name=\"viewport\"\n" +
+            "          content=\"width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes\"/>"
+            + "<style>@font-face {font-family: 'kievit';src: url('file:///android_asset/fonts/KievitPro-Regular.otf');}</style>"
+            + "<link rel=\"stylesheet\" type=\"text/css\" href=\"androidnight.css\" />\n"
+            + "<script type=\"text/javascript\" src=\"android.js\" ></script>"
+            + "</head><body>";
     public static final String FOOTER = "</body></html>";
 
     private void setContentData(int textSize) {
@@ -1039,7 +1046,11 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         String content = mBean.getContent();
         content = processContent(content);
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(HEAD);
+        if (App.getInstance().getThemeName().equals("2")) {
+            stringBuilder.append(HEAD_night);
+        } else {
+            stringBuilder.append(HEAD);
+        }
         stringBuilder.append(content);
         stringBuilder.append(FOOTER);
         mWebView.loadDataWithBaseURL(BASE_URL, formatStringToHtml(stringBuilder.toString(), textSize), "text/html", "utf-8", BASE_URL);
@@ -1791,18 +1802,20 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 for (int i = 0; i < 3; i++) {
                     View view = LayoutInflater.from(this).inflate(R.layout.details_related_tag, null);
                     TextView text = (TextView) view.findViewById(R.id.details_tag1);
-                    String tagcontent = mBean.getTag().get(i).getName();
+                    TagBean tagBean = mBean.getTag().get(i);
+                    String tagcontent = tagBean.getName();
                     text.setText("" + tagcontent);
-                    view.setOnClickListener(new MyOnClickListener(tagcontent));
+                    view.setOnClickListener(new MyOnClickListener(tagBean));
                     ll_tag.addView(view);
                 }
             } else {
                 for (int i = 0; i < mBean.getTag().size(); i++) {
                     View view = LayoutInflater.from(this).inflate(R.layout.details_related_tag, null);
                     TextView text = (TextView) view.findViewById(R.id.details_tag1);
-                    String tagcontent = mBean.getTag().get(i).getName();
+                    TagBean tagBean = mBean.getTag().get(i);
+                    String tagcontent = tagBean.getName();
                     text.setText(tagcontent);
-                    view.setOnClickListener(new MyOnClickListener(tagcontent));
+                    view.setOnClickListener(new MyOnClickListener(tagBean));
                     ll_tag.addView(view);
                 }
             }
@@ -1836,19 +1849,22 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     }
 
     private class MyOnClickListener implements OnClickListener {
-        private String tag;
+        private TagBean tagBean;
 
-        public MyOnClickListener(String tag) {
-            this.tag = tag;
+        public MyOnClickListener(TagBean tagBean) {
+            this.tagBean = tagBean;
         }
 
         @Override
         public void onClick(View v) {
             if (AvoidOnClickFastUtils.isFastDoubleClick())
                 return;
-            Intent intent = new Intent();
-            intent.putExtra("TAGCONNENT", tag);
-            intent.setClass(NewsDetailActivity.this, SearchActivity.class);
+//            Intent intent = new Intent();
+//            intent.putExtra("TAGCONNENT", tagBean);
+//            intent.setClass(NewsDetailActivity.this, SearchActivity.class);
+//            startActivity(intent);
+            Intent intent = new Intent(NewsDetailActivity.this, TagActivity.class);
+            intent.putExtra("tagbean", tagBean);
             startActivity(intent);
             AAnim.ActivityStartAnimation(NewsDetailActivity.this);
         }
@@ -1994,11 +2010,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     if (200 == obj.getIntValue("code")) {
                         JSONObject object = obj.getJSONObject("data");
                         if ("1".equals(object.getString("status"))) {
-                            if (App.getInstance().getThemeName().equals("0"))
-                                newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
-                            else
-                                newdetail_collection.setImageResource(R.drawable.details_collect_already_select_red);
-
+                            newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
                         }
                     }
                 }
@@ -2015,10 +2027,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         .findFirst(Selector.from(NewsItemBeanForCollection.class).where("nid", "=", nb.getNid())
                                 .and("type", "=", "1"));
                 if (null != nbfc) {
-                    if (App.getInstance().getThemeName().equals("0"))
-                        newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
-                    else
-                        newdetail_collection.setImageResource(R.drawable.details_collect_already_select_red);
+                    newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

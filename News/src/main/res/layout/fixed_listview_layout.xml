@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?zqzx_setting_main_color"
+    android:paddingLeft="@dimen/search_padding_middle"
+    android:paddingRight="@dimen/search_padding_middle">
+
+    <com.hzpd.ui.widget.FixedListView
+        android:id="@+id/fixed_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:dividerHeight="0dp" />
+
+    <View
+        android:id="@+id/cover_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80111111"
+        android:visibility="gone" />
+</FrameLayout>

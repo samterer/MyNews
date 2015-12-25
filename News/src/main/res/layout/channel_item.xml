@@ -9,13 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/subscribe_item_bg"
+        android:background="?subscribe_text_bg"
         android:ellipsize="end"
         android:gravity="center"
         android:minHeight="30.0dip"
         android:minWidth="95.0dip"
         android:singleLine="true"
-        android:textColor="@color/subscribe_item_text_color"
+        android:textColor="?subscribe_textcolor"
         android:textSize="12.0sp" />
 
     <ImageView

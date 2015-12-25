@@ -9,7 +9,7 @@ public class InterfaceJsonfile {
 
     //印尼
     public static final String PATH_ROOT = "http://v2.nutnote.com/api.php?s=";
-    public static final String S3 = "http://v2.nutnote.com/";
+    public static final String S3 = "http://s3-ap-southeast-1.amazonaws.com/ltcms/";
     //本地测试
 //    public static final String PATH_ROOT = "http://10.80.3.123/cmsv2/api.php?s=";
 

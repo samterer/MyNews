@@ -1,40 +1,38 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/zqzx_bg_normal">
+    android:background="?discover_fragment_title">
 
     <LinearLayout
         android:id="@+id/ll_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/zqzx_bg_normal"
+        android:background="?discover_fragment_title"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="125dp"
-            android:background="@color/main_background_color">
+            android:background="?discover_fragment_title">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/id_recyclerview_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:background="@color/main_background_color"
                 android:scrollbars="none" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/line_height"
-            android:background="#e6e6e6" />
+            android:background="?discover_item_line_color" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/id_recyclerview_vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:background="@color/white"
             android:scrollbars="none" />
     </LinearLayout>
 

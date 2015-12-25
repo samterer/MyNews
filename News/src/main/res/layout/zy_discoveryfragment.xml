@@ -25,8 +25,8 @@
                 android:id="@+id/tv_week"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -56,8 +56,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -78,19 +78,26 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/line_height"
-            android:background="?discover_item_line_color"/>
+            android:background="?discover_item_line_color" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/rank_pager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center"
-            android:background="@color/white"
             android:layout_weight="1.0"
+            android:background="@color/white"
             android:flipInterval="30"
             android:persistentDrawingCache="animation" />
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/cover_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
+        android:background="#80111111"
+        android:visibility="gone" />
 
 </FrameLayout>

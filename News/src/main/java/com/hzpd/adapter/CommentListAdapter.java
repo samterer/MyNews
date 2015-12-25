@@ -92,20 +92,6 @@ public class CommentListAdapter extends BaseAdapter {
         if (position == 0) {
             if (convertView == null || convertView.getId() != R.id.details_related_comments) {
                 convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.details_related_comments, parent, false);
-                TextView comcount_adapter_tv = (TextView) convertView.findViewById(R.id.comcount_adapter_tv);
-                try {
-                    DBHelper dbHelper;
-                    NewsBeanDB nbfc = DBHelper.getInstance(parent.getContext()).getNewsListDbUtils().findFirst(
-                            Selector.from(NewsBeanDB.class).where("nid", "=", nid));
-                    if (null != nbfc) {
-                        comcount_adapter_tv.setText("(" + nbfc.getComcount() + ")");
-                    } else {
-
-                    }
-                } catch (DbException e) {
-                    e.printStackTrace();
-                }
-
             }
         } else {
             final ViewHolder holder;

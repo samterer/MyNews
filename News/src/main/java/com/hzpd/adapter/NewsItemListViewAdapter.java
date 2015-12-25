@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -331,6 +332,10 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             if (viewPagelist.size() > 0 && position != 0) {
                 --position;
             }
+            TypedValue typedValue = new TypedValue();
+            context.getTheme().resolveAttribute(R.attr.item_title, typedValue, true);
+            int color = typedValue.data;
+
             switch (type) {
                 case TYPE_LOADING:
                     if (showLoading && callBack != null) {
@@ -351,14 +356,12 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     TextViewHolder textViewHolder = (TextViewHolder) holder;
                     textViewHolder.newsitem_title.setTextSize(fontSize);
                     textViewHolder.newsitem_title.setText(bean.getTitle());
-                    textViewHolder.newsitem_title.setTextColor(App.getInstance()
-                            .getResources().getColor(R.color.item_title));
+                    textViewHolder.newsitem_title.setTextColor(color);
                     if (readedNewsSet.contains(bean.getNid())) {
                         textViewHolder.newsitem_title.setTextColor(App.getInstance()
                                 .getResources().getColor(R.color.grey_font));
                     } else {
-                        textViewHolder.newsitem_title.setTextColor(App.getInstance()
-                                .getResources().getColor(R.color.item_title));
+                        textViewHolder.newsitem_title.setTextColor(color);
                     }
                     SPUtil.setAtt(textViewHolder.item_type_iv, bean.getAttname());
 
@@ -427,8 +430,8 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     holder.itemView.setTag(bean);
                     vhThree.newsitem_title.setTextSize(fontSize);
                     vhThree.newsitem_title.setText(bean.getTitle());
-                    vhThree.newsitem_title.setTextColor(App.getInstance()
-                            .getResources().getColor(R.color.item_title));
+
+                    vhThree.newsitem_title.setTextColor(color);
                     if (readedNewsSet.contains(bean.getNid())) {
                         vhThree.newsitem_title.setTextColor(App.getInstance()
                                 .getResources().getColor(R.color.grey_font));
@@ -502,14 +505,14 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     VHLeftPic vhLeftPic = (VHLeftPic) holder;
                     vhLeftPic.newsitem_title.setTextSize(fontSize);
                     vhLeftPic.newsitem_title.setText(bean.getTitle());
-                    vhLeftPic.newsitem_title.setTextColor(App.getInstance()
-                            .getResources().getColor(R.color.item_title));
+
+                    vhLeftPic.newsitem_title.setTextColor(color);
+
                     if (readedNewsSet.contains(bean.getNid())) {
                         vhLeftPic.newsitem_title.setTextColor(App.getInstance()
                                 .getResources().getColor(R.color.grey_font));
                     } else {
-                        vhLeftPic.newsitem_title.setTextColor(App.getInstance()
-                                .getResources().getColor(R.color.item_title));
+                        vhLeftPic.newsitem_title.setTextColor(color);
                     }
                     SPUtil.setAtt(vhLeftPic.item_type_iv, bean.getAttname());
 
@@ -618,14 +621,12 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     VHLargePic vhLargePic = (VHLargePic) holder;
                     vhLargePic.newsitem_title.setTextSize(fontSize);
                     vhLargePic.newsitem_title.setText(bean.getTitle());
-                    vhLargePic.newsitem_title.setTextColor(App.getInstance()
-                            .getResources().getColor(R.color.item_title));
+                    vhLargePic.newsitem_title.setTextColor(color);
                     if (readedNewsSet.contains(bean.getNid())) {
                         vhLargePic.newsitem_title.setTextColor(App.getInstance()
                                 .getResources().getColor(R.color.grey_font));
                     } else {
-                        vhLargePic.newsitem_title.setTextColor(App.getInstance()
-                                .getResources().getColor(R.color.item_title));
+                        vhLargePic.newsitem_title.setTextColor(color);
                     }
 
                     SPUtil.setAtt(vhLargePic.item_type_iv, bean.getAttname());

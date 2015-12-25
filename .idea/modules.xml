@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/CommonAnalyticsLib/CommonAnalyticsLib.iml" filepath="$PROJECT_DIR$/CommonAnalyticsLib/CommonAnalyticsLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/JoyNews.iml" filepath="$PROJECT_DIR$/JoyNews.iml" />
+      <module fileurl="file://$PROJECT_DIR$/News/News.iml" filepath="$PROJECT_DIR$/News/News.iml" />
+    </modules>
+  </component>
+</project>

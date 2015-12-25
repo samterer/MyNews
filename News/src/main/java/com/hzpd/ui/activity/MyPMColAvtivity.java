@@ -28,6 +28,7 @@ import com.hzpd.modle.Jsonbean;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsItemBeanForCollection;
 import com.hzpd.modle.VideoItemBean;
+import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
@@ -84,6 +85,7 @@ public class MyPMColAvtivity extends MBaseActivity {
     private CollectionAdapter colladAdapter;
 
     private String type;
+    private View coverTop;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,6 +100,12 @@ public class MyPMColAvtivity extends MBaseActivity {
             ViewUtils.inject(this);
             findViewById(R.id.mycomments_title).setVisibility(View.GONE);
             init();
+            coverTop = findViewById(R.id.cover_top);
+            if (App.getInstance().getThemeName().equals("0")) {
+                coverTop.setVisibility(View.GONE);
+            } else {
+                coverTop.setVisibility(View.VISIBLE);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -166,7 +174,7 @@ public class MyPMColAvtivity extends MBaseActivity {
 
         if (AvoidOnClickFastUtils.isFastDoubleClick())
             return;
-        CollectionJsonBean cb = (CollectionJsonBean) colladAdapter.getItem(position );
+        CollectionJsonBean cb = (CollectionJsonBean) colladAdapter.getItem(position);
         CollectionDataBean cdb = cb.getData();
         Intent intent = new Intent();
         intent.putExtra("from", "collection");

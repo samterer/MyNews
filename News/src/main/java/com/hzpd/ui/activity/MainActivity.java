@@ -218,6 +218,7 @@ public class
 
     public void onEventMainThread(SetThemeEvent event) {
         recreate();
+
     }
 
     private void restartApplication() {
@@ -280,7 +281,7 @@ public class
                     return;
                 }
 
-                if (UpdateUtils.isRomVersion(activity.getApplicationContext())) {
+                if (!UpdateUtils.isRomVersion(activity.getApplicationContext())) {
                     try {
                         String dialogContent = pref.getString(UpdateUtils.KEY.KEY_DIALOG_CONTENT, "");
                         LocalUpdateDialogFragment fragment = (LocalUpdateDialogFragment) Fragment.instantiate(activity, LocalUpdateDialogFragment.class.getName
@@ -300,13 +301,11 @@ public class
                 if (!forcing) {
                     if (pref.getBoolean(UpdateUtils.KEY.IS_DOWNLOADING, false)
                             || pref.getBoolean(UpdateUtils.KEY.IS_WIFI_DOWNLOADING, false)) {
-                        Log.e("update", " IS_DOWNLOADING ");
                         return;
                     }
                 }
                 boolean autoD = pref.getBoolean(UpdateUtils.KEY.KEY_AUTO_DOWNLOAD, false);
                 int cVersion = pref.getInt(UpdateUtils.KEY.COMPLETED_VERSION_CODE, 0);
-                Log.e("update", " autoD " + autoD);
                 if (autoD) {
                     File root = Environment.getExternalStorageDirectory();
                     if (root != null) {

@@ -133,7 +133,12 @@ public class WelcomeActivity extends MWBaseActivity {
                             String json = App.getFileContext(responseInfo.result);
 //							LogUtils.e("WelcomeActivity数据源问题--->"+json);
                             if (json != null) {
-                                JSONObject obj = FjsonUtil.parseObject(json);
+                                JSONObject obj = null;
+                                try {
+                                    obj = FjsonUtil.parseObject(json);
+                                } catch (Exception e) {
+                                    obj = FjsonUtil.parseObject("{\"code\":209}");
+                                }
                                 if (null == obj) {
                                     if (!exists) {
                                         loadMainUI();
