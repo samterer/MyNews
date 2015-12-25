@@ -95,7 +95,7 @@
     <color name="search_history_dropdown_item_pressed_bg">#44444444</color>
 
     <color name="subscribe_item_drag_stroke">#ffd2d2d2</color>
-    <color name="subscribe_item_drag_bg">#fff5f5f5</color>
+    <color name="subscribe_item_drag_bg">#f5f5f5</color>
     <color name="subscribe_item_selected_bg">#ffffffff</color>
     <color name="subscribe_item_selected_stroke">#0033ee</color>
     <color name="subscribe_item_disabled_bg">#ffefefef</color>

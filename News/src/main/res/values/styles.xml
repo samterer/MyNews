@@ -83,6 +83,10 @@
         <item name="my_comment_time">@color/time_color</item>
         <item name="my_comment_news_selector">@drawable/my_comment_news_selector</item>
         <item name="news_detail_rel_item_title">@color/black</item>
+        <item name="discover_fragment_title">@color/white</item>
+        <item name="discover_fragment_recyclerview_color">@color/white</item>
+        <item name="discover_item_spacing_color">@color/main_background_color</item>
+        <item name="discover_item_line_color">#e6e6e6</item>
     </style>
 
     <style name="ThemeDefault_2" parent="ThemeDefault">
@@ -102,7 +106,7 @@
         <item name="item_title_read">#656565</item>
         <item name="item_tag">@color/main_tag</item>
         <item name="news_item_btn_selector">@drawable/news_item_selector_night</item>
-        <item name="news_item_line_color">#e6e6e6</item>
+        <item name="news_item_line_color">#1f1f1f</item>
         <item name="choose_fragment_bg">#1f1f1f</item>
 
 
@@ -159,6 +163,11 @@
         <item name="my_comment_time">@color/white</item>
         <item name="my_comment_news_selector">@drawable/my_comment_news_selector_night</item>
         <item name="news_detail_rel_item_title">@color/white</item>
+        <item name="discover_fragment_title">#222222</item>
+        <item name="discover_fragment_recyclerview_color">#1f1f1f</item>
+        <item name="discover_item_spacing_color">#1f1f1f</item>
+        <item name="discover_item_line_color">#1f1f1f</item>
+
 
     </style>
 

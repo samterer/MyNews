@@ -2,27 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:orientation="vertical">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:orientation="vertical">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/margin_10"
-            android:background="@color/main_background_color" />
+            android:background="?discover_item_spacing_color" />
 
         <!-- 标签-->
         <LinearLayout
             android:id="@+id/discovery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#fafafa"
+            android:background="?discover_fragment_title"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingRight="16dp">
@@ -79,7 +77,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/line_height"
-            android:background="#e6e6e6" />
+            android:background="?discover_item_line_color" />
 
         <!-- 新闻 -->
         <LinearLayout

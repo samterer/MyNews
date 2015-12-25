@@ -152,7 +152,7 @@
                 android:layout_height="@dimen/item_height"
                 android:layout_marginLeft="@dimen/list_item_padding"
                 android:layout_marginRight="@dimen/list_item_padding"
-                android:background="#fff5f5f5" />
+                android:background="?news_item_line_color" />
         </LinearLayout>
 
 

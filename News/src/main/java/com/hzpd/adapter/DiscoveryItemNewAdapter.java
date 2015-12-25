@@ -162,7 +162,6 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                     viewHolder.tv_subscribe.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-//                Toast.makeText(context,"订阅",Toast.LENGTH_SHORT).show();
                             Log.i("DiscoveryItemNewAdapter", "DiscoveryItemNewAdapter  viewHolder.tv_subscribe  onClick");
                             try {
                                 viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
@@ -175,7 +174,6 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                                 viewHolder.tv_subscribe.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-//                Toast.makeText(context, "订阅。。。", Toast.LENGTH_SHORT).show();
                                         viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
                                         viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.details_tv_check_color));
                                         Drawable nav_up = context.getResources().getDrawable(R.drawable.discovery_image_select);
