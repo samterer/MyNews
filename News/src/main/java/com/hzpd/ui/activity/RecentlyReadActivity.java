@@ -70,6 +70,7 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
 //                    Log.i("MyPushActivity", "MyPushActivity" + bean.getNid());
                     nblist.add(bean);
                 }
+                adapter.getReaded(nblist);
                 adapter.appendData(nblist, false, false);
             } else {
 

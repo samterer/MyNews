@@ -79,7 +79,7 @@
         <item name="my_comment_top_nickname">@color/white</item>
         <item name="my_comment_top_regtime">#d0d7ff</item>
         <item name="my_comment_news_title">#333</item>
-        <item name="my_comment_nickname">#8d8d8d</item>
+        <item name="my_comment_nickname">@color/general_color</item>
         <item name="my_comment_time">@color/time_color</item>
         <item name="my_comment_news_selector">@drawable/my_comment_news_selector</item>
         <item name="news_detail_rel_item_title">@color/black</item>
@@ -131,7 +131,7 @@
         <item name="fragment_main_backgroup">@color/main_bg_night</item>
         <item name="item_title">@color/white</item>
         <item name="item_title_read">#656565</item>
-        <item name="item_tag">#8d8d8d</item>
+        <item name="item_tag">@color/general_color</item>
         <item name="news_item_btn_selector">@drawable/news_item_selector_night</item>
         <item name="news_item_line_color">@color/divider_line_color</item>
         <item name="choose_fragment_bg">@color/divider_line_color</item>
@@ -146,7 +146,7 @@
         <!-- newsfragment-->
         <item name="fragment_main_psts_tabs_background">@color/main_bg_night</item>
         <item name="fragment_main_psts_tabs_indicator_color">#0c6399</item>
-        <item name="fragment_main_psts_tabs_text_color">#8a8a8a</item>
+        <item name="fragment_main_psts_tabs_text_color">#fafafa</item>
         <!-- choosefragment-->
         <item name="fragment_choose_card_backgroup_color">#ffffff</item>
         <item name="fragment_choose_btn_src_color">@drawable/floating_button_selector</item>
@@ -163,8 +163,8 @@
         <item name="zqzx_setting_main_color">@color/main_bg_night</item>
         <item name="zqzx_onclik_setting_item">@drawable/setting_item_selector_night</item>
         <item name="setting_item_selector_color">@color/white</item>
-        <item name="zqzx_setting_item_text">#8d8d8d</item>
-        <item name="zqzx_setting_item_right_text">#8d8d8d</item>
+        <item name="zqzx_setting_item_text">@color/general_color</item>
+        <item name="zqzx_setting_item_right_text">@color/general_color</item>
         <item name="zqzx_setting_line_color">@color/divider_line_color</item>
 
 
@@ -210,11 +210,11 @@
         <item name="editcolumn_tv_color">@color/bg</item>
         <item name="list_loading_color">@color/white</item>
         <item name="rob_sofa_tv_color">@color/white</item>
-        <item name="search_head_tv_color">#8d8d8d</item>
-        <item name="search_key_tv_color">#8d8d8d</item>
+        <item name="search_head_tv_color">@color/general_color</item>
+        <item name="search_key_tv_color">@color/general_color</item>
         <item name="app_progress_bar_bg">@color/main_bg_night</item>
         <item name="comment_list_layout_bg">@color/main_bg_night</item>
-        <item name="comment_text_color">#8d8d8d</item>
+        <item name="comment_text_color">@color/white</item>
 
 
 

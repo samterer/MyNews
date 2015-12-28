@@ -2,6 +2,7 @@ package com.hzpd.adapter;
 
 import android.app.Activity;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -83,7 +84,9 @@ public class CollectionAdapter extends ListBaseAdapter<CollectionJsonBean> {
             Log.e("CollectionJsonBean", "CollectionJsonBean--->" + cb.toString());
         else
             Log.e("CollectionJsonBean", "CollectionJsonBean--->null");
-
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.item_title, typedValue, true);
+        int color = typedValue.data;
 
         if (convertView == null) {
             switch (type) {
@@ -132,6 +135,7 @@ public class CollectionAdapter extends ListBaseAdapter<CollectionJsonBean> {
             case 1: {
 
                 if (cdb.getTitle() != null) {
+                    holder.newsitem_title.setTextColor(color);
                     holder.newsitem_title.setText(cdb.getTitle());
                 }
                 if (cdb.getImgs() != null && cdb.getImgs().length > 0) {

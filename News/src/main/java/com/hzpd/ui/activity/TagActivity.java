@@ -211,6 +211,7 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
                         Drawable nav_up = getResources().getDrawable(R.drawable.discovery_details_image_select);
                         nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
                         details_tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+                        details_tv_subscribe.setText(getString(R.string.discovery_followed));
                         EventBus.getDefault().post(new TagEvent(tagBean));
                         RequestParams params = RequestParamsUtils.getParamsWithU();
                         if (spu.getUser() != null) {

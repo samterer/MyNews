@@ -9,19 +9,24 @@
 
     <include layout="@layout/stitle_layout" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recylerlist"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?fragment_main_backgroup"
-        android:cacheColorHint="@null"
-        android:scrollbars="none" />
+        android:layout_height="match_parent">
 
-    <View
-        android:id="@+id/cover_top"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="40dp"
-        android:background="#80111111"
-        android:visibility="gone" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recylerlist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?fragment_main_backgroup"
+            android:cacheColorHint="@null"
+            android:scrollbars="none" />
+
+        <View
+            android:id="@+id/cover_top"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80111111"
+            android:visibility="gone" />
+
+    </FrameLayout>
 </LinearLayout>

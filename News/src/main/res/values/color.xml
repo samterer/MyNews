@@ -156,6 +156,8 @@
     <color name="bg">#8d8d8d</color>
     <color name="main_bg_night">#222222</color>
     <color name="divider_line_color">#1f1f1f</color>
+    <color name="general_color">#dddddd</color>
+    <color name="add_transparency">#50333333</color>
 
 
 </resources>

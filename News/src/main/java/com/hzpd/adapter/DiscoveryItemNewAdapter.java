@@ -180,6 +180,7 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                                         Drawable nav_up = context.getResources().getDrawable(R.drawable.discovery_image_select);
                                         nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
                                         viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+                                        viewHolder.tv_subscribe.setText(context.getString(R.string.discovery_followed));
                                         EventBus.getDefault().post(new TagEvent(bean.getTag()));
                                         RequestParams params = RequestParamsUtils.getParamsWithU();
                                         if (spu.getUser() != null) {
