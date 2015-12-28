@@ -33,7 +33,7 @@
             android:layout_marginTop="5dp"
             android:maxWidth="75dp"
             android:singleLine="true"
-            android:textColor="#333333"
+            android:textColor="?item_title"
             android:textSize="13dp" />
 
     </LinearLayout>

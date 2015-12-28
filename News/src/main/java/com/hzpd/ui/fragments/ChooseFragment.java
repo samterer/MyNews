@@ -386,7 +386,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         }
         SPUtil.addParams(params);
         httpUtils.send(HttpRequest.HttpMethod.POST
-                , InterfaceJsonfile.CHANNEL_RECOMMEND
+                , InterfaceJsonfile.CHANNEL_RECOMMEND_NEW
                 , params
                 , new RequestCallBack<String>() {
             @Override

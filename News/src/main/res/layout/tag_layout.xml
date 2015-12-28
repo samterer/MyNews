@@ -20,7 +20,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/details_title_bar"
-            android:background="@color/main_title"
+            android:background="?title_bar_color"
             android:orientation="horizontal">
 
             <!--返回按钮-->
@@ -69,8 +69,7 @@
                         android:layout_height="wrap_content"
                         android:text="Bloa"
                         android:textColor="@color/white"
-                        android:textSize="15sp"
-                         />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/details_head_tag_num"
@@ -108,16 +107,28 @@
             android:background="#e0e0e0"
             android:visibility="gone" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recylerlist"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?fragment_main_backgroup"
-            android:cacheColorHint="@null"
-            android:scrollbars="none" />
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recylerlist"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?fragment_main_backgroup"
+                android:cacheColorHint="@null"
+                android:scrollbars="none" />
+
+            <View
+                android:visibility="gone"
+                android:id="@+id/cover_top"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#80111111" />
+        </FrameLayout>
+
 
     </LinearLayout>
-
 
 
     <!-- 没有数据-->

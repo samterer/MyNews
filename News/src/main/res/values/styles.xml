@@ -105,6 +105,12 @@
         <item name="subscribe_textcolor">@color/subscribe_item_text_color</item>
         <item name="editcolumn_tv_color">@color/item_title</item>
         <item name="list_loading_color">@color/item_title</item>
+        <item name="rob_sofa_tv_color">#aeaeae</item>
+        <item name="search_head_tv_color">#333333</item>
+        <item name="search_key_tv_color">#333333</item>
+        <item name="app_progress_bar_bg">@color/white</item>
+        <item name="comment_list_layout_bg">@color/white</item>
+        <item name="comment_text_color">@color/details_hot_comment_content</item>
 
 
 
@@ -129,11 +135,7 @@
         <item name="news_item_btn_selector">@drawable/news_item_selector_night</item>
         <item name="news_item_line_color">@color/divider_line_color</item>
         <item name="choose_fragment_bg">@color/divider_line_color</item>
-
-
         <item name="right_item_layout_bg">@color/divider_line_color</item>
-
-
         <item name="xf_login_bg_drawable">@drawable/xf_login_bg</item>
         <!--侧滑菜单-->
         <item name="left_menu_fb_avatar">@drawable/zy_pic_main_info_profile_bg</item>
@@ -207,6 +209,12 @@
         <item name="subscribe_textcolor">@color/white</item>
         <item name="editcolumn_tv_color">@color/bg</item>
         <item name="list_loading_color">@color/white</item>
+        <item name="rob_sofa_tv_color">@color/white</item>
+        <item name="search_head_tv_color">#8d8d8d</item>
+        <item name="search_key_tv_color">#8d8d8d</item>
+        <item name="app_progress_bar_bg">@color/main_bg_night</item>
+        <item name="comment_list_layout_bg">@color/main_bg_night</item>
+        <item name="comment_text_color">#8d8d8d</item>
 
 
 

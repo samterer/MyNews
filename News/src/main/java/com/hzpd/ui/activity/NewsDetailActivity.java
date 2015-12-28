@@ -15,6 +15,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -215,7 +216,15 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         details_head_tag_name = (TextView) findViewById(R.id.details_head_tag_name);
         details_head_tag_num = (TextView) findViewById(R.id.details_head_tag_num);
         details_tv_subscribe = (TextView) findViewById(R.id.details_tv_subscribe);
-
+        newdetail_share = (ImageView) findViewById(R.id.newdetail_share);
+        newdetail_share.setOnClickListener(this);
+        mBack = findViewById(R.id.news_detail_bak);
+        mBack.setOnClickListener(this);
+        mRoot = (LinearLayout) findViewById(R.id.news_detail_main_root_id);
+        newdetail_collection = (ImageView) findViewById(R.id.newdetail_collection);
+        newdetail_collection.setOnClickListener(this);
+        newdetail_comment = (ImageView) findViewById(R.id.newdetail_comment);
+        newdetail_comment.setOnClickListener(this);
         initViews();
         getThisIntent();
         if (nb != null && BuildConfig.DEBUG) {
@@ -242,6 +251,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+
 
         super.changeStatusBar();
     }
@@ -311,25 +323,24 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         ll_rob = (LinearLayout) headView.findViewById(R.id.ll_rob);
 
         mRelativeLayoutTitleRoot = (RelativeLayout) findViewById(R.id.news_detail_layout);
-        mBack = findViewById(R.id.news_detail_bak);
-        mRoot = (LinearLayout) findViewById(R.id.news_detail_main_root_id);
+
+
         newdetail_rl_comm = (RelativeLayout) findViewById(R.id.comment_box);
         newdetail_tv_comm = (TextView) findViewById(R.id.newdetail_tv_comm);
         newdetail_fontsize = (ImageView) findViewById(R.id.newdetail_fontsize);
-        newdetail_share = (ImageView) findViewById(R.id.newdetail_share);
-        newdetail_comment = (ImageView) findViewById(R.id.newdetail_comment);
-        newdetail_collection = (ImageView) findViewById(R.id.newdetail_collection);
+
+
         newdetail_more = (ImageView) findViewById(R.id.newdetail_more);
         news_detail_nonetwork = findViewById(R.id.news_detail_nonetwork);
         mButtomLayout1 = (LinearLayout) findViewById(R.id.news_detail_ll_bottom1);
 
-        mBack.setOnClickListener(this);
+
         newdetail_rl_comm.setOnClickListener(this);
         newdetail_tv_comm.setOnClickListener(this);
         newdetail_fontsize.setOnClickListener(this);
-        newdetail_share.setOnClickListener(this);
-        newdetail_comment.setOnClickListener(this);
-        newdetail_collection.setOnClickListener(this);
+
+
+
         newdetail_more.setOnClickListener(this);
 
         if ("yes".equals(isVideo)) {
@@ -439,7 +450,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     }
 
     private void initNew() {
-        dbUtils = DbUtils.create(this, App.getInstance().getJsonFileCacheRootDir(), App.collectiondbname);
+        dbUtils = DBHelper.getInstance(this).getCollectionDBUitls();
         initPopupWindows();
         isCollection();
     }
@@ -1028,14 +1039,14 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     public static final String HEAD = "<html><head>" + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n"
             + " <meta name=\"viewport\"\n" +
             "          content=\"width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes\"/>"
-            + "<style>@font-face {font-family: 'kievit';src: url('file:///android_asset/fonts/KievitPro-Regular.otf');}</style>"
+            + "<style>@font-face {font-family: 'kievit';src: url('file:///android_asset/fonts/Roboto-Regular.otf');}</style>"
             + "<link rel=\"stylesheet\" type=\"text/css\" href=\"android.css\" />\n"
             + "<script type=\"text/javascript\" src=\"android.js\" ></script>"
             + "</head><body>";
     public static final String HEAD_night = "<html><head>" + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n"
             + " <meta name=\"viewport\"\n" +
             "          content=\"width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes\"/>"
-            + "<style>@font-face {font-family: 'kievit';src: url('file:///android_asset/fonts/KievitPro-Regular.otf');}</style>"
+            + "<style>@font-face {font-family: 'kievit';src: url('file:///android_asset/fonts/Roboto-Regular.otf');}</style>"
             + "<link rel=\"stylesheet\" type=\"text/css\" href=\"androidnight.css\" />\n"
             + "<script type=\"text/javascript\" src=\"android.js\" ></script>"
             + "</head><body>";
@@ -1285,7 +1296,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private boolean isTagSelect;
 
     private void setContents() {
-        Log.i("setContents", "setContents" + mBean.toString());
+//        Log.i("setContents", "setContents" + mBean.toString());
         int textSize = spu.getTextSize();
         setupWebView(textSize);
         mRoot.setVisibility(View.VISIBLE);
@@ -1417,6 +1428,13 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         }
 
         if (mBean.getRef() != null && mBean.getRef().size() > 0) {
+            for (int i = 0; i < mBean.getRef().size(); i++) {
+                if (mBean.getRef().get(i).getTitle() == null) {
+                    NewsBean bean = mBean.getRef().get(i);
+                    mBean.getRef().remove(bean);
+                    i--;
+                }
+            }
             rl_related.setVisibility(View.VISIBLE);
             ll_tag.setVisibility(View.VISIBLE);
             addRelatedNewsView();
@@ -1438,22 +1456,25 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         if (mBean.getRef() != null && mBean.getRef().size() > 0) {
             for (int i = 0; i < mBean.getRef().size(); i++) {
                 final NewsBean bean = mBean.getRef().get(i);
+                TypedValue typedValue = new TypedValue();
+                getTheme().resolveAttribute(R.attr.item_title, typedValue, true);
+                int color = typedValue.data;
                 View view = null;
                 if ("4".equals(bean.getType())) {
                     view = LayoutInflater.from(this).inflate(R.layout.news_3_item_layout, null);
-                    setThreePic(bean, view);
+                    setThreePic(bean, view, color);
                 } else if ("99".equals(bean.getType())) {
                     view = LayoutInflater.from(this).inflate(R.layout.news_large_item_layout, null);
-                    setLargePic(bean, view);
+                    setLargePic(bean, view, color);
                 } else {
                     if (bean.getImgs() == null || bean.getImgs().length == 0) {
                         view = LayoutInflater.from(this).inflate(
                                 R.layout.news_list_text_layout, null);
-                        setTextPic(bean, view);
+                        setTextPic(bean, view, color);
 
                     } else {
                         view = LayoutInflater.from(this).inflate(R.layout.news_list_item_layout, null);
-                        setLeftPic(bean, view);
+                        setLeftPic(bean, view, color);
                     }
                 }
 //                View view = LayoutInflater.from(this).inflate(R.layout.news_detail_other_layout, null);
@@ -1475,9 +1496,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         }
     }
 
-    private void setTextPic(NewsBean bean, View view) {
+    private void setTextPic(NewsBean bean, View view, int color) {
         TextViewHolder textViewHolder = new TextViewHolder();
         textViewHolder.newsitem_title = (TextView) view.findViewById(R.id.newsitem_title);
+        textViewHolder.newsitem_title.setTextColor(color);
         textViewHolder.newsitem_title.setText(bean.getTitle());
         textViewHolder.item_type_iv = (ImageView) view.findViewById(R.id.item_type_iv);
         SPUtil.setAtt(textViewHolder.item_type_iv, bean.getAttname());
@@ -1560,9 +1582,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         private LinearLayout ll_tag;
     }
 
-    private void setLeftPic(NewsBean bean, View view) {
+    private void setLeftPic(NewsBean bean, View view, int color) {
         VHLeftPic vhLeftPic = new VHLeftPic();
         vhLeftPic.newsitem_title = (TextView) view.findViewById(R.id.newsitem_title);
+        vhLeftPic.newsitem_title.setTextColor(color);
         vhLeftPic.newsitem_title.setText(bean.getTitle());
         vhLeftPic.item_type_iv = (ImageView) view.findViewById(R.id.item_type_iv);
         SPUtil.setAtt(vhLeftPic.item_type_iv, bean.getAttname());
@@ -1646,11 +1669,11 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         private ImageView item_type_iv;
     }
 
-    private void setThreePic(NewsBean bean, View view) {
+    private void setThreePic(NewsBean bean, View view, int color) {
         VHThree vhThree = new VHThree();
         vhThree.newsitem_title = (TextView) view.findViewById(R.id.newsitem_title);
+        vhThree.newsitem_title.setTextColor(color);
         vhThree.newsitem_title.setText(bean.getTitle());
-
         vhThree.newsitem_source = (TextView) view.findViewById(R.id.newsitem_source);
         String from = bean.getCopyfrom();
         if (!TextUtils.isEmpty(from)) {
@@ -1731,10 +1754,11 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         private ImageView item_type_iv;
     }
 
-    private void setLargePic(NewsBean bean, View view) {
+    private void setLargePic(NewsBean bean, View view, int color) {
         VHLargePic vhLargePic = new VHLargePic();
 
         vhLargePic.newsitem_title = (TextView) view.findViewById(R.id.newsitem_title);
+        vhLargePic.newsitem_title.setTextColor(color);
         vhLargePic.newsitem_title.setText(bean.getTitle());
         vhLargePic.item_type_iv = (ImageView) view.findViewById(R.id.item_type_iv);
         SPUtil.setAtt(vhLargePic.item_type_iv, bean.getAttname());
@@ -1952,10 +1976,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 long co = dbUtils.count(NewsItemBeanForCollection.class);
                 LogUtils.i("num:" + co);
                 LogUtils.i("type-->" + nibfc.getType());
-                if (App.getInstance().getThemeName().equals("0"))
-                    newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
-                else
-                    newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
+                newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
 
             } else {
                 dbUtils.delete(NewsItemBeanForCollection.class, WhereBuilder.b("nid", "=", nb.getNid()));
@@ -1992,7 +2013,20 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     // 是否收藏
     private void isCollection() {
-        if (null != spu.getUser()) {
+        if (spu.getUser() == null) {
+            try {
+                LogUtils.i("isCollection");
+                NewsItemBeanForCollection nbfc = dbUtils
+                        .findFirst(Selector.from(NewsItemBeanForCollection.class).where("nid", "=", nb.getNid()));
+                LogUtils.i("isCollection");
+                if (null != nbfc) {
+                    LogUtils.i("isCollection   getTitle:" + nbfc.getTitle());
+                    newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
             RequestParams params = RequestParamsUtils.getParamsWithU();
             params.addBodyParameter("typeid", nb.getNid());
             params.addBodyParameter("type", "1");
@@ -2021,17 +2055,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 }
             });
             handlerList.add(httpHandler);
-        } else {
-            try {
-                NewsItemBeanForCollection nbfc = dbHelper.getCollectionDBUitls()
-                        .findFirst(Selector.from(NewsItemBeanForCollection.class).where("nid", "=", nb.getNid())
-                                .and("type", "=", "1"));
-                if (null != nbfc) {
-                    newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 

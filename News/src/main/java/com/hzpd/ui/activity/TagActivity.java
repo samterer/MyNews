@@ -15,6 +15,7 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.TagBean;
 import com.hzpd.modle.event.TagEvent;
+import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
@@ -52,12 +53,19 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
 
     NewsItemListViewAdapter.CallBack callBack;
     boolean addLoading = false;
+    private View cover_top;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tag_layout);
         super.changeStatusBar();
+        cover_top = findViewById(R.id.cover_top);
+        if (App.getInstance().getThemeName().equals("0")) {
+            cover_top.setVisibility(View.GONE);
+        } else {
+            cover_top.setVisibility(View.VISIBLE);
+        }
 
         initView();
 
@@ -186,13 +194,13 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
             nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
             details_tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
             details_tv_subscribe.setText(getString(R.string.discovery_followed));
-            isFollowed=true;
+            isFollowed = true;
         } else {
             details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
             Drawable nav_up = getResources().getDrawable(R.drawable.editcolum_image);
             nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
             details_tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
-            isFollowed=false;
+            isFollowed = false;
         }
         if (Utils.isNetworkConnected(this)) {
             details_tv_subscribe.setOnClickListener(new View.OnClickListener() {
@@ -205,7 +213,7 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
                         details_tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
                         EventBus.getDefault().post(new TagEvent(tagBean));
                         RequestParams params = RequestParamsUtils.getParamsWithU();
-                        if (spu.getUser().getUid() != null) {
+                        if (spu.getUser() != null) {
                             params.addBodyParameter("uid", spu.getUser().getUid() + "");
                         }
                         params.addBodyParameter("tagId", tagBean.getId() + "");

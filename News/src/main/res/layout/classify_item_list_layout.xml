@@ -39,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="name"
-                    android:textColor="#333333"
+                    android:textColor="?item_title"
                     android:textSize="16dp" />
 
                 <TextView
@@ -49,7 +49,7 @@
                     android:layout_weight="1"
                     android:gravity="bottom"
                     android:text="null"
-                    android:textColor="#333333"
+                    android:textColor="?item_title"
                     android:textSize="12dp" />
             </LinearLayout>
         </LinearLayout>

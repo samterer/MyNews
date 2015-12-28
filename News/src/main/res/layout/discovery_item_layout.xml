@@ -79,7 +79,7 @@
             android:layout_height="@dimen/line_height"
             android:background="?discover_item_line_color" />
 
-        <!-- 新闻 -->
+        <!-- 新闻列表 -->
         <LinearLayout
             android:id="@+id/news_ll"
             android:layout_width="match_parent"

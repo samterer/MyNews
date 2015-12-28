@@ -77,7 +77,7 @@ public class MyPMColAvtivity extends MBaseActivity {
     private View pushmsg_tv_empty;
 
     private int Page = 1;//页数
-    private static final int PageSize = 15; //每页大小
+    private static final int PageSize = 100; //每页大小
 
     private boolean mFlagRefresh = true;//刷新还是加载
 

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.hzpd.hflt.R;
 import com.hzpd.ui.App;
+import com.hzpd.utils.Log;
 
 /**
  * WevView third url
@@ -116,6 +117,12 @@ public class WebActivity extends MBaseActivity {
             }
 
             @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                super.onReceivedError(view, errorCode, description, failingUrl);
+                Log.e("test", description + ";" + errorCode + ":" + failingUrl);
+            }
+
+            @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
                 handler.proceed();
             }
@@ -125,9 +132,15 @@ public class WebActivity extends MBaseActivity {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
+                Log.e("test", newProgress);
                 if (newProgress > progress) {
                     progress = newProgress;
                     load_progress_bar.setProgress(progress);
+                }
+                if (progress > 99) {
+                    background_empty.setVisibility(View.GONE);
+                    wProgress = 100;
+                    load_progress_bar.setVisibility(View.GONE);
                 }
             }
         });

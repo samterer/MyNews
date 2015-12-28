@@ -212,17 +212,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/rl_related"
         android:layout_marginTop="10dp"
-        android:background="@color/white"
+        android:background="?detail_related_news_bg"
         android:orientation="vertical"
         android:paddingBottom="10dp"
         android:visibility="gone">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:layout_below="@+id/details_more_check"
-            android:background="@color/grey_color"
-            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/iamge_details"
@@ -239,7 +232,7 @@
             android:layout_marginTop="8dp"
             android:padding="5dp"
             android:text="Komen Pertama"
-            android:textColor="#aeaeae" />
+            android:textColor="?rob_sofa_tv_color" />
 
     </LinearLayout>
 

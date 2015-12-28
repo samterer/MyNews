@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -181,7 +182,7 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                                         viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
                                         EventBus.getDefault().post(new TagEvent(bean.getTag()));
                                         RequestParams params = RequestParamsUtils.getParamsWithU();
-                                        if (spu.getUser().getUid()!=null){
+                                        if (spu.getUser() != null) {
                                             params.addBodyParameter("uid", spu.getUser().getUid() + "");
                                         }
                                         params.addBodyParameter("tagId", bean.getTag().getId() + "");
@@ -261,6 +262,10 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                         newsitem_time.setText(CalendarUtil.friendlyTime(itembean.getUpdate_time(), context));
                     }
 
+                    TypedValue typedValue = new TypedValue();
+                    context.getTheme().resolveAttribute(R.attr.item_title, typedValue, true);
+                    int color = typedValue.data;
+                    newsitem_title.setTextColor(color);
                     newsitem_title.setText(itembean.getTitle());
                     if (null != itembean.getImgs()
                             && itembean.getImgs().length > 0) {

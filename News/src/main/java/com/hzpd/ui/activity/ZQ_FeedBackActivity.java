@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
+import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
@@ -46,10 +47,18 @@ public class ZQ_FeedBackActivity extends MBaseActivity {
 
     private long start;
 
+    private View cover_top;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zq_feedback_layout);
+        cover_top = findViewById(R.id.cover_top);
+        if (App.getInstance().getThemeName().equals("0")) {
+            cover_top.setVisibility(View.GONE);
+        } else {
+            cover_top.setVisibility(View.VISIBLE);
+        }
         ViewUtils.inject(this);
         super.changeStatusBar();
         SPUtil.setFont(zq_feedback_et_content);

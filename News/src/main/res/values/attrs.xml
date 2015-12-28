@@ -277,6 +277,12 @@
     <attr name="subscribe_textcolor" format="reference|color" />
     <attr name="editcolumn_tv_color" format="reference|color" />
     <attr name="list_loading_color" format="reference|color" />
+    <attr name="rob_sofa_tv_color" format="reference|color" />
+    <attr name="search_head_tv_color" format="reference|color" />
+    <attr name="search_key_tv_color" format="reference|color" />
+    <attr name="app_progress_bar_bg" format="reference|color" />
+    <attr name="comment_list_layout_bg" format="reference|color" />
+    <attr name="comment_text_color" format="reference|color" />
 
 
 

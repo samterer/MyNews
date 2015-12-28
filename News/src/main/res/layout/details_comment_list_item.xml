@@ -159,7 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="comment_text"
-                android:textColor="@color/details_hot_comment_content"
+                android:textColor="?comment_text_color"
                 android:textSize="16.0sp" />
 
         </RelativeLayout>

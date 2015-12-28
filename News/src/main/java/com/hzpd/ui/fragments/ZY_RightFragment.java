@@ -117,7 +117,10 @@ public class ZY_RightFragment extends BaseFragment {
             image_skin_mode = (ImageView) view.findViewById(R.id.image_skin_mode);
             personal_item_text = (TextView) view.findViewById(R.id.choose_country);
             String name = SPUtil.getCountryName();
-            personal_item_text.setText("" + name);
+//            Log.i("", "personal_item_text" + name);
+            String countryname = name.toUpperCase().charAt(0) + name.substring(1, name.length());
+//            Toast.makeText(getActivity(), "" + countryname, Toast.LENGTH_SHORT).show();
+            personal_item_text.setText("" + countryname);
             coverTop = view.findViewById(R.id.cover_top);
             if (App.getInstance().getThemeName().equals("0")) {
                 coverTop.setVisibility(View.GONE);
@@ -141,7 +144,8 @@ public class ZY_RightFragment extends BaseFragment {
         } catch (Exception e) {
 
         }
-
+//        String z= "zhang";
+//        System.out.println();
         EventBus.getDefault().register(this);
         return view;
     }

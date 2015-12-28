@@ -86,7 +86,6 @@
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_weight="1.0"
-            android:background="@color/white"
             android:flipInterval="30"
             android:persistentDrawingCache="animation" />
 

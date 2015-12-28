@@ -75,6 +75,7 @@
                         android:paddingLeft="5dp"
                         android:paddingRight="0dp"
                         android:textColorHint="#cccccc"
+                        android:textColor="?search_head_tv_color"
                         android:textCursorDrawable="@null"
                         android:textSize="12sp" />
 
