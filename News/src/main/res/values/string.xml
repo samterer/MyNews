@@ -315,5 +315,6 @@
     <string name="default_county">Indonesia</string>
     <string name="select_country">Select country or region</string>
     <string name="welcome_to_comment">Berikan Pendapat Anda</string>
+    <string name="tag_followed">Pilihan berhasil,artikel di halaman depan</string>
 
 </resources>

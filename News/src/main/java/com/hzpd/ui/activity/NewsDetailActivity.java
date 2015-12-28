@@ -36,6 +36,7 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -1392,6 +1393,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                             details_tv_subscribe.setCompoundDrawables(null, null, null, null);
                             EventBus.getDefault().post(new TagEvent(mBean.getTag().get(0)));
                             details_tv_subscribe.setText(getString(R.string.look_over));
+                            Toast.makeText(NewsDetailActivity.this,getString(R.string.tag_followed),Toast.LENGTH_SHORT).show();
                             RequestParams params = RequestParamsUtils.getParamsWithU();
                             if (spu.getUser() != null) {
                                 params.addBodyParameter("uid", spu.getUser().getUid());

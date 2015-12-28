@@ -242,7 +242,7 @@ public class ZY_RightFragment extends BaseFragment {
                 spu.setUser(null);
 
                 zy_rfrag_tv_login.setText(R.string.prompt_login_now);
-                zy_rfrag_iv_login.setImageResource(R.drawable.zy_pic_touxiang_new);
+                zy_rfrag_iv_login.setImageResource(R.drawable.personal_icon_avatarr);
             }
         }
     };
@@ -407,7 +407,7 @@ public class ZY_RightFragment extends BaseFragment {
     }
 
     private void setQuit() {
-        zy_rfrag_iv_login.setImageResource(R.drawable.zy_pic_touxiang);
+        zy_rfrag_iv_login.setImageResource(R.drawable.personal_icon_avatarr);
         zy_rfrag_tv_login.setText(R.string.login);
 
         JPushInterface.setAlias(activity, "", new TagAliasCallback() {

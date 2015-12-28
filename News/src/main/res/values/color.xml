@@ -22,7 +22,7 @@
     <!-- 下面是蓝色样式颜色-->
 
     <color name="grey_divider">#c9c9c9</color>
-    <color name="grey_font">#8d8d8d</color>
+    <color name="grey_font">#bbbbbb</color>
     <color name="grey_item">#eeeeee</color>
     <color name="grey_item_night">#222222</color>
 
