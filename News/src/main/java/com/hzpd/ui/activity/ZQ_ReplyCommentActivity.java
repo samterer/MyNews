@@ -4,14 +4,9 @@ package com.hzpd.ui.activity;
  * Created by taoshuang on 2015/10/8.
  */
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.alibaba.fastjson.JSONObject;
@@ -22,7 +17,6 @@ import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
-import com.hzpd.utils.SystemBarTintManager;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -34,24 +28,27 @@ import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
-public class ZQ_ReplyCommentActivity extends MBaseActivity {
+public class ZQ_ReplyCommentActivity extends MBaseActivity implements View.OnClickListener {
 
     @Override
     public String getAnalyticPageName() {
         return AnalyticUtils.SCREEN.comment;
     }
 
-    @ViewInject(R.id.zq_reply_et_content)
     private EditText zq_reply_et_content;
-
+    private View zq_reply_tv_cancle;
+    private View zq_reply_tv_send;
     private String bean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zq_reply_comment_layout);
-        ViewUtils.inject(this);
-        changeStatus();
+        zq_reply_et_content = (EditText) findViewById(R.id.zq_reply_et_content);
+        zq_reply_tv_cancle = findViewById(R.id.zq_reply_tv_cancle);
+        zq_reply_tv_cancle.setOnClickListener(this);
+        zq_reply_tv_send = findViewById(R.id.zq_reply_tv_send);
+        zq_reply_tv_send.setOnClickListener(this);
         Intent intent = getIntent();
         if (null != intent) {
             bean = intent.getStringExtra("USER_UID");
@@ -60,39 +57,9 @@ public class ZQ_ReplyCommentActivity extends MBaseActivity {
 
     }
 
-    private void changeStatus() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true);
-            //透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //透明导航栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
-
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(true);
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
-        int color = typedValue.data;
-        tintManager.setStatusBarTintColor(color);
-    }
-
-    @TargetApi(19)
-    private void setTranslucentStatus(boolean on) {
-        Window win = getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
-    }
-
-    @OnClick({R.id.zq_reply_tv_cancle, R.id.zq_reply_tv_send})
-    private void click(View view) {
-        switch (view.getId()) {
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.zq_reply_tv_cancle: {
                 finish();
             }
@@ -113,7 +80,6 @@ public class ZQ_ReplyCommentActivity extends MBaseActivity {
         }
     }
 
-    //7784
     // 发表评论
     private void sendComment(String content) {
         if (spu.getUser() == null) {
@@ -163,4 +129,6 @@ public class ZQ_ReplyCommentActivity extends MBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
     }
+
+
 }

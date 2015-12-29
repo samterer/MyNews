@@ -1344,7 +1344,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 int num = Integer.parseInt(tagBean.getNum());
                 if (num > 1) {
                     details_head_tag_num.setVisibility(View.VISIBLE);
-                    details_head_tag_num.setText("" + num);
+                    details_head_tag_num.setText("" + num+""+getString(R.string.follow_num));
                 }
             } else {
                 details_head_tag_num.setVisibility(View.GONE);

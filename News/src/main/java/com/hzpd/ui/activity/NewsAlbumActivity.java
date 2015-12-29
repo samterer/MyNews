@@ -27,6 +27,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.hzpd.custorm.DonutProgress;
 import com.hzpd.custorm.ImageViewPager;
 import com.hzpd.custorm.RecyclingPagerAdapter;
@@ -54,7 +57,6 @@ import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
@@ -64,7 +66,6 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -81,45 +82,32 @@ import uk.co.senab.photoview.PhotoView;
  * 图集展示*
  */
 public class NewsAlbumActivity extends MBaseActivity implements OnClickListener {
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
+
     @Override
     public String getAnalyticPageName() {
         return "图集展示页";
     }
 
-    @ViewInject(R.id.img_detail_test_pager)
     private ImageViewPager mViewPager;
-    @ViewInject(R.id.img_detail_title_id)
     private TextView mTextViewTitle;
-    @ViewInject(R.id.img_detail_content_id)
     private TextView mTextViewContent;
-    @ViewInject(R.id.img_detial_number_id)
     private TextView mTextViewNumber;
-    @ViewInject(R.id.main_title_personal)
     private View mLayoutBack;
-
-    @ViewInject(R.id.imgdetails_title_pl)
     private LinearLayout imgdetails_title_pl;
-    @ViewInject(R.id.imgdetails_title_comment)
     private LinearLayout imgdetails_title_comment;
-    @ViewInject(R.id.imgdetails_title_num)
     private TextView imgdetails_title_num;
-
-    @ViewInject(R.id.album_donutProgress)
     private DonutProgress donutProgress;
-
     private NewsAlbumAdapter simpleAdapter;
-
     private String from;//news album newsitem
     private int currentPosition = 0;
-
-    @ViewInject(R.id.album_rl_head)
     private RelativeLayout album_rl_head;//头部
-    @ViewInject(R.id.album_rl_bottom)//底部
     private RelativeLayout album_rl_bottom;
-
-    @ViewInject(R.id.pop_xiazai_iv1)
     private ImageView pop_xiazai_iv1;
-
     private boolean animationFlag = false;//是否隐藏
 
     private NewsDetailBean ndb;
@@ -128,9 +116,9 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.news_detail_img_main_layout);
-        ViewUtils.inject(this);
+
+        initViews();
 
         pop_xiazai_iv1.setOnClickListener(new OnClickListener() {
             @Override
@@ -161,8 +149,6 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                             @Override
                             public void onStart() {
                                 super.onStart();
-//						donutProgress.setVisibility(View.VISIBLE);
-//						donutProgress.setProgress(0);
                             }
 
                             @Override
@@ -170,25 +156,38 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                                                   boolean isUploading) {
                                 super.onLoading(total, current, isUploading);
                                 LogUtils.i("current:" + current + " total:" + total + "   " + (current * 100 / total));
-//						donutProgress.setProgress((int)(current*100/total));
                             }
 
                             @Override
                             public void onSuccess(ResponseInfo<File> responseInfo) {
                                 TUtils.toast(getString(R.string.toast_downloaded_at, responseInfo.result.getAbsolutePath()));
                                 MediaScannerConnection.scanFile(NewsAlbumActivity.this, new String[]{imagePath}, null, null);
-//						alpha();
                             }
 
                             @Override
                             public void onFailure(HttpException error, String msg) {
                                 TUtils.toast(getString(R.string.toast_download_failed));
-//						alpha();
                             }
                         });
             }
         });
         init();
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    private void initViews() {
+        mViewPager = (ImageViewPager) findViewById(R.id.img_detail_test_pager);
+        mTextViewTitle = (TextView) findViewById(R.id.img_detail_title_id);
+        mTextViewContent = (TextView) findViewById(R.id.img_detail_content_id);
+        mTextViewNumber = (TextView) findViewById(R.id.img_detial_number_id);
+        mLayoutBack = findViewById(R.id.main_title_personal);
+        imgdetails_title_pl = (LinearLayout) findViewById(R.id.imgdetails_title_pl);
+        imgdetails_title_comment = (LinearLayout) findViewById(R.id.imgdetails_title_comment);
+        imgdetails_title_num= (TextView) findViewById(R.id.imgdetails_title_num);
+        donutProgress= (DonutProgress) findViewById(R.id.album_donutProgress);
+        album_rl_head= (RelativeLayout) findViewById(R.id.album_rl_head);
+        album_rl_bottom= (RelativeLayout) findViewById(R.id.album_rl_bottom);
+        pop_xiazai_iv1= (ImageView) findViewById(R.id.pop_xiazai_iv1);
     }
 
     private void init() {
@@ -297,6 +296,46 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
         });
         mViewPager.setCurrentItem(currentPosition);
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "NewsAlbum Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.hzpd.ui.activity/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "NewsAlbum Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.hzpd.ui.activity/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 
     class NewsAlbumAdapter extends RecyclingPagerAdapter {
@@ -597,8 +636,6 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                             @Override
                             public void onStart() {
                                 super.onStart();
-//						donutProgress.setVisibility(View.VISIBLE);
-//						donutProgress.setProgress(0);
                             }
 
                             @Override
@@ -606,19 +643,16 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                                                   boolean isUploading) {
                                 super.onLoading(total, current, isUploading);
                                 LogUtils.i("current:" + current + " total:" + total + "   " + (current * 100 / total));
-//						donutProgress.setProgress((int)(current*100/total));
                             }
 
                             @Override
                             public void onSuccess(ResponseInfo<File> responseInfo) {
                                 TUtils.toast(getString(R.string.toast_downloaded_at, responseInfo.result.getAbsolutePath()));
-//						alpha();
                             }
 
                             @Override
                             public void onFailure(HttpException error, String msg) {
                                 TUtils.toast(getString(R.string.toast_download_failed));
-//						alpha();
                             }
                         });
             }
@@ -681,9 +715,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                     JSONObject object = obj.getJSONObject("data");
                     //1:收藏操作成功 2:取消收藏操作成功
                     if ("1".equals(object.getString("status"))) {
-//								newdetail_collection.setImageResource(R.drawable.zqzx_nd_collection_selected);
                     } else {
-//								newdetail_collection.setImageResource(R.drawable.zqzx_nd_collection);
                     }
                 }
 
@@ -964,7 +996,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
         params.addBodyParameter("nids", imgListBean.getPid());
         SPUtil.addParams(params);
         httpUtils.send(HttpMethod.POST
-                ,  InterfaceJsonfile.commentsConts
+                , InterfaceJsonfile.commentsConts
                 , params
                 , new RequestCallBack<String>() {
             @Override

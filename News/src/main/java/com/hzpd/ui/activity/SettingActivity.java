@@ -56,72 +56,49 @@ import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import de.greenrobot.event.EventBus;
 
-public class SettingActivity extends MBaseActivity {
+public class SettingActivity extends MBaseActivity implements View.OnClickListener {
     @Override
     public String getAnalyticPageName() {
         return AnalyticUtils.SCREEN.setting;
     }
 
-    @ViewInject(R.id.stitle_tv_content)
     private TextView stitle_tv_content;
-    @ViewInject(R.id.zqzx_setting_skin)
-    private LinearLayout zqzx_setting_skin;
-    @ViewInject(R.id.setting_chosse_skin)
-    private TextView setting_chosse_skin;
-    @ViewInject(R.id.zqzx_setting_textsize)
     private LinearLayout zqzx_setting_textsize;
-    @ViewInject(R.id.setting_chosse_textsize)
     private FontTextView setting_chosse_textsize;
-    @ViewInject(R.id.zqzx_setting_cache)
     private FontTextView zqzx_setting_cache;
-    @ViewInject(R.id.zqzx_setting_tv_version)
     private FontTextView zqzx_setting_tv_version;
     //站点设置
-    @ViewInject(R.id.sb_use_listener)
     private SwitchButton sb_use_listener;
     private View loadingView;
     private LinearLayout zqzx_setting_login_out;
     private AlertDialog.Builder mDeleteDialog;
     private TextView setting_choose_country;
 
+    private View zqzx_setting_aboutus;
+    private View zqzx_setting_deletecache;
+    private View zqzx_setting_feedback;
+    private View stitle_ll_back;
+    private View zqzx_setting_update;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zqzx_setting_layout);
-        EventBus.getDefault().register(this);
-        try {
-            ViewUtils.inject(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         super.changeStatusBar();
-        loadingView = findViewById(R.id.app_progress_bar);
-        zqzx_setting_login_out = (LinearLayout) findViewById(R.id.zqzx_setting_login_out);
+
+        initViews();
+
+        stitle_tv_content.setText(R.string.title_settings);//标题
+
+        EventBus.getDefault().register(this);
+
         if (spu.getUser() != null) {
             zqzx_setting_login_out.setVisibility(View.VISIBLE);
         }
 
-        skin = new String[]{this.getResources().getString(R.string.skin_style_blue), this.getResources().getString(R.string.skin_style_red), "黑夜"};//"黑夜"
-        switch (App.getInstance().getThemeName()) {
-            case "0": {
-                setting_chosse_skin.setText(this.getResources().getString(R.string.skin_style_blue));
-            }
-            break;
-            case "1": {
-                setting_chosse_skin.setText(this.getResources().getString(R.string.skin_style_red));
-            }
-            break;
-            case "2": {
-//                setting_chosse_skin.setText(this.getResources().getString(R.string.skin_style_red));
-                setting_chosse_skin.setText("护眼模式");
-            }
-            break;
-        }
         textSize = new String[]{this.getResources().getString(R.string.settings_option_font_large), this.getResources().getString(R.string.settings_option_font_medium), this.getResources().getString(R.string.settings_option_font_small)};//"Besar", "Sedang", "Kecil"
-        zqzx_setting_skin.setOnClickListener(new ChooseSkinClickListener());
-
-        stitle_tv_content.setText(R.string.title_settings);
-
+        zqzx_setting_textsize.setOnClickListener(new TextSizeAlertClickListener());
         //设置字体大小
         switch (spu.getTextSize()) {
             case CODE.textSize_big: {
@@ -137,12 +114,9 @@ public class SettingActivity extends MBaseActivity {
             }
             break;
         }
-        zqzx_setting_textsize.setOnClickListener(new TextSizeAlertClickListener());
 
         //推送获取当前状态
-        Log.i("", "spu.getOffTuiSong()" + spu.getOffTuiSong());
         if (spu.getOffTuiSong()) {
-            LogUtils.e("设置推送状态");
             sb_use_listener.setChecked(true);
         } else {
             sb_use_listener.setChecked(false);
@@ -162,7 +136,6 @@ public class SettingActivity extends MBaseActivity {
 
         //获取版本信息
         zqzx_setting_tv_version.setText(App.getInstance().getVersionName());
-
         //设置国家
         setting_choose_country = (TextView) findViewById(R.id.setting_choose_country);
         Object country_Name = SharePreferecesUtils.getParam(SettingActivity.this, "CountryName", "Indonesia");
@@ -175,24 +148,42 @@ public class SettingActivity extends MBaseActivity {
 
                     @Override
                     public void onSelectCountry(String name, String code, String dialCode) {
-                        Log.i("Setting", "CountryName:" + name + "\nCode: " + code + "\nCurrency: " + CountryPicker.getCurrencyCode(code) + "\nDial Code: " + dialCode);
                         setting_choose_country.setText("" + name);
                         SharePreferecesUtils.setParam(SettingActivity.this, "CountryName", name);
-//                        activity.startService(new Intent(activity, ClearCacheService.class));
                         SPUtil.setCountry(code);
-//                      重新设置
                         EventBus.getDefault().post(new RestartEvent());
                         restartApplication();
                         finish();
                         picker.dismiss();
                     }
                 });
-
                 picker.show(getSupportFragmentManager(), "COUNTRY_CODE_PICKER");
             }
         });
 
         getCacheSize();
+    }
+
+    private void initViews() {
+        loadingView = findViewById(R.id.app_progress_bar);
+        stitle_tv_content = (TextView) findViewById(R.id.stitle_tv_content);
+        zqzx_setting_textsize = (LinearLayout) findViewById(R.id.zqzx_setting_textsize);
+        setting_chosse_textsize = (FontTextView) findViewById(R.id.setting_chosse_textsize);
+        zqzx_setting_cache = (FontTextView) findViewById(R.id.zqzx_setting_cache);
+        zqzx_setting_tv_version = (FontTextView) findViewById(R.id.zqzx_setting_tv_version);
+        sb_use_listener = (SwitchButton) findViewById(R.id.sb_use_listener);
+        zqzx_setting_aboutus = findViewById(R.id.zqzx_setting_aboutus);
+        zqzx_setting_aboutus.setOnClickListener(this);
+        zqzx_setting_deletecache = findViewById(R.id.zqzx_setting_deletecache);
+        zqzx_setting_deletecache.setOnClickListener(this);
+        zqzx_setting_feedback = findViewById(R.id.zqzx_setting_feedback);
+        zqzx_setting_feedback.setOnClickListener(this);
+        stitle_ll_back = findViewById(R.id.stitle_ll_back);
+        stitle_ll_back.setOnClickListener(this);
+        zqzx_setting_update = findViewById(R.id.zqzx_setting_update);
+        zqzx_setting_update.setOnClickListener(this);
+        zqzx_setting_login_out = (LinearLayout) findViewById(R.id.zqzx_setting_login_out);
+        zqzx_setting_login_out.setOnClickListener(this);
     }
 
     private void restartApplication() {
@@ -207,7 +198,6 @@ public class SettingActivity extends MBaseActivity {
         super.onDestroy();
     }
 
-    //开关状态
     private void pushSwitch(boolean isChecked) {
 //		保存推送开关状态
         spu.setOffTuiSong(isChecked);
@@ -221,10 +211,8 @@ public class SettingActivity extends MBaseActivity {
                             @Override
                             public void gotResult(int arg0, String arg1,
                                                   Set<String> arg2) {
-                                Log.i("", "arg0-->" + arg0 + " arg1-->" + arg1);
                                 if (arg2 != null) {
                                     for (String s : arg2) {
-                                        Log.i("", "arg2->" + s);
                                     }
                                 }
                             }
@@ -237,42 +225,92 @@ public class SettingActivity extends MBaseActivity {
 
     }
 
-    //	关于我们
-    @OnClick(R.id.zqzx_setting_aboutus)
-    private void aboutus(View v) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick())
+
+    @Override
+    public void onClick(View v) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
             return;
-        Intent mIntent = new Intent(this, AboutUsActivity.class);
-        startActivity(mIntent);
-        AAnim.ActivityStartAnimation(this);
-    }
-
-    private String[] skin;
-
-    /**
-     * 菜单弹出窗口
-     */
-    class ChooseSkinClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-//            @string/setting_skin
-            new AlertDialog.Builder(SettingActivity.this).setTitle(getResources().getString(R.string.setting_skin)).setItems(skin, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    if (App.getInstance().getThemeName().equals("" + which)) {
-                        return;
-                    }
-                    setting_chosse_skin.setText(skin[which]);
-                    Log.e("which", "which" + which);
-                    App.getInstance().setThemeName("" + which);
-                    EventBus.getDefault().post(new SetThemeEvent());
-                    stitle_tv_content.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            finish();
-                        }
-                    }, 300);
+        }
+        switch (v.getId()) {
+            case R.id.zqzx_setting_aboutus:
+                Intent mIntent = new Intent(this, AboutUsActivity.class);
+                startActivity(mIntent);
+                AAnim.ActivityStartAnimation(this);
+                break;
+            case R.id.zqzx_setting_deletecache:
+                mDeleteDialog = new Builder(this);
+                mDeleteDialog.setTitle(R.string.prompt_clear_cache_dialog_title);
+                mDeleteDialog.setMessage(R.string.prompt_clear_cache_dialog_msg);
+                mDeleteDialog.setNegativeButton(android.R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                loadingView.setVisibility(View.VISIBLE);
+                                activity.startService(new Intent(activity, ClearCacheService.class));
+                                App.getInstance().newTimeMap.clear();
+                                handler.sendEmptyMessageDelayed(111, 2000);
+                            }
+                        });
+                mDeleteDialog.setPositiveButton(android.R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                loadingView.setVisibility(View.GONE);
+                            }
+                        });
+                mDeleteDialog.show();
+                break;
+            case R.id.zqzx_setting_feedback:
+                Intent intent = new Intent(this, ZQ_FeedBackActivity.class);
+                startActivity(intent);
+                AAnim.ActivityStartAnimation(this);
+                break;
+            case R.id.stitle_ll_back:
+                finish();
+                break;
+            case R.id.zqzx_setting_update:
+                try {
+                    getSharedPreferences(UpdateUtils.SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE)
+                            .edit()
+                            .putLong(UpdateUtils.KEY.UPDATE_LATER_TIME, 0L)
+                            .apply();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            }).show();
+                Intent intentUpdate = new Intent(this, UpdateService.class);
+                startService(intentUpdate);
+                break;
+            case R.id.zqzx_setting_login_out:
+                String logout = getResources().getString(
+                        R.string.com_facebook_loginview_log_out_action);
+                String cancel = getResources().getString(
+                        R.string.com_facebook_loginview_cancel_action);
+                String message;
+                Profile profile = Profile.getCurrentProfile();
+                if (profile != null && profile.getName() != null) {
+                    message = String.format(
+                            getResources().getString(
+                                    R.string.com_facebook_loginview_logged_in_as),
+                            profile.getName());
+                } else {
+                    message = getResources().getString(
+                            R.string.com_facebook_loginview_logged_in_using_facebook);
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(message)
+                        .setCancelable(true)
+                        .setPositiveButton(logout, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                EventBus.getDefault().post(new LoginOutEvent());
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(cancel, null);
+                builder.create().show();
+                break;
         }
     }
 
@@ -298,11 +336,6 @@ public class SettingActivity extends MBaseActivity {
             }).show();
         }
     }
-
-
-    private String[] areas = new String[]{"Indonesia"};
-    private String[] areas1 = new String[]{"def"};
-
 
     public void getCacheSize() {
         GetFileSizeUtil fz = GetFileSizeUtil.getInstance();
@@ -337,102 +370,6 @@ public class SettingActivity extends MBaseActivity {
             }
         }
     };
-
-
-    @OnClick(R.id.zqzx_setting_deletecache)
-    private void deleteCache(View v) {
-        mDeleteDialog = new Builder(this);
-        mDeleteDialog.setTitle(R.string.prompt_clear_cache_dialog_title);
-        mDeleteDialog.setMessage(R.string.prompt_clear_cache_dialog_msg);
-        mDeleteDialog.setNegativeButton(android.R.string.ok,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        loadingView.setVisibility(View.VISIBLE);
-                        activity.startService(new Intent(activity, ClearCacheService.class));
-                        //刪除SharedPreference
-//                        DataCleanManager.cleanSharedPreference(SettingActivity.this);
-//                        App.getInstance().newTimeMap.put(channelbean.getTid(), obj.getString("newTime"));
-                        App.getInstance().newTimeMap.clear();
-                        handler.sendEmptyMessageDelayed(111, 2000);
-                    }
-                });
-        mDeleteDialog.setPositiveButton(android.R.string.cancel,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        loadingView.setVisibility(View.GONE);
-                    }
-                });
-        mDeleteDialog.show();
-    }
-
-    @OnClick(R.id.zqzx_setting_feedback)
-    private void feedBack(View v) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
-            return;
-        }
-
-        Intent intent = new Intent(this, ZQ_FeedBackActivity.class);
-        startActivity(intent);
-        AAnim.ActivityStartAnimation(this);
-    }
-
-    @OnClick(R.id.stitle_ll_back)
-    private void goback(View v) {
-        finish();
-    }
-
-    @OnClick(R.id.zqzx_setting_login_out)
-    private void loginOut(View v) {
-        String logout = getResources().getString(
-                R.string.com_facebook_loginview_log_out_action);
-        String cancel = getResources().getString(
-                R.string.com_facebook_loginview_cancel_action);
-        String message;
-        Profile profile = Profile.getCurrentProfile();
-        if (profile != null && profile.getName() != null) {
-            message = String.format(
-                    getResources().getString(
-                            R.string.com_facebook_loginview_logged_in_as),
-                    profile.getName());
-        } else {
-            message = getResources().getString(
-                    R.string.com_facebook_loginview_logged_in_using_facebook);
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(message)
-                .setCancelable(true)
-                .setPositiveButton(logout, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        EventBus.getDefault().post(new LoginOutEvent());
-                        finish();
-                    }
-                })
-                .setNegativeButton(cancel, null);
-        builder.create().show();
-    }
-
-
-    @OnClick(R.id.zqzx_setting_update)
-    private void checkUpdate(View v) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
-            return;
-        }
-        try {
-            getSharedPreferences(UpdateUtils.SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE)
-                    .edit()
-                    .putLong(UpdateUtils.KEY.UPDATE_LATER_TIME, 0L)
-                    .apply();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Intent intent = new Intent(this, UpdateService.class);
-        startService(intent);
-    }
 
     public void onEventMainThread(CheckUpdateEvent event) {
         Log.e("UPDATE", null);

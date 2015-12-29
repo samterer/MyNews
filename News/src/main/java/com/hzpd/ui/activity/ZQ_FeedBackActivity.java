@@ -29,43 +29,46 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ZQ_FeedBackActivity extends MBaseActivity {
+public class ZQ_FeedBackActivity extends MBaseActivity implements View.OnClickListener {
     @Override
     public String getAnalyticPageName() {
         return AnalyticUtils.SCREEN.feedback;
     }
 
-    @ViewInject(R.id.stitle_tv_content)
     private TextView stitle_tv_content;
-
-    @ViewInject(R.id.zq_feedback_et_content)
     private EditText zq_feedback_et_content;
-    @ViewInject(R.id.zq_feedback_et_email)
     private EditText zq_feedback_et_email;
-    @ViewInject(R.id.zq_feedback_btn_submit)
     private Button zq_feedback_btn_submit;
-
     private long start;
-
     private View cover_top;
+    private View stitle_ll_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zq_feedback_layout);
+        super.changeStatusBar();
+        initViews();
+        SPUtil.setFont(zq_feedback_et_content);
+        SPUtil.setFont(zq_feedback_et_email);
+        SPUtil.setFont(zq_feedback_btn_submit);
+        stitle_tv_content.setText(getString(R.string.prompt_feedback));
+    }
+
+    private void initViews() {
+        stitle_tv_content = (TextView) findViewById(R.id.stitle_tv_content);
+        zq_feedback_et_content = (EditText) findViewById(R.id.zq_feedback_et_content);
+        zq_feedback_et_email = (EditText) findViewById(R.id.zq_feedback_et_email);
+        zq_feedback_btn_submit = (Button) findViewById(R.id.zq_feedback_btn_submit);
+        zq_feedback_btn_submit.setOnClickListener(this);
+        stitle_ll_back=findViewById(R.id.stitle_ll_back);
+        stitle_ll_back.setOnClickListener(this);
         cover_top = findViewById(R.id.cover_top);
         if (App.getInstance().getThemeName().equals("0")) {
             cover_top.setVisibility(View.GONE);
         } else {
             cover_top.setVisibility(View.VISIBLE);
         }
-        ViewUtils.inject(this);
-        super.changeStatusBar();
-        SPUtil.setFont(zq_feedback_et_content);
-        SPUtil.setFont(zq_feedback_et_email);
-        SPUtil.setFont(zq_feedback_btn_submit);
-        stitle_tv_content.setText(getString(R.string.prompt_feedback));
-
     }
 
     @Override
@@ -73,20 +76,28 @@ public class ZQ_FeedBackActivity extends MBaseActivity {
         super.onDestroy();
     }
 
-    @OnClick(R.id.zq_feedback_btn_submit)
-    private void submit(View view) {
-        if (start > 0) {
-            if (System.currentTimeMillis() - start < 2000) {
-                return;
-            }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.zq_feedback_btn_submit:
+                if (start > 0) {
+                    if (System.currentTimeMillis() - start < 2000) {
+                        return;
+                    }
+                }
+                String content = zq_feedback_et_content.getText().toString();
+                String email = zq_feedback_et_email.getText().toString();
+                submit(content, email);
+                start = System.currentTimeMillis();
+                break;
+            case R.id.stitle_ll_back:
+                finish();
+                break;
         }
 
-        String content = zq_feedback_et_content.getText().toString();
-        String email = zq_feedback_et_email.getText().toString();
-
-        submit(content, email);
-        start = System.currentTimeMillis();
     }
+
 
     //判断email格式是否正确
     public boolean isEmail(String email) {
@@ -107,10 +118,11 @@ public class ZQ_FeedBackActivity extends MBaseActivity {
                 TUtils.toast(getString(R.string.toast_email_cannot_be_error));//格式不正确
                 return;
             }
-        } else {
-            TUtils.toast(getString(R.string.toast_email_cannot_be_empty));//不能为空
-            return;
         }
+//        else {
+//            TUtils.toast(getString(R.string.toast_email_cannot_be_empty));//不能为空
+//            return;
+//        }
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("Email", email);
@@ -149,8 +161,5 @@ public class ZQ_FeedBackActivity extends MBaseActivity {
     }
 
 
-    @OnClick(R.id.stitle_ll_back)
-    private void goback(View v) {
-        finish();
-    }
+
 }

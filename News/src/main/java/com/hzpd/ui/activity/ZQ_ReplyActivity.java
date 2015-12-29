@@ -35,39 +35,35 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import de.greenrobot.event.EventBus;
 
-public class ZQ_ReplyActivity extends MBaseActivity {
+public class ZQ_ReplyActivity extends MBaseActivity implements View.OnClickListener {
     @Override
     public String getAnalyticPageName() {
         return AnalyticUtils.SCREEN.comment;
     }
 
-    @ViewInject(R.id.zq_reply_et_content)
     private EditText zq_reply_et_content;
-    @ViewInject(R.id.zq_reply_share_iv)
     private ImageView zq_reply_share_iv;
-    @ViewInject(R.id.zq_reply_share_iv1)
-    private ImageView zq_reply_share_iv1;
-    @ViewInject(R.id.stitle_tv_content)
     private TextView stitle_tv_content;
-    @ViewInject(R.id.stitle_ll_back)
     private View stitle_ll_back;
-    @ViewInject(R.id.iv_reply_share)
     private ImageView iv_reply_share;
-
     private boolean isShare = false;
-
     private ReplayBean bean;
     private View loadingView;
-
     private RelativeLayout rl_share1;
+    private View zq_reply_tv_send;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zq_reply_layout);
+        Intent intent = getIntent();
+        if (null != intent) {
+            bean = (ReplayBean) intent.getSerializableExtra("replay");
+        }
+        super.changeStatusBar();
+        
+        initViews();
 
-        loadingView = findViewById(R.id.app_progress_bar);
-        rl_share1 = (RelativeLayout) findViewById(R.id.rl_share1);
         rl_share1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,14 +77,22 @@ public class ZQ_ReplyActivity extends MBaseActivity {
             }
         });
 
-        ViewUtils.inject(this);
+    }
 
+    private void initViews() {
+        stitle_tv_content = (TextView) findViewById(R.id.stitle_tv_content);
         stitle_tv_content.setText(R.string.comment);
-        Intent intent = getIntent();
-        if (null != intent) {
-            bean = (ReplayBean) intent.getSerializableExtra("replay");
-        }
-        super.changeStatusBar();
+        zq_reply_et_content = (EditText) findViewById(R.id.zq_reply_et_content);
+        zq_reply_share_iv = (ImageView) findViewById(R.id.zq_reply_share_iv);
+        zq_reply_share_iv.setOnClickListener(this);
+        loadingView = findViewById(R.id.app_progress_bar);
+        rl_share1 = (RelativeLayout) findViewById(R.id.rl_share1);
+        stitle_ll_back = findViewById(R.id.stitle_ll_back);
+        stitle_ll_back.setOnClickListener(this);
+        zq_reply_tv_send = findViewById(R.id.zq_reply_tv_send);
+        zq_reply_tv_send.setOnClickListener(this);
+        iv_reply_share = (ImageView) findViewById(R.id.iv_reply_share);
+
     }
 
     @Override
@@ -108,43 +112,6 @@ public class ZQ_ReplyActivity extends MBaseActivity {
             bean = (ReplayBean) savedInstanceState.getSerializable("replay");
         }
         super.onRestoreInstanceState(savedInstanceState);
-    }
-
-
-    @OnClick({R.id.zq_reply_tv_cancle, R.id.zq_reply_tv_send, R.id.zq_reply_share_iv, R.id.zq_reply_share_iv1, R.id.stitle_ll_back})
-    private void click(View view) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
-            return;
-        }
-
-        switch (view.getId()) {
-            case R.id.stitle_ll_back:
-                finish();
-                break;
-            case R.id.zq_reply_share_iv: {
-            }
-            break;
-            case R.id.zq_reply_share_iv1: {
-            }
-            case R.id.zq_reply_tv_cancle: {
-                finish();
-            }
-            break;
-            case R.id.zq_reply_tv_send: {
-                loadingView.setVisibility(View.VISIBLE);
-                String comcount = bean.getComcount();
-                String comment = zq_reply_et_content.getText().toString();
-                if (null == comment || "".equals(comment)) {
-                    TUtils.toast(getString(R.string.toast_input_cannot_be_empty));
-                    return;
-                }
-                sendComment(comment, comcount);
-            }
-            break;
-
-            default:
-                break;
-        }
     }
 
     // 发表评论
@@ -217,4 +184,33 @@ public class ZQ_ReplyActivity extends MBaseActivity {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+            return;
+        }
+        switch (v.getId()) {
+            case R.id.stitle_ll_back:
+                finish();
+                break;
+            case R.id.zq_reply_tv_cancle: {
+                finish();
+            }
+            break;
+            case R.id.zq_reply_tv_send: {
+                String comcount = bean.getComcount();
+                String comment = zq_reply_et_content.getText().toString();
+                if (null == comment || "".equals(comment)) {
+                    TUtils.toast(getString(R.string.toast_input_cannot_be_empty));
+                    return;
+                }
+                loadingView.setVisibility(View.VISIBLE);
+                sendComment(comment, comcount);
+            }
+            break;
+
+            default:
+                break;
+        }
+    }
 }
