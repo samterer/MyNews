@@ -1,2 +1,2 @@
-channelId=rom
-gameId=365
+channelId=letang
+gameId=rom

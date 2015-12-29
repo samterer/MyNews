@@ -49,8 +49,7 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 
-public class
-        MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity {
 
     public final static String TAG = "NEWS";
     public final static String TAG_DIALOG = "NEWS_DIALOG";
@@ -59,17 +58,7 @@ public class
         super();
     }
 
-    public static final int REQUEST_IMAGE = 2;
-    private int itemSelectPositon = 0;
-    private Fragment currentFrag;
-    @ViewInject(R.id.title_content)
     private TextView mTextView;
-    public final static int FILECHOOSER_RESULTCODE = 1900;
-
-    private DrawerArrowDrawable drawerArrowDrawable;
-    private float offset;
-    private boolean flipped;
-
     List<HttpHandler> handlerList = new ArrayList<>();
 
 
@@ -84,7 +73,6 @@ public class
         super.finish();
     }
 
-    private View login_bg;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,8 +80,7 @@ public class
         EventBus.getDefault().register(this);
         long start = System.currentTimeMillis();
         setContentView(R.layout.app_main);
-        ViewUtils.inject(this);
-        login_bg = findViewById(R.id.login_bg);
+        mTextView = (TextView) findViewById(R.id.title_content);
         viewPager = (MyViewPager) findViewById(R.id.main_pager);
         adapter = new MainPagerAdapter(getSupportFragmentManager());
         fragments = new BaseFragment[3];

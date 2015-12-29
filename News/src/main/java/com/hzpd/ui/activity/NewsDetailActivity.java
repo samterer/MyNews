@@ -434,13 +434,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             } catch (Exception e) {
                 isVideo = null;
             }
-            if ("0".equals(nb.getTid())) {
-                detailPathRoot = App.getInstance().getJsonFileCacheRootDir() + File.separator + "subject" + File.separator
-                        + "notid" + File.separator;
-            } else {
-                detailPathRoot = App.getInstance().getJsonFileCacheRootDir() + File.separator + "newsdetail"
-                        + File.separator;
-            }
+            detailPathRoot = App.getInstance().getJsonFileCacheRootDir() + File.separator + "newsdetail"
+                    + File.separator;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1041,6 +1036,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             + "<link rel=\"stylesheet\" type=\"text/css\" href=\"android.css\" />\n"
             + "<script type=\"text/javascript\" src=\"android.js\" ></script>"
             + "</head><body>";
+
     public static final String HEAD_night = "<html><head>" + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n"
             + " <meta name=\"viewport\"\n" +
             "          content=\"width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes\"/>"
@@ -1063,7 +1059,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         stringBuilder.append(content);
         stringBuilder.append(FOOTER);
         mWebView.loadDataWithBaseURL(BASE_URL, formatStringToHtml(stringBuilder.toString(), textSize), "text/html", "utf-8", BASE_URL);
-        //mWebView.loadUrl("http://www.nutnote.com/ltcms/api.php?s=/View/details/nid/378216");
         jsInterface.setNewsDetailBean(mBean);
     }
 
@@ -1127,7 +1122,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     //查看评论
     private void getLatestComm() {
         //TODO 评论
-        Log.e("test", "getLatestComm ");
         if (mBean == null) {
             return;
         }
@@ -1170,12 +1164,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 return;
             }
             if (obj != null && 200 == obj.getIntValue("code")) {
-                Log.e("test", "getLatestComm   200");
                 ll_rob.setVisibility(View.GONE);
                 latestList = (ArrayList<CommentzqzxBean>) JSONArray.parseArray(
                         obj.getString("data"), CommentzqzxBean.class);
 
-                Log.e("test", "test--->" + latestList.toString());
                 // 添加数据到Adpater
                 mCommentListAdapter.appendData(latestList);
             } else {
@@ -1318,7 +1310,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
         //查看原文
         if (mBean.getSource() != null) {
-            Log.i("mBean.getSource()", "mBean.getSource()--->" + mBean.getSource());
             details_more_check.setVisibility(View.VISIBLE);
             details_more_check.setOnClickListener(new OnClickListener() {
                 @Override
@@ -1336,7 +1327,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
 //        tag相关
         if ((mBean.getTag() != null && mBean.getTag().size() > 0)) {
-            Log.i("NewsDetails", "NewsDtails  mBean.getTag()--->" + mBean.getTag());
             final TagBean tagBean = mBean.getTag().get(0);
             rl_related.setVisibility(View.VISIBLE);
             ll_tag.setVisibility(View.VISIBLE);
@@ -1378,7 +1368,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             details_tv_subscribe.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("NewsDetails", "NewsDetails-->" + isTagSelect);
                     if (isTagSelect) {
                         details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
                         Intent intent = new Intent(NewsDetailActivity.this, TagActivity.class);
@@ -1422,8 +1411,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     }
                 }
             });
-
-
         }
 
         if (mBean.getRef() != null && mBean.getRef().size() > 0) {
@@ -1476,7 +1463,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         setLeftPic(bean, view, color);
                     }
                 }
-//                View view = LayoutInflater.from(this).inflate(R.layout.news_detail_other_layout, null);
                 view.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {

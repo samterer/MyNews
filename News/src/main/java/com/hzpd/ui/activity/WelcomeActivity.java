@@ -59,7 +59,6 @@ public class WelcomeActivity extends MWBaseActivity {
     private volatile boolean exists;
     private FragmentManager fm;
     private boolean isFirstStartApp;
-    private View welcome_top_view;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,7 +66,6 @@ public class WelcomeActivity extends MWBaseActivity {
         Log.e("test", "  WelcomeActivity " + getResources().getBoolean(R.bool.isRom));
         exists = false;
         setContentView(R.layout.frame_welcome);
-        welcome_top_view = findViewById(R.id.welcome_top_view);
         fm = getSupportFragmentManager();
         FragmentTransaction tran = fm.beginTransaction();
         isFirstStartApp = spu.getIsTodayFistStartApp();

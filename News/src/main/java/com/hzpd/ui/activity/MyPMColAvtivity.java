@@ -58,7 +58,7 @@ import java.util.List;
  *         推送和收藏页面
  */
 
-public class MyPMColAvtivity extends MBaseActivity {
+public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListener{
     @Override
     public String getAnalyticPageName() {
         if ("pushmsg".equals(type)) {
@@ -68,12 +68,8 @@ public class MyPMColAvtivity extends MBaseActivity {
         }
     }
 
-    @ViewInject(R.id.stitle_tv_content)
     private TextView stitle_tv_content;
-
-    @ViewInject(R.id.pushmsg_lv)
     private ListView pushmsg_lv;
-    @ViewInject(R.id.pushmsg_tv_empty)
     private View pushmsg_tv_empty;
 
     private int Page = 1;//页数
@@ -86,6 +82,7 @@ public class MyPMColAvtivity extends MBaseActivity {
 
     private String type;
     private View coverTop;
+    private View stitle_ll_back;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,10 +94,8 @@ public class MyPMColAvtivity extends MBaseActivity {
             type = intent.getStringExtra("type");
             super.onCreate(savedInstanceState);
             setContentView(R.layout.mypushmsg_layout);
-            ViewUtils.inject(this);
-            findViewById(R.id.mycomments_title).setVisibility(View.GONE);
+            initViews();
             init();
-            coverTop = findViewById(R.id.cover_top);
             if (App.getInstance().getThemeName().equals("0")) {
                 coverTop.setVisibility(View.GONE);
             } else {
@@ -110,6 +105,16 @@ public class MyPMColAvtivity extends MBaseActivity {
             e.printStackTrace();
         }
         super.changeStatusBar();
+    }
+
+    private void initViews() {
+        stitle_ll_back=findViewById(R.id.stitle_ll_back);
+        stitle_ll_back.setOnClickListener(this);
+        stitle_tv_content= (TextView) findViewById(R.id.stitle_tv_content);
+        pushmsg_lv= (ListView) findViewById(R.id.pushmsg_lv);
+        pushmsg_tv_empty=findViewById(R.id.pushmsg_tv_empty);
+        findViewById(R.id.mycomments_title).setVisibility(View.GONE);
+        coverTop = findViewById(R.id.cover_top);
     }
 
 
@@ -456,11 +461,13 @@ public class MyPMColAvtivity extends MBaseActivity {
         }
     }
 
-    @OnClick(R.id.stitle_ll_back)
-    private void goback(View v) {
-        finish();
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.stitle_ll_back:
+                finish();
+        }
     }
-
 
     @Override
     protected void onDestroy() {

@@ -143,7 +143,7 @@
     <color name="main_activity_background_color">#f5f5f5</color>
     <color name="details_tv_check_color">#999999</color>
     <color name="details_bg_check_color">#ededed</color>
-    <color name="details_bg_color">#fafafa</color>
+    <color name="details_bg_color">#f5f5f5</color>
     <color name="details_hot_comment_nickname">#94c4f1</color>
     <color name="details_hot_comment_time">#bababa</color>
     <color name="details_hot_comment_content">#333333</color>

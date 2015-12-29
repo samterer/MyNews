@@ -102,6 +102,7 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
             super(v);
         }
 
+        public TagBean tagBean;
         ImageView discovery_iv_tag;
         TextView discovery_tag_name;
         TextView tv_subscribe;
@@ -128,6 +129,7 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
             viewHolder.discovery_iv_tag = (ImageView) view.findViewById(R.id.discovery_iv_tag);
             viewHolder.discovery_tag_name = (TextView) view.findViewById(R.id.discovery_tag_name);
             viewHolder.tv_subscribe = (TextView) view.findViewById(R.id.tv_subscribe);
+            viewHolder.tv_subscribe.setOnClickListener(onClickListener);
             viewHolder.tag_layout = (LinearLayout) view.findViewById(R.id.tag_layout);
             viewHolder.news_ll = (LinearLayout) view.findViewById(R.id.news_ll);
             return viewHolder;
@@ -146,6 +148,7 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
         switch (type) {
             case TYPE_NORMAL:
                 final ItemViewHolder viewHolder = (ItemViewHolder) holder;
+                viewHolder.news_ll.removeAllViews();
                 final DiscoveryItemBean bean = list.get(position);
                 if (bean.getTag() == null || bean.getNews() == null) {
                     return;
@@ -159,55 +162,8 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                             , viewHolder.discovery_iv_tag
                             , DisplayOptionFactory.getOption(OptionTp.Personal_center_News));
                 }
-                viewHolder.tv_subscribe.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.i("DiscoveryItemNewAdapter", "DiscoveryItemNewAdapter  viewHolder.tv_subscribe  onClick");
-                        try {
-                            viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
-                            viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.details_tv_check_color));
-                            Drawable nav_up = context.getResources().getDrawable(R.drawable.discovery_image_select);
-                            nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
-                            viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
-                            viewHolder.tv_subscribe.setText(context.getString(R.string.discovery_followed));
-                            EventBus.getDefault().post(new TagEvent(bean.getTag()));
-                            viewHolder.tv_subscribe.setEnabled(false);
-
-                            if (Utils.isNetworkConnected(context)) {
-                                RequestParams params = RequestParamsUtils.getParamsWithU();
-                                if (spu.getUser() != null) {
-                                    params.addBodyParameter("uid", spu.getUser().getUid() + "");
-                                }
-                                params.addBodyParameter("tagId", bean.getTag().getId() + "");
-                                SPUtil.addParams(params);
-
-                                httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.tag_click_url, params, new RequestCallBack<String>() {
-                                    @Override
-                                    public void onSuccess(ResponseInfo<String> responseInfo) {
-                                        JSONObject obj = null;
-                                        try {
-                                            obj = JSONObject.parseObject(responseInfo.result);
-                                        } catch (Exception e) {
-                                            return;
-                                        }
-                                        if (200 == obj.getIntValue("code")) {
-
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(HttpException error, String msg) {
-                                        LogUtils.i("isCollection failed");
-                                    }
-                                });
-                            }
-                            Log.i("viewHolder.tv_subscribe", "viewHolder.tv_subscribe");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
+                viewHolder.tv_subscribe.setTag(viewHolder);
+                viewHolder.tagBean = bean.getTag();
 
                 viewHolder.tag_layout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -227,6 +183,7 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                     nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
                     viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
                     viewHolder.tv_subscribe.setText(context.getString(R.string.discovery_followed));
+                    viewHolder.tv_subscribe.setEnabled(false);
                 } else {
                     viewHolder.tv_subscribe.setBackgroundResource(R.drawable.discovery_item_corners_bg);
                     viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.pager_sliding_tab_indicator_color));
@@ -234,9 +191,9 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                     nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
                     viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
                     viewHolder.tv_subscribe.setText(context.getString(R.string.discovery_follow));
+                    viewHolder.tv_subscribe.setEnabled(true);
                 }
 
-                viewHolder.news_ll.removeAllViews();
                 for (final NewsBean itembean : bean.getNews()) {
                     if (itembean.getTitle() == null) {
                         return;
@@ -328,4 +285,53 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
 
     }
 
+    View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Log.i("DiscoveryItemNewAdapter", "DiscoveryItemNewAdapter  viewHolder.tv_subscribe  onClick");
+            try {
+                if (view.getTag() instanceof ItemViewHolder) {
+                    ItemViewHolder viewHolder = (ItemViewHolder) view.getTag();
+                    viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
+                    viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.details_tv_check_color));
+                    Drawable nav_up = context.getResources().getDrawable(R.drawable.discovery_image_select);
+                    nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+                    viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+                    viewHolder.tv_subscribe.setText(context.getString(R.string.discovery_followed));
+                    EventBus.getDefault().post(new TagEvent(viewHolder.tagBean));
+                    if (Utils.isNetworkConnected(context)) {
+                        RequestParams params = RequestParamsUtils.getParamsWithU();
+                        if (spu.getUser() != null) {
+                            params.addBodyParameter("uid", spu.getUser().getUid() + "");
+                        }
+                        params.addBodyParameter("tagId", viewHolder.tagBean.getId() + "");
+                        SPUtil.addParams(params);
+
+                        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.tag_click_url, params, new RequestCallBack<String>() {
+                            @Override
+                            public void onSuccess(ResponseInfo<String> responseInfo) {
+                                JSONObject obj = null;
+                                try {
+                                    obj = JSONObject.parseObject(responseInfo.result);
+                                } catch (Exception e) {
+                                    return;
+                                }
+                                if (200 == obj.getIntValue("code")) {
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(HttpException error, String msg) {
+                                LogUtils.i("isCollection failed");
+                            }
+                        });
+                    }
+                    Log.i("viewHolder.tv_subscribe", "viewHolder.tv_subscribe");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
 }

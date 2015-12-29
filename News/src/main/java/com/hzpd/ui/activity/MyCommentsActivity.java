@@ -36,7 +36,7 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import java.util.List;
 
-public class MyCommentsActivity extends MBaseActivity {
+public class MyCommentsActivity extends MBaseActivity implements View.OnClickListener {
 
     private CircleImageView xf_pinfo_iv_avatar;//头像
     private TextView xf_pinfo_tv_nickname;//昵称
@@ -56,38 +56,26 @@ public class MyCommentsActivity extends MBaseActivity {
     }
 
 
-    @ViewInject(R.id.title)
-    private View title;
-    @ViewInject(R.id.stitle_tv_content)
     private TextView stitle_tv_content;
-    @ViewInject(R.id.pushmsg_tv_empty)
     private View pushmsg_tv_empty;
-    @ViewInject(R.id.mycomments_title)
     private LinearLayout mycomments_title;
-    @ViewInject(R.id.mycoms_text)
     private TextView mycoms_text;
     private ListView listView;
-
     private int Page = 1;
     private static final int PageSize = 1500;
     private boolean mFlagRefresh;
     private MycommentsAdapter adapter;
-    @ViewInject(R.id.transparent_layout_id)
-    private View transparent_layout_id;
     private View coverTop;
+    private View stitle_ll_back;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mycomment_layout);
-        app_progress_bar = findViewById(R.id.app_progress_bar);
-        ViewUtils.inject(this);
-        if (App.getInstance().getThemeName().equals("3")) {
-            transparent_layout_id.setVisibility(View.VISIBLE);
-        } else {
-            transparent_layout_id.setVisibility(View.GONE);
-        }
         super.changeStatusBar();
+
+        initViews();
+
         coverTop = findViewById(R.id.cover_top);
         if (App.getInstance().getThemeName().equals("0")) {
             coverTop.setVisibility(View.GONE);
@@ -96,8 +84,37 @@ public class MyCommentsActivity extends MBaseActivity {
         }
         stitle_tv_content.setText(R.string.comment_mine);
         listView = (ListView) findViewById(R.id.list_view);
-        LayoutInflater infla = LayoutInflater.from(activity);
-        View headView = infla.inflate(R.layout.my_comment_headview, null);
+        setHeadView();
+
+        listView.setEmptyView(pushmsg_tv_empty);
+        adapter = new MycommentsAdapter(this);
+        listView.setAdapter(adapter);
+
+        listView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Page = 1;
+                getInfoFromServer();
+            }
+        }, 600);
+
+
+        getUserInfoFromServer();
+
+    }
+
+    private void initViews() {
+        stitle_ll_back = findViewById(R.id.stitle_ll_back);
+        stitle_ll_back.setOnClickListener(this);
+        stitle_tv_content = (TextView) findViewById(R.id.stitle_tv_content);
+        pushmsg_tv_empty = findViewById(R.id.pushmsg_tv_empty);
+        mycomments_title = (LinearLayout) findViewById(R.id.mycomments_title);
+        mycoms_text = (TextView) findViewById(R.id.mycoms_text);
+        app_progress_bar = findViewById(R.id.app_progress_bar);
+    }
+
+    private void setHeadView() {
+        View headView = LayoutInflater.from(activity).inflate(R.layout.my_comment_headview, null);
         headView.findViewById(R.id.xf_pinfo_iv_back).setVisibility(View.GONE);
         headView.findViewById(R.id.xf_pinfo_iv_back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,22 +132,6 @@ public class MyCommentsActivity extends MBaseActivity {
         xf_pinfo_tv_regtime = (TextView) headView.findViewById(R.id.xf_pinfo_tv_regtime);
         xf_pinfo_tv_levelup = (TextView) headView.findViewById(R.id.xf_pinfo_tv_levelup);
         listView.addHeaderView(headView);
-
-        listView.setEmptyView(pushmsg_tv_empty);
-        adapter = new MycommentsAdapter(this);
-        listView.setAdapter(adapter);
-
-        listView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Page = 1;
-                getInfoFromServer();
-            }
-        }, 600);
-
-
-        getUserInfoFromServer();
-
     }
 
     @Override
@@ -286,9 +287,12 @@ public class MyCommentsActivity extends MBaseActivity {
         });
     }
 
-    @OnClick(R.id.stitle_ll_back)
-    private void goback(View v) {
-        finish();
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.stitle_ll_back:
+                finish();
+        }
     }
 
 }

@@ -59,8 +59,6 @@ public class ZQ_ReplyActivity extends MBaseActivity {
     private ReplayBean bean;
     private View loadingView;
 
-    @ViewInject(R.id.transparent_layout_id)
-    private View transparent_layout_id;
     private RelativeLayout rl_share1;
 
     @Override
@@ -84,11 +82,6 @@ public class ZQ_ReplyActivity extends MBaseActivity {
         });
 
         ViewUtils.inject(this);
-        if (App.getInstance().getThemeName().equals("3")) {
-            transparent_layout_id.setVisibility(View.VISIBLE);
-        } else {
-            transparent_layout_id.setVisibility(View.GONE);
-        }
 
         stitle_tv_content.setText(R.string.comment);
         Intent intent = getIntent();

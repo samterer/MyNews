@@ -87,7 +87,6 @@
                     android:visibility="gone"
                     app:loadingText="@string/load_more_loading" />
 
-                <include layout="@layout/transparent_layout" />
             </FrameLayout>
 
             <FrameLayout

@@ -64,8 +64,6 @@ public class NewsFragment extends BaseFragment {
     private View main_no_news;
     @ViewInject(R.id.app_progress_bar)
     private View app_progress_bar;
-    @ViewInject(R.id.transparent_layout_id)
-    private View transparent_layout_id;
 
     private NewsFragmentPagerAdapter adapter;
 
@@ -273,7 +271,6 @@ public class NewsFragment extends BaseFragment {
     }
 
     public void onEventMainThread(ChangeChannelEvent event) {
-        SPUtil.updateChannel();
         if (event.csl != null) {
             SPUtil.updateChannel();
             pager.setOffscreenPageLimit(PAGE_LIMIT);
@@ -298,19 +295,30 @@ public class NewsFragment extends BaseFragment {
             if (beanDB == null) {
                 beanDB = new NewsChannelBeanDB(tagBean);
                 beanDB.setDefault_show("1");
-                dbHelper.getChannelDbUtils().save(beanDB);
+                if (SPUtil.dbs.size() > 2) {
+                    SPUtil.dbs.add(2, beanDB);
+                } else {
+                    SPUtil.dbs.add(1, beanDB);
+                }
+                dbHelper.getChannelDbUtils().deleteAll(NewsChannelBeanDB.class);
+                dbHelper.getChannelDbUtils().saveAll(SPUtil.dbs);
                 SPUtil.updateChannel();
             } else {
                 beanDB.setDefault_show("1");
                 dbHelper.getChannelDbUtils().update(beanDB);
             }
+
             if (mList.size() > 2) {
                 mList.add(2, new NewsChannelBean(beanDB));
+                adapter.sortChannel(mList);
+                pager.setCurrentItem(2);
+                adapter.setSelectedPosition(2);
             } else {
                 mList.add(1, new NewsChannelBean(beanDB));
+                adapter.sortChannel(mList);
+                pager.setCurrentItem(1);
+                adapter.setSelectedPosition(1);
             }
-            adapter.sortChannel(mList);
-            pager.setCurrentItem(2);
             tabStrip.notifyDataSetChanged();
         } catch (Exception e) {
             e.printStackTrace();

@@ -374,8 +374,10 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                             adapter.removeOld();
                         }
                     }
-                    if (list.size() >= pageSize) {
+                    if (list.size() >= 5) {
                         adapter.showLoading = true;
+                    } else {
+                        addLoading = true;
                     }
                     adapter.appendData(list, mFlagRefresh, false);
                     background_empty.setVisibility(View.GONE);

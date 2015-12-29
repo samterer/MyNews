@@ -170,9 +170,6 @@
                     </RelativeLayout>
                 </RelativeLayout>
 
-
-                <include layout="@layout/transparent_layout" />
-
                 <FrameLayout
                     android:id="@+id/app_progress_bar"
                     android:layout_width="match_parent"
