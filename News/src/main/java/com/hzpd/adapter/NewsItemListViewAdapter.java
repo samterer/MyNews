@@ -157,8 +157,8 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         list = new ArrayList<NewsBean>();
         dbHelper = DBHelper.getInstance(context);
         spu = SPUtil.getInstance();
-        readedNewsSet = new HashSet<String>();
         newsListDbTask = new NewsListDbTask(context);
+        readedNewsSet = new HashSet<String>();
         fontSize = spu.getTextSize();
         topviewAdapter = new TopviewpagerAdapter((Activity) context);
     }

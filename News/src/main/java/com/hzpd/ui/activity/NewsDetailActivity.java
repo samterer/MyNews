@@ -254,8 +254,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         }
 
 
-
-
         super.changeStatusBar();
     }
 
@@ -339,7 +337,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         newdetail_rl_comm.setOnClickListener(this);
         newdetail_tv_comm.setOnClickListener(this);
         newdetail_fontsize.setOnClickListener(this);
-
 
 
         newdetail_more.setOnClickListener(this);
@@ -1377,23 +1374,24 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 isTagSelect = false;
             }
 
-            if (Utils.isNetworkConnected(this)) {
-                details_tv_subscribe.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.i("NewsDetails", "NewsDetails-->" + isTagSelect);
-                        if (isTagSelect) {
-                            details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
-                            Intent intent = new Intent(NewsDetailActivity.this, TagActivity.class);
-                            intent.putExtra("tagbean", tagBean);
-                            startActivity(intent);
-                            isTagSelect = false;
-                        } else {
-                            details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
-                            details_tv_subscribe.setCompoundDrawables(null, null, null, null);
-                            EventBus.getDefault().post(new TagEvent(mBean.getTag().get(0)));
-                            details_tv_subscribe.setText(getString(R.string.look_over));
-                            Toast.makeText(NewsDetailActivity.this,getString(R.string.tag_followed),Toast.LENGTH_SHORT).show();
+
+            details_tv_subscribe.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("NewsDetails", "NewsDetails-->" + isTagSelect);
+                    if (isTagSelect) {
+                        details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
+                        Intent intent = new Intent(NewsDetailActivity.this, TagActivity.class);
+                        intent.putExtra("tagbean", tagBean);
+                        startActivity(intent);
+                        isTagSelect = false;
+                    } else {
+                        details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
+                        details_tv_subscribe.setCompoundDrawables(null, null, null, null);
+                        EventBus.getDefault().post(new TagEvent(mBean.getTag().get(0)));
+                        details_tv_subscribe.setText(getString(R.string.look_over));
+                        Toast.makeText(NewsDetailActivity.this, getString(R.string.tag_followed), Toast.LENGTH_SHORT).show();
+                        if (Utils.isNetworkConnected(NewsDetailActivity.this)) {
                             RequestParams params = RequestParamsUtils.getParamsWithU();
                             if (spu.getUser() != null) {
                                 params.addBodyParameter("uid", spu.getUser().getUid());
@@ -1413,18 +1411,17 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
                                     }
                                 }
-
                                 @Override
                                 public void onFailure(HttpException error, String msg) {
                                     LogUtils.i("isCollection failed");
                                 }
                             });
                             handlerList.add(httpHandler);
-                            isTagSelect = true;
                         }
+                        isTagSelect = true;
                     }
-                });
-            }
+                }
+            });
 
 
         }

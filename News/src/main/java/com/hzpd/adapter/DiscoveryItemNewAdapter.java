@@ -159,66 +159,55 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                             , viewHolder.discovery_iv_tag
                             , DisplayOptionFactory.getOption(OptionTp.Personal_center_News));
                 }
-                if (Utils.isNetworkConnected(context)) {
-                    viewHolder.tv_subscribe.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Log.i("DiscoveryItemNewAdapter", "DiscoveryItemNewAdapter  viewHolder.tv_subscribe  onClick");
-                            try {
-                                viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
-                                viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.details_tv_check_color));
-                                Drawable nav_up = context.getResources().getDrawable(R.drawable.discovery_image_select);
-                                nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
-                                viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
-                                viewHolder.tv_subscribe.setEnabled(false);
-                                EventBus.getDefault().post(new TagEvent(bean.getTag()));
-                                viewHolder.tv_subscribe.setOnClickListener(new View.OnClickListener() {
+                viewHolder.tv_subscribe.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.i("DiscoveryItemNewAdapter", "DiscoveryItemNewAdapter  viewHolder.tv_subscribe  onClick");
+                        try {
+                            viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
+                            viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.details_tv_check_color));
+                            Drawable nav_up = context.getResources().getDrawable(R.drawable.discovery_image_select);
+                            nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+                            viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+                            viewHolder.tv_subscribe.setText(context.getString(R.string.discovery_followed));
+                            EventBus.getDefault().post(new TagEvent(bean.getTag()));
+                            viewHolder.tv_subscribe.setEnabled(false);
+
+                            if (Utils.isNetworkConnected(context)) {
+                                RequestParams params = RequestParamsUtils.getParamsWithU();
+                                if (spu.getUser() != null) {
+                                    params.addBodyParameter("uid", spu.getUser().getUid() + "");
+                                }
+                                params.addBodyParameter("tagId", bean.getTag().getId() + "");
+                                SPUtil.addParams(params);
+
+                                httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.tag_click_url, params, new RequestCallBack<String>() {
                                     @Override
-                                    public void onClick(View v) {
-                                        viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
-                                        viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.details_tv_check_color));
-                                        Drawable nav_up = context.getResources().getDrawable(R.drawable.discovery_image_select);
-                                        nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
-                                        viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
-                                        viewHolder.tv_subscribe.setText(context.getString(R.string.discovery_followed));
-                                        EventBus.getDefault().post(new TagEvent(bean.getTag()));
-                                        RequestParams params = RequestParamsUtils.getParamsWithU();
-                                        if (spu.getUser() != null) {
-                                            params.addBodyParameter("uid", spu.getUser().getUid() + "");
+                                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                                        JSONObject obj = null;
+                                        try {
+                                            obj = JSONObject.parseObject(responseInfo.result);
+                                        } catch (Exception e) {
+                                            return;
                                         }
-                                        params.addBodyParameter("tagId", bean.getTag().getId() + "");
-                                        SPUtil.addParams(params);
+                                        if (200 == obj.getIntValue("code")) {
 
-                                        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.tag_click_url, params, new RequestCallBack<String>() {
-                                            @Override
-                                            public void onSuccess(ResponseInfo<String> responseInfo) {
-                                                JSONObject obj = null;
-                                                try {
-                                                    obj = JSONObject.parseObject(responseInfo.result);
-                                                } catch (Exception e) {
-                                                    return;
-                                                }
-                                                if (200 == obj.getIntValue("code")) {
+                                        }
+                                    }
 
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(HttpException error, String msg) {
-                                                LogUtils.i("isCollection failed");
-                                            }
-                                        });
-                                        Log.i("viewHolder.tv_subscribe", "viewHolder.tv_subscribe");
+                                    @Override
+                                    public void onFailure(HttpException error, String msg) {
+                                        LogUtils.i("isCollection failed");
                                     }
                                 });
-
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
+                            Log.i("viewHolder.tv_subscribe", "viewHolder.tv_subscribe");
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    });
-                }
+                    }
+                });
+
 
                 viewHolder.tag_layout.setOnClickListener(new View.OnClickListener() {
                     @Override
