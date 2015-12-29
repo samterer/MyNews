@@ -63,6 +63,7 @@ public class UpdateService extends Service {
                 String data = pres.getString(UpdateUtils.KEY.LAST_UPDATE_DATA, "{}");
                 Log.e(TAG, "data: " + data);
                 parseJson(new JSONObject(data));
+                stopSelf();
                 return;
             }
             release();
@@ -104,6 +105,7 @@ public class UpdateService extends Service {
                 Log.e("update", responseInfo.result);
                 parseJson(new JSONObject(responseInfo.result));
                 release();
+                stopSelf();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -112,6 +114,7 @@ public class UpdateService extends Service {
         @Override
         public void onFailure(HttpException error, String msg) {
             release();
+            stopSelf();
         }
     };
 

@@ -21,6 +21,7 @@ import com.hzpd.ui.App;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.Log;
+import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.util.LogUtils;
@@ -44,12 +45,8 @@ public class MyEditColumnActivity extends MBaseActivity {
         return AnalyticUtils.SCREEN.edit;
     }
 
-    @ViewInject(R.id.editcolumn_dragGridView)
     private DragGrid editcolumn_dragGridView;
-    @ViewInject(R.id.editcolumn_gridview)
     private OtherGridView editcolumn_gridview;
-
-    @ViewInject(R.id.stitle_tv_content)
     private TextView stitle_tv_content;
 
     private LastEditColumnAdapter myAllAdapter;//所有title适配器
@@ -59,12 +56,8 @@ public class MyEditColumnActivity extends MBaseActivity {
     private List<NewsChannelBean> channelData;
     private List<NewsChannelBean> myAllList;
 
-    private String channelJsonPath;
-    @ViewInject(R.id.editcolumn_item_tv)
     private TextView editcolumn_item_tv;
-    @ViewInject(R.id.text_editcolumn)
     private TextView text_editcolumn;
-    @ViewInject(R.id.editcolum_explain)
     private TextView editcolum_explain;
 
     private ChannelSortedList csl;
@@ -76,19 +69,21 @@ public class MyEditColumnActivity extends MBaseActivity {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.editcolumn_my_layout);
-            coverTop = findViewById(R.id.cover_top);
-            if (App.getInstance().getThemeName().equals("0")) {
-                coverTop.setVisibility(View.GONE);
-            } else {
-                coverTop.setVisibility(View.VISIBLE);
-            }
-            ViewUtils.inject(this);
+            super.changeStatusBar();
+            initViews();
             findViewById(R.id.ll_choose_channel).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Intent intent = new Intent(MyEditColumnActivity.this, SearchActivity.class);
                     startActivity(intent);
                     AAnim.ActivityStartAnimation(MyEditColumnActivity.this);
+                    isEdit = false;
+                    editcolum_explain.setVisibility(View.GONE);
+                    dragAdapter.isEditItem(isEdit);
+                    myAllAdapter.isEditItem(isEdit);
+                    text_editcolumn.setText(getString(R.string.editcolumn_edit));
+                    editcolumn_dragGridView.isEditColumn(isEdit);
                 }
             });
             stitle_tv_content.setText(R.string.prompt_column_subscribe);
@@ -102,13 +97,13 @@ public class MyEditColumnActivity extends MBaseActivity {
                         dragAdapter.isEditItem(isEdit);
                         myAllAdapter.isEditItem(isEdit);
                         editcolumn_dragGridView.isEditColumn(isEdit);
-                        text_editcolumn.setText(getResources().getString(R.string.editcolumn_ok));
+                        text_editcolumn.setText(getString(R.string.editcolumn_ok));
                     } else {
                         isEdit = false;
                         editcolum_explain.setVisibility(View.GONE);
                         dragAdapter.isEditItem(isEdit);
                         myAllAdapter.isEditItem(isEdit);
-                        text_editcolumn.setText(getResources().getString(R.string.editcolumn_edit));
+                        text_editcolumn.setText(getString(R.string.editcolumn_edit));
                         editcolumn_dragGridView.isEditColumn(isEdit);
                         Log.e("isEdit", "isEdit" + false);
                     }
@@ -120,7 +115,21 @@ public class MyEditColumnActivity extends MBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        super.changeStatusBar();
+    }
+
+    private void initViews() {
+        editcolumn_dragGridView= (DragGrid) findViewById(R.id.editcolumn_dragGridView);
+        editcolumn_gridview= (OtherGridView) findViewById(R.id.editcolumn_gridview);
+        stitle_tv_content= (TextView) findViewById(R.id.stitle_tv_content);
+        editcolumn_item_tv= (TextView) findViewById(R.id.editcolumn_item_tv);
+        text_editcolumn= (TextView) findViewById(R.id.text_editcolumn);
+        editcolum_explain= (TextView) findViewById(R.id.editcolum_explain);
+        coverTop = findViewById(R.id.cover_top);
+        if (App.getInstance().getThemeName().equals("0")) {
+            coverTop.setVisibility(View.GONE);
+        } else {
+            coverTop.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -294,14 +303,17 @@ public class MyEditColumnActivity extends MBaseActivity {
             for (NewsChannelBean bean : myAllList) {
                 bean.setDefault_show("0");
             }
-            myAllList.addAll(channelData);
+            List<NewsChannelBean> all = new ArrayList<>();
+            all.addAll(channelData);
+            all.addAll(myAllList);
             List<NewsChannelBeanDB> dbs = new ArrayList<>();
-            for (NewsChannelBean bean : myAllList) {
+            for (NewsChannelBean bean : all) {
                 dbs.add(new NewsChannelBeanDB(bean));
             }
             dbHelper.getChannelDbUtils().deleteAll(NewsChannelBeanDB.class);
             dbHelper.getChannelDbUtils().saveAll(dbs);
             csl.setSaveTitleList(channelData);
+            SPUtil.updateChannel();
         } catch (Exception e) {
             e.printStackTrace();
         }

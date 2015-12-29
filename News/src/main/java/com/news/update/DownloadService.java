@@ -49,6 +49,7 @@ public class DownloadService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
             if (!UpdateUtils.isRomVersion(this)) {
+                stopSelf();
                 return START_NOT_STICKY;
             }
             Log.e(TAG, intent);
@@ -106,6 +107,7 @@ public class DownloadService extends Service {
     private void startDownload() {
         try {
             if (!getSharedPreferences(UpdateUtils.SHARE_PREFERENCE_NAME, MODE_PRIVATE).getBoolean(UpdateUtils.KEY.KEY_HAS_NEW, false)) {
+                stopSelf();
                 return;
             }
             if (httpHandler == null || httpHandler.isCancelled()) {
@@ -115,11 +117,13 @@ public class DownloadService extends Service {
 //				url = "http://gdown.baidu.com/data/wisegame/7c31d95af688e9e4/menghuanxiyou_10140.apk";
                 Log.e("test", url);
                 if (TextUtils.isEmpty(url) || !url.toLowerCase().startsWith("http")) {
+                    stopSelf();
                     return;
                 }
                 NetworkInfo networkInfo = UpdateUtils.getNetworkInfo(this);
                 if (networkInfo == null || networkInfo.getState() != NetworkInfo.State.CONNECTED) {
                     Log.e("test", " no connection ");
+                    stopSelf();
                     return;
                 }
                 SharedPreferences pref = getSharedPreferences(UpdateUtils.SHARE_PREFERENCE_NAME, MODE_PRIVATE);

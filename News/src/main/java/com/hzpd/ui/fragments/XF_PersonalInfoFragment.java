@@ -30,17 +30,6 @@ import java.util.List;
 
 public class XF_PersonalInfoFragment extends BaseFragment {
 
-//    private CircleImageView xf_pinfo_iv_avatar;//头像
-//    private TextView xf_pinfo_tv_nickname;//昵称
-//    private ImageView xf_pinfo_iv_gender;//性别
-//    private TextView xf_pinfo_tv_level_alias;//级别
-//    private TextView xf_pinfo_tv_level;//级别
-//    private TextView xf_pinfo_tv_score;//分数
-//    private NumberProgressBar xf_pinfo_npb;//进度条
-//    private TextView xf_pinfo_tv_regtime;//注册时间
-//    private TextView xf_pinfo_tv_levelup;//升级提示
-
-
     private XF_UserCommentsAdapter adapter;
     private String uid;
     private XF_UserInfoBean userInfoBean;

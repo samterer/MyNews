@@ -3,6 +3,7 @@ package com.hzpd.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -198,67 +199,13 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                     if (itembean.getTitle() == null) {
                         return;
                     }
-                    View vi = mInflater.inflate(R.layout.news_list_item_layout, null);
-                    ImageView newsitem_img = (ImageView) vi.findViewById(R.id.newsitem_img);
-                    TextView newsitem_title = (TextView) vi.findViewById(R.id.newsitem_title);
-                    TextView newsitem_time = (TextView) vi.findViewById(R.id.newsitem_time);
-                    LinearLayout ll_tag = (LinearLayout) vi.findViewById(R.id.ll_tag);
-                    if (CalendarUtil.friendlyTime(itembean.getUpdate_time(), context) == null) {
-                        newsitem_time.setText(" ");
-                    } else {
-                        newsitem_time.setText(CalendarUtil.friendlyTime(itembean.getUpdate_time(), context));
-                    }
-
-                    TypedValue typedValue = new TypedValue();
-                    context.getTheme().resolveAttribute(R.attr.item_title, typedValue, true);
-                    int color = typedValue.data;
-                    newsitem_title.setTextColor(color);
-                    newsitem_title.setText(itembean.getTitle());
+                    View vi = null;
                     if (null != itembean.getImgs()
                             && itembean.getImgs().length > 0) {
-                        newsitem_title.setPadding(App.px_15dp, 0, 0, 0);
-                        ll_tag.setPadding(App.px_15dp, 0, 0, 0);
-                        SPUtil.displayImage(itembean.getImgs()[0], newsitem_img,
-                                DisplayOptionFactory.getOption(OptionTp.Small));
+                        vi = getLeftPicView(itembean);
+
                     } else {
-                        newsitem_img.setVisibility(View.GONE);
-                        newsitem_title.setPadding(0, 0, 0, App.px_15dp);
-                        ll_tag.setPadding(0, 0, 0, 0);
-                    }
-                    TextView newsitem_collectcount = (TextView) vi.findViewById(R.id.newsitem_collectcount);
-                    String fav = itembean.getFav();
-                    if (!TextUtils.isEmpty(fav)) {
-                        int fav_counts = Integer.parseInt(fav);
-                        if (fav_counts > 0) {
-                            newsitem_collectcount.setVisibility(View.VISIBLE);
-                            newsitem_collectcount.setText(fav_counts + "");
-                        } else {
-                            newsitem_collectcount.setVisibility(View.GONE);
-                        }
-                    } else {
-                        newsitem_collectcount.setVisibility(View.GONE);
-                    }
-                    TextView newsitem_source = (TextView) vi.findViewById(R.id.newsitem_source);
-                    String from = itembean.getCopyfrom();
-                    if (!TextUtils.isEmpty(from)) {
-                        newsitem_source.setVisibility(View.VISIBLE);
-                        newsitem_source.setText(from);
-                    } else {
-                        newsitem_source.setVisibility(View.GONE);
-                    }
-                    TextView newsitem_commentcount = (TextView) vi.findViewById(R.id.newsitem_commentcount);
-                    String comcount = itembean.getComcount();
-                    if (!TextUtils.isEmpty(comcount)) {
-                        int counts = Integer.parseInt(comcount);
-                        if (counts > 0) {
-                            newsitem_commentcount.setVisibility(View.VISIBLE);
-                            itembean.setComcount(counts + "");
-                            newsitem_commentcount.setText(counts + "");
-                        } else {
-                            newsitem_commentcount.setVisibility(View.GONE);
-                        }
-                    } else {
-                        newsitem_commentcount.setVisibility(View.GONE);
+                        vi = getTextView(itembean);
                     }
 
 
@@ -283,6 +230,133 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
 
         }
 
+    }
+
+    @NonNull
+    private View getLeftPicView(NewsBean itembean) {
+        View vi;
+        vi = mInflater.inflate(R.layout.news_list_item_layout, null);
+        ImageView newsitem_img = (ImageView) vi.findViewById(R.id.newsitem_img);
+        TextView newsitem_title = (TextView) vi.findViewById(R.id.newsitem_title);
+        TextView newsitem_time = (TextView) vi.findViewById(R.id.newsitem_time);
+        LinearLayout ll_tag = (LinearLayout) vi.findViewById(R.id.ll_tag);
+        if (CalendarUtil.friendlyTime(itembean.getUpdate_time(), context) == null) {
+            newsitem_time.setText(" ");
+        } else {
+            newsitem_time.setText(CalendarUtil.friendlyTime(itembean.getUpdate_time(), context));
+        }
+
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.item_title, typedValue, true);
+        int color = typedValue.data;
+        newsitem_title.setTextColor(color);
+        newsitem_title.setText(itembean.getTitle());
+        if (null != itembean.getImgs()
+                && itembean.getImgs().length > 0) {
+            newsitem_title.setPadding(App.px_15dp, 0, 0, 0);
+            ll_tag.setPadding(App.px_15dp, 0, 0, 0);
+            SPUtil.displayImage(itembean.getImgs()[0], newsitem_img,
+                    DisplayOptionFactory.getOption(OptionTp.Small));
+        } else {
+            newsitem_img.setVisibility(View.GONE);
+            newsitem_title.setPadding(0, 0, 0, App.px_15dp);
+            ll_tag.setPadding(0, 0, 0, 0);
+        }
+        TextView newsitem_collectcount = (TextView) vi.findViewById(R.id.newsitem_collectcount);
+        String fav = itembean.getFav();
+        if (!TextUtils.isEmpty(fav)) {
+            int fav_counts = Integer.parseInt(fav);
+            if (fav_counts > 0) {
+                newsitem_collectcount.setVisibility(View.VISIBLE);
+                newsitem_collectcount.setText(fav_counts + "");
+            } else {
+                newsitem_collectcount.setVisibility(View.GONE);
+            }
+        } else {
+            newsitem_collectcount.setVisibility(View.GONE);
+        }
+        TextView newsitem_source = (TextView) vi.findViewById(R.id.newsitem_source);
+        String from = itembean.getCopyfrom();
+        if (!TextUtils.isEmpty(from)) {
+            newsitem_source.setVisibility(View.VISIBLE);
+            newsitem_source.setText(from);
+        } else {
+            newsitem_source.setVisibility(View.GONE);
+        }
+        TextView newsitem_commentcount = (TextView) vi.findViewById(R.id.newsitem_commentcount);
+        String comcount = itembean.getComcount();
+        if (!TextUtils.isEmpty(comcount)) {
+            int counts = Integer.parseInt(comcount);
+            if (counts > 0) {
+                newsitem_commentcount.setVisibility(View.VISIBLE);
+                itembean.setComcount(counts + "");
+                newsitem_commentcount.setText(counts + "");
+            } else {
+                newsitem_commentcount.setVisibility(View.GONE);
+            }
+        } else {
+            newsitem_commentcount.setVisibility(View.GONE);
+        }
+        return vi;
+    }
+
+    @NonNull
+    private View getTextView(NewsBean itembean) {
+        View vi;
+        vi = mInflater.inflate(R.layout.news_list_text_layout, null);
+        TextView newsitem_title = (TextView) vi.findViewById(R.id.newsitem_title);
+        TextView newsitem_time = (TextView) vi.findViewById(R.id.newsitem_time);
+        LinearLayout ll_tag = (LinearLayout) vi.findViewById(R.id.ll_tag);
+        if (CalendarUtil.friendlyTime(itembean.getUpdate_time(), context) == null) {
+            newsitem_time.setText(" ");
+        } else {
+            newsitem_time.setText(CalendarUtil.friendlyTime(itembean.getUpdate_time(), context));
+        }
+
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.item_title, typedValue, true);
+        int color = typedValue.data;
+        newsitem_title.setTextColor(color);
+        newsitem_title.setText(itembean.getTitle());
+
+        TextView newsitem_collectcount = (TextView) vi.findViewById(R.id.newsitem_collectcount);
+        String fav = itembean.getFav();
+        if (!TextUtils.isEmpty(fav)) {
+            int fav_counts = Integer.parseInt(fav);
+            if (fav_counts > 0) {
+                newsitem_collectcount.setVisibility(View.VISIBLE);
+                newsitem_collectcount.setText(fav_counts + "");
+            } else {
+                newsitem_collectcount.setVisibility(View.GONE);
+            }
+        } else {
+            newsitem_collectcount.setVisibility(View.GONE);
+        }
+
+        TextView newsitem_source = (TextView) vi.findViewById(R.id.newsitem_source);
+        String from = itembean.getCopyfrom();
+        if (!TextUtils.isEmpty(from)) {
+            newsitem_source.setVisibility(View.VISIBLE);
+            newsitem_source.setText(from);
+        } else {
+            newsitem_source.setVisibility(View.GONE);
+        }
+
+        TextView newsitem_commentcount = (TextView) vi.findViewById(R.id.newsitem_commentcount);
+        String comcount = itembean.getComcount();
+        if (!TextUtils.isEmpty(comcount)) {
+            int counts = Integer.parseInt(comcount);
+            if (counts > 0) {
+                newsitem_commentcount.setVisibility(View.VISIBLE);
+                itembean.setComcount(counts + "");
+                newsitem_commentcount.setText(counts + "");
+            } else {
+                newsitem_commentcount.setVisibility(View.GONE);
+            }
+        } else {
+            newsitem_commentcount.setVisibility(View.GONE);
+        }
+        return vi;
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {

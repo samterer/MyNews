@@ -36,20 +36,18 @@ public class VideoAdapter extends ListBaseAdapter<VideoItemBean> {
 	}
 
 	private static class ViewHolderb {
-		@ViewInject(R.id.vib_tv_title)
 		TextView vib_tv_title;
-		@ViewInject(R.id.zq_video_tv_updatetime)
 		TextView zq_video_tv_updatetime;
-		@ViewInject(R.id.zq_video_tv_comments)
 		TextView zq_video_tv_comments;
-		@ViewInject(R.id.vib_iv_img)
 		ImageView vib_iv_img;
-		@ViewInject(R.id.vib_iv_icon)
 		ImageView vib_iv_icon;
 
-
 		public ViewHolderb(View view) {
-			ViewUtils.inject(this, view);
+			vib_tv_title= (TextView) view.findViewById(R.id.vib_tv_title);
+			zq_video_tv_updatetime= (TextView) view.findViewById(R.id.zq_video_tv_updatetime);
+			zq_video_tv_comments= (TextView) view.findViewById(R.id.zq_video_tv_comments);
+			vib_iv_img= (ImageView) view.findViewById(R.id.vib_iv_img);
+			vib_iv_icon= (ImageView) view.findViewById(R.id.vib_iv_icon);
 		}
 	}
 

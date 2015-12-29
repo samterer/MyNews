@@ -2,6 +2,7 @@ package com.hzpd.utils.db;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsChannelBean;
@@ -109,21 +110,21 @@ public class NewsListDbTask {
         protected List<NewsBeanDB> doInBackground(String... params) {
             List<NewsBeanDB> list = null;
             try {
-
-                Selector TagidSelector = Selector.from(NewsBeanDB.class)
-                        .where("tagId", "=", channelbean.getId());
-                TagidSelector.orderBy("sort_order", true)
-                        .limit(pageSize)
-                        .offset(page * pageSize);
-                newsListDb.findAll(TagidSelector);
-
-
-                Selector selector = Selector.from(NewsBeanDB.class)
-                        .where("tid", "=", channelbean.getTid());
-                selector.orderBy("sort_order", true)
-                        .limit(pageSize)
-                        .offset(page * pageSize);
-                list = newsListDb.findAll(selector);
+                if (!TextUtils.isEmpty(channelbean.getId())) {
+                    Selector TagidSelector = Selector.from(NewsBeanDB.class)
+                            .where("tagId", "=", channelbean.getId());
+                    TagidSelector.orderBy("sort_order", true)
+                            .limit(pageSize)
+                            .offset(page * pageSize);
+                    list = newsListDb.findAll(TagidSelector);
+                } else {
+                    Selector selector = Selector.from(NewsBeanDB.class)
+                            .where("tid", "=", channelbean.getTid());
+                    selector.orderBy("sort_order", true)
+                            .limit(pageSize)
+                            .offset(page * pageSize);
+                    list = newsListDb.findAll(selector);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -64,38 +64,24 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import java.io.File;
 
 
-public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.OnPreparedListener {
+public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.OnPreparedListener, OnClickListener {
 
     private static final String BASEURL = InterfaceJsonfile.PATH_ROOT + "/Public/videoview/id/";
 
-    @ViewInject(R.id.surface_view)
     private VideoView mVideoView;
-    @ViewInject(R.id.operation_volume_brightness)
     private View mVolumeBrightnessLayout;
-    @ViewInject(R.id.operation_bg)
     private ImageView mOperationBg;
-    @ViewInject(R.id.operation_percent)
     private ImageView mOperationPercent;
-
     private AudioManager mAudioManager;
-
     private int mMaxVolume;// 最大声音
     private int mVolume = -1;// 当前声音
     private float mBrightness = -1f;// 当前亮度
-
     private GestureDetector mGestureDetector;
-    @ViewInject(R.id.video_loading)
     private View mLoadingView;
-    @ViewInject(R.id.video_loading_tv)
     private TextView video_loading_tv;
-    @ViewInject(R.id.video_loading_tv2)
     private TextView video_loading_tv2;
-
-    @ViewInject(R.id.videodetails_title_comment)
     private LinearLayout videodetails_title_comment;// 评论
-    @ViewInject(R.id.videodetails_title_num)
     private TextView videodetails_title_num;// 评论数量
-    @ViewInject(R.id.videodetails_title_pl)
     private LinearLayout videodetails_title_pl;// 收藏 评论 分享
 
 
@@ -110,7 +96,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
     private String mPath;
     private String mTitle;
     private String videoPath;
-
+    private View videoview_back;
     private String from;// newsitem newsdetail videofragment collection
     private boolean isCollected;
 
@@ -119,8 +105,22 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
         try {
             super.onCreate(bundle);
             setContentView(R.layout.video_view);
+            mVideoView = (VideoView) findViewById(R.id.surface_view);
+            mVolumeBrightnessLayout = findViewById(R.id.operation_volume_brightness);
+            mOperationBg = (ImageView) findViewById(R.id.operation_bg);
+            mOperationPercent = (ImageView) findViewById(R.id.operation_percent);
+            mLoadingView = findViewById(R.id.video_loading);
+            video_loading_tv = (TextView) findViewById(R.id.video_loading_tv);
+            video_loading_tv2 = (TextView) findViewById(R.id.video_loading_tv2);
+            videodetails_title_comment = (LinearLayout) findViewById(R.id.videodetails_title_comment);
+            videodetails_title_comment.setOnClickListener(this);
+            videodetails_title_num = (TextView) findViewById(R.id.videodetails_title_num);
+            videodetails_title_pl = (LinearLayout) findViewById(R.id.videodetails_title_pl);
+            videodetails_title_pl.setOnClickListener(this);
+            videoview_back = findViewById(R.id.videoview_back);
+            videoview_back.setOnClickListener(this);
+
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            ViewUtils.inject(this);
             // -------初始化播放器--------------
             // ~~~ 绑定事件
 
@@ -216,28 +216,27 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
 
     }
 
-    @OnClick(R.id.videodetails_title_pl)
-    private void pop(View view) {
-        popUpwindow();
-    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.videodetails_title_pl:
+                popUpwindow();
+                break;
+            case R.id.videodetails_title_comment:
+                // 跳转到评论页
+                if (!MyCommonUtil.isNetworkConnected(this)) {
+                    TUtils.toast(getString(R.string.toast_check_network));
+                    return;
+                }
+                if (null == vib) {
+                    return;
+                }
+                break;
+            case R.id.videoview_back:
+                finish();
+                break;
 
-    @OnClick(R.id.videodetails_title_comment)
-    private void comments(View view) {
-
-        // 跳转到评论页
-        if (!MyCommonUtil.isNetworkConnected(this)) {
-            TUtils.toast(getString(R.string.toast_check_network));
-            return;
         }
-        if (null == vib) {
-            return;
-        }
-
-    }
-
-    @OnClick(R.id.videoview_back)
-    private void goback(View v) {
-        finish();
     }
 
     // 加入收藏
@@ -726,4 +725,6 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
         Log.e("test", "" + mVideoView);
         mLoadingView.setVisibility(View.GONE);
     }
+
+
 }
