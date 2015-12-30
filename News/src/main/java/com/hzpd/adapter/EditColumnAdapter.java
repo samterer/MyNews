@@ -126,7 +126,6 @@ public class EditColumnAdapter extends MyBaseAdater {
         ImageView ib;
 
         public ViewHolder(View view) {
-            ViewUtils.inject(this, view);
             tv = (TextView) view.findViewById(R.id.editcolumn_title_tv);
             tv1 = (TextView) view.findViewById(R.id.editcolumn_title_tv1);
             ib = (ImageView) view.findViewById(R.id.editcolumn_title_ib);

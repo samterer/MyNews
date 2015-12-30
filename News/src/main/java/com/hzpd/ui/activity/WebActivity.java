@@ -22,10 +22,13 @@ import com.hzpd.utils.Log;
  * WevView third url
  */
 public class WebActivity extends MBaseActivity {
+
+    private View app_progress_bar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.web_activity_layout);
+        app_progress_bar=findViewById(R.id.app_progress_bar);
         checkIntent();
     }
 
@@ -111,6 +114,7 @@ public class WebActivity extends MBaseActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                app_progress_bar.setVisibility(View.GONE);
                 background_empty.setVisibility(View.GONE);
                 wProgress = 100;
                 load_progress_bar.setVisibility(View.GONE);
@@ -150,28 +154,6 @@ public class WebActivity extends MBaseActivity {
     int wProgress = 0;
     int MIDDLE_PROGRESS = 95;
     int progress = 0;
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            if (loading) {
-                if (wProgress < MIDDLE_PROGRESS && progress < MIDDLE_PROGRESS) {
-                    progress += 1;
-                } else if (wProgress > MIDDLE_PROGRESS) {
-                    progress += 3;
-                    if (progress > 100) {
-                        progress = 100;
-                        wProgress = 101;
-                    }
-                }
-                if (wProgress > 100) {
-                    loading = false;
-                    load_progress_bar.setVisibility(View.GONE);
-                    return;
-                }
-                load_progress_bar.setProgress(progress);
-                load_progress_bar.postDelayed(runnable, 20);
-            }
-        }
-    };
+
 
 }

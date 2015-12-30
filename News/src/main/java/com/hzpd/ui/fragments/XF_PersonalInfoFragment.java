@@ -17,7 +17,6 @@ import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -42,7 +41,6 @@ public class XF_PersonalInfoFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.xf_personalinfofm_layout, container, false);
-        ViewUtils.inject(this, view);
         recylerlist = (RecyclerView) view.findViewById(R.id.recylerlist);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recylerlist.setLayoutManager(layoutManager);

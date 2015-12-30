@@ -2,9 +2,7 @@ package com.hzpd.ui.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 
 import com.hzpd.ui.App;
 import com.hzpd.utils.AAnim;
@@ -18,9 +16,7 @@ import org.common.lib.analytics.ActivityLifecycleAction;
 import org.common.lib.analytics.AnalyticCallback;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MWBaseActivity extends FragmentActivity implements AnalyticCallback {
     public MWBaseActivity() {
@@ -30,14 +26,8 @@ public class MWBaseActivity extends FragmentActivity implements AnalyticCallback
     private ActivityLifecycleAction action = new ActivityLifecycleAction(this);
     protected HttpUtils httpUtils;
     protected SPUtil spu;//
-
-    protected long startMills;
-    protected Map<String, String> analyMap;
     protected DBHelper dbHelper;
     protected Activity activity;
-
-    protected FragmentManager fm;
-    protected Fragment currentFm;
     boolean isResume = false;
     List<HttpHandler> handlerList = new ArrayList<>();
 
@@ -46,12 +36,8 @@ public class MWBaseActivity extends FragmentActivity implements AnalyticCallback
         super.onCreate(null);
         action.onCreate(this);
         activity = this;
-        fm = getSupportFragmentManager();
-
         httpUtils = SPUtil.getHttpUtils();
         spu = SPUtil.getInstance();
-        startMills = System.currentTimeMillis();
-        analyMap = new HashMap<>();
         dbHelper = DBHelper.getInstance(getApplicationContext());
     }
 
@@ -93,7 +79,8 @@ public class MWBaseActivity extends FragmentActivity implements AnalyticCallback
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        activity = null;
+        spu = null;
         for (HttpHandler httpHandler : handlerList) {
             if (httpHandler.getState() == HttpHandler.State.LOADING || httpHandler.getState() == HttpHandler.State.STARTED) {
                 httpHandler.setRequestCallBack(null);
@@ -102,7 +89,7 @@ public class MWBaseActivity extends FragmentActivity implements AnalyticCallback
         }
         handlerList.clear();
         httpUtils = null;
-        Log.e("exit", "onDestroy 2");
+        super.onDestroy();
         App.getInstance().getRefWatcher().watch(this);
     }
 

@@ -13,51 +13,48 @@ import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
-public class FontsizePop extends PopupWindow {
+public class FontsizePop extends PopupWindow implements View.OnClickListener {
 
-	@ViewInject(R.id.nd_tv_big)
-	private TextView nd_tv_big;
-	@ViewInject(R.id.nd_tv_mid)
-	private TextView nd_tv_mid;
-	@ViewInject(R.id.nd_tv_small)
-	private TextView nd_tv_small;
+    private TextView nd_tv_big;
+    private TextView nd_tv_mid;
+    private TextView nd_tv_small;
 
-	private Handler handler;
-	private View view;
+    private Handler handler;
+    private View view;
 
-	public FontsizePop(View view, Handler h) {
-		super(view, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		this.setBackgroundDrawable(new BitmapDrawable());
-		ViewUtils.inject(this, view);
-		this.handler = h;
-		setOutsideTouchable(true);
+    public FontsizePop(View view, Handler h) {
+        super(view, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        this.setBackgroundDrawable(new BitmapDrawable());
+        nd_tv_big = (TextView) view.findViewById(R.id.nd_tv_big);
+        nd_tv_big.setOnClickListener(this);
+        nd_tv_mid = (TextView) view.findViewById(R.id.nd_tv_mid);
+        nd_tv_mid.setOnClickListener(this);
+        nd_tv_small = (TextView) view.findViewById(R.id.nd_tv_small);
+        nd_tv_small.setOnClickListener(this);
+        this.handler = h;
+        setOutsideTouchable(true);
 
-	}
-
-	@OnClick({
-			R.id.nd_tv_big,
-			R.id.nd_tv_mid,
-			R.id.nd_tv_small
-	})
-	private void onclick(View v) {
-		this.dismiss();
-		switch (v.getId()) {
-			case R.id.nd_tv_big: {
-				handler.sendEmptyMessage(CODE.font_big);
-			}
-			break;
-			case R.id.nd_tv_mid: {
-				handler.sendEmptyMessage(CODE.font_mid);
-			}
-			break;
-			case R.id.nd_tv_small: {
-				handler.sendEmptyMessage(CODE.font_small);
-			}
-			break;
-
-		}
-
-	}
+    }
 
 
+    @Override
+    public void onClick(View v) {
+        this.dismiss();
+        switch (v.getId()) {
+            case R.id.nd_tv_big: {
+                handler.sendEmptyMessage(CODE.font_big);
+            }
+            break;
+            case R.id.nd_tv_mid: {
+                handler.sendEmptyMessage(CODE.font_mid);
+            }
+            break;
+            case R.id.nd_tv_small: {
+                handler.sendEmptyMessage(CODE.font_small);
+            }
+            break;
+
+        }
+
+    }
 }

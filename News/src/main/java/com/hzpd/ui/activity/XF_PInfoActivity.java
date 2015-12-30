@@ -23,7 +23,6 @@ public class XF_PInfoActivity extends MBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.xf_pinfo_layout);
         super.changeStatusBar();
-        ViewUtils.inject(this);
         stitle_ll_back = findViewById(R.id.stitle_ll_back);
         stitle_ll_back.setOnClickListener(new View.OnClickListener() {
             @Override

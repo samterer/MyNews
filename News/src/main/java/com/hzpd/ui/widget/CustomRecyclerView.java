@@ -29,8 +29,10 @@ public class CustomRecyclerView extends RecyclerView {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        webView.loadUrl("about:blank");
-        webView.destroy();
-        webView = null;
+        if (webView != null) {
+            webView.loadUrl("about:blank");
+            webView.destroy();
+            webView = null;
+        }
     }
 }

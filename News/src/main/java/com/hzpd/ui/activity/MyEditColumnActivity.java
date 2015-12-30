@@ -38,7 +38,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class MyEditColumnActivity extends MBaseActivity {
+public class MyEditColumnActivity extends MBaseActivity implements View.OnClickListener {
 
     @Override
     public String getAnalyticPageName() {
@@ -63,6 +63,7 @@ public class MyEditColumnActivity extends MBaseActivity {
     private ChannelSortedList csl;
     private boolean isEdit;
     private View coverTop;
+    private View stitle_ll_back;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,6 +125,8 @@ public class MyEditColumnActivity extends MBaseActivity {
         editcolumn_item_tv= (TextView) findViewById(R.id.editcolumn_item_tv);
         text_editcolumn= (TextView) findViewById(R.id.text_editcolumn);
         editcolum_explain= (TextView) findViewById(R.id.editcolum_explain);
+        stitle_ll_back=findViewById(R.id.stitle_ll_back);
+        stitle_ll_back.setOnClickListener(this);
         coverTop = findViewById(R.id.cover_top);
         if (App.getInstance().getThemeName().equals("0")) {
             coverTop.setVisibility(View.GONE);
@@ -319,11 +322,6 @@ public class MyEditColumnActivity extends MBaseActivity {
         }
     }
 
-    @OnClick(R.id.stitle_ll_back)
-    private void goback(View v) {
-        finish();
-    }
-
     @Override
     protected void onDestroy() {
         if (!modified) {
@@ -341,4 +339,12 @@ public class MyEditColumnActivity extends MBaseActivity {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.stitle_ll_back:
+                finish();
+                break;
+        }
+    }
 }

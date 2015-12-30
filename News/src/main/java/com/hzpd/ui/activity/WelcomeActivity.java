@@ -3,10 +3,10 @@ package com.hzpd.ui.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -51,14 +51,9 @@ public class WelcomeActivity extends MWBaseActivity {
         return AnalyticUtils.SCREEN.welcome;
     }
 
-    public WelcomeActivity() {
-        Log.e("test", "WelcomeActivity new ");
-    }
-
     private volatile int done;
     private volatile boolean exists;
-    private FragmentManager fm;
-    private boolean isFirstStartApp;
+    private Fragment fragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,10 +61,10 @@ public class WelcomeActivity extends MWBaseActivity {
         Log.e("test", "  WelcomeActivity " + getResources().getBoolean(R.bool.isRom));
         exists = false;
         setContentView(R.layout.frame_welcome);
-        fm = getSupportFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction tran = fm.beginTransaction();
-        isFirstStartApp = spu.getIsTodayFistStartApp();
-        tran.replace(R.id.welcome_frame, new AdFlashFragment());
+        fragment = new AdFlashFragment();
+        tran.replace(R.id.welcome_frame, fragment);
         tran.commit();
         getChooseNewsJson();
         getChannelJson();
@@ -80,11 +75,14 @@ public class WelcomeActivity extends MWBaseActivity {
         // 更新服务
         service = new Intent(this, UpdateService.class);
         this.startService(service);
-        Log.d(getLogTag(), "");
     }
 
     @Override
     protected void onDestroy() {
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction().remove(fragment);
+            fragment = null;
+        }
         super.onDestroy();
     }
 
@@ -105,7 +103,6 @@ public class WelcomeActivity extends MWBaseActivity {
                 + SPUtil.getCountry()
                 + File.separator
                 + App.mTitle;
-        Log.i("", "WelcomeActivity存储--->" + channelCachePath);
         final File channelCacheFile = new File(channelCachePath);
         final File target = App.getFile(App.getInstance().getAllDiskCacheDir() + File.separator + SPUtil.getCountry() + File.separator + "News");
 

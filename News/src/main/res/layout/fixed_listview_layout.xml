@@ -2,9 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?zqzx_setting_main_color"
-    android:paddingLeft="@dimen/search_padding_middle"
-    android:paddingRight="@dimen/search_padding_middle">
+    android:background="?zqzx_setting_main_color">
 
     <com.hzpd.ui.widget.FixedListView
         android:id="@+id/fixed_listview"

@@ -2,8 +2,6 @@ package com.hzpd.ui.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.http.SslError;
 import android.os.Bundle;
@@ -30,10 +28,7 @@ import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -138,17 +133,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     public final static String IMG_PREFIX = "com.hzpd.provider.imageprovider";
     public final static String HOT_NEWS = "hotnews://";
 
-    private PopupWindow mPopupWindow;
-    /**
-     * popo的布局
-     */
-    private RelativeLayout mRelativeLayoutPopuBig;
-    private RelativeLayout mRelativeLayoutPopuCenter;
-    private RelativeLayout mRelativeLayoutPopuSmaill;
     private boolean mFlagPopuShow;
     private WebSettings webSettings;
     private View mBack;
-    private ProgressBar load_progress_bar;
     private ViewGroup mRoot;
     private LinearLayout mButtomLayout1;// 底部1
     private NewsDetailBean mBean;
@@ -211,6 +198,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         }
         App.getInstance().setProfileTracker(callback);
         setContentView(R.layout.news_details_layout);
+        initViews();
         //显示tag订阅相关
         details_tag_layout = findViewById(R.id.details_tag_layout);
         details_head_tag_img = (ImageView) findViewById(R.id.details_head_tag_img);
@@ -226,17 +214,14 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         newdetail_collection.setOnClickListener(this);
         newdetail_comment = (ImageView) findViewById(R.id.newdetail_comment);
         newdetail_comment.setOnClickListener(this);
-        initViews();
         getThisIntent();
         if (nb != null && BuildConfig.DEBUG) {
             TUtils.toast("nid=" + nb.getNid());
         }
         try {
-            load_progress_bar = (ProgressBar) findViewById(R.id.load_progress_bar);
             if (loading) {
                 progress = 0;
                 wProgress = 0;
-                load_progress_bar.postDelayed(runnable, 50);
             }
 
             loadingView = findViewById(R.id.app_progress_bar);
@@ -276,6 +261,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         this.mWebView = webView;
         recyclerView.setWebView(mWebView);
         webViewChangeProgress(webView);
+        getNewsDetails();
     }
 
     public void setListView(ListView listView) {
@@ -289,8 +275,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         mCommentListView.setVisibility(View.GONE);
         //请联系我们
         details_explain = (FontTextView) headView.findViewById(R.id.details_explain);
-        String link = getResources().getString(R.string.details_lv_link);
         try {
+            String link = getResources().getString(R.string.details_lv_link);
             SpannableString spanttt = new SpannableString(link);
             ClickableSpan clickttt = new ShuoMClickableSpan(link, this);
             spanttt.setSpan(clickttt, 0, link.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -354,13 +340,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 loading = true;
                 progress = 0;
                 wProgress = 0;
-                load_progress_bar.postDelayed(runnable, 50);
                 getNewsDetails();
             }
         });
 
-
-        getNewsDetails();
         initCommentListView();
         Log.e("test", "10 " + System.currentTimeMillis());
     }
@@ -444,7 +427,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     private void initNew() {
         dbUtils = DBHelper.getInstance(this).getCollectionDBUitls();
-        initPopupWindows();
         isCollection();
     }
 
@@ -459,8 +441,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         try {
             callback = null;
             loading = false;
-            load_progress_bar.setVisibility(View.GONE);
-            runnable = null;
             App.getInstance().setProfileTracker(null);
             nb = null;
             mWebView = null;
@@ -470,6 +450,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             e.printStackTrace();
         }
         super.onDestroy();
+        System.gc();
     }
 
 
@@ -674,27 +655,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         mCommentListView.addHeaderView(headerView);
     }
 
-    private void initPopupWindows() {
-        View mPopupMenu = LayoutInflater.from(this).inflate(R.layout.text_size_popu_layout, null);
-        mPopupWindow = new PopupWindow(mPopupMenu, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        ColorDrawable dw = new ColorDrawable(Color.TRANSPARENT);
-        mPopupWindow.setBackgroundDrawable(dw);
-        mPopupWindow.setOutsideTouchable(true);
-        mRelativeLayoutPopuBig = (RelativeLayout) mPopupMenu.findViewById(R.id.news_textsize_big_id);
-        mRelativeLayoutPopuCenter = (RelativeLayout) mPopupMenu.findViewById(R.id.text_size_popu_center_root_id);
-        mRelativeLayoutPopuSmaill = (RelativeLayout) mPopupMenu.findViewById(R.id.text_size_popu_smail_root_id);
-        mRelativeLayoutPopuBig.setOnClickListener(this);
-        mRelativeLayoutPopuCenter.setOnClickListener(this);
-        mRelativeLayoutPopuSmaill.setOnClickListener(this);
-    }
-
-    private void dismissPopupWindows() {
-        if (mPopupWindow != null && mPopupWindow.isShowing()) {
-            mPopupWindow.dismiss();
-            mFlagPopuShow = false;
-        }
-    }
-
     private final static int SCANNIN_GREQUEST_CODE = 0;
     private List<String> permissions = Arrays.asList("public_profile", "user_friends");
 
@@ -704,21 +664,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             return;
         try {
             switch (v.getId()) {
-                case R.id.news_textsize_big_id:
-                    spu.setTextSizeNews(CODE.textSize_big);
-                    setupWebView(CODE.textSize_big);
-                    dismissPopupWindows();
-                    break;
-                case R.id.text_size_popu_center_root_id:
-                    spu.setTextSizeNews(CODE.textSize_normal);
-                    setupWebView(CODE.textSize_normal);
-                    dismissPopupWindows();
-                    break;
-                case R.id.text_size_popu_smail_root_id:
-                    spu.setTextSizeNews(CODE.textSize_small);
-                    setupWebView(CODE.textSize_small);
-                    dismissPopupWindows();
-                    break;
                 case R.id.news_detail_bak:
                     this.finish();
                     break;
@@ -905,6 +850,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 super.onLoadResource(view, url);
                 if (SPUtil.isImageUri(url)) {
                     wProgress = 100;
+                    hideLoading();
                 }
             }
 
@@ -915,13 +861,12 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                Log.e("test", "wProgress " + wProgress);
                 if (!isResume) {
-                    load_progress_bar.setVisibility(View.GONE);
                     return;
                 }
                 try {
                     wProgress = 100;
+                    hideLoading();
                     mCommentListView.setVisibility(View.VISIBLE);
                     if (isDetail) {
                         return;
@@ -976,38 +921,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     int MIDDLE_PROGRESS = 95;
     int progress = 0;
     int delay = 30;
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            if (!isResume) {
-                loading = false;
-                load_progress_bar.setVisibility(View.GONE);
-                return;
-            }
-            if (loading) {
-                if (wProgress < MIDDLE_PROGRESS && progress < MIDDLE_PROGRESS) {
-                    progress += 1;
-                } else if (wProgress > MIDDLE_PROGRESS) {
-                    progress += 3;
-                    delay = 10;
-                    if (progress >= 100) {
-                        progress = 100;
-                        wProgress = 101;
-                    }
-                }
-                if (wProgress > 100) {
-                    loading = false;
-                    load_progress_bar.setVisibility(View.GONE);
-                    mCommentListView.setVisibility(View.VISIBLE);
-                    return;
-                }
-                load_progress_bar.setProgress(progress);
-                load_progress_bar.postDelayed(runnable, delay);
-            } else {
-                load_progress_bar.setVisibility(View.GONE);
-            }
-        }
-    };
 
     /**
      * 容纳标题栏、视频、WebView
@@ -1015,6 +928,17 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private TextView title;
     private TextView time;
     private WebView mWebView;
+
+    private void hideLoading() {
+        if (loadingView.getVisibility() == View.VISIBLE) {
+            loadingView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    loadingView.setVisibility(View.GONE);
+                }
+            }, 500);
+        }
+    }
 
     /**
      * 设置webview的字体大小
@@ -1032,7 +956,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     public static final String HEAD = "<html><head>" + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n"
             + " <meta name=\"viewport\"\n" +
             "          content=\"width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes\"/>"
-            + "<style>@font-face {font-family: 'kievit';src: url('file:///android_asset/fonts/Roboto-Regular.otf');}</style>"
+            + "<style>@font-face {font-family: 'kievit';src: url('file:///android_asset/fonts/KievitPro-Regular.otf');}</style>"
             + "<link rel=\"stylesheet\" type=\"text/css\" href=\"android.css\" />\n"
             + "<script type=\"text/javascript\" src=\"android.js\" ></script>"
             + "</head><body>";
@@ -1040,7 +964,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     public static final String HEAD_night = "<html><head>" + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n"
             + " <meta name=\"viewport\"\n" +
             "          content=\"width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes\"/>"
-            + "<style>@font-face {font-family: 'kievit';src: url('file:///android_asset/fonts/Roboto-Regular.otf');}</style>"
+            + "<style>@font-face {font-family: 'kievit';src: url('file:///android_asset/fonts/KievitPro-Regular.otf');}</style>"
             + "<link rel=\"stylesheet\" type=\"text/css\" href=\"androidnight.css\" />\n"
             + "<script type=\"text/javascript\" src=\"android.js\" ></script>"
             + "</head><body>";
@@ -1222,13 +1146,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 @Override
                 public void onSuccess(ResponseInfo<File> responseInfo) {
                     try {
-                        Log.e("test", "news " + (System.currentTimeMillis() - start));
-                        loadingView.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                loadingView.setVisibility(View.GONE);
-                            }
-                        }, 500);
                         String data = App.getFileContext(responseInfo.result);
                         if (TextUtils.isEmpty(data)) {
                             //TODO 考虑 没有获取内容 或者 内容为空的情况 服务器满
@@ -1286,18 +1203,11 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private boolean isTagSelect;
 
     private void setContents() {
-//        Log.i("setContents", "setContents" + mBean.toString());
         int textSize = spu.getTextSize();
         setupWebView(textSize);
         mRoot.setVisibility(View.VISIBLE);
         mButtomLayout1.setVisibility(View.VISIBLE);
         news_detail_nonetwork.setVisibility(View.GONE);
-        loadingView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadingView.setVisibility(View.GONE);
-            }
-        }, 500);
 
         //新闻标题时间
         if (mBean != null) {
@@ -1344,7 +1254,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 int num = Integer.parseInt(tagBean.getNum());
                 if (num > 1) {
                     details_head_tag_num.setVisibility(View.VISIBLE);
-                    details_head_tag_num.setText("" + num+""+getString(R.string.follow_num));
+                    details_head_tag_num.setText("" + num + "" + getString(R.string.follow_num));
                 }
             } else {
                 details_head_tag_num.setVisibility(View.GONE);
@@ -1400,6 +1310,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
                                     }
                                 }
+
                                 @Override
                                 public void onFailure(HttpException error, String msg) {
                                     LogUtils.i("isCollection failed");
@@ -1412,7 +1323,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 }
             });
         }
-
         if (mBean.getRef() != null && mBean.getRef().size() > 0) {
             for (int i = 0; i < mBean.getRef().size(); i++) {
                 if (mBean.getRef().get(i).getTitle() == null) {
@@ -1433,7 +1343,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         wProgress = 100;
         progress = 0;
         loadingView.setVisibility(View.GONE);
-        load_progress_bar.setVisibility(View.GONE);
         news_detail_nonetwork.setVisibility(View.VISIBLE);
     }
 
@@ -1887,63 +1796,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             in.setClass(this, MainActivity.class);
             startActivity(in);
         }
-
-    }
-
-    private void popUpwindow() {
-        final PopupWindow pinlunpop = new PopupWindow(this);
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View popRoot = inflater.inflate(R.layout.newsdetail_popupwindow_layout, null);
-        pinlunpop.setWindowLayoutMode(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        pinlunpop.setContentView(popRoot);
-        ColorDrawable dw = new ColorDrawable(Color.TRANSPARENT);
-        pinlunpop.setBackgroundDrawable(dw);
-        pinlunpop.setOutsideTouchable(true);
-        ImageView pop_fenxiang_img = (ImageView) popRoot.findViewById(R.id.pop_fenxiang_img);
-        ImageView pop_shoucang_img = (ImageView) popRoot.findViewById(R.id.pop_shoucang_img);
-        ImageView pop_ziti_img = (ImageView) popRoot.findViewById(R.id.pop_ziti_img);
-        ImageView pop_xiazai_iv = (ImageView) popRoot.findViewById(R.id.pop_xiazai_iv);
-
-        pop_xiazai_iv.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pinlunpop.dismiss();
-            }
-        });
-        pop_fenxiang_img.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pinlunpop.dismiss();
-                // SharedUtil.showShares(true, null, mBean.getTitle(),
-                // mBean.getLink(),nb.getSmallimgurl(),NewsDetailActivity.this);
-                String imgurl = null;
-                if (null != nb.getImgs() && nb.getImgs().length > 0) {
-                    imgurl = nb.getImgs()[0];
-                }
-                FacebookSharedUtil.showShares(mBean.getTitle(), mBean.getLink(), imgurl,
-                        NewsDetailActivity.this);
-            }
-        });
-        pop_shoucang_img.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pinlunpop.dismiss();
-                addCollection();
-            }
-        });
-        pop_ziti_img.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pinlunpop.dismiss();
-                if (mFlagPopuShow) {
-                    dismissPopupWindows();
-                } else {
-                    // mPopupWindow.showAsDropDown(mPinLun,-30,-15);
-                }
-                mFlagPopuShow = !mFlagPopuShow;
-            }
-        });
-        // pinlunpop.showAsDropDown(mPinLun, -60,-15);
 
     }
 

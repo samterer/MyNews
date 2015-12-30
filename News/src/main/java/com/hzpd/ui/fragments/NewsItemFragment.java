@@ -229,8 +229,16 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
+        Log.e("onDestroyView", "onDestroyView " + getAnalyticPageName());
+        EventBus.getDefault().unregister(this);
         SPUtil.clearAds(ads);
+        adapter.appendData(null, true, false);
+        mRecyclerView.setAdapter(null);
+        mRecyclerView.removeAllViews();
+        mRecyclerView = null;
+        adapter = null;
+        SPUtil.clearAds(ads);
+        super.onDestroyView();
     }
 
     boolean firstLoading = false;
@@ -325,6 +333,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
             @Override
             public void onFailure(HttpException error, String msg) {
+                mSwipeRefreshWidget.setRefreshing(false);
                 showEmpty();
                 TUtils.toast(getString(R.string.toast_cannot_connect_network));
                 AnalyticUtils.sendGaEvent(getActivity(), AnalyticUtils.ACTION.networkErrorOnList, null, null, 0L);
@@ -459,7 +468,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
     @Override
     public void onDestroy() {
-        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 

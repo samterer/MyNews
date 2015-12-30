@@ -359,7 +359,6 @@ public class MyCommentListAdapter extends RecyclerView.Adapter {
     public class LoadingHolder extends RecyclerView.ViewHolder {
         public LoadingHolder(View itemView) {
             super(itemView);
-            ViewUtils.inject(this, itemView);
         }
 
     }

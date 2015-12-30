@@ -76,8 +76,8 @@ public class MultiImageSelectorFragment extends Fragment {
 	private ArrayList<Folder> mResultFolder = new ArrayList<Folder>();
 
 	// 图片Grid
-	@ViewInject(R.id.grid)
 	private GridView mGridView;
+
 	private Callback mCallback;
 
 	private ImageGridAdapter mImageAdapter;
@@ -86,16 +86,12 @@ public class MultiImageSelectorFragment extends Fragment {
 	private ListPopupWindow mFolderPopupWindow;
 
 	// 时间线
-	@ViewInject(R.id.timeline_area)
 	private TextView mTimeLineText;
 	// 类别
-	@ViewInject(R.id.category_btn)
 	private TextView mCategoryText;
 	// 预览按钮
-	@ViewInject(R.id.preview)
 	private Button mPreviewBtn;
 	// 底部View
-	@ViewInject(R.id.footer)
 	private View mPopupAnchorView;
 
 	private int mDesireImageCount;
@@ -123,7 +119,12 @@ public class MultiImageSelectorFragment extends Fragment {
 	                         @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.img_fragment_multi_image, container,
 				false);
-		ViewUtils.inject(this, view);
+		mGridView= (GridView) view.findViewById(R.id.grid);
+		mTimeLineText= (TextView) view.findViewById(R.id.timeline_area);
+		mCategoryText= (TextView) view.findViewById(R.id.category_btn);
+		mPreviewBtn= (Button) view.findViewById(R.id.preview);
+		mPopupAnchorView=view.findViewById(R.id.footer);
+
 		return view;
 	}
 

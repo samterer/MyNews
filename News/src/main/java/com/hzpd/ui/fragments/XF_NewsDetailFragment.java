@@ -58,31 +58,20 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 
-public class XF_NewsDetailFragment extends BaseFragment {
+public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickListener {
     private static final String BASEURL = InterfaceJsonfile.PATH_ROOT + "/Public/newsview/nid/";
 
     private static final String HTMLURL = InterfaceJsonfile.PATH_ROOT + "/News/newsInfo2Html/nid/";
 
-    @ViewInject(R.id.xf_newshtmldetail_iv_back)
     private ImageView xf_newshtmldetail_iv_back;// 返回
-    @ViewInject(R.id.xf_newshtmldetail_tv_comments)
     private TextView xf_newshtmldetail_tv_comments;// 跟贴数
-
-    @ViewInject(R.id.xf_newshtmldetail_tv_comment)
     private TextView xf_newshtmldetail_tv_comment;// 编辑评论
-    @ViewInject(R.id.xf_newshtmldetail_iv_share)
     private ImageView xf_newshtmldetail_iv_share;// 分享
-    @ViewInject(R.id.xf_newshtmldetail_iv_collection)
     private ImageView xf_newshtmldetail_iv_collection;// 收藏
-    @ViewInject(R.id.xf_newshtmldetail_iv_praise)
     private ImageView xf_newshtmldetail_iv_praise;// 赞文章
-    @ViewInject(R.id.xf_newshtmldetail_wv_detail)
     private VideoEnabledWebView xf_newshtmldetail_wv_detail;
     private VideoEnabledWebChromeClient webChromeClient;
-
-    @ViewInject(R.id.xf_newshtmldetail_nonVideoLayout)
     private RelativeLayout xf_newshtmldetail_nonVideoLayout;
-    @ViewInject(R.id.xf_newshtmldetail_videoLayout)
     private FrameLayout xf_newshtmldetail_videoLayout;
     private View xf_newshtmldetail_videoLoading;
 
@@ -98,9 +87,26 @@ public class XF_NewsDetailFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.xf_newshtmldetails_layout, container, false);
-        ViewUtils.inject(this, view);
-
+        initViews(view);
         return view;
+    }
+
+    private void initViews(View view) {
+        xf_newshtmldetail_iv_back = (ImageView) view.findViewById(R.id.xf_newshtmldetail_iv_back);
+        xf_newshtmldetail_iv_back.setOnClickListener(this);
+        xf_newshtmldetail_tv_comments = (TextView) view.findViewById(R.id.xf_newshtmldetail_tv_comments);
+        xf_newshtmldetail_tv_comments.setOnClickListener(this);
+        xf_newshtmldetail_tv_comment = (TextView) view.findViewById(R.id.xf_newshtmldetail_tv_comment);
+        xf_newshtmldetail_tv_comment.setOnClickListener(this);
+        xf_newshtmldetail_iv_share = (ImageView) view.findViewById(R.id.xf_newshtmldetail_iv_share);
+        xf_newshtmldetail_iv_share.setOnClickListener(this);
+        xf_newshtmldetail_iv_collection = (ImageView) view.findViewById(R.id.xf_newshtmldetail_iv_collection);
+        xf_newshtmldetail_iv_collection.setOnClickListener(this);
+        xf_newshtmldetail_iv_praise = (ImageView) view.findViewById(R.id.xf_newshtmldetail_iv_praise);
+        xf_newshtmldetail_iv_praise.setOnClickListener(this);
+        xf_newshtmldetail_wv_detail = (VideoEnabledWebView) view.findViewById(R.id.xf_newshtmldetail_wv_detail);
+        xf_newshtmldetail_nonVideoLayout = (RelativeLayout) view.findViewById(R.id.xf_newshtmldetail_nonVideoLayout);
+        xf_newshtmldetail_videoLayout = (FrameLayout) view.findViewById(R.id.xf_newshtmldetail_videoLayout);
     }
 
     @Override
@@ -252,12 +258,11 @@ public class XF_NewsDetailFragment extends BaseFragment {
     }
 
     // 监听事件
-    @OnClick({R.id.xf_newshtmldetail_tv_comments, R.id.xf_newshtmldetail_iv_share,
-            R.id.xf_newshtmldetail_iv_praise, R.id.xf_newshtmldetail_iv_collection,
-            R.id.xf_newshtmldetail_tv_comment})
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.xf_newshtmldetail_tv_comments:// 跳转到评论列表页
+                break;
             case R.id.xf_newshtmldetail_tv_comment: {// 打开评论
                 if (null == nb || null == newsdetailBean) {
                     return;
@@ -304,6 +309,10 @@ public class XF_NewsDetailFragment extends BaseFragment {
             break;
             case R.id.xf_newshtmldetail_iv_praise: {// 赞文章
                 praiseArtical();
+            }
+            break;
+            case R.id.xf_newshtmldetail_iv_back: {
+                activity.onBackPressed();
             }
             break;
         }
@@ -493,10 +502,6 @@ public class XF_NewsDetailFragment extends BaseFragment {
                 });
     }
 
-    @OnClick(R.id.xf_newshtmldetail_iv_back)
-    private void goback(View v) {
-        activity.onBackPressed();
-    }
 
     // 是否收藏
     private void isCollection() {

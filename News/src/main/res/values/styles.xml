@@ -95,7 +95,7 @@
         <item name="detail_related_news_bg">@color/white</item>
         <item name="detail_related_news_head_bg">@color/details_bg_color</item>
         <item name="details_news_comments">@color/white</item>
-        <item name="detail_recy_backgroup">@color/details_bg_color</item>
+        <item name="detail_recy_backgroup">@color/fragment_background</item>
         <item name="main_search_bg">@drawable/corners_bg</item>
         <item name="search_head_layout_bg">#f0f0f0</item>
         <item name="search_history_layout_bg">@color/white</item>
@@ -520,7 +520,7 @@
         <item name="android:layout_marginLeft">@dimen/margin_10</item>
         <item name="android:layout_weight">1</item>
         <item name="android:textColor">?zqzx_setting_item_text</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="setting_img">

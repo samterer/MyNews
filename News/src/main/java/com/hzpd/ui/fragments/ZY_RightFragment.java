@@ -49,15 +49,12 @@ import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.sithagi.countrycodepicker.CountryPicker;
 import com.sithagi.countrycodepicker.CountryPickerListener;
 
@@ -69,7 +66,7 @@ import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import de.greenrobot.event.EventBus;
 
-public class ZY_RightFragment extends BaseFragment {
+public class ZY_RightFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public String getAnalyticPageName() {
         return AnalyticUtils.SCREEN.leftMenu;
@@ -89,39 +86,35 @@ public class ZY_RightFragment extends BaseFragment {
     public static final String ACTION_USER = "com.hzpd.cms.user";
     public static final String ACTION_QUIT = "com.hzpd.cms.quit";
     public static final String ACTION_QUIT_LOGIN = "com.hzpd.cms.quit.login";
-    @ViewInject(R.id.zy_rfrag_ll_login)
     private LinearLayout zy_rfrag_ll_login;
-    @ViewInject(R.id.zy_rfrag_tv_login)
     private TextView zy_rfrag_tv_login;
-    @ViewInject(R.id.zy_rfrag_iv_login)
     private CircleImageView zy_rfrag_iv_login;
     private LoginQuitBR br;
-
     private CallbackManager callbackManager;
-
     private TextView night_mode;
-
     private TextView version;
     private TextView personal_item_text;
     private ImageView image_skin_mode;
     private View coverTop;
+    private View zy_rfrag_ll_comm;
+    private View zy_rfrag_ll_collect;
+    private View zy_rfrag_ll_push;
+    private View zy_rfrag_ll_setting;
+    private View zy_rfrag_ll_feedback;
+    private View zy_rfrag_ll_download;
+    private View zy_rfrag_ll_night;
+    private View zy_rfrag_ll_read;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = null;
         try {
             view = inflater.inflate(R.layout.zy_rightfragment, container, false);
-            ViewUtils.inject(this, view);
-            night_mode = (TextView) view.findViewById(R.id.night_mode);
-            version = (TextView) view.findViewById(R.id.zy_version);
-            image_skin_mode = (ImageView) view.findViewById(R.id.image_skin_mode);
-            personal_item_text = (TextView) view.findViewById(R.id.choose_country);
+            initViews(view);
             String name = SPUtil.getCountryName();
-//            Log.i("", "personal_item_text" + name);
             String countryname = name.toUpperCase().charAt(0) + name.substring(1, name.length());
-//            Toast.makeText(getActivity(), "" + countryname, Toast.LENGTH_SHORT).show();
             personal_item_text.setText("" + countryname);
-            coverTop = view.findViewById(R.id.cover_top);
             if (App.getInstance().getThemeName().equals("0")) {
                 coverTop.setVisibility(View.GONE);
             } else {
@@ -144,10 +137,35 @@ public class ZY_RightFragment extends BaseFragment {
         } catch (Exception e) {
 
         }
-//        String z= "zhang";
-//        System.out.println();
         EventBus.getDefault().register(this);
         return view;
+    }
+
+    private void initViews(View view) {
+        zy_rfrag_ll_login = (LinearLayout) view.findViewById(R.id.zy_rfrag_ll_login);
+        zy_rfrag_tv_login = (TextView) view.findViewById(R.id.zy_rfrag_tv_login);
+        zy_rfrag_iv_login = (CircleImageView) view.findViewById(R.id.zy_rfrag_iv_login);
+        night_mode = (TextView) view.findViewById(R.id.night_mode);
+        version = (TextView) view.findViewById(R.id.zy_version);
+        image_skin_mode = (ImageView) view.findViewById(R.id.image_skin_mode);
+        personal_item_text = (TextView) view.findViewById(R.id.choose_country);
+        coverTop = view.findViewById(R.id.cover_top);
+        zy_rfrag_ll_comm = view.findViewById(R.id.zy_rfrag_ll_comm);
+        zy_rfrag_ll_comm.setOnClickListener(this);
+        zy_rfrag_ll_collect = view.findViewById(R.id.zy_rfrag_ll_collect);
+        zy_rfrag_ll_collect.setOnClickListener(this);
+        zy_rfrag_ll_push = view.findViewById(R.id.zy_rfrag_ll_push);
+        zy_rfrag_ll_push.setOnClickListener(this);
+        zy_rfrag_ll_setting = view.findViewById(R.id.zy_rfrag_ll_setting);
+        zy_rfrag_ll_setting.setOnClickListener(this);
+        zy_rfrag_ll_feedback = view.findViewById(R.id.zy_rfrag_ll_feedback);
+        zy_rfrag_ll_feedback.setOnClickListener(this);
+        zy_rfrag_ll_download = view.findViewById(R.id.zy_rfrag_ll_download);
+        zy_rfrag_ll_download.setOnClickListener(this);
+        zy_rfrag_ll_night = view.findViewById(R.id.zy_rfrag_ll_night);
+        zy_rfrag_ll_night.setOnClickListener(this);
+        zy_rfrag_ll_read = view.findViewById(R.id.zy_rfrag_ll_read);
+        zy_rfrag_ll_read.setOnClickListener(this);
     }
 
     @Override
@@ -252,9 +270,15 @@ public class ZY_RightFragment extends BaseFragment {
     private List<String> permissions = Arrays.asList("public_profile", "user_friends");
     private boolean isChangeSkin;
 
-    @OnClick({R.id.zy_rfrag_ll_login, R.id.zy_rfrag_ll_comm, R.id.zy_rfrag_ll_collect, R.id.zy_rfrag_ll_push,
-            R.id.zy_rfrag_ll_setting, R.id.zy_rfrag_ll_feedback, R.id.zy_rfrag_ll_download, R.id.zy_rfrag_ll_night, R.id.zy_rfrag_ll_read})
-    private void rightClick(View v) {
+
+    private void restartApplication() {
+        final Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage(getActivity().getPackageName());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View v) {
         if (AvoidOnClickFastUtils.isFastDoubleClick())
             return;
         boolean flag = false;
@@ -354,13 +378,6 @@ public class ZY_RightFragment extends BaseFragment {
             startActivity(mIntent);
             AAnim.ActivityStartAnimation(activity);
         }
-    }
-
-
-    private void restartApplication() {
-        final Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage(getActivity().getPackageName());
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
     }
 
     public class LoginQuitBR extends BroadcastReceiver {

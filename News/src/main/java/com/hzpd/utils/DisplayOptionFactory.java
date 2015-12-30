@@ -19,9 +19,9 @@ public class DisplayOptionFactory {
             case Big: {
                 option = new DisplayImageOptions.Builder()
                         .bitmapConfig(Config.RGB_565)
-                        .showImageOnLoading(R.drawable.news_album_def)
-                        .showImageOnFail(R.drawable.news_album_def)
-                        .showImageForEmptyUri(R.drawable.news_album_def)
+                        .showImageOnLoading(R.drawable.zy_thumbnail_small)
+                        .showImageOnFail(R.drawable.zy_thumbnail_small)
+                        .showImageForEmptyUri(R.drawable.zy_thumbnail_small)
                         .cacheInMemory(true).cacheOnDisk(true)
                         .imageScaleType(ImageScaleType.EXACTLY)
                         .build();

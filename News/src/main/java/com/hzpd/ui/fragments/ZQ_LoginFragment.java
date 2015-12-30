@@ -17,113 +17,117 @@ import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 
-public class ZQ_LoginFragment extends BaseFragment {
+public class ZQ_LoginFragment extends BaseFragment implements View.OnClickListener {
 
-	@ViewInject(R.id.stitle_tv_content)
-	private TextView stitle_tv_content;
-	@ViewInject(R.id.login_uname_id)
-	private EditText login_uname_id;        //用户名
-	@ViewInject(R.id.login_passwd_id)
-	private EditText login_passwd_id;        //密码
-	@ViewInject(R.id.login_not_passwd)
-	private TextView login_not_passwd;        //忘记密码
-	@ViewInject(R.id.login_login_comfirm_id)
-	private Button login_login_comfirm_id;    //登录
+    private TextView stitle_tv_content;
+    private EditText login_uname_id;        //用户名
+    private EditText login_passwd_id;        //密码
+    private TextView login_not_passwd;        //忘记密码
+    private Button login_login_comfirm_id;    //登录
+    private TextView login_register_tv_id;//注册
+    private View stitle_ll_back;
 
-	@ViewInject(R.id.login_register_tv_id)
-	private TextView login_register_tv_id;//注册
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.login_layout, container, false);
+        stitle_tv_content = (TextView) view.findViewById(R.id.stitle_tv_content);
+        login_uname_id = (EditText) view.findViewById(R.id.login_uname_id);
+        login_passwd_id = (EditText) view.findViewById(R.id.login_passwd_id);
+        login_not_passwd = (TextView) view.findViewById(R.id.login_not_passwd);
+        login_login_comfirm_id = (Button) view.findViewById(R.id.login_login_comfirm_id);
+        login_login_comfirm_id.setOnClickListener(this);
+        login_register_tv_id = (TextView) view.findViewById(R.id.login_register_tv_id);
+        stitle_ll_back=view.findViewById(R.id.stitle_ll_back);
+        stitle_ll_back.setOnClickListener(this);
+
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        stitle_tv_content.setText(R.string.title_login);
+    }
+
+    private void showDialog() {
+    }
 
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	                         Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.login_layout, container, false);
-		ViewUtils.inject(this, view);
 
-		return view;
-	}
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.stitle_ll_back:
+            {
+                activity.onBackPressed();
+            }
+                break;
+            case R.id.login_login_comfirm_id: {
+                if (!MyCommonUtil.isNetworkConnected(activity)) {
+                    TUtils.toast(getString(R.string.toast_network_error));
+                    return;
+                }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		stitle_tv_content.setText(R.string.title_login);
-	}
+                final String uname = login_uname_id.getText().toString();
+                final String pwd = login_passwd_id.getText().toString();
+                if (uname == null || "".equals(uname)) {
+                    TUtils.toast(getString(R.string.toast_input_username));
+                    return;
+                }
+                if (pwd == null || "".equals(pwd)) {
+                    TUtils.toast(getString(R.string.toast_input_password));
+                    return;
+                }
 
-	private void showDialog() {
-	}
+                showDialog();
 
-	@OnClick(R.id.login_login_comfirm_id)
-	private void login(View v) {
-		if (!MyCommonUtil.isNetworkConnected(activity)) {
-			TUtils.toast(getString(R.string.toast_network_error));
-			return;
-		}
+                RequestParams params = RequestParamsUtils.getParams();
+                params.addBodyParameter("username", uname);
+                params.addBodyParameter("password", pwd);
 
-		final String uname = login_uname_id.getText().toString();
-		final String pwd = login_passwd_id.getText().toString();
-		if (uname == null || "".equals(uname)) {
-			TUtils.toast(getString(R.string.toast_input_username));
-			return;
-		}
-		if (pwd == null || "".equals(pwd)) {
-			TUtils.toast(getString(R.string.toast_input_password));
-			return;
-		}
+                httpUtils.send(HttpMethod.POST
+                        , InterfaceJsonfile.LOGIN//InterfaceApi.mUserLogin
+                        , params
+                        , new RequestCallBack<String>() {
+                    @Override
+                    public void onFailure(HttpException arg0, String arg1) {
+                        LogUtils.i("login-failed");
+                        TUtils.toast(getString(R.string.toast_server_no_response));
+                    }
 
-		showDialog();
+                    @Override
+                    public void onSuccess(ResponseInfo<String> arg0) {
+                        LogUtils.i("login-success-->" + arg0.result);
+                        JSONObject object = FjsonUtil.parseObject(arg0.result);
+                        if (null == object) {
+                            return;
+                        }
+                        if (200 == object.getIntValue("code")) {
 
-		RequestParams params = RequestParamsUtils.getParams();
-		params.addBodyParameter("username", uname);
-		params.addBodyParameter("password", pwd);
+                            UserBean user = FjsonUtil.parseObject(object.getString("data"), UserBean.class);
+                            spu.setUser(user);
 
-		httpUtils.send(HttpMethod.POST
-				, InterfaceJsonfile.LOGIN//InterfaceApi.mUserLogin
-				, params
-				, new RequestCallBack<String>() {
-			@Override
-			public void onFailure(HttpException arg0, String arg1) {
-				LogUtils.i("login-failed");
-				TUtils.toast(getString(R.string.toast_server_no_response));
-			}
+                            Intent intent = new Intent();
+                            intent.setAction(ZY_RightFragment.ACTION_USER);
+                            activity.sendBroadcast(intent);
+                            activity.finish();
+                            TUtils.toast(getString(R.string.toast_login_success));
+                        } else {
+                            TUtils.toast(object.getString("msg"));
+                        }
+                    }
+                });
 
-			@Override
-			public void onSuccess(ResponseInfo<String> arg0) {
-				LogUtils.i("login-success-->" + arg0.result);
-				JSONObject object = FjsonUtil.parseObject(arg0.result);
-				if (null == object) {
-					return;
-				}
-				if (200 == object.getIntValue("code")) {
-
-					UserBean user = FjsonUtil.parseObject(object.getString("data"), UserBean.class);
-					spu.setUser(user);
-
-					Intent intent = new Intent();
-					intent.setAction(ZY_RightFragment.ACTION_USER);
-					activity.sendBroadcast(intent);
-					activity.finish();
-					TUtils.toast(getString(R.string.toast_login_success));
-				} else {
-					TUtils.toast(object.getString("msg"));
-				}
-			}
-		});
-
-	}
-
-	@OnClick(R.id.stitle_ll_back)
-	private void back(View v) {
-		activity.onBackPressed();
-	}
-
+            }
+            break;
+        }
+    }
 }

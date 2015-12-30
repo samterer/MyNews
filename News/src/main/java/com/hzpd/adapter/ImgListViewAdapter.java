@@ -76,7 +76,6 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
         public TextView pl;
 
         public ViewHolder1(View v) {
-            ViewUtils.inject(this, v);
             img = (ImageView) v.findViewById(R.id.img_img1_id1);
             title = (TextView) v.findViewById(R.id.img_content_id1);
             pl = (TextView) v.findViewById(R.id.img_number_id1);
@@ -91,7 +90,6 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
         public TextView pl;
 
         public ViewHolder2(View v) {
-            ViewUtils.inject(this, v);
             img1 = (ImageView) v.findViewById(R.id.img_img2_id1);
             img2 = (ImageView) v.findViewById(R.id.img_img2_id2);
             title = (TextView) v.findViewById(R.id.img_content_id2);
@@ -107,7 +105,6 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
         public TextView pl;
 
         public ViewHolder3(View v) {
-            ViewUtils.inject(this, v);
             img1 = (ImageView) v.findViewById(R.id.img_img3_id1);
             img2 = (ImageView) v.findViewById(R.id.img_img3_id2);
             img3 = (ImageView) v.findViewById(R.id.img_img3_id3);
@@ -125,7 +122,6 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
         public TextView pl;
 
         public ViewHolder4(View v) {
-            ViewUtils.inject(this, v);
             img1 = (ImageView) v.findViewById(R.id.img_img4_id1);
             img2 = (ImageView) v.findViewById(R.id.img_img4_id2);
             img3 = (ImageView) v.findViewById(R.id.img_img4_id3);
@@ -146,7 +142,6 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
         public TextView pl;
 
         public ViewHolder5(View v) {
-            ViewUtils.inject(this, v);
             img1 = (ImageView) v.findViewById(R.id.img_img5_id1);
             img2 = (ImageView) v.findViewById(R.id.img_img5_id2);
             img3 = (ImageView) v.findViewById(R.id.img_img5_id3);

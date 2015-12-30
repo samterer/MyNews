@@ -9,11 +9,9 @@ import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Interpolator;
 
 import com.hzpd.hflt.R;
 import com.hzpd.ui.App;
-import com.hzpd.ui.fragments.ZY_RightFragment;
 import com.hzpd.utils.SystemBarTintManager;
 
 import org.common.lib.analytics.ActivityLifecycleAction;
@@ -22,12 +20,7 @@ import org.common.lib.analytics.AnalyticCallback;
 public class BaseActivity extends FragmentActivity implements AnalyticCallback {
 
     private ActivityLifecycleAction action = new ActivityLifecycleAction(this);
-
-    protected ZY_RightFragment mRightFragment;
-
     protected FragmentManager fm;
-
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
     }
@@ -42,7 +35,7 @@ public class BaseActivity extends FragmentActivity implements AnalyticCallback {
         super.onCreate(null);
         action.onCreate(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        changeStatus();
+        //changeStatus();
         fm = getSupportFragmentManager();
     }
 
@@ -64,14 +57,6 @@ public class BaseActivity extends FragmentActivity implements AnalyticCallback {
         tintManager.setStatusBarTintColor(color);
 //        tintManager.setStatusBarTintResource(R.color.main_title);
     }
-
-    private Interpolator interp = new Interpolator() {
-        @Override
-        public float getInterpolation(float t) {
-            t -= 1.0f;
-            return t * t * t + 1.0f;
-        }
-    };
 
     @TargetApi(19)
     private void setTranslucentStatus(boolean on) {

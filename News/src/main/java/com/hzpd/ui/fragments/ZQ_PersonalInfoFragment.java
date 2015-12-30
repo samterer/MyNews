@@ -34,15 +34,12 @@ import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.PropertyValuesHolder;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -53,295 +50,294 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 
+public class ZQ_PersonalInfoFragment extends BaseFragment implements View.OnClickListener {
 
-public class ZQ_PersonalInfoFragment extends BaseFragment {
-
-	@ViewInject(R.id.zq_pinfo_rl_bg)
-	private RelativeLayout zq_pinfo_rl_bg;
-	@ViewInject(R.id.pi_login_name_tr)
-	private TableRow pi_login_name_tr;
-	@ViewInject(R.id.pi_modifypwd_tr)
-	private TableRow pi_modifypwd_tr;
-	@ViewInject(R.id.pi_nick_name_tr)
-	private TableRow pi_nick_name_tr;
-	@ViewInject(R.id.pi_gender_tr)
-	private TableRow pi_gender_tr;
-
-
-	@ViewInject(R.id.lg_pi_iv_touxiang)
-	private CircleImageView lg_pi_iv_touxiang;//头像
-	@ViewInject(R.id.lg_pi_tv_name)
-	private TextView lg_pi_tv_name;//用户名
-	@ViewInject(R.id.lg_pi_nick)
-	private TextView lg_pi_nick;//昵称
-	@ViewInject(R.id.lg_pi_tv_sex)
-	private TextView lg_pi_tv_sex;//性别
-	@ViewInject(R.id.lg_pi_bt_quite)
-	private Button lg_pi_bt_quite;//退出登录
+    private RelativeLayout zq_pinfo_rl_bg;
+    private TableRow pi_login_name_tr;
+    private TableRow pi_modifypwd_tr;
+    private TableRow pi_nick_name_tr;
+    private TableRow pi_gender_tr;
+    private CircleImageView lg_pi_iv_touxiang;//头像
+    private TextView lg_pi_tv_name;//用户名
+    private TextView lg_pi_nick;//昵称
+    private TextView lg_pi_tv_sex;//性别
+    private Button lg_pi_bt_quite;//退出登录
+    private View zq_pinfo_iv_back;
 
 
-	/* 请求码 */
-	private static final int IMAGE_REQUEST_CODE = 450;
-	private static final int CAMERA_REQUEST_CODE = 451;
-	private static final int RESULT_REQUEST_CODE = 452;
-	private String[] items = new String[]{App.getInstance().getString(R.string.prompt_choose_local_photo),
-			App.getInstance().getString(R.string.prompt_take_photo)};
-	private final String IMAGE_FILE_NAME = "faceImage.jpg";
-	private boolean isThirdpart = false;//是否是第三方登陆
-	private File imgFile;
+    /* 请求码 */
+    private static final int IMAGE_REQUEST_CODE = 450;
+    private static final int CAMERA_REQUEST_CODE = 451;
+    private static final int RESULT_REQUEST_CODE = 452;
+    private String[] items = new String[]{App.getInstance().getString(R.string.prompt_choose_local_photo),
+            App.getInstance().getString(R.string.prompt_take_photo)};
+    private final String IMAGE_FILE_NAME = "faceImage.jpg";
+    private boolean isThirdpart = false;//是否是第三方登陆
+    private File imgFile;
 
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.personal_info, container, false);
-		ViewUtils.inject(this, view);
-		return view;
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.personal_info, container, false);
+        zq_pinfo_rl_bg = (RelativeLayout) view.findViewById(R.id.zq_pinfo_rl_bg);
+        pi_login_name_tr = (TableRow) view.findViewById(R.id.pi_login_name_tr);
+        pi_modifypwd_tr = (TableRow) view.findViewById(R.id.pi_modifypwd_tr);
+        pi_modifypwd_tr.setOnClickListener(this);
+        pi_nick_name_tr = (TableRow) view.findViewById(R.id.pi_nick_name_tr);
+        pi_nick_name_tr.setOnClickListener(this);
+        pi_gender_tr = (TableRow) view.findViewById(R.id.pi_gender_tr);
+        pi_gender_tr.setOnClickListener(this);
+        lg_pi_iv_touxiang = (CircleImageView) view.findViewById(R.id.lg_pi_iv_touxiang);
+        lg_pi_iv_touxiang.setOnClickListener(this);
+        lg_pi_tv_name = (TextView) view.findViewById(R.id.lg_pi_tv_name);
+        lg_pi_nick = (TextView) view.findViewById(R.id.lg_pi_nick);
+        lg_pi_tv_sex = (TextView) view.findViewById(R.id.lg_pi_tv_sex);
+        lg_pi_bt_quite = (Button) view.findViewById(R.id.lg_pi_bt_quite);
+        zq_pinfo_iv_back = view.findViewById(R.id.zq_pinfo_iv_back);
+        zq_pinfo_iv_back.setOnClickListener(this);
+        return view;
+    }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		init();
-	}
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.zq_pinfo_iv_back:
+                activity.onBackPressed();
+                break;
+            case R.id.pi_modifypwd_tr:
+                if (isThirdpart) {
+                    TUtils.toast(getString(R.string.toast_cannot_modify_password));
+                    return;
+                }
+                ((PersonalInfoActivity) activity).toFindbackpwdFm();
+                break;
+            case R.id.pi_nick_name_tr:
+                if (isThirdpart) {
+                    TUtils.toast(getString(R.string.toast_cannot_modify_nickname));
+                    return;
+                }
 
-	private void init() {
-		LogUtils.i("userimg-->" + spu.getUser().getAvatar_path());
-		LogUtils.i("usertoken-->" + spu.getUser().getToken());
-		LogUtils.i("uid-->" + spu.getUser().getUid());
-		JSONObject obj = spu.getWelcome();
+                ((PersonalInfoActivity) activity).toModifyPinfoFm(InterfaceJsonfile.NICKNAME);
+                break;
+            case R.id.pi_gender_tr:
+                if (isThirdpart) {
+                    TUtils.toast(getString(R.string.toast_cannot_modify_sex));
+                    return;
+                }
+                ((PersonalInfoActivity) activity).toModifyPinfoFm(InterfaceJsonfile.NICKNAME);
+                break;
+            case R.id.lg_pi_iv_touxiang: {
+                /**
+                 * 显示选择对话框
+                 */
+                new AlertDialog.Builder(activity)
+                        .setTitle(R.string.prompt_set_avatar)
+                        .setItems(items, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0: {
+                                        Intent intentFromGallery = new Intent();
+                                        intentFromGallery.setType("image/*"); // 设置文件类型
+                                        intentFromGallery.setAction(Intent.ACTION_GET_CONTENT);
+                                        activity.startActivityForResult(intentFromGallery,
+                                                IMAGE_REQUEST_CODE);
+                                        AAnim.ActivityStartAnimation(activity);
+                                    }
+                                    break;
+                                    case 1: {
+                                        Intent intentFromCapture = new Intent(
+                                                MediaStore.ACTION_IMAGE_CAPTURE);
+                                        intentFromCapture.putExtra(
+                                                MediaStore.EXTRA_OUTPUT,
+                                                Uri.fromFile(imgFile));
+                                        activity.startActivityForResult(intentFromCapture,
+                                                CAMERA_REQUEST_CODE);
+                                        AAnim.ActivityStartAnimation(activity);
+                                    }
+                                    break;
+                                }
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
 
-		String pinfobg = null;
-		if (null != obj) {
-			pinfobg = obj.getString("userinfobg");
-		}
-		if (TextUtils.isEmpty(pinfobg)) {
-			zq_pinfo_rl_bg.setBackgroundResource(R.drawable.welcome_1);
-		} else {
-			mImageLoader.loadImage(pinfobg, new ImageLoadingListener() {
-				@Override
-				public void onLoadingStarted(String imageUri, View view) {
-				}
+            }
+            break;
+        }
+    }
 
-				@Override
-				public void onLoadingFailed(String imageUri, View view,
-											FailReason failReason) {
-					zq_pinfo_rl_bg.setBackgroundResource(R.drawable.welcome_1);
-				}
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        init();
+    }
 
-				@Override
-				public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-					BitmapDrawable bg = new BitmapDrawable(getResources(), loadedImage);
-				}
+    private void init() {
+        LogUtils.i("userimg-->" + spu.getUser().getAvatar_path());
+        LogUtils.i("usertoken-->" + spu.getUser().getToken());
+        LogUtils.i("uid-->" + spu.getUser().getUid());
+        JSONObject obj = spu.getWelcome();
 
-				@Override
-				public void onLoadingCancelled(String imageUri, View view) {
-					zq_pinfo_rl_bg.setBackgroundResource(R.drawable.welcome_1);
-				}
-			});
-		}
+        String pinfobg = null;
+        if (null != obj) {
+            pinfobg = obj.getString("userinfobg");
+        }
+        if (TextUtils.isEmpty(pinfobg)) {
+            zq_pinfo_rl_bg.setBackgroundResource(R.drawable.welcome);
+        } else {
+            mImageLoader.loadImage(pinfobg, new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String imageUri, View view) {
+                }
+
+                @Override
+                public void onLoadingFailed(String imageUri, View view,
+                                            FailReason failReason) {
+                    zq_pinfo_rl_bg.setBackgroundResource(R.drawable.welcome);
+                }
+
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    BitmapDrawable bg = new BitmapDrawable(getResources(), loadedImage);
+                }
+
+                @Override
+                public void onLoadingCancelled(String imageUri, View view) {
+                    zq_pinfo_rl_bg.setBackgroundResource(R.drawable.welcome);
+                }
+            });
+        }
 
 
-		mImageLoader.displayImage(spu.getUser().getAvatar_path(), lg_pi_iv_touxiang, DisplayOptionFactory.getOption(OptionTp.Logo));
+        mImageLoader.displayImage(spu.getUser().getAvatar_path(), lg_pi_iv_touxiang, DisplayOptionFactory.getOption(OptionTp.Logo));
 
-		activity.finish();
-	}
+        activity.finish();
+    }
 
-	@OnClick(R.id.zq_pinfo_iv_back)
-	private void goBack(View v) {
-		activity.onBackPressed();
-	}
+    public void modify() {
+        lg_pi_nick.setText(spu.getUser().getNickname());
 
+        if ("1".equals(spu.getUser().getSex())) {
+            lg_pi_tv_sex.setText(R.string.prompt_male);
+        } else if ("2".equals(spu.getUser().getSex())) {
+            lg_pi_tv_sex.setText(R.string.prompt_female);
+        } else if ("3".equals(spu.getUser().getSex())) {
+            lg_pi_tv_sex.setText(R.string.prompt_keep_secret);
+        }
+    }
 
-	@OnClick(R.id.pi_modifypwd_tr)
-	private void modifyPwd(View view) {
-		if (isThirdpart) {
-			TUtils.toast(getString(R.string.toast_cannot_modify_password));
-			return;
-		}
-		((PersonalInfoActivity) activity).toFindbackpwdFm();
-	}
+    //图片裁剪
+    public void startPhotoZoom(Uri uri) {
+        if (null == uri) {
+            return;
+        }
 
-	@OnClick(R.id.pi_nick_name_tr)
-	private void modifyNickName(View v) {
-		if (isThirdpart) {
-			TUtils.toast(getString(R.string.toast_cannot_modify_nickname));
-			return;
-		}
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        // 设置裁剪
+        intent.putExtra("crop", "true");
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        // outputX outputY 是裁剪图片宽高
+        intent.putExtra("outputX", 320);
+        intent.putExtra("outputY", 320);
+        intent.putExtra("return-data", true);
+        activity.startActivityForResult(intent, RESULT_REQUEST_CODE);
+        AAnim.ActivityStartAnimation(activity);
+    }
 
-		((PersonalInfoActivity) activity).toModifyPinfoFm(InterfaceJsonfile.NICKNAME);
-	}
+    public void startPhotoZoom() {
+        Uri uri = Uri.fromFile(imgFile);
+        startPhotoZoom(uri);
+    }
 
-	@OnClick(R.id.pi_gender_tr)
-	private void modifyGender(View v) {
-		if (isThirdpart) {
-			TUtils.toast(getString(R.string.toast_cannot_modify_sex));
-			return;
-		}
-		((PersonalInfoActivity) activity).toModifyPinfoFm(InterfaceJsonfile.NICKNAME);
-	}
+    //上传头像
+    public void uploadPhoto(Bitmap photo) {
 
-	/**
-	 * 显示选择对话框
-	 */
-	@OnClick(R.id.lg_pi_iv_touxiang)
-	private void showDialog(View v) {
-		new AlertDialog.Builder(activity)
-				.setTitle(R.string.prompt_set_avatar)
-				.setItems(items, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						switch (which) {
-							case 0: {
-								Intent intentFromGallery = new Intent();
-								intentFromGallery.setType("image/*"); // 设置文件类型
-								intentFromGallery.setAction(Intent.ACTION_GET_CONTENT);
-								activity.startActivityForResult(intentFromGallery,
-										IMAGE_REQUEST_CODE);
-								AAnim.ActivityStartAnimation(activity);
-							}
-							break;
-							case 1: {
-								Intent intentFromCapture = new Intent(
-										MediaStore.ACTION_IMAGE_CAPTURE);
-								intentFromCapture.putExtra(
-										MediaStore.EXTRA_OUTPUT,
-										Uri.fromFile(imgFile));
-								activity.startActivityForResult(intentFromCapture,
-										CAMERA_REQUEST_CODE);
-								AAnim.ActivityStartAnimation(activity);
-							}
-							break;
-						}
-					}
-				})
-				.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				}).show();
+        try {
+            photo.compress(CompressFormat.PNG, 100, new FileOutputStream(imgFile));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        lg_pi_iv_touxiang.setImageBitmap(photo);
+        RequestParams params = RequestParamsUtils.getParams();
+        params.addBodyParameter("token", spu.getUser().getToken());
+        params.addBodyParameter("avatar", CipherUtils.base64Encode(photo));
+        SPUtil.addParams(params);
+        httpUtils.send(HttpMethod.POST
+                , InterfaceJsonfile.CHANGEPINFO//InterfaceApi.modify_gender
+                , params
+                , new RequestCallBack<String>() {
+            @Override
+            public void onFailure(HttpException arg0, String arg1) {
+                if (!isAdded()) {
+                    return;
+                }
+                TUtils.toast(getString(R.string.toast_server_no_response));
+            }
 
-	}
+            @Override
+            public void onSuccess(ResponseInfo<String> arg0) {
+                if (!isAdded()) {
+                    return;
+                }
+                JSONObject obj = FjsonUtil.parseObject(arg0.result);
+                if (null == obj) {
+                    return;
+                }
 
-	public void modify() {
-		lg_pi_nick.setText(spu.getUser().getNickname());
+                if (200 == obj.getIntValue("code")) {
+                    TUtils.toast(getString(R.string.toast_modify_success));
+                    UserBean user = FjsonUtil.parseObject(obj.getString("data"), UserBean.class);
+                    spu.setUser(user);
 
-		if ("1".equals(spu.getUser().getSex())) {
-			lg_pi_tv_sex.setText(R.string.prompt_male);
-		} else if ("2".equals(spu.getUser().getSex())) {
-			lg_pi_tv_sex.setText(R.string.prompt_female);
-		} else if ("3".equals(spu.getUser().getSex())) {
-			lg_pi_tv_sex.setText(R.string.prompt_keep_secret);
-		}
-	}
+                    Intent intent = new Intent();
+                    intent.setAction(ZY_RightFragment.ACTION_USER);
+                    activity.sendBroadcast(intent);
+                } else {
+                    TUtils.toast(obj.getString("msg"));
+                }
+            }
+        });
 
-	//图片裁剪
-	public void startPhotoZoom(Uri uri) {
-		if (null == uri) {
-			return;
-		}
+    }
 
-		Intent intent = new Intent("com.android.camera.action.CROP");
-		intent.setDataAndType(uri, "image/*");
-		// 设置裁剪
-		intent.putExtra("crop", "true");
-		// aspectX aspectY 是宽高的比例
-		intent.putExtra("aspectX", 1);
-		intent.putExtra("aspectY", 1);
-		// outputX outputY 是裁剪图片宽高
-		intent.putExtra("outputX", 320);
-		intent.putExtra("outputY", 320);
-		intent.putExtra("return-data", true);
-		activity.startActivityForResult(intent, RESULT_REQUEST_CODE);
-		AAnim.ActivityStartAnimation(activity);
-	}
+    public File getImgPath() {
+        File cacheFileDir;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||
+                !Environment.isExternalStorageRemovable()) {
+            cacheFileDir = Environment.getExternalStorageDirectory();
+        } else {
+            cacheFileDir = activity.getApplicationContext().getCacheDir();
+        }
+        if (null != cacheFileDir && !cacheFileDir.exists()) {
+            cacheFileDir.mkdirs();
+        }
+        File cacheFile = App.getFile(cacheFileDir.getAbsolutePath()
+                + File.separator + "cyol"
+                + File.separator + IMAGE_FILE_NAME);
 
-	public void startPhotoZoom() {
-		Uri uri = Uri.fromFile(imgFile);
-		startPhotoZoom(uri);
-	}
+        return cacheFile;
+    }
 
-	//上传头像
-	public void uploadPhoto(Bitmap photo) {
+    private void play() {
+        PropertyValuesHolder scaleX = PropertyValuesHolder
+                .ofFloat("scaleX", 1f, 1.3f, 1f);
+        PropertyValuesHolder scaleY = PropertyValuesHolder
+                .ofFloat("scaleY", 1f, 1.3f, 1f);
 
-		try {
-			photo.compress(CompressFormat.PNG, 100, new FileOutputStream(imgFile));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		lg_pi_iv_touxiang.setImageBitmap(photo);
-		RequestParams params = RequestParamsUtils.getParams();
-		params.addBodyParameter("token", spu.getUser().getToken());
-		params.addBodyParameter("avatar", CipherUtils.base64Encode(photo));
-		SPUtil.addParams(params);
-		httpUtils.send(HttpMethod.POST
-				, InterfaceJsonfile.CHANGEPINFO//InterfaceApi.modify_gender
-				, params
-				, new RequestCallBack<String>() {
-			@Override
-			public void onFailure(HttpException arg0, String arg1) {
-				if(!isAdded()){
-					return;
-				}
-				TUtils.toast(getString(R.string.toast_server_no_response));
-			}
+        ObjectAnimator obj = ObjectAnimator.ofPropertyValuesHolder(lg_pi_iv_touxiang, scaleX, scaleY)
+                .setDuration(200);
+        obj.setStartDelay(1000);
+        obj.start();
 
-			@Override
-			public void onSuccess(ResponseInfo<String> arg0) {
-				if(!isAdded()){
-					return;
-				}
-				JSONObject obj = FjsonUtil.parseObject(arg0.result);
-				if (null == obj) {
-					return;
-				}
-
-				if (200 == obj.getIntValue("code")) {
-					TUtils.toast(getString(R.string.toast_modify_success));
-					UserBean user = FjsonUtil.parseObject(obj.getString("data"), UserBean.class);
-					spu.setUser(user);
-
-					Intent intent = new Intent();
-					intent.setAction(ZY_RightFragment.ACTION_USER);
-					activity.sendBroadcast(intent);
-				} else {
-					TUtils.toast(obj.getString("msg"));
-				}
-			}
-		});
-
-	}
-
-	public File getImgPath() {
-		File cacheFileDir;
-		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||
-				!Environment.isExternalStorageRemovable()) {
-			cacheFileDir = Environment.getExternalStorageDirectory();
-		} else {
-			cacheFileDir = activity.getApplicationContext().getCacheDir();
-		}
-		if (null != cacheFileDir && !cacheFileDir.exists()) {
-			cacheFileDir.mkdirs();
-		}
-		File cacheFile = App.getFile(cacheFileDir.getAbsolutePath()
-				+ File.separator + "cyol"
-				+ File.separator + IMAGE_FILE_NAME);
-
-		return cacheFile;
-	}
-
-	private void play() {
-		PropertyValuesHolder scaleX = PropertyValuesHolder
-				.ofFloat("scaleX", 1f, 1.3f, 1f);
-		PropertyValuesHolder scaleY = PropertyValuesHolder
-				.ofFloat("scaleY", 1f, 1.3f, 1f);
-
-		ObjectAnimator obj = ObjectAnimator.ofPropertyValuesHolder(lg_pi_iv_touxiang, scaleX, scaleY)
-				.setDuration(200);
-		obj.setStartDelay(1000);
-		obj.start();
-
-	}
+    }
 
 }

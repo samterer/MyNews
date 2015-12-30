@@ -42,17 +42,13 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import java.lang.reflect.InvocationTargetException;
 
 
-public class XF_NewsCommentsFragment extends BaseFragment {
+public class XF_NewsCommentsFragment extends BaseFragment implements View.OnClickListener {
     private static final String HTMLURL = InterfaceJsonfile.PATH_ROOT + "/Comment/showcommentv3/nid/";
 
 
-    @ViewInject(R.id.xf_comments_iv_back)
     private ImageView xf_comments_iv_back;
-    @ViewInject(R.id.xf_comments_wv_detail)
     private WebView xf_comments_wv_detail;
-    @ViewInject(R.id.xf_comment_et_comment)
     private EditText xf_comment_et_comment;
-    @ViewInject(R.id.xf_comment_tv_publish)
     private TextView xf_comment_tv_publish;
 
     private ReplayBean bean;
@@ -64,7 +60,12 @@ public class XF_NewsCommentsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.xf_newscomments_layout2, container, false);
-        ViewUtils.inject(this, view);
+        xf_comments_iv_back = (ImageView) view.findViewById(R.id.xf_comments_iv_back);
+        xf_comments_iv_back.setOnClickListener(this);
+        xf_comments_wv_detail = (WebView) view.findViewById(R.id.xf_comments_wv_detail);
+        xf_comment_et_comment = (EditText) view.findViewById(R.id.xf_comment_et_comment);
+        xf_comment_tv_publish = (TextView) view.findViewById(R.id.xf_comment_tv_publish);
+        xf_comment_tv_publish.setOnClickListener(this);
 
         return view;
     }
@@ -166,23 +167,6 @@ public class XF_NewsCommentsFragment extends BaseFragment {
 
     }
 
-    @OnClick(R.id.xf_comment_tv_publish)
-    private void publish(View view) {
-
-        String content = xf_comment_et_comment.getText().toString();
-        if (TextUtils.isEmpty(content)) {
-            TUtil.toast(activity, "输入内容不能为空");
-            return;
-        }
-
-        if (TextUtils.isEmpty(commentItemCid)) {
-            commentNews(content);
-        } else {
-            reply(content);
-        }
-
-    }
-
     private void commentNews(String content) {
 
         if (null == spu.getUser()) {
@@ -238,7 +222,6 @@ public class XF_NewsCommentsFragment extends BaseFragment {
         });
     }
 
-
     private void reply(String content) {
         if (null == spu.getUser()) {
             TUtil.toast(activity, "请登录");
@@ -291,12 +274,6 @@ public class XF_NewsCommentsFragment extends BaseFragment {
 
     }
 
-    @OnClick(R.id.xf_comments_iv_back)
-    private void goback(View v) {
-        activity.onBackPressed();
-    }
-
-
     @Override
     public void onPause() {
         try {
@@ -319,6 +296,29 @@ public class XF_NewsCommentsFragment extends BaseFragment {
         } catch (IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.xf_comments_iv_back:
+                activity.onBackPressed();
+                break;
+            case R.id.xf_comment_tv_publish:
+
+                String content = xf_comment_et_comment.getText().toString();
+                if (TextUtils.isEmpty(content)) {
+                    TUtil.toast(activity, "输入内容不能为空");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(commentItemCid)) {
+                    commentNews(content);
+                } else {
+                    reply(content);
+                }
+                break;
         }
     }
 }

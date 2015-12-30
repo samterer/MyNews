@@ -28,39 +28,26 @@ import com.lidroid.xutils.view.annotation.ViewInject;
 
 public class VotePinfoFragment extends BaseFragment {
 
-	@ViewInject(R.id.vote_detail_tv_right)
 	private TextView vote_detail_tv_right;
-	@ViewInject(R.id.vote_detail_tv_bottom)
 	private TextView vote_detail_tv_bottom;
-	@ViewInject(R.id.vote_detail_lv)
 	private ListView vote_detail_lv;
-
-
-	private int screenWidth = 0;
-	private int count = 0;
-	private float textTotalWidth = 0.0f;
-	private float textWidth = 0.0f;
 	private Paint paint = new Paint();
-
-	//	private JSONObject object;//
 	private Vote_detailMultiPicBean bean;
 	private VoteDetailMultiPicAdapter adapter;
-	private String text = "";
-
 	private String androidId;    //
 	private String newsid;        //
 	private String optid;
 	private String subjectid;
 	private String isRadio;
-
-	private boolean isVoted;
 	private String actionname;
 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.vote_detail_multipic_layout, container, false);
-		ViewUtils.inject(this, view);
+		vote_detail_tv_right= (TextView) view.findViewById(R.id.vote_detail_tv_right);
+		vote_detail_tv_bottom= (TextView) view.findViewById(R.id.vote_detail_tv_bottom);
+		vote_detail_lv= (ListView) view.findViewById(R.id.vote_detail_lv);
 		return view;
 	}
 
@@ -157,10 +144,6 @@ public class VotePinfoFragment extends BaseFragment {
 					bean = JSONObject.parseObject(obj.getString("data"), Vote_detailMultiPicBean.class);
 					vote_detail_tv_right.setText(getString(R.string.prompt_name, bean.getOption().getName()));
 					vote_detail_tv_bottom.setText(getString(R.string.prompt_brief_intro, bean.getOption().getDescription()));
-//						mImageLoader.displayImage(object.getJSONObject("option").getString("imgurl"), vote_detail_imge,diOp2);
-//						if("1".equals(object.getJSONObject("option").getString("status"))){
-//							vote_detail_bt_submit.setClickable(false);
-//						}
 					adapter.appendData(bean.getOption().getImgurls(), true);
 					adapter.notifyDataSetChanged();
 				} else {
@@ -169,14 +152,6 @@ public class VotePinfoFragment extends BaseFragment {
 
 			}
 		});
-
-	}
-
-	//	@OnClick(R.id.votedmulti_ll_share)
-	private void shareInfo(View v) {
-		if (null == bean) {
-			return;
-		}
 
 	}
 

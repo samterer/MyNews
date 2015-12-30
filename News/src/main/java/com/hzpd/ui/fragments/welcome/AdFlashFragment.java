@@ -3,13 +3,13 @@ package com.hzpd.ui.fragments.welcome;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.hzpd.hflt.R;
 import com.hzpd.ui.App;
@@ -20,29 +20,22 @@ import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
-import com.nineoldandroids.animation.AnimatorSet;
 import com.nostra13.universalimageloader.utils.DiskCacheUtils;
 
 import java.io.File;
 
-public class AdFlashFragment extends BaseFragment {
+public class AdFlashFragment extends BaseFragment implements View.OnClickListener {
 
-    @ViewInject(R.id.adflash_img_ad)
     private ImageView adflash_img_ad;
-    @ViewInject(R.id.adflash_img_logo)
-    private ImageView adflash_img_logo;
-    @ViewInject(R.id.adflash_tv_slogan)
-    private TextView adflash_tv_slogan;
-
-    private AnimatorSet animSetFadeout;
-    private AnimatorSet animSetFadein;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.adflash_frag_layout, container,
+        view = inflater.inflate(R.layout.adflash_frag_layout, container,
                 false);
-        ViewUtils.inject(this, view);
+        adflash_img_ad = (ImageView) view.findViewById(R.id.adflash_img_ad);
+        adflash_img_ad.setOnClickListener(this);
 
         return view;
     }
@@ -76,7 +69,7 @@ public class AdFlashFragment extends BaseFragment {
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            Log.e("test", "  AdFlashFragment " +  isAdd);
+            Log.e("test", "  AdFlashFragment " + isAdd);
             Bitmap bm = null;
             if (!isAdd) {
                 return;
@@ -122,7 +115,8 @@ public class AdFlashFragment extends BaseFragment {
                 } else {
                     try {
                         if (isAdd) {
-                            adflash_img_ad.setImageResource(R.drawable.welcome_1);
+                            BitmapDrawable bitmapDrawable = SPUtil.getBitmapDrawable(getResources(), R.drawable.welcome);
+                            adflash_img_ad.setImageDrawable(bitmapDrawable);
                             Log.e("test", "  loadMainUI ");
                             ((WelcomeActivity) getActivity()).loadMainUI();
                         }
@@ -137,26 +131,33 @@ public class AdFlashFragment extends BaseFragment {
         }
     };
 
-    @OnClick(R.id.adflash_img_ad)
-    private void adJump(View view) {
-        String url = null;
-        if (null != App.getInstance().welcomeAdbean) {
-            url = App.getInstance().welcomeAdbean.getLink();
-        }
-        if (!TextUtils.isEmpty(url)) {
-            ((WelcomeActivity) getActivity()).jump(url);
-        }
-    }
 
     @Override
     public void onDestroy() {
-        if (null != animSetFadeout) {
-            animSetFadeout.removeAllListeners();
-        }
-        if (null != animSetFadein) {
-            animSetFadein.removeAllListeners();
+        try {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) adflash_img_ad.getDrawable();
+            adflash_img_ad.setBackgroundDrawable(null);
+            bitmapDrawable.setCallback(null);
+            bitmapDrawable.getBitmap().recycle();
+            ((ViewGroup) view).removeAllViews();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         super.onDestroy();
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.adflash_img_ad:
+                String url = null;
+                if (null != App.getInstance().welcomeAdbean) {
+                    url = App.getInstance().welcomeAdbean.getLink();
+                }
+                if (!TextUtils.isEmpty(url)) {
+                    ((WelcomeActivity) getActivity()).jump(url);
+                }
+                break;
+        }
+    }
 }

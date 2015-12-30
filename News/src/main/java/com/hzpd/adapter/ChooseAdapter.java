@@ -92,7 +92,6 @@ public class ChooseAdapter extends RecyclerView.Adapter {
     public class LoadingHolder extends RecyclerView.ViewHolder {
         public LoadingHolder(View itemView) {
             super(itemView);
-            ViewUtils.inject(this, itemView);
         }
 
     }
@@ -101,8 +100,6 @@ public class ChooseAdapter extends RecyclerView.Adapter {
         public TextView textView;
         public ImageView imageView;
         public View clickView;
-
-
         public FirstViewHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.newsitem_title);

@@ -27,14 +27,11 @@ import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -43,26 +40,19 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 
-public class NewsFragment extends BaseFragment {
+public class NewsFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public String getAnalyticPageName() {
         return null;
     }
 
-    @ViewInject(R.id.news_pager)
     private ViewPager pager;
-    @ViewInject(R.id.ll_news_button)
     private View ll_news_button;
-    @ViewInject(R.id.psts_tabs_app)
     private PagerSlidingTabStrip tabStrip;
-    @ViewInject(R.id.ll_main)
     private LinearLayout ll_main;
-    @ViewInject(R.id.background_empty)
     private ImageView background_empty;
-    @ViewInject(R.id.main_no_news)
     private View main_no_news;
-    @ViewInject(R.id.app_progress_bar)
     private View app_progress_bar;
 
     private NewsFragmentPagerAdapter adapter;
@@ -80,7 +70,14 @@ public class NewsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.news_fragment_main, container, false);
-        ViewUtils.inject(this, view);
+        pager = (ViewPager) view.findViewById(R.id.news_pager);
+        ll_news_button = view.findViewById(R.id.ll_news_button);
+        ll_news_button.setOnClickListener(this);
+        tabStrip= (PagerSlidingTabStrip) view.findViewById(R.id.psts_tabs_app);
+        ll_main= (LinearLayout) view.findViewById(R.id.ll_main);
+        background_empty= (ImageView) view.findViewById(R.id.background_empty);
+        main_no_news=view.findViewById(R.id.main_no_news);
+        app_progress_bar=view.findViewById(R.id.app_progress_bar);
         coverTop = view.findViewById(R.id.cover_top);
         main_top_search = view.findViewById(R.id.main_top_search);
         main_top_search.setOnClickListener(new View.OnClickListener() {
@@ -118,17 +115,6 @@ public class NewsFragment extends BaseFragment {
         }
     }
 
-
-    @OnClick(R.id.ll_news_button)
-    private void editChannel1(View v) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
-            return;
-        }
-        Intent in = new Intent();
-        in.setClass(getActivity(), MyEditColumnActivity.class);
-        startActivity(in);
-        AAnim.ActivityStartAnimation(getActivity());
-    }
 
     private List<NewsChannelBean> mList;
 
@@ -327,5 +313,20 @@ public class NewsFragment extends BaseFragment {
     }
 
     final static int PAGE_LIMIT = 2;
+
+    @Override
+    public void onClick(View v) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+            return;
+        }
+        switch (v.getId()) {
+            case R.id.ll_news_button:
+                Intent in = new Intent();
+                in.setClass(getActivity(), MyEditColumnActivity.class);
+                startActivity(in);
+                AAnim.ActivityStartAnimation(getActivity());
+                break;
+        }
+    }
 }
 

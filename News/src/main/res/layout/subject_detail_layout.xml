@@ -83,7 +83,6 @@
             android:fastScrollEnabled="false"
             android:focusableInTouchMode="true"
             android:listSelector="@drawable/listview_selecter"
-            android:scrollbarThumbVertical="@drawable/base_list_scrollbar_handle"
             android:scrollbarTrackVertical="@color/transparent"
             android:scrollbars="vertical"
             android:smoothScrollbar="true"

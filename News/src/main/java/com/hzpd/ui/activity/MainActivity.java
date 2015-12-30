@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.hzpd.adapter.MainPagerAdapter;
-import com.hzpd.custorm.DrawerArrowDrawable;
 import com.hzpd.custorm.MyViewPager;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.event.RestartEvent;
@@ -23,19 +22,13 @@ import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.ui.fragments.NewsFragment;
 import com.hzpd.ui.fragments.ZY_DiscoveryFragment;
 import com.hzpd.ui.fragments.ZY_RightFragment;
-import com.hzpd.utils.AAnim;
-import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.ExitApplication;
 import com.hzpd.utils.Log;
-import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.news.update.DownloadService;
 import com.news.update.LocalUpdateDialogFragment;
 import com.news.update.LocalUpdateEvent;
@@ -58,7 +51,6 @@ public class MainActivity extends BaseActivity {
         super();
     }
 
-    private TextView mTextView;
     List<HttpHandler> handlerList = new ArrayList<>();
 
 
@@ -78,9 +70,7 @@ public class MainActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
         EventBus.getDefault().register(this);
-        long start = System.currentTimeMillis();
         setContentView(R.layout.app_main);
-        mTextView = (TextView) findViewById(R.id.title_content);
         viewPager = (MyViewPager) findViewById(R.id.main_pager);
         adapter = new MainPagerAdapter(getSupportFragmentManager());
         fragments = new BaseFragment[3];
@@ -110,11 +100,8 @@ public class MainActivity extends BaseActivity {
 
         Thread.setDefaultUncaughtExceptionHandler(App.uncaughtExceptionHandler);
 
-        setTitleText(getString(R.string.app_name));
-        Log.e("MainActivity", System.currentTimeMillis() - start);
         App.isStartApp = true;
         EventUtils.sendStart(this);
-        Log.e("MainActivity", System.currentTimeMillis() - start);
         Intent intent = new Intent(this, InitService.class);
         intent.setAction(InitService.UserLogAction);
         startService(intent);
@@ -136,39 +123,12 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.main_title_left, R.id.main_title_right})
-    private void onclick(View view) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
-            return;
-        }
-        switch (view.getId()) {
-            case R.id.main_title_left: {
-            }
-            break;
-            case R.id.main_title_right: {
-                Intent mIntent = new Intent();
-                mIntent.setClass(MainActivity.this, SearchActivity.class);
-                startActivity(mIntent);
-                AAnim.ActivityStartAnimation(this);
-
-            }
-            break;
-
-            default:
-                break;
-        }
-    }
-
     @Override
     public void onBackPressed() {
         //退出程序
         ExitApplication.exit(this);
     }
 
-    public void setTitleText(String name) {
-        SPUtil.setTitleFont(mTextView);
-        mTextView.setText(name);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

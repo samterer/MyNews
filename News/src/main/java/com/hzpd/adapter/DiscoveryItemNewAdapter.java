@@ -24,6 +24,7 @@ import com.hzpd.ui.App;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.TagActivity;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
@@ -115,7 +116,6 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
     public class LoadingHolder extends RecyclerView.ViewHolder {
         public LoadingHolder(View itemView) {
             super(itemView);
-            ViewUtils.inject(this, itemView);
         }
 
     }
@@ -169,7 +169,9 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                 viewHolder.tag_layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.i("DiscoveryItemNewAdapter", "DiscoveryItemNewAdapter   viewHolder.tag_layout   onClick");
+                        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+                            return;
+                        }
                         Intent intent = new Intent(context, TagActivity.class);
                         TagBean tagBean = bean.getTag();
                         intent.putExtra("tagbean", tagBean);

@@ -42,14 +42,11 @@ import java.util.List;
 
 public class MySearchFragment extends BaseFragment implements View.OnClickListener {
 
-    @ViewInject(R.id.search_listview_id)
     private RecyclerView recyclerView;
 
     private NewsItemListViewAdapter adapter;
-    @ViewInject(R.id.app_progress_bar)
     private View loadingView;
 
-    private boolean isSearch = false;//是否已有搜索结果
     private boolean isRefresh = false;
     private int page = 1;
     private static final int pageSize = 15;
@@ -62,7 +59,8 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View mView = inflater.inflate(R.layout.search_main_layout, container, false);
-        ViewUtils.inject(this, mView);
+        recyclerView= (RecyclerView) mView.findViewById(R.id.search_listview_id);
+        loadingView=mView.findViewById(R.id.app_progress_bar);
         return mView;
     }
 

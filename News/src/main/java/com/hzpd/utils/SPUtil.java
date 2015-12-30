@@ -8,9 +8,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -29,6 +32,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.facebook.ads.NativeAd;
 import com.facebook.ads.NativeAdView;
+import com.hzpd.hflt.BuildConfig;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.TagBean;
 import com.hzpd.modle.UserBean;
@@ -36,7 +40,6 @@ import com.hzpd.modle.db.NewsChannelBeanDB;
 import com.hzpd.ui.App;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.util.LogUtils;
 import com.news.update.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -308,9 +311,16 @@ public class SPUtil {
 
     }
 
+    static int count = 0;
+
     public static void displayImage(String uri, ImageView imageView, DisplayImageOptions options, ImageLoadingListener loadingListener,
                                     ImageLoadingProgressListener progressListener) {
-
+        if (BuildConfig.DEBUG) {
+            count++;
+            if (count > 1000) {
+                return;
+            }
+        }
         if (isImageUri(uri)) {
             try {
                 uri = uri.replaceAll("&amp;", "&");
@@ -412,19 +422,9 @@ public class SPUtil {
         msp.put("off_ts", flag);
     }
 
-    public boolean getIsTodayFistStartApp() {
-        String oldDay = msp.getAsString("addate");
-        String newDay = CalendarUtil.getToday("yyyy-MM-dd");
-        LogUtils.e("newDay-->" + newDay);
-
-        setDate(newDay);
-
-        if (null != oldDay) {
-            if (oldDay.equals(newDay)) {
-                return false;
-            }
-        }
-        return true;
+    public static BitmapDrawable getBitmapDrawable(Resources resources, int rid) {
+        Bitmap bitmap = BitmapFactory.decodeResource(resources, rid);
+        return new BitmapDrawable(resources, bitmap);
     }
 
     private void setDate(String d) {
@@ -607,7 +607,7 @@ public class SPUtil {
                 nli_foot.setImageResource(R.drawable.zq_subscript_live);
                 //				vhLargePic.nli_foot.setVisibility(View.VISIBLE);
             } else if ("4".equals(rtype)) {
-                nli_foot.setImageResource(R.drawable.zq_subscript_issue);
+                nli_foot.setImageResource(R.drawable.zq_subscript_fokus);
                 nli_foot.setVisibility(View.VISIBLE);
             } else if ("7".equals(rtype)) {
                 nli_foot.setImageResource(R.drawable.zq_subscript_html);

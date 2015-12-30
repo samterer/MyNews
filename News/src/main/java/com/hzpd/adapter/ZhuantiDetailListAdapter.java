@@ -162,107 +162,97 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
 
     //三联图
     private class VHThree extends RecyclerView.ViewHolder {
-        @ViewInject(R.id.newsitem_title)
         private TextView newsitem_title;
-        @ViewInject(R.id.news_3_tv_time)
         private TextView tv3;
-        @ViewInject(R.id.news_3_item1)
         private ImageView img0;
-        @ViewInject(R.id.news_3_item2)
         private ImageView img1;
-        @ViewInject(R.id.news_3_item3)
         private ImageView img2;
-        @ViewInject(R.id.newsitem_foot)
         private ImageView newsitem_foot;
-        @ViewInject(R.id.newsitem_comments)
         private TextView newsitem_comments;
-        @ViewInject(R.id.newsitem_source)
         private TextView newsitem_source;
-        @ViewInject(R.id.newsitem_collectcount)
         private TextView newsitem_collectcount;
-        @ViewInject(R.id.item_type_iv)
         private ImageView item_type_iv;
 
         public VHThree(View v) {
             super(v);
-            ViewUtils.inject(this, v);
+            newsitem_title= (TextView) v.findViewById(R.id.newsitem_title);
+            tv3= (TextView) v.findViewById(R.id.news_3_tv_time);
+            newsitem_comments= (TextView) v.findViewById(R.id.newsitem_comments);
+            newsitem_source= (TextView) v.findViewById(R.id.newsitem_source);
+            newsitem_collectcount= (TextView) v.findViewById(R.id.newsitem_collectcount);
+            newsitem_foot= (ImageView) v.findViewById(R.id.newsitem_foot);
+            img0= (ImageView) v.findViewById(R.id.news_3_item1);
+            img1= (ImageView) v.findViewById(R.id.news_3_item2);
+            img2= (ImageView) v.findViewById(R.id.news_3_item3);
+            item_type_iv= (ImageView) v.findViewById(R.id.item_type_iv);
             v.setOnClickListener(onClickListener);
         }
     }
 
     //左边图片，右title，评论，时间，脚标
     private class VHLeftPic extends RecyclerView.ViewHolder {
-        @ViewInject(R.id.newsitem_title)
         private TextView newsitem_title;
-        @ViewInject(R.id.nli_foot)
         private ImageView nli_foot;
-        //		来源
-        @ViewInject(R.id.newsitem_source)
         private TextView newsitem_source;
-        //		收藏数
-        @ViewInject(R.id.newsitem_collectcount)
         private TextView newsitem_collectcount;
-        //		评论数
-        @ViewInject(R.id.newsitem_commentcount)
         private TextView newsitem_commentcount;
-        @ViewInject(R.id.newsitem_time)
         private TextView newsitem_time;
-        @ViewInject(R.id.newsitem_img)
         private ImageView newsitem_img;
-        @ViewInject(R.id.newsitem_unlike)
         private ImageView newsitem_unlike;
-        @ViewInject(R.id.item_type_iv)
         private ImageView item_type_iv;
-        @ViewInject(R.id.ll_tag)
         private LinearLayout ll_tag;
 
         public VHLeftPic(View v) {
             super(v);
-            ViewUtils.inject(this, v);
+            newsitem_title= (TextView) v.findViewById(R.id.newsitem_title);
+            nli_foot= (ImageView) v.findViewById(R.id.nli_foot);
+            newsitem_source= (TextView) v.findViewById(R.id.newsitem_source);
+            newsitem_collectcount= (TextView) v.findViewById(R.id.newsitem_collectcount);
+            newsitem_commentcount= (TextView) v.findViewById(R.id.newsitem_commentcount);
+            newsitem_time= (TextView) v.findViewById(R.id.newsitem_time);
+            newsitem_img= (ImageView) v.findViewById(R.id.newsitem_img);
+            newsitem_unlike= (ImageView) v.findViewById(R.id.newsitem_unlike);
+            item_type_iv= (ImageView) v.findViewById(R.id.item_type_iv);
+            ll_tag= (LinearLayout) v.findViewById(R.id.ll_tag);
             v.setOnClickListener(onClickListener);
         }
     }
 
     //大图
     private class VHLargePic extends RecyclerView.ViewHolder {
-        @ViewInject(R.id.newsitem_title)
         private TextView newsitem_title;
-        @ViewInject(R.id.nli_foot)
         private ImageView nli_foot;
-        //		来源
-        @ViewInject(R.id.newsitem_source)
         private TextView newsitem_source;
-        //		收藏数
-        @ViewInject(R.id.newsitem_collectcount)
         private TextView newsitem_collectcount;
-        //		评论数
-        @ViewInject(R.id.newsitem_commentcount)
         private TextView newsitem_commentcount;
-        @ViewInject(R.id.newsitem_time)
         private TextView newsitem_time;
-        @ViewInject(R.id.newsitem_img)
         private ImageView newsitem_img;
-        @ViewInject(R.id.newsitem_unlike)
         private ImageView newsitem_unlike;
-        @ViewInject(R.id.item_type_iv)
         private ImageView item_type_iv;
 
         public VHLargePic(View v) {
             super(v);
-            ViewUtils.inject(this, v);
+            newsitem_title= (TextView) v.findViewById(R.id.newsitem_title);
+            nli_foot= (ImageView) v.findViewById(R.id.nli_foot);
+            newsitem_source= (TextView) v.findViewById(R.id.newsitem_source);
+            newsitem_collectcount= (TextView) v.findViewById(R.id.newsitem_collectcount);
+            newsitem_commentcount= (TextView) v.findViewById(R.id.newsitem_commentcount);
+            newsitem_time= (TextView) v.findViewById(R.id.newsitem_time);
+            newsitem_img= (ImageView) v.findViewById(R.id.newsitem_img);
+            newsitem_unlike= (ImageView) v.findViewById(R.id.newsitem_unlike);
+            item_type_iv= (ImageView) v.findViewById(R.id.item_type_iv);
             v.setOnClickListener(onClickListener);
         }
     }
 
     private class VHBigPic extends RecyclerView.ViewHolder {
 
-        @ViewInject(R.id.news_big_item1)
         private ImageView news_big_item1;
 
 
         public VHBigPic(View v) {
             super(v);
-            ViewUtils.inject(this, v);
+            news_big_item1= (ImageView) v.findViewById(R.id.news_big_item1);
             v.setOnClickListener(onClickListener);
         }
     }

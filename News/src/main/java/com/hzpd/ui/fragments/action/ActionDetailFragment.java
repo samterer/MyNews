@@ -24,36 +24,24 @@ import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
-public class ActionDetailFragment extends BaseFragment {
+public class ActionDetailFragment extends BaseFragment implements View.OnClickListener {
 
-    @ViewInject(R.id.actiondetail_title_tv)
     private TextView actiondetail_title_tv;
-    @ViewInject(R.id.actiondetail_time_tv)
     private TextView actiondetail_time_tv;
-    @ViewInject(R.id.actiondetail_content_wv)
     private WebView actiondetail_content_wv;
-    @ViewInject(R.id.actiondetail_content_iv)
     private ImageView actiondetail_content_iv;
-
-    @ViewInject(R.id.actiondetail_tv_register)
     private TextView actiondetail_tv_register;
-    @ViewInject(R.id.actiondetail_tv_vote)
     private TextView actiondetail_tv_vote;
-    @ViewInject(R.id.actiondetail_tv_leto)
     private TextView actiondetail_tv_leto;
-    @ViewInject(R.id.actiondetail_tv_share)
     private TextView actiondetail_tv_share;
 
     private String id;
@@ -62,7 +50,18 @@ public class ActionDetailFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.actiondetail_fm_layout, container, false);
-        ViewUtils.inject(this, view);
+        actiondetail_title_tv= (TextView) view.findViewById(R.id.actiondetail_title_tv);
+        actiondetail_time_tv= (TextView) view.findViewById(R.id.actiondetail_time_tv);
+        actiondetail_content_wv= (WebView) view.findViewById(R.id.actiondetail_content_wv);
+        actiondetail_content_iv= (ImageView) view.findViewById(R.id.actiondetail_content_iv);
+        actiondetail_tv_register= (TextView) view.findViewById(R.id.actiondetail_tv_register);
+        actiondetail_tv_register.setOnClickListener(this);
+        actiondetail_tv_vote= (TextView) view.findViewById(R.id.actiondetail_tv_vote);
+        actiondetail_tv_vote.setOnClickListener(this);
+        actiondetail_tv_leto= (TextView) view.findViewById(R.id.actiondetail_tv_leto);
+        actiondetail_tv_leto.setOnClickListener(this);
+        actiondetail_tv_share= (TextView) view.findViewById(R.id.actiondetail_tv_share);
+        actiondetail_tv_share.setOnClickListener(this);
         return view;
     }
 
@@ -77,57 +76,8 @@ public class ActionDetailFragment extends BaseFragment {
         getInfoFromSever();
     }
 
-    @OnClick({R.id.actiondetail_tv_register, R.id.actiondetail_tv_vote, R.id.actiondetail_tv_leto,
-            R.id.actiondetail_tv_share})
-    private void click(View view) {
-        if (null == adb) {
-            return;
-        }
-        switch (view.getId()) {
-            case R.id.actiondetail_tv_register: {
-                if (!"1".equals(adb.getRegable())) {
-                    TUtils.toast(getString(R.string.toast_activity_not_started));
-                    return;
-                }
-                ((ActionDetailActivity) activity).toRegister(id);
-            }
-            break;
-            case R.id.actiondetail_tv_vote: {
-                if (!"1".equals(adb.getVoteable())) {
-                    TUtils.toast(getString(R.string.toast_activity_not_started));
-                    return;
-                }
-                ((ActionDetailActivity) activity).toVote(adb.getSubjectid());
-            }
-            break;
-            case R.id.actiondetail_tv_leto: {
-                if (!"1".equals(adb.getRollable())) {
-                    TUtils.toast(getString(R.string.toast_activity_not_started));
-                    return;
-                }
-                if (null == spu.getUser()) {
-                    return;
-                }
-                ((ActionDetailActivity) activity).toLottery(adb.getSubjectid());
-            }
-            break;
-            case R.id.actiondetail_tv_share: {
-                if (null == adb) {
-                    return;
-                }
-                FacebookSharedUtil.showShares(adb.getTitle()
-                        , adb.getUrl(), adb.getHeadpic(), activity);
-
-            }
-            break;
-            default:
-                break;
-        }
-    }
 
     private void getInfoFromSever() {
-
-
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("id", id);
         httpUtils.send(HttpMethod.POST, InterfaceJsonfile.actionDetail, params, new RequestCallBack<String>() {
@@ -221,5 +171,52 @@ public class ActionDetailFragment extends BaseFragment {
                 LogUtils.i("action list failed");
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (null == adb) {
+            return;
+        }
+        switch (v.getId()) {
+            case R.id.actiondetail_tv_register: {
+                if (!"1".equals(adb.getRegable())) {
+                    TUtils.toast(getString(R.string.toast_activity_not_started));
+                    return;
+                }
+                ((ActionDetailActivity) activity).toRegister(id);
+            }
+            break;
+            case R.id.actiondetail_tv_vote: {
+                if (!"1".equals(adb.getVoteable())) {
+                    TUtils.toast(getString(R.string.toast_activity_not_started));
+                    return;
+                }
+                ((ActionDetailActivity) activity).toVote(adb.getSubjectid());
+            }
+            break;
+            case R.id.actiondetail_tv_leto: {
+                if (!"1".equals(adb.getRollable())) {
+                    TUtils.toast(getString(R.string.toast_activity_not_started));
+                    return;
+                }
+                if (null == spu.getUser()) {
+                    return;
+                }
+                ((ActionDetailActivity) activity).toLottery(adb.getSubjectid());
+            }
+            break;
+            case R.id.actiondetail_tv_share: {
+                if (null == adb) {
+                    return;
+                }
+                FacebookSharedUtil.showShares(adb.getTitle()
+                        , adb.getUrl(), adb.getHeadpic(), activity);
+
+            }
+            break;
+            default:
+                break;
+        }
     }
 }

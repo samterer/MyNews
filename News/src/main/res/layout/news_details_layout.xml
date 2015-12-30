@@ -124,6 +124,7 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
+                    android:background="?detail_recy_backgroup"
                     android:layout_height="match_parent">
 
                     <com.hzpd.ui.widget.CustomRecyclerView
@@ -134,17 +135,6 @@
                         android:overScrollMode="ifContentScrolls"
                         android:scrollbarStyle="outsideOverlay"
                         android:scrollbars="vertical" />
-
-                    <!-- 进度条-->
-                    <ProgressBar
-                        android:id="@+id/load_progress_bar"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="fill_parent"
-                        android:layout_height="2dp"
-                        android:indeterminateOnly="false"
-                        android:max="100"
-                        android:progressDrawable="@drawable/progressbar_drawable"
-                        android:visibility="gone" />
 
                     <!-- 加载Loading-->
                     <FrameLayout

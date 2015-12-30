@@ -36,7 +36,6 @@ import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.db.NewsListDbTask;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
-import com.lidroid.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -181,7 +180,8 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
     }
 
     public void appendData(List<NewsBean> data, boolean isClearOld, boolean isDb) {
-        if (data == null) {
+        if (data == null && isClearOld) {
+            list.clear();
             return;
         }
         int index = getItemCount();
@@ -841,7 +841,6 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
     public class LoadingHolder extends RecyclerView.ViewHolder {
         public LoadingHolder(View itemView) {
             super(itemView);
-            ViewUtils.inject(this, itemView);
         }
 
     }
@@ -854,10 +853,10 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
         public FlashHolder(View v) {
             super(v);
-            topViewpager= (TopPicViewPager) v.findViewById(R.id.test_pager);
-            indicator_default= (CircleIndicator) v.findViewById(R.id.indicator_default);
-            mTextView= (TextView) v.findViewById(R.id.viewpage_txt_id);
-            news_viewpage_myroot= (FrameLayout) v.findViewById(R.id.news_viewpage_myroot);
+            topViewpager = (TopPicViewPager) v.findViewById(R.id.test_pager);
+            indicator_default = (CircleIndicator) v.findViewById(R.id.indicator_default);
+            mTextView = (TextView) v.findViewById(R.id.viewpage_txt_id);
+            news_viewpage_myroot = (FrameLayout) v.findViewById(R.id.news_viewpage_myroot);
             try {
                 DisplayMetrics dm = context.getResources().getDisplayMetrics();
                 int height = (int) (dm.widthPixels * 0.55);
@@ -903,15 +902,15 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
         public JokeHolder(View v) {
             super(v);
-            newsitem_title= (TextView) v.findViewById(R.id.newsitem_title);
-            nli_foot= (ImageView) v.findViewById(R.id.nli_foot);
-            newsitem_source= (TextView) v.findViewById(R.id.newsitem_source);
-            newsitem_collectcount= (TextView) v.findViewById(R.id.newsitem_collectcount);
-            newsitem_commentcount= (TextView) v.findViewById(R.id.newsitem_commentcount);
-            newsitem_time= (TextView) v.findViewById(R.id.newsitem_time);
-            newsitem_unlike= (ImageView) v.findViewById(R.id.newsitem_unlike);
-            item_type_iv= (ImageView) v.findViewById(R.id.item_type_iv);
-            ll_tag= (LinearLayout) v.findViewById(R.id.ll_tag);
+            newsitem_title = (TextView) v.findViewById(R.id.newsitem_title);
+            nli_foot = (ImageView) v.findViewById(R.id.nli_foot);
+            newsitem_source = (TextView) v.findViewById(R.id.newsitem_source);
+            newsitem_collectcount = (TextView) v.findViewById(R.id.newsitem_collectcount);
+            newsitem_commentcount = (TextView) v.findViewById(R.id.newsitem_commentcount);
+            newsitem_time = (TextView) v.findViewById(R.id.newsitem_time);
+            newsitem_unlike = (ImageView) v.findViewById(R.id.newsitem_unlike);
+            item_type_iv = (ImageView) v.findViewById(R.id.item_type_iv);
+            ll_tag = (LinearLayout) v.findViewById(R.id.ll_tag);
             v.setOnClickListener(onClickListener);
         }
     }
@@ -931,16 +930,16 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
         public VHThree(View v) {
             super(v);
-            newsitem_title= (TextView) v.findViewById(R.id.newsitem_title);
-            tv3= (TextView) v.findViewById(R.id.news_3_tv_time);
-            newsitem_comments= (TextView) v.findViewById(R.id.newsitem_comments);
-            newsitem_source= (TextView) v.findViewById(R.id.newsitem_source);
-            newsitem_collectcount= (TextView) v.findViewById(R.id.newsitem_collectcount);
-            newsitem_foot= (ImageView) v.findViewById(R.id.newsitem_foot);
-            img0= (ImageView) v.findViewById(R.id.news_3_item1);
-            img1= (ImageView) v.findViewById(R.id.news_3_item2);
-            img2= (ImageView) v.findViewById(R.id.news_3_item3);
-            item_type_iv= (ImageView) v.findViewById(R.id.item_type_iv);
+            newsitem_title = (TextView) v.findViewById(R.id.newsitem_title);
+            tv3 = (TextView) v.findViewById(R.id.news_3_tv_time);
+            newsitem_comments = (TextView) v.findViewById(R.id.newsitem_comments);
+            newsitem_source = (TextView) v.findViewById(R.id.newsitem_source);
+            newsitem_collectcount = (TextView) v.findViewById(R.id.newsitem_collectcount);
+            newsitem_foot = (ImageView) v.findViewById(R.id.newsitem_foot);
+            img0 = (ImageView) v.findViewById(R.id.news_3_item1);
+            img1 = (ImageView) v.findViewById(R.id.news_3_item2);
+            img2 = (ImageView) v.findViewById(R.id.news_3_item3);
+            item_type_iv = (ImageView) v.findViewById(R.id.item_type_iv);
             v.setOnClickListener(onClickListener);
         }
     }
@@ -960,16 +959,16 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
         public VHLeftPic(View v) {
             super(v);
-            newsitem_title= (TextView) v.findViewById(R.id.newsitem_title);
-            nli_foot= (ImageView) v.findViewById(R.id.nli_foot);
-            newsitem_source= (TextView) v.findViewById(R.id.newsitem_source);
-            newsitem_collectcount= (TextView) v.findViewById(R.id.newsitem_collectcount);
-            newsitem_commentcount= (TextView) v.findViewById(R.id.newsitem_commentcount);
-            newsitem_time= (TextView) v.findViewById(R.id.newsitem_time);
-            newsitem_img= (ImageView) v.findViewById(R.id.newsitem_img);
-            newsitem_unlike= (ImageView) v.findViewById(R.id.newsitem_unlike);
-            item_type_iv= (ImageView) v.findViewById(R.id.item_type_iv);
-            ll_tag= (LinearLayout) v.findViewById(R.id.ll_tag);
+            newsitem_title = (TextView) v.findViewById(R.id.newsitem_title);
+            nli_foot = (ImageView) v.findViewById(R.id.nli_foot);
+            newsitem_source = (TextView) v.findViewById(R.id.newsitem_source);
+            newsitem_collectcount = (TextView) v.findViewById(R.id.newsitem_collectcount);
+            newsitem_commentcount = (TextView) v.findViewById(R.id.newsitem_commentcount);
+            newsitem_time = (TextView) v.findViewById(R.id.newsitem_time);
+            newsitem_img = (ImageView) v.findViewById(R.id.newsitem_img);
+            newsitem_unlike = (ImageView) v.findViewById(R.id.newsitem_unlike);
+            item_type_iv = (ImageView) v.findViewById(R.id.item_type_iv);
+            ll_tag = (LinearLayout) v.findViewById(R.id.ll_tag);
             v.setOnClickListener(onClickListener);
         }
     }
@@ -988,15 +987,15 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
         public TextViewHolder(View v) {
             super(v);
-            newsitem_title= (TextView) v.findViewById(R.id.newsitem_title);
-            nli_foot= (ImageView) v.findViewById(R.id.nli_foot);
-            newsitem_source= (TextView) v.findViewById(R.id.newsitem_source);
-            newsitem_collectcount= (TextView) v.findViewById(R.id.newsitem_collectcount);
-            newsitem_commentcount= (TextView) v.findViewById(R.id.newsitem_commentcount);
-            newsitem_time= (TextView) v.findViewById(R.id.newsitem_time);
-            newsitem_unlike= (ImageView) v.findViewById(R.id.newsitem_unlike);
-            item_type_iv= (ImageView) v.findViewById(R.id.item_type_iv);
-            ll_tag= (LinearLayout) v.findViewById(R.id.ll_tag);
+            newsitem_title = (TextView) v.findViewById(R.id.newsitem_title);
+            nli_foot = (ImageView) v.findViewById(R.id.nli_foot);
+            newsitem_source = (TextView) v.findViewById(R.id.newsitem_source);
+            newsitem_collectcount = (TextView) v.findViewById(R.id.newsitem_collectcount);
+            newsitem_commentcount = (TextView) v.findViewById(R.id.newsitem_commentcount);
+            newsitem_time = (TextView) v.findViewById(R.id.newsitem_time);
+            newsitem_unlike = (ImageView) v.findViewById(R.id.newsitem_unlike);
+            item_type_iv = (ImageView) v.findViewById(R.id.item_type_iv);
+            ll_tag = (LinearLayout) v.findViewById(R.id.ll_tag);
             v.setOnClickListener(onClickListener);
         }
     }
@@ -1015,15 +1014,15 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
         public VHLargePic(View v) {
             super(v);
-            newsitem_title= (TextView) v.findViewById(R.id.newsitem_title);
-            nli_foot= (ImageView) v.findViewById(R.id.nli_foot);
-            newsitem_source= (TextView) v.findViewById(R.id.newsitem_source);
-            newsitem_collectcount= (TextView) v.findViewById(R.id.newsitem_collectcount);
-            newsitem_commentcount= (TextView) v.findViewById(R.id.newsitem_commentcount);
-            newsitem_time= (TextView) v.findViewById(R.id.newsitem_time);
-            newsitem_img= (ImageView) v.findViewById(R.id.newsitem_img);
-            newsitem_unlike= (ImageView) v.findViewById(R.id.newsitem_unlike);
-            item_type_iv= (ImageView) v.findViewById(R.id.item_type_iv);
+            newsitem_title = (TextView) v.findViewById(R.id.newsitem_title);
+            nli_foot = (ImageView) v.findViewById(R.id.nli_foot);
+            newsitem_source = (TextView) v.findViewById(R.id.newsitem_source);
+            newsitem_collectcount = (TextView) v.findViewById(R.id.newsitem_collectcount);
+            newsitem_commentcount = (TextView) v.findViewById(R.id.newsitem_commentcount);
+            newsitem_time = (TextView) v.findViewById(R.id.newsitem_time);
+            newsitem_img = (ImageView) v.findViewById(R.id.newsitem_img);
+            newsitem_unlike = (ImageView) v.findViewById(R.id.newsitem_unlike);
+            item_type_iv = (ImageView) v.findViewById(R.id.item_type_iv);
             v.setOnClickListener(onClickListener);
         }
     }
@@ -1035,7 +1034,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
         public VHBigPic(View v) {
             super(v);
-            news_big_item1= (ImageView) v.findViewById(R.id.news_big_item1);
+            news_big_item1 = (ImageView) v.findViewById(R.id.news_big_item1);
             v.setOnClickListener(onClickListener);
         }
     }

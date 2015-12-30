@@ -257,7 +257,6 @@ public class XF_UserCommentsAdapter extends RecyclerView.Adapter {
 
         HeadViewHolder(View itemView) {
             super(itemView);
-            ViewUtils.inject(this, itemView);
         }
     }
 

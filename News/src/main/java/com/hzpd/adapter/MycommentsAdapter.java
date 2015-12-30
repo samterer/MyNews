@@ -50,7 +50,6 @@ public class MycommentsAdapter extends ListBaseAdapter<MycommentsBean> {
         LinearLayout mycoms_ll;
 
         public ViewHolder(View v) {
-            ViewUtils.inject(this, v);
             mycoms_img_id = (ImageView) v.findViewById(R.id.mycoms_img_id);
             my_newdetails = (LinearLayout) v.findViewById(R.id.my_newdetails);
             mycoms_content_txt = (TextView) v.findViewById(R.id.mycoms_content_txt);

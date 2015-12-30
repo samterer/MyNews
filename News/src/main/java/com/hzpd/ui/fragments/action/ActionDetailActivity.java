@@ -11,25 +11,20 @@ import com.hzpd.ui.activity.MBaseActivity;
 import com.hzpd.ui.fragments.vote.VoteDetailFragment;
 import com.hzpd.ui.fragments.vote.VotePinfoFragment;
 import com.hzpd.utils.CODE;
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
-public class ActionDetailActivity extends MBaseActivity {
+public class ActionDetailActivity extends MBaseActivity implements View.OnClickListener {
 
-    @ViewInject(R.id.stitle_tv_content)
     private TextView title;
-
+    private View stitle_ll_back;
     private ActionDetailFragment detailFm;
     private ActionRegisterFragment registerFm;
     private ActionLotteryFragment lotteryFm;
     private ActionLotteryPInfoFragment lotteryPinfoFm;
-
     private VoteDetailFragment voteFm;
     private VotePinfoFragment voteDetailFm;
 
@@ -37,7 +32,9 @@ public class ActionDetailActivity extends MBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multi_fm_std_layout);
-        ViewUtils.inject(this);
+        title= (TextView) findViewById(R.id.stitle_tv_content);
+        stitle_ll_back=findViewById(R.id.stitle_ll_back);
+        stitle_ll_back.setOnClickListener(this);
         EventBus.getDefault().register(this);
         title.setText(R.string.title_activity_detail);
         Intent intent = getIntent();
@@ -54,12 +51,6 @@ public class ActionDetailActivity extends MBaseActivity {
         ft.replace(R.id.std_fm, detailFm);
         ft.commit();
         currentFm = detailFm;
-    }
-
-
-    @OnClick(R.id.stitle_ll_back)
-    private void goback(View v) {
-        onBackPressed();
     }
 
     @Override
@@ -199,4 +190,12 @@ public class ActionDetailActivity extends MBaseActivity {
         super.onDestroy();
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.stitle_ll_back:
+                onBackPressed();
+                break;
+        }
+    }
 }

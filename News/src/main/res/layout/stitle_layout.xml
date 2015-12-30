@@ -41,7 +41,7 @@
             android:layout_gravity="center_vertical"
             android:text="@string/prompt_column_subscribe"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="@dimen/title_bar_size" />
     </LinearLayout>
 
     <View
