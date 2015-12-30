@@ -22,7 +22,6 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import java.util.List;
 
@@ -132,11 +131,6 @@ public class XF_NewsCommentsActivity extends MBaseActivity implements View.OnCli
                 myCommentListAdapter.setShowLoading(false);
             }
         });
-    }
-
-    @OnClick(R.id.stitle_ll_back)
-    private void goback(View v) {
-        finish();
     }
 
     @Override

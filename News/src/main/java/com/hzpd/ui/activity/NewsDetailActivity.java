@@ -112,7 +112,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private static CallbackManager callbackManager = CallbackManager.Factory.create();
     NewsDetailAdapter adapter;
     CustomRecyclerView recyclerView;
-
     private SwipeCloseLayout swipeCloseLayout;
     public final static String PREFIX = "P:";
     ViewGroup ad_layout;
@@ -127,9 +126,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         }
         return null;
     }
-
-    private String BASEURL = "index.php?s=/Public/newsview/nid/";
-
     public final static String IMG_PREFIX = "com.hzpd.provider.imageprovider";
     public final static String HOT_NEWS = "hotnews://";
 
@@ -260,7 +256,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         ad_layout = (ViewGroup) headView.findViewById(R.id.ad_layout);
         ad_view = (ViewGroup) headView.findViewById(R.id.ad_view);
         mCommentListView.addHeaderView(headView);
-
         mCommentListView.setAdapter(mCommentListAdapter);
         mCommentListView.setVisibility(View.GONE);
         //请联系我们
@@ -940,7 +935,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         }
     }
 
-    public static final String CONTENT_START = "<!-- content_start -->";
     public static final String BASE_URL = "file:///android_asset/news/?random=20151615";
     public static final String HEAD = "<html><head>" + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n"
             + " <meta name=\"viewport\"\n" +

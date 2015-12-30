@@ -25,25 +25,17 @@ public class NewsDetailAdapter extends RecyclerView.Adapter {
         this.context = (NewsDetailActivity) context;
     }
 
-    class HeadViewHolder extends RecyclerView.ViewHolder {
-
-        public HeadViewHolder(View itemView) {
-            super(itemView);
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) {
+            return TYPE_HEAD;
         }
+        return position == 1 ? TYPE_WEBVIEW : TYPE_ITEM;
     }
 
-    class WebViewHolder extends RecyclerView.ViewHolder {
-
-        public WebViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-    class ItemViewHolder extends RecyclerView.ViewHolder {
-
-        public ItemViewHolder(View itemView) {
-            super(itemView);
-        }
+    @Override
+    public int getItemCount() {
+        return 3;
     }
 
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -79,16 +71,26 @@ public class NewsDetailAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if (position == 0) {
-            return TYPE_HEAD;
+
+
+    class HeadViewHolder extends RecyclerView.ViewHolder {
+
+        public HeadViewHolder(View itemView) {
+            super(itemView);
         }
-        return position == 1 ? TYPE_WEBVIEW : TYPE_ITEM;
     }
 
-    @Override
-    public int getItemCount() {
-        return 3;
+    class WebViewHolder extends RecyclerView.ViewHolder {
+
+        public WebViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    class ItemViewHolder extends RecyclerView.ViewHolder {
+
+        public ItemViewHolder(View itemView) {
+            super(itemView);
+        }
     }
 }

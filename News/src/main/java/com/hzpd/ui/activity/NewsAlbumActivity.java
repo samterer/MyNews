@@ -27,9 +27,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.hzpd.custorm.DonutProgress;
 import com.hzpd.custorm.ImageViewPager;
 import com.hzpd.custorm.RecyclingPagerAdapter;
@@ -82,11 +79,7 @@ import uk.co.senab.photoview.PhotoView;
  * 图集展示*
  */
 public class NewsAlbumActivity extends MBaseActivity implements OnClickListener {
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+
 
     @Override
     public String getAnalyticPageName() {
@@ -172,7 +165,6 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
             }
         });
         init();
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void initViews() {
@@ -183,11 +175,11 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
         mLayoutBack = findViewById(R.id.main_title_personal);
         imgdetails_title_pl = (LinearLayout) findViewById(R.id.imgdetails_title_pl);
         imgdetails_title_comment = (LinearLayout) findViewById(R.id.imgdetails_title_comment);
-        imgdetails_title_num= (TextView) findViewById(R.id.imgdetails_title_num);
-        donutProgress= (DonutProgress) findViewById(R.id.album_donutProgress);
-        album_rl_head= (RelativeLayout) findViewById(R.id.album_rl_head);
-        album_rl_bottom= (RelativeLayout) findViewById(R.id.album_rl_bottom);
-        pop_xiazai_iv1= (ImageView) findViewById(R.id.pop_xiazai_iv1);
+        imgdetails_title_num = (TextView) findViewById(R.id.imgdetails_title_num);
+        donutProgress = (DonutProgress) findViewById(R.id.album_donutProgress);
+        album_rl_head = (RelativeLayout) findViewById(R.id.album_rl_head);
+        album_rl_bottom = (RelativeLayout) findViewById(R.id.album_rl_bottom);
+        pop_xiazai_iv1 = (ImageView) findViewById(R.id.pop_xiazai_iv1);
     }
 
     private void init() {
@@ -301,41 +293,11 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
     @Override
     public void onStart() {
         super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "NewsAlbum Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.hzpd.ui.activity/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "NewsAlbum Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.hzpd.ui.activity/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
     }
 
     class NewsAlbumAdapter extends RecyclingPagerAdapter {
@@ -345,7 +307,6 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
         public NewsAlbumAdapter() {
             list = new ArrayList<ImageListSubBean>();
             inflater = LayoutInflater.from(NewsAlbumActivity.this);
-
         }
 
         public ImageListSubBean getCurrentBean(int position) {

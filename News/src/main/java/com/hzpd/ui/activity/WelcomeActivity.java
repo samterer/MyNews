@@ -32,7 +32,6 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
-import com.lidroid.xutils.util.LogUtils;
 import com.news.update.UpdateService;
 import com.news.update.Utils;
 
@@ -112,7 +111,6 @@ public class WelcomeActivity extends MWBaseActivity {
 
         if (channelCacheFile.exists() && channelCacheFile.length() > 30) {
             exists = true;
-            Log.e("loadMainUI()", "loadMainUI()");
             loadMainUI();
         }
         if (!Utils.isNetworkConnected(this)) {
@@ -130,7 +128,6 @@ public class WelcomeActivity extends MWBaseActivity {
                     public void onSuccess(ResponseInfo<File> responseInfo) {
                         try {
                             String json = App.getFileContext(responseInfo.result);
-//							LogUtils.e("WelcomeActivity数据源问题--->"+json);
                             if (json != null) {
                                 JSONObject obj = null;
                                 try {
@@ -167,7 +164,6 @@ public class WelcomeActivity extends MWBaseActivity {
                                 dbs = dbHelper.getChannelDbUtils().findAll(NewsChannelBeanDB.class);
                                 // 如果没有缓存
                                 if (null == dbs || dbs.size() < 1) {
-                                    Log.i("Welcome", "如果没有缓存");
                                     addLocalChannels(newestChannels);
                                     dbs = new ArrayList<>();
                                     for (NewsChannelBean bean : newestChannels) {
@@ -176,8 +172,6 @@ public class WelcomeActivity extends MWBaseActivity {
                                     dbHelper.getChannelDbUtils().saveAll(dbs);
                                     SPUtil.updateChannel();
                                 } else if (newestChannels.size() > 0) { // 如果有缓存
-                                    Log.i("Welcome", "如果有缓存" + dbs.size());
-                                    //TODO
                                     boolean change = false;
                                     for (int ii = 0; ii < dbs.size(); ii++) {
                                         NewsChannelBeanDB beanDB = dbs.get(ii);
@@ -217,7 +211,6 @@ public class WelcomeActivity extends MWBaseActivity {
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Log.e("Test", error + ":" + msg);
                         if (!exists) {
                             loadMainUI();
                         }
@@ -269,7 +262,6 @@ public class WelcomeActivity extends MWBaseActivity {
                         }
                     }
                     if (null != list) {
-                        LogUtils.i(" getChooseNewsJson --> " + list.size());
                         new NewsListDbTask(getApplicationContext()).saveList(list, null);
                     }
                 }

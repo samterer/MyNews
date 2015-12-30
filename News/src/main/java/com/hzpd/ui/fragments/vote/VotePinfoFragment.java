@@ -17,14 +17,12 @@ import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
 
 public class VotePinfoFragment extends BaseFragment {
 
@@ -78,43 +76,6 @@ public class VotePinfoFragment extends BaseFragment {
 		getInfoFromServer();
 
 	}
-
-
-	/**
-	 * @OnClick(R.id.vote_detail_bt_submit) private void vote(View v){
-	 * <p>
-	 * if(!isVoted){
-	 * DebugUntil.createInstance().toastStr("已投票！");
-	 * return;
-	 * }
-	 * <p>
-	 * RequestParams params=new RequestParams();
-	 * params.addBodyParameter("uid",uid);
-	 * params.addBodyParameter("device",androidId);
-	 * params.addBodyParameter("subjectid",subjectid);
-	 * params.addBodyParameter("optionid",optid);
-	 * <p>
-	 * //		vote_detail_bt_submit.setClickable(false);
-	 * httpUtils.send(HttpMethod.POST
-	 * , InterfaceApi.mSetvote
-	 * , params
-	 * , new RequestCallBack<String>() {
-	 * @Override public void onFailure(HttpException arg0, String arg1) {
-	 * //					vote_detail_bt_submit.setClickable(true);
-	 * }
-	 * @Override public void onSuccess(ResponseInfo<String> arg0) {
-	 * //					vote_detail_bt_submit.setClickable(true);
-	 * LogUtils.i("submit-->"+arg0.result);
-	 * JSONObject obj=JSONObject.parseObject(arg0.result);
-	 * if(200==obj.getIntValue("code")){
-	 * DebugUntil.createInstance().toastStr(obj.getString("data"));
-	 * isVoted=true;
-	 * //						vote_detail_bt_submit.setClickable(false);
-	 * }
-	 * }
-	 * });
-	 * }
-	 */
 
 
 	private void getInfoFromServer() {

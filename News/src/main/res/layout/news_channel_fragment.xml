@@ -14,39 +14,47 @@
             android:id="@+id/main_top_layout"
             layout="@layout/main_top_layout" />
 
-        <android.support.v4.widget.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/swipe_refresh_widget"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recylerlist"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v4.widget.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/swipe_refresh_widget"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="?fragment_main_backgroup"
-                android:cacheColorHint="@null"
-                android:scrollbarStyle="outsideOverlay"
-                android:scrollbars="vertical" />
-        </android.support.v4.widget.CustomSwipeRefreshLayout>
+                android:scrollbars="none">
 
-        <ImageView
-            android:id="@+id/background_empty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingBottom="60dp"
-            android:src="@drawable/zqzx_nonetwork" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recylerlist"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?fragment_main_backgroup"
+                    android:cacheColorHint="@null"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:scrollbars="vertical" />
+            </android.support.v4.widget.CustomSwipeRefreshLayout>
 
-        <TextView
-            android:id="@+id/update_counts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@color/toolbar_bg"
-            android:gravity="center"
-            android:padding="5dp"
-            android:visibility="gone" />
+            <ImageView
+                android:id="@+id/background_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingBottom="60dp"
+                android:src="@drawable/zqzx_nonetwork" />
+
+            <TextView
+                android:id="@+id/update_counts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/toolbar_bg"
+                android:gravity="center"
+                android:padding="5dp"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
 
     </LinearLayout>
 </FrameLayout>
