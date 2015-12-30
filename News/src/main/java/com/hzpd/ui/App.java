@@ -127,7 +127,7 @@ public class App extends Application {
         return refWatcher;
     }
 
-    final static int IMAGE_LOAD_SIZE = 1024 * 1024 * 5;
+    final static int IMAGE_LOAD_SIZE = 1024 * 500;
 
     private void init() {
         initAds();
@@ -151,7 +151,7 @@ public class App extends Application {
                     .defaultDisplayImageOptions(DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small))
                     .diskCacheFileNameGenerator(new Md5FileNameGenerator())
                     .tasksProcessingOrder(QueueProcessingType.FIFO)
-                    .memoryCacheSize(IMAGE_LOAD_SIZE)// 缓存大小
+                    .denyCacheImageMultipleSizesInMemory()
                     .memoryCache(new LruMemoryCache(IMAGE_LOAD_SIZE))
                     .threadPoolSize(5)
                     .build();

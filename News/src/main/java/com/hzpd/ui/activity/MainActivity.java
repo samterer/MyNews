@@ -14,17 +14,20 @@ import android.widget.TextView;
 import com.hzpd.adapter.MainPagerAdapter;
 import com.hzpd.custorm.MyViewPager;
 import com.hzpd.hflt.R;
+import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.modle.event.RestartEvent;
 import com.hzpd.modle.event.SetThemeEvent;
 import com.hzpd.services.InitService;
 import com.hzpd.ui.App;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.ui.fragments.NewsFragment;
+import com.hzpd.ui.fragments.NewsItemFragment;
 import com.hzpd.ui.fragments.ZY_DiscoveryFragment;
 import com.hzpd.ui.fragments.ZY_RightFragment;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.ExitApplication;
 import com.hzpd.utils.Log;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.http.HttpHandler;
@@ -86,12 +89,22 @@ public class MainActivity extends BaseActivity {
                 }
             });
         }
-        fragments[0] = new NewsFragment();
-        fragments[1] = new ZY_DiscoveryFragment();
-        fragments[2] = new ZY_RightFragment();
-        adapter.add(fragments[0]);
-        adapter.add(fragments[1]);
-        adapter.add(fragments[2]);
+        int index = 0;
+        if (SPUtil.getCountry().equals("id")) {
+            fragments[index] = new NewsFragment();
+            adapter.add(fragments[index++]);
+            fragments[index] = new ZY_DiscoveryFragment();
+            adapter.add(fragments[index++]);
+        } else {
+            tv_menu[1].setVisibility(View.GONE);
+            NewsChannelBean channelBean = new NewsChannelBean();
+            channelBean.setTid("1");
+            channelBean.setCnname("NEWS");
+            fragments[index] = new NewsItemFragment(channelBean);
+            adapter.add(fragments[index++]);
+        }
+        fragments[index] = new ZY_RightFragment();
+        adapter.add(fragments[index++]);
         viewPager.setOffscreenPageLimit(adapter.getCount());
         viewPager.setAdapter(adapter);
         onClickIndex(0);

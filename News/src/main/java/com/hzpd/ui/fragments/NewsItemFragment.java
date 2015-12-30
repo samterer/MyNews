@@ -29,6 +29,7 @@ import com.hzpd.modle.event.UpdateNewsBeanDbEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.NewsAlbumActivity;
 import com.hzpd.ui.activity.NewsDetailActivity;
+import com.hzpd.ui.activity.SearchActivity;
 import com.hzpd.ui.activity.VideoPlayerActivity;
 import com.hzpd.ui.activity.XF_NewsHtmlDetailActivity;
 import com.hzpd.ui.activity.ZhuanTiActivity;
@@ -146,6 +147,22 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         page = 1;
         isRefresh = true;
         View view = inflater.inflate(R.layout.news_channel_fragment, container, false);
+        view.findViewById(R.id.main_top_layout).setVisibility(View.GONE);
+        if (!SPUtil.getCountry().equals("id")) {
+            view.findViewById(R.id.main_top_layout).setVisibility(View.VISIBLE);
+            View main_top_search = view.findViewById(R.id.main_top_search);
+            main_top_search.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (AvoidOnClickFastUtils.isFastDoubleClick())
+                        return;
+                    Intent mIntent = new Intent();
+                    mIntent.setClass(getActivity(), SearchActivity.class);
+                    startActivity(mIntent);
+                    AAnim.ActivityStartAnimation(getActivity());
+                }
+            });
+        }
         background_empty = (ImageView) view.findViewById(R.id.background_empty);
         update_counts = (TextView) view.findViewById(R.id.update_counts);
         background_empty.setOnClickListener(new View.OnClickListener() {
@@ -215,6 +232,9 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         page = 1;
         mFlagRefresh = true;
         firstLoading = false;
+        if (!SPUtil.getCountry().equals("id")) {
+            loadData();
+        }
     }
 
     @Override

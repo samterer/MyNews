@@ -63,7 +63,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
+                    <com.hzpd.ui.widget.FontTextView
                         android:id="@+id/details_head_tag_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
                         android:textColor="@color/white"
                         android:textSize="15sp" />
 
-                    <TextView
+                    <com.hzpd.ui.widget.FontRobotoTextView
                         android:id="@+id/details_head_tag_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

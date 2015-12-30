@@ -66,8 +66,6 @@ public class WelcomeActivity extends MWBaseActivity {
         fragment = new AdFlashFragment();
         tran.replace(R.id.welcome_frame, fragment);
         tran.commit();
-        getChooseNewsJson();
-        getChannelJson();
         // 初始化服务
         Intent service = new Intent(this, InitService.class);
         service.setAction(InitService.InitAction);
@@ -75,6 +73,12 @@ public class WelcomeActivity extends MWBaseActivity {
         // 更新服务
         service = new Intent(this, UpdateService.class);
         this.startService(service);
+        if (SPUtil.getCountry().equals("id")) {
+            getChooseNewsJson();
+            getChannelJson();
+        } else {
+            done += 2;
+        }
     }
 
     @Override
@@ -213,6 +217,7 @@ public class WelcomeActivity extends MWBaseActivity {
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
+                        Log.e("Test", error + ":" + msg);
                         if (!exists) {
                             loadMainUI();
                         }
@@ -281,8 +286,6 @@ public class WelcomeActivity extends MWBaseActivity {
 
     //	直接添加本地频道
     private void addLocalChannels(List<NewsChannelBean> list) {
-
-
         NewsChannelBean channelRecommend = new NewsChannelBean();
         channelRecommend.setTid("" + NewsChannelBean.TYPE_RECOMMEND);
         channelRecommend.setType(NewsChannelBean.TYPE_RECOMMEND);
@@ -293,6 +296,5 @@ public class WelcomeActivity extends MWBaseActivity {
             list.add(0, channelRecommend);
         }
     }
-
 
 }

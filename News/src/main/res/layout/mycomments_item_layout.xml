@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:background="?my_comment_news_selector"
+                android:background="?zqzx_onclik_setting_item"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 

@@ -76,7 +76,7 @@
                             android:gravity="center_vertical"
                             android:orientation="vertical">
                             <!--tag名称-->
-                            <com.hzpd.ui.widget.FontTextView
+                            <TextView
                                 android:id="@+id/details_head_tag_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
                                 android:textColor="@color/white"
                                 android:textSize="14sp" />
                             <!--tag订阅数-->
-                            <com.hzpd.ui.widget.FontRobotoTextView
+                            <TextView
                                 android:id="@+id/details_head_tag_num"
                                 android:layout_width="wrap_content"
                                 android:layout_height="0dp"
@@ -136,6 +136,17 @@
                         android:scrollbarStyle="outsideOverlay"
                         android:scrollbars="vertical" />
 
+                    <!-- 进度条-->
+                    <ProgressBar
+                        android:id="@+id/load_progress_bar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="2dp"
+                        android:indeterminateOnly="false"
+                        android:max="100"
+                        android:progressDrawable="@drawable/progressbar_drawable"
+                        android:visibility="gone" />
+
                     <!-- 加载Loading-->
                     <FrameLayout
                         android:id="@+id/app_progress_bar"
@@ -181,6 +192,7 @@
 
         <!-- 底部菜单 -->
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/news_detail_ll_bottom1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

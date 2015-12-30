@@ -17,7 +17,6 @@ public class XF_PInfoActivity extends MBaseActivity {
     private View stitle_ll_back;
     private TextView stitle_tv_content;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +29,7 @@ public class XF_PInfoActivity extends MBaseActivity {
                 finish();
             }
         });
-        stitle_tv_content= (TextView) findViewById(R.id.stitle_tv_content);
+        stitle_tv_content = (TextView) findViewById(R.id.stitle_tv_content);
         stitle_tv_content.setText(getString(R.string.comment));
         Intent intent = getIntent();
         String uid = intent.getStringExtra("uid");

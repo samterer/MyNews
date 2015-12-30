@@ -214,7 +214,9 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                     vi.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-//                            Toast.makeText(context, "" + itembean.getNid(), Toast.LENGTH_SHORT).show();
+                            if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+                                return;
+                            }
                             Intent mIntent = new Intent(context, NewsDetailActivity.class);
                             mIntent.putExtra("newbean", itembean);
                             mIntent.putExtra("from", "newsitem");

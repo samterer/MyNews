@@ -18,7 +18,7 @@
             android:orientation="horizontal"
             android:padding="15dp">
 
-            <ImageView
+            <com.hzpd.ui.widget.FixedImageView
                 android:id="@+id/id_index_gallery_item_image"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
@@ -34,7 +34,7 @@
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
-                <TextView
+                <com.hzpd.ui.widget.FontTextView
                     android:id="@+id/id_index_gallery_item_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
                     android:textColor="?item_title"
                     android:textSize="16dp" />
 
-                <TextView
+                <com.hzpd.ui.widget.FontRobotoTextView
                     android:id="@+id/id_index_gallery_item_num_text"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"

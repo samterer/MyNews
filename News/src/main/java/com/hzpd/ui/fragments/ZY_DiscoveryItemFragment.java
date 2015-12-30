@@ -111,12 +111,14 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
                         }
                     }
                     newAdapter.appendData(mlist, false);
+                }else {
+                    Page--;
                 }
             }
 
             @Override
             public void onFailure(HttpException e, String s) {
-
+                Page--;
             }
         });
     }

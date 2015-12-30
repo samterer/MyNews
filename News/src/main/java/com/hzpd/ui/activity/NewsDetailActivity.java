@@ -142,9 +142,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     public ListView mCommentListView;
     private CommentListAdapter mCommentListAdapter;
     private View news_detail_nonetwork;
-
     // ---------------------------
-
     private RelativeLayout newdetail_rl_comm;
     private View newdetail_ll_comm;
     private TextView newdetail_tv_comm;// 评论
@@ -156,6 +154,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private RelativeLayout mRelativeLayoutTitleRoot;
     // -------------------------
     private FontsizePop fontpop;
+    private View details_tag_layout;
+    private ImageView details_head_tag_img;
+    private TextView details_head_tag_name;
+    private TextView details_head_tag_num;
 
     App.Callback callback = new App.Callback() {
         @Override
@@ -178,24 +180,12 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         }
     };
 
-    private boolean isTheme;
-    private View transparent_layout_id;
-    private View details_tag_layout;
-    private ImageView details_head_tag_img;
-    private TextView details_head_tag_name;
-    private TextView details_head_tag_num;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
         Log.e("test", "1 " + System.currentTimeMillis());
         nativeAd = new NativeAd(this, AD_KEY);
         nativeAd.setAdListener(this);
-        if (App.getInstance().getThemeName().equals("3")) {
-            isTheme = true;
-        } else {
-            isTheme = false;
-        }
         App.getInstance().setProfileTracker(callback);
         setContentView(R.layout.news_details_layout);
         initViews();
@@ -450,7 +440,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             e.printStackTrace();
         }
         super.onDestroy();
-        System.gc();
     }
 
 
@@ -1213,9 +1202,17 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         if (mBean != null) {
             details_head_title_layout.setVisibility(View.VISIBLE);
             details_title_name.setText("" + nb.getTitle());
-            details_source_time.setText("" + nb.getCopyfrom());
-            String localTime = CalendarUtil.loaclTime(nb.getUpdate_time());
-            details_time.setText("" + localTime);
+            if (!TextUtils.isEmpty(nb.getCopyfrom())) {
+                details_source_time.setText("" + nb.getCopyfrom());
+            } else {
+                details_source_time.setText("");
+            }
+            if (!TextUtils.isEmpty(nb.getUpdate_time())) {
+                String localTime = CalendarUtil.loaclTime(nb.getUpdate_time());
+                details_time.setText("" + localTime);
+            } else {
+                details_time.setText("");
+            }
         }
 
         //查看原文

@@ -17,7 +17,7 @@
         android:paddingRight="@dimen/margin_10"
         android:paddingTop="3dp">
 
-        <ImageView
+        <com.hzpd.ui.widget.FixedImageView
             android:id="@+id/id_index_gallery_item_image"
             android:layout_width="60dp"
             android:layout_height="60dp"
@@ -25,7 +25,7 @@
             android:background="@color/grey_item"
             android:scaleType="centerCrop" />
 
-        <TextView
+        <com.hzpd.ui.widget.FontTextView
             android:id="@+id/id_index_gallery_item_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

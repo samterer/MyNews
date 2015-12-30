@@ -143,6 +143,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
 
     private void initViews(View view) {
         zy_rfrag_ll_login = (LinearLayout) view.findViewById(R.id.zy_rfrag_ll_login);
+        zy_rfrag_ll_login.setOnClickListener(this);
         zy_rfrag_tv_login = (TextView) view.findViewById(R.id.zy_rfrag_tv_login);
         zy_rfrag_iv_login = (CircleImageView) view.findViewById(R.id.zy_rfrag_iv_login);
         night_mode = (TextView) view.findViewById(R.id.night_mode);
@@ -358,13 +359,10 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
             case R.id.zy_rfrag_ll_read: {
                 mIntent.setClass(activity, RecentlyReadActivity.class);
                 flag = true;
-//               Toast.makeText(getActivity(),"暂无此功能。。。",Toast.LENGTH_SHORT).show();
             }
             break;
             case R.id.zy_rfrag_ll_login: {
-
                 if (null == spu.getUser()) {
-
                     loginManager.setDefaultAudience(DefaultAudience.FRIENDS);
                     loginManager.setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);
                     loginManager.logInWithReadPermissions(this, permissions);

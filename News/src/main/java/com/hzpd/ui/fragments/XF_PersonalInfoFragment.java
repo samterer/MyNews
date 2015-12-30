@@ -36,15 +36,33 @@ public class XF_PersonalInfoFragment extends BaseFragment {
     private int page = 1;
     private static final int pagesize = 10;
     private RecyclerView recylerlist;
-
+    private int lastVisibleItem;
+    private LinearLayoutManager vlinearLayoutManager;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.xf_personalinfofm_layout, container, false);
         recylerlist = (RecyclerView) view.findViewById(R.id.recylerlist);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recylerlist.setLayoutManager(layoutManager);
+        vlinearLayoutManager = new LinearLayoutManager(getActivity());
+        recylerlist.setLayoutManager(vlinearLayoutManager);
+        recylerlist.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.getItemCount()) {
+                    adapter.setShowLoading(true);
+
+                    getCommentsFromServer();
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                lastVisibleItem = vlinearLayoutManager.findLastVisibleItemPosition();
+            }
+        });
         return view;
     }
 
@@ -60,12 +78,7 @@ public class XF_PersonalInfoFragment extends BaseFragment {
         if (TextUtils.isEmpty(uid)) {
             return;
         }
-
-
         getUserInfoFromServer();
-
-
-
     }
 
     private void getUserInfoFromServer() {
@@ -126,6 +139,7 @@ public class XF_PersonalInfoFragment extends BaseFragment {
                 JSONObject obj = FjsonUtil
                         .parseObject(responseInfo.result);
                 if (null != obj) {
+                    page++;
                     if (200 == obj.getIntValue("code")) {
                         List<XF_UserCommentsBean> list = FjsonUtil.parseArray(obj.getString("data")
                                 , XF_UserCommentsBean.class);
@@ -134,16 +148,15 @@ public class XF_PersonalInfoFragment extends BaseFragment {
                         }
                         Log.i("XF_UserCommentsBean", "onSuccess   XF_UserCommentsBean" + list.toString());
                         adapter.appendData(list, false);
-//                        adapter.notifyDataSetChanged();
                     }
                 } else {
-//                    page--;
+                    page--;
                 }
             }
 
             @Override
             public void onFailure(HttpException error, String msg) {
-//                page--;
+                page--;
             }
         });
     }

@@ -316,10 +316,6 @@ public class SPUtil {
     public static void displayImage(String uri, ImageView imageView, DisplayImageOptions options, ImageLoadingListener loadingListener,
                                     ImageLoadingProgressListener progressListener) {
         if (BuildConfig.DEBUG) {
-            count++;
-            if (count > 1000) {
-                return;
-            }
         }
         if (isImageUri(uri)) {
             try {

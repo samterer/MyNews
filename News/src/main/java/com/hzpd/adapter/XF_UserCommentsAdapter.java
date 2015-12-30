@@ -23,6 +23,7 @@ import com.hzpd.ui.activity.NewsAlbumActivity;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.VideoPlayerActivity;
 import com.hzpd.utils.AAnim;
+import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.Log;
@@ -36,20 +37,28 @@ import java.util.List;
 public class XF_UserCommentsAdapter extends RecyclerView.Adapter {
 
     private boolean flag = false;
-
+    public boolean showLoading = false;
     private Context context;
     public static final int TYPE_HEAD = 0;
     private static final int TYPE_NORMAL = 1;
+    final static int TYPE_LOADING = 2;
     private List<XF_UserCommentsBean> list;
     private LayoutInflater mInflater;
     XF_UserInfoBean userInfoBean;
+
+    public void setShowLoading(boolean showLoading) {
+        this.showLoading = showLoading;
+        notifyDataSetChanged();
+    }
+
     public XF_UserCommentsAdapter(Context context) {
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
         list = new ArrayList<>();
     }
-    public XF_UserCommentsAdapter(Context context,XF_UserInfoBean userInfoBean) {
-        this.userInfoBean=userInfoBean;
+
+    public XF_UserCommentsAdapter(Context context, XF_UserInfoBean userInfoBean) {
+        this.userInfoBean = userInfoBean;
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
         list = new ArrayList<>();
@@ -66,6 +75,30 @@ public class XF_UserCommentsAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) {
+            return TYPE_HEAD;
+        } else if (showLoading && position + 1 == getItemCount()) {
+            return TYPE_LOADING;
+        } else {
+            return TYPE_NORMAL;
+        }
+
+    }
+
+    @Override
+    public int getItemCount() {
+        int count = 1;
+        if (list != null) {
+            count = count + list.size();
+            if (showLoading) {
+                count = count + 1;
+            }
+        }
+        return count;
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -89,6 +122,11 @@ public class XF_UserCommentsAdapter extends RecyclerView.Adapter {
                     parent, false);
 
             return new NorViewHolder(view);
+        } else if (viewType == TYPE_LOADING) {
+            View view = mInflater.inflate(R.layout.list_load_more_layout,
+                    parent, false);
+            LoadingHolder loadingHolder = new LoadingHolder(view);
+            return loadingHolder;
         }
 
         return null;
@@ -100,9 +138,9 @@ public class XF_UserCommentsAdapter extends RecyclerView.Adapter {
         int type = getItemViewType(position);
         switch (type) {
             case TYPE_HEAD: {
-                HeadViewHolder headingHolder= (HeadViewHolder) holder;
+                HeadViewHolder headingHolder = (HeadViewHolder) holder;
                 SPUtil.displayImage(userInfoBean.getAvatar_path()
-                        ,headingHolder.xf_pinfo_iv_avatar
+                        , headingHolder.xf_pinfo_iv_avatar
                         , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Avatar));
 
                 headingHolder.xf_pinfo_tv_nickname.setText(userInfoBean.getNickname());
@@ -149,15 +187,57 @@ public class XF_UserCommentsAdapter extends RecyclerView.Adapter {
 
             }
             break;
+            case TYPE_LOADING:
+                break;
         }
 
+    }
+
+    public class LoadingHolder extends RecyclerView.ViewHolder {
+        public LoadingHolder(View itemView) {
+            super(itemView);
+        }
+
+    }
+
+    private static class HeadViewHolder extends RecyclerView.ViewHolder {
+        CircleImageView xf_pinfo_iv_avatar;//头像
+        TextView xf_pinfo_tv_nickname;//昵称
+        ImageView xf_pinfo_iv_gender;//性别
+        TextView xf_pinfo_tv_level_alias;//级别
+        TextView xf_pinfo_tv_level;//级别
+        TextView xf_pinfo_tv_score;//分数
+        NumberProgressBar xf_pinfo_npb;//进度条
+        TextView xf_pinfo_tv_regtime;//注册时间
+        TextView xf_pinfo_tv_levelup;//升级提示
+
+        HeadViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    private static class NorViewHolder extends RecyclerView.ViewHolder {
+        ImageView mycoms_img_id;
+        LinearLayout my_newdetails;
+        TextView mycoms_content_txt;
+        LinearLayout mycoms_ll;
+
+        public NorViewHolder(View v) {
+            super(v);
+            mycoms_img_id = (ImageView) v.findViewById(R.id.mycoms_img_id);
+            my_newdetails = (LinearLayout) v.findViewById(R.id.my_newdetails);
+            mycoms_content_txt = (TextView) v.findViewById(R.id.mycoms_content_txt);
+            mycoms_ll = (LinearLayout) v.findViewById(R.id.mycoms_ll);
+        }
     }
 
     private void JumpActivity(NorViewHolder norViewHolder, final XF_UserCommNewsBean myCommentBean) {
         norViewHolder.my_newdetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+                    return;
+                }
                 Intent intent = new Intent();
                 if ("1".equals(myCommentBean.getType())) {
                     intent.setClass(context, NewsDetailActivity.class);
@@ -223,56 +303,4 @@ public class XF_UserCommentsAdapter extends RecyclerView.Adapter {
             }
         });
     }
-
-
-    @Override
-    public int getItemViewType(int position) {
-        if (position == 0) {
-            return TYPE_HEAD;
-        } else {
-            return TYPE_NORMAL;
-        }
-
-    }
-
-    @Override
-    public int getItemCount() {
-        int count = 1;
-        if (list != null) {
-            count = count + list.size();
-        }
-        return count;
-    }
-
-    private static class HeadViewHolder extends RecyclerView.ViewHolder {
-        CircleImageView xf_pinfo_iv_avatar;//头像
-        TextView xf_pinfo_tv_nickname;//昵称
-        ImageView xf_pinfo_iv_gender;//性别
-        TextView xf_pinfo_tv_level_alias;//级别
-        TextView xf_pinfo_tv_level;//级别
-        TextView xf_pinfo_tv_score;//分数
-        NumberProgressBar xf_pinfo_npb;//进度条
-        TextView xf_pinfo_tv_regtime;//注册时间
-        TextView xf_pinfo_tv_levelup;//升级提示
-
-        HeadViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-    private static class NorViewHolder extends RecyclerView.ViewHolder {
-        ImageView mycoms_img_id;
-        LinearLayout my_newdetails;
-        TextView mycoms_content_txt;
-        LinearLayout mycoms_ll;
-
-        public NorViewHolder(View v) {
-            super(v);
-            mycoms_img_id= (ImageView) v.findViewById(R.id.mycoms_img_id);
-            my_newdetails= (LinearLayout) v.findViewById(R.id.my_newdetails);
-            mycoms_content_txt= (TextView) v.findViewById(R.id.mycoms_content_txt);
-            mycoms_ll= (LinearLayout) v.findViewById(R.id.mycoms_ll);
-        }
-    }
-
 }

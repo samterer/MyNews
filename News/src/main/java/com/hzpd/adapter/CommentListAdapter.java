@@ -61,9 +61,9 @@ public class CommentListAdapter extends BaseAdapter {
     }
 
     public CommentListAdapter(String nid) {
+        this.nid = nid;
         spu = SPUtil.getInstance();
         httpUtils = SPUtil.getHttpUtils();
-        this.nid = nid;
     }
 
     @Override
@@ -110,15 +110,12 @@ public class CommentListAdapter extends BaseAdapter {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-
             final CommentzqzxBean item = getItem(position);
             if (position == 1) {
                 holder.line.setVisibility(View.GONE);
             }
-
             holder.userId = item.getUid();
             // 显示头像
-
             SPUtil.displayImage(item.getAvatar_path()
                     , holder.comment_user_icon
                     , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.XF_Avatar));
@@ -146,7 +143,6 @@ public class CommentListAdapter extends BaseAdapter {
 
             // 评论内容
             holder.comment_text.setText(item.getContent());
-//            holder.rl_comment_text.setOnClickListener(new View.OnClickListener() {
             holder.comment_text.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -155,7 +151,6 @@ public class CommentListAdapter extends BaseAdapter {
                     }
                     ArrayList<String> titles = new ArrayList<String>();
                     titles.add(parent.getContext().getResources().getString(R.string.reply_comment));
-//                titles.add("删除");
                     View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_popupwindow, null);
                     PopUpwindowLayout popUpwindowLayout = (PopUpwindowLayout) view.findViewById(R.id.llayout_popupwindow);
                     popUpwindowLayout.initViews(parent.getContext(), titles, false);
@@ -178,7 +173,6 @@ public class CommentListAdapter extends BaseAdapter {
                         public void onItemClick(LinearLayout parentView, int size, int index) {
                             switch (index) {
                                 case 0:
-//                                    Toast.makeText(parent.getContext(), "回复评论", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(parent.getContext(), ZQ_ReplyCommentActivity.class);
                                     intent.putExtra("USER_UID", item.getCid());
                                     parent.getContext().startActivity(intent);
@@ -192,12 +186,8 @@ public class CommentListAdapter extends BaseAdapter {
 
                 }
             });
-
-
             // 评论时间
             holder.comment_time.setText(CalendarUtil.friendlyTime1(item.getDateline(), parent.getContext()));
-
-
             if (SharePreferecesUtils.getParam(parent.getContext(), "" + item.getCid(), "0").toString().equals("1")) {
                 holder.up_icon.setImageResource(R.drawable.details_icon_likeit);
                 holder.up_icon.setEnabled(false);
@@ -262,12 +252,6 @@ public class CommentListAdapter extends BaseAdapter {
                     }
                 }
             });
-
-//            if (position == getCount() - 1) {
-//                holder.bottom.setVisibility(View.GONE);
-//            } else {
-//                holder.bottom.setVisibility(View.VISIBLE);
-//            }
         }
 
 
@@ -324,8 +308,6 @@ public class CommentListAdapter extends BaseAdapter {
             public void onSuccess(ResponseInfo<String> arg0) {
                 Log.d(getLogTag(), "赞-->" + arg0.result);
                 JSONObject obj = JSONObject.parseObject(arg0.result);
-//                TUtils.toast(obj.getString("msg"));
-
                 if (200 == obj.getInteger("code")) {
                     LogUtils.i("m---->" + cb.getPraise());
                     SharePreferecesUtils.setParam(context, "" + cb.getCid(), "1");
