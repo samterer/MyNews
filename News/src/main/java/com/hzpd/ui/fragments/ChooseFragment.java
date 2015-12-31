@@ -19,8 +19,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +31,7 @@ import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.modle.UserBean;
 import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.event.FontSizeEvent;
+import com.hzpd.modle.event.RefreshEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.interfaces.I_SetList;
@@ -52,7 +51,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.melnykov.fab.FloatingActionButton;
-import com.nineoldandroids.view.ViewHelper;
+import com.news.update.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.lucasr.twowayview.widget.SpacingItemDecoration;
@@ -60,6 +59,8 @@ import org.lucasr.twowayview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * 推荐频道
@@ -80,8 +81,6 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
     private int page = 1;
     private static final int pageSize = 15;//
     private boolean loading = false;
-    private View floatingView;
-    private Animation animation;
     private ImageView background_empty;
     private FloatingActionButton mFloatBtn;
     private RecyclerView.OnScrollListener onScrollListener;
@@ -164,13 +163,8 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
             public void onClick(View v) {
                 isAgainLoading = true;
                 mSwipeRefreshWidget.setRefreshing(true);
-//                getChooseNewsJson();
             }
         });
-        floatingView = view.findViewById(R.id.floating_button);
-        update_counts = (TextView) view.findViewById(R.id.update_counts);
-        floatingView.setOnClickListener(this);
-        ViewHelper.setAlpha(floatingView, 0.7f);
         mSwipeRefreshWidget = (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
 //        mSwipeRefreshWidget.setLayoutMode();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recylerlist);
@@ -192,18 +186,6 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (isAgainLoading) {
-                    page = 1;
-                    tagIndex = 1;
-                    pageIndex = 1;
-                    getServerList("");
-                    floatingView.startAnimation(animation);
-                    return;
-                }
-                Log.e("isAgainLoading", "isAgainLoading--->false");
-                if (!isRefresh) {
-                    floatingView.startAnimation(animation);
-                }
                 pullRefresh = true;
                 page = 1;
                 ++tagIndex;
@@ -226,7 +208,6 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.addItemDecoration(itemDecoration);
         paddingTop = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
-        animation = AnimationUtils.loadAnimation(getActivity(), R.anim.floating_button_anim);
         callBack = new ChooseAdapter.CallBack() {
             @Override
             public void loadMore() {
@@ -294,8 +275,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        mFloatBtn.setMaxWidth(100);
-//        mFloatBtn.setMaxHeight(100);
+        EventBus.getDefault().register(this);
         mFloatBtn.attachToRecyclerView(mRecyclerView, null, onScrollListener);
         mFloatBtn.setOnClickListener(mFloatBtnClickListener);
         mFloatBtn.setVisibility(View.VISIBLE);
@@ -316,7 +296,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
     private View.OnClickListener mFloatBtnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (AvoidOnClickFastUtils.isFastDoubleClick())
+            if (AvoidOnClickFastUtils.isFastDoubleClick(v))
                 return;
             Log.i("", "mFloatBtn.getWidth()--->" + mFloatBtn.getWidth() + ":::mFloatBtn.getHeight()--->" + mFloatBtn.getHeight());
             // 显示反馈对话框
@@ -325,13 +305,10 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
     };
 
     @Override
-    public void onDestroy() {
-        try {
-            super.onDestroy();
-        } catch (Exception e) {
-        }
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
-
 
     //新闻列表
     public void getDbList() {
@@ -426,6 +403,10 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
 
     //获取新闻list
     public void getServerList(String nids) {
+        if (!isAdded() || !Utils.isNetworkConnected(getActivity())) {
+            mSwipeRefreshWidget.setRefreshing(false);
+            return;
+        }
         RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("newTime", App.getInstance().newTime);
@@ -552,24 +533,12 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        Log.e("isRefresh", "isRefresh--->" + isRefresh);
-        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick(v)) {
             return;
         }
         try {
-            if (!isRefresh && v == floatingView) {
-                mRecyclerView.scrollToPosition(0);
-                mSwipeRefreshWidget.setRefreshing(true);
-                pageIndex = 1;
-                ++tagIndex;
-                page = 1;
-                getServerList("");
-                v.setAnimation(animation);
-                v.startAnimation(animation);
-                return;
-            }
             if (v.getTag() instanceof NewsBean) {
-                if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+                if (AvoidOnClickFastUtils.isFastDoubleClick(v)) {
                     return;
                 }
                 TextView title = (TextView) v.findViewById(R.id.newsitem_title);
@@ -597,4 +566,15 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         adapter.setFontSize(event.getFontSize());
     }
 
+    public void onEventMainThread(RefreshEvent event) {
+        if (isVisible) {
+            mSwipeRefreshWidget.setRefreshing(true);
+            pullRefresh = true;
+            page = 1;
+            ++tagIndex;
+            pageIndex = 1;
+            getServerList("");
+            isRefreshCounts = false;
+        }
+    }
 }

@@ -49,7 +49,7 @@ public class ZY_DiscoveryFragment extends BaseFragment {
             main_top_search.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (AvoidOnClickFastUtils.isFastDoubleClick())
+                    if (AvoidOnClickFastUtils.isFastDoubleClick(v))
                         return;
                     Intent mIntent = new Intent();
                     mIntent.setClass(getActivity(), SearchActivity.class);

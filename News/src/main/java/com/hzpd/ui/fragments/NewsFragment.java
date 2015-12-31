@@ -26,6 +26,7 @@ import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.exception.HttpException;
@@ -66,10 +67,12 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
 
     private View main_top_search;
     private View coverTop;
+    private View main_title_left_img;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.news_fragment_main, container, false);
+        main_title_left_img=view.findViewById(R.id.main_title_left_img);
         pager = (ViewPager) view.findViewById(R.id.news_pager);
         ll_news_button = view.findViewById(R.id.ll_news_button);
         ll_news_button.setOnClickListener(this);
@@ -83,7 +86,7 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
         main_top_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (AvoidOnClickFastUtils.isFastDoubleClick())
+                if (AvoidOnClickFastUtils.isFastDoubleClick(v))
                     return;
                 Intent mIntent = new Intent();
                 mIntent.setClass(getActivity(), SearchActivity.class);
@@ -96,6 +99,7 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
         } else {
             coverTop.setVisibility(View.VISIBLE);
         }
+
         return view;
     }
 
@@ -150,6 +154,14 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
             adapter = new NewsFragmentPagerAdapter(fm);
             pager.setAdapter(adapter);
             adapter.sortChannel(mList);
+            main_title_left_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("onTabClicked","onTabClicked  onClick");
+                    pager.setCurrentItem(0);
+                }
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -174,6 +186,7 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
         tabStrip.setOnTabClickListener(new PagerSlidingTabStrip.TabClickListener() {
 
                                            public void onTabClicked(int position) {
+                                               Log.i("onTabClicked","onTabClicked"+position);
                                                pager.setCurrentItem(position);
                                            }
                                        }
@@ -316,7 +329,7 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick(v)) {
             return;
         }
         switch (v.getId()) {

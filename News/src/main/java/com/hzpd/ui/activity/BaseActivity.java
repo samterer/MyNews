@@ -35,7 +35,7 @@ public class BaseActivity extends FragmentActivity implements AnalyticCallback {
         super.onCreate(null);
         action.onCreate(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //changeStatus();
+        changeStatus();
         fm = getSupportFragmentManager();
     }
 

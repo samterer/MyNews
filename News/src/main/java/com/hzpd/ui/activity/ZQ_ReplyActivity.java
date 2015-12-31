@@ -13,7 +13,6 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.ReplayBean;
 import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.event.UpdateNewsBeanDbEvent;
-import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.AvoidOnClickFastUtils;
@@ -22,7 +21,6 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -30,8 +28,6 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import de.greenrobot.event.EventBus;
 
@@ -186,7 +182,7 @@ public class ZQ_ReplyActivity extends MBaseActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick(v)) {
             return;
         }
         switch (v.getId()) {

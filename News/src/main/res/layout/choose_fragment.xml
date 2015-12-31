@@ -40,6 +40,7 @@
         android:visibility="gone" />
 
     <ImageView
+        android:visibility="gone"
         android:id="@+id/floating_button"
         android:layout_width="42dp"
         android:layout_height="42dp"

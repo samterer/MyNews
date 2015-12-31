@@ -25,7 +25,7 @@ import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.modle.NewsPageListBean;
 import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.event.FontSizeEvent;
-import com.hzpd.modle.event.UpdateNewsBeanDbEvent;
+import com.hzpd.modle.event.RefreshEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.NewsAlbumActivity;
 import com.hzpd.ui.activity.NewsDetailActivity;
@@ -45,7 +45,6 @@ import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.db.NewsListDbTask;
-import com.news.update.Utils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.RequestParams;
@@ -53,6 +52,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
+import com.news.update.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -125,7 +125,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         newsItemPath = App.getInstance().getJsonFileCacheRootDir();
 
         newsListDbTask = new NewsListDbTask(activity);
-        EventBus.getDefault().register(this);
     }
 
 
@@ -154,7 +153,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             main_top_search.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (AvoidOnClickFastUtils.isFastDoubleClick())
+                    if (AvoidOnClickFastUtils.isFastDoubleClick(v))
                         return;
                     Intent mIntent = new Intent();
                     mIntent.setClass(getActivity(), SearchActivity.class);
@@ -169,6 +168,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             @Override
             public void onClick(View v) {
                 mSwipeRefreshWidget.setRefreshing(true);
+                refresh();
             }
         });
         mSwipeRefreshWidget = (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
@@ -184,12 +184,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                pullRefresh = true;
-                page = 1;
-                mFlagRefresh = true;
-                getFlash();
-                getServerList("");
-                isRefreshCounts = false; //TODO hide
+                refresh();
             }
         });
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -225,10 +220,20 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         return view;
     }
 
+    private void refresh() {
+        pullRefresh = true;
+        page = 1;
+        mFlagRefresh = true;
+        getFlash();
+        getServerList("");
+        isRefreshCounts = false; //TODO hide
+    }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        EventBus.getDefault().register(this);
         page = 1;
         mFlagRefresh = true;
         firstLoading = false;
@@ -353,7 +358,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
             @Override
             public void onFailure(HttpException error, String msg) {
-                mSwipeRefreshWidget.setRefreshing(false);
                 showEmpty();
                 TUtils.toast(getString(R.string.toast_cannot_connect_network));
                 AnalyticUtils.sendGaEvent(getActivity(), AnalyticUtils.ACTION.networkErrorOnList, null, null, 0L);
@@ -366,10 +370,10 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     private void showEmpty() {
         isLoading = false;
         pullRefresh = false;
+        mSwipeRefreshWidget.setRefreshing(false);
         if (!isAdded()) {
             return;
         }
-        mSwipeRefreshWidget.setRefreshing(false);
     }
 
     boolean loadad = true;
@@ -495,19 +499,17 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         adapter.setFontSize(event.getFontSize());
     }
 
-    public void onEventMainThread(UpdateNewsBeanDbEvent event) {
-        String msg = event.getmMsg();
-        Log.d("NewsItemFragment", "msg--->" + msg);
-        if (msg.equals("Update_OK")) {
-            Log.d("NewsItemFragment", "msg--->数据更新");
-//            getDbList();
+    public void onEventMainThread(RefreshEvent event) {
+        if (isVisible) {
+            mSwipeRefreshWidget.setRefreshing(true);
+            refresh();
         }
     }
 
     //点击操作
     @Override
     public void onClick(View view) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick(view)) {
             return;
         }
         TextView title = (TextView) view.findViewById(R.id.newsitem_title);

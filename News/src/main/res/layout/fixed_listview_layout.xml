@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="?zqzx_setting_main_color">
 
-    <com.hzpd.ui.widget.FixedListView
+    <ListView
         android:id="@+id/fixed_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

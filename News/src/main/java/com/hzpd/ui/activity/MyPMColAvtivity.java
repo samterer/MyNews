@@ -37,7 +37,6 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
@@ -47,8 +46,6 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -177,7 +174,7 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
     private void mycollectionItemclick(AdapterView<?> parent, View view,
                                        int position, long id) {
 
-        if (AvoidOnClickFastUtils.isFastDoubleClick())
+        if (AvoidOnClickFastUtils.isFastDoubleClick(view))
             return;
         CollectionJsonBean cb = (CollectionJsonBean) colladAdapter.getItem(position);
         CollectionDataBean cdb = cb.getData();

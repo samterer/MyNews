@@ -50,6 +50,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListe
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -104,6 +105,9 @@ public class SPUtil {
 
     public static void setCountry(String country) {
         if (!TextUtils.isEmpty(country)) {
+            App.getInstance().newTime = null;
+            App.getInstance().oldTime = null;
+            App.getInstance().newTimeMap.clear();
             country = country.toLowerCase();
             PreferenceManager.getDefaultSharedPreferences(App.getInstance()).edit().putString("CountryCode", country).commit();
 
@@ -228,6 +232,18 @@ public class SPUtil {
         params.addBodyParameter(VERSION_CODE, "" + Utils.getVersionCode(context));
         params.addBodyParameter(PACKAGE_NAME_SELF, context.getPackageName());
         params.addBodyParameter(IS_ROM, "" + Utils.isRomVersion(context));
+    }
+
+    public static void addParams(Map<String, String> params) {
+        Context context = App.getInstance();
+        params.put(COUNTRY, getCountry());
+        params.put(UUID, Utils.getDeviceUUID(context));
+        params.put(ANDROID_ID, Utils.getAndroidId(context));
+        params.put(IMEI, Utils.getIMEI(context));
+        params.put(LAUGUAGE, Utils.getLanguage(context));
+        params.put(VERSION_CODE, "" + Utils.getVersionCode(context));
+        params.put(PACKAGE_NAME_SELF, context.getPackageName());
+        params.put(IS_ROM, "" + Utils.isRomVersion(context));
     }
 
     /**
@@ -420,7 +436,11 @@ public class SPUtil {
 
     public static BitmapDrawable getBitmapDrawable(Resources resources, int rid) {
         Bitmap bitmap = BitmapFactory.decodeResource(resources, rid);
-        return new BitmapDrawable(resources, bitmap);
+        if (bitmap != null && !bitmap.isRecycled()) {
+            return new BitmapDrawable(resources, bitmap);
+        } else {
+            return null;
+        }
     }
 
     private void setDate(String d) {

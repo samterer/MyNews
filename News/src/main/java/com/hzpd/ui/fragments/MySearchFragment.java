@@ -28,7 +28,6 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.RequestParams;
@@ -36,7 +35,6 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
 
 import java.util.List;
 
@@ -220,7 +218,7 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick(view)) {
             return;
         }
         TextView title = (TextView) view.findViewById(R.id.newsitem_title);

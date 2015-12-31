@@ -25,7 +25,6 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.event.FontSizeEvent;
 import com.hzpd.modle.event.LoginOutEvent;
 import com.hzpd.modle.event.RestartEvent;
-import com.hzpd.modle.event.SetThemeEvent;
 import com.hzpd.services.ClearCacheService;
 import com.hzpd.ui.App;
 import com.hzpd.ui.widget.FontTextView;
@@ -38,10 +37,6 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.news.update.CheckUpdateEvent;
 import com.news.update.UpdateService;
 import com.news.update.UpdateUtils;
@@ -228,7 +223,7 @@ public class SettingActivity extends MBaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick(v)) {
             return;
         }
         switch (v.getId()) {

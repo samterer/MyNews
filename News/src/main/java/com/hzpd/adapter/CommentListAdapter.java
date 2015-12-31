@@ -19,13 +19,11 @@ import com.hzpd.custorm.CircleImageView;
 import com.hzpd.custorm.PopUpwindowLayout;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.CommentzqzxBean;
-import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.ui.activity.XF_PInfoActivity;
 import com.hzpd.ui.activity.ZQ_ReplyCommentActivity;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CalendarUtil;
-import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
@@ -33,8 +31,6 @@ import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -146,7 +142,7 @@ public class CommentListAdapter extends BaseAdapter {
             holder.comment_text.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+                    if (AvoidOnClickFastUtils.isFastDoubleClick(v)) {
                         return;
                     }
                     ArrayList<String> titles = new ArrayList<String>();

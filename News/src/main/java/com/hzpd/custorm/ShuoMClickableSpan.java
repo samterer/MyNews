@@ -2,7 +2,6 @@ package com.hzpd.custorm;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.view.View;
@@ -30,7 +29,7 @@ public class ShuoMClickableSpan extends ClickableSpan {
 
     @Override
     public void onClick(View widget) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick())
+        if (AvoidOnClickFastUtils.isFastDoubleClick(widget))
             return;
         Intent intent = new Intent();
         intent.setClass(context, ZQ_FeedBackActivity.class);

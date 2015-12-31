@@ -75,7 +75,7 @@ public class MyPushActivity extends MBaseActivity implements View.OnClickListene
 
     @Override
     public void onClick(View view) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick(view)) {
             return;
         }
         TextView title = (TextView) view.findViewById(R.id.newsitem_title);

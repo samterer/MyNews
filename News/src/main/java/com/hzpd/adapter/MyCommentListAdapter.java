@@ -10,12 +10,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.custorm.CircleImageView;
@@ -34,7 +32,6 @@ import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -163,7 +160,7 @@ public class MyCommentListAdapter extends RecyclerView.Adapter {
                 viewHolder.comment_text.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+                        if (AvoidOnClickFastUtils.isFastDoubleClick(v)) {
                             return;
                         }
                         ArrayList<String> titles = new ArrayList<String>();

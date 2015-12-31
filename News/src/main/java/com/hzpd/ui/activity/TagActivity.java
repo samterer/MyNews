@@ -248,7 +248,7 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick(view)) {
             return;
         }
         TextView title = (TextView) view.findViewById(R.id.newsitem_title);

@@ -6,8 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.hzpd.utils.SPUtil;
 
 /**
  * 释放图片内存
@@ -22,26 +21,36 @@ public class FixedImageView extends ImageView {
         super(context, attrs);
     }
 
-    List<BitmapDrawable> bitmaps = new ArrayList<>();
+    BitmapDrawable bitmapDrawable;
 
     @Override
     public void setImageBitmap(Bitmap bm) {
+        release();
         super.setImageBitmap(bm);
-        bitmaps.add((BitmapDrawable) getDrawable());
+        bitmapDrawable = (BitmapDrawable) getDrawable();
+    }
+
+    @Override
+    public void setImageResource(int resId) {
+        release();
+        bitmapDrawable = SPUtil.getBitmapDrawable(getResources(), resId);
+        super.setImageDrawable(bitmapDrawable);
+        bitmapDrawable = (BitmapDrawable) getDrawable();
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
         release();
+        super.onDetachedFromWindow();
     }
 
     public void release() {
-        for (BitmapDrawable bitmapDrawable : bitmaps) {
-            setImageDrawable(null);
+        if (bitmapDrawable != null) {
+            super.setImageDrawable(null);
             bitmapDrawable.getBitmap().recycle();
             bitmapDrawable.setCallback(null);
+            bitmapDrawable = null;
         }
-        bitmaps.clear();
     }
+
 }

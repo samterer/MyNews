@@ -26,14 +26,12 @@ public class BaseFragment extends Fragment implements AnalyticCallback {
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        if (!isAdded()) {
-            return;
-        }
-        if (TextUtils.isEmpty(getAnalyticPageName())) {
-            return;
-        }
+        super.setUserVisibleHint(isVisibleToUser);
         if (isVisible != isVisibleToUser) {
             isVisible = isVisibleToUser;
+            if (TextUtils.isEmpty(getAnalyticPageName())) {
+                return;
+            }
             try {
                 if (isVisibleToUser) {
                     AnalyticUtils.sendGaScreenViewHit(getActivity(), getAnalyticPageName());

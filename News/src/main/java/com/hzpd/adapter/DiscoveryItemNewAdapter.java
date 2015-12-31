@@ -32,7 +32,6 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -169,7 +168,7 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                 viewHolder.tag_layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+                        if (AvoidOnClickFastUtils.isFastDoubleClick(v)) {
                             return;
                         }
                         Intent intent = new Intent(context, TagActivity.class);
@@ -214,7 +213,7 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                     vi.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+                            if (AvoidOnClickFastUtils.isFastDoubleClick(v)) {
                                 return;
                             }
                             Intent mIntent = new Intent(context, NewsDetailActivity.class);

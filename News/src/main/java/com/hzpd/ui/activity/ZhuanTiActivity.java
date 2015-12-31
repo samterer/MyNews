@@ -191,7 +191,7 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
     //点击操作
     @Override
     public void onClick(View view) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+        if (AvoidOnClickFastUtils.isFastDoubleClick(view)) {
             return;
         }
         TextView title = (TextView) view.findViewById(R.id.newsitem_title);

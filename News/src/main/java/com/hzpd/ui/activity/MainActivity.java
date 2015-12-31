@@ -15,6 +15,7 @@ import com.hzpd.adapter.MainPagerAdapter;
 import com.hzpd.custorm.MyViewPager;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsChannelBean;
+import com.hzpd.modle.event.RefreshEvent;
 import com.hzpd.modle.event.RestartEvent;
 import com.hzpd.modle.event.SetThemeEvent;
 import com.hzpd.services.InitService;
@@ -123,16 +124,16 @@ public class MainActivity extends BaseActivity {
 
     public void onClickIndex(int index) {
         // TODO Auto-generated method stub
-//        fragments[index].OnSelected();
         viewPager.setCurrentItem(index, false);
-
         for (int i = 0; i < tv_menu.length; i++) {
-
             if (index == i) {
                 tv_menu[i].setSelected(true);
             } else {
                 tv_menu[i].setSelected(false);
             }
+        }
+        if (index == 0) {
+            EventBus.getDefault().post(new RefreshEvent());
         }
     }
 

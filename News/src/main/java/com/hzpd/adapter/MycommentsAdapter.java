@@ -25,7 +25,6 @@ import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.util.LogUtils;
 
 public class MycommentsAdapter extends ListBaseAdapter<MycommentsBean> {
@@ -88,7 +87,7 @@ public class MycommentsAdapter extends ListBaseAdapter<MycommentsBean> {
             @Override
             public void onClick(View v) {
 
-                if (AvoidOnClickFastUtils.isFastDoubleClick())
+                if (AvoidOnClickFastUtils.isFastDoubleClick(v))
                     return;
 
                 Intent intent = new Intent();

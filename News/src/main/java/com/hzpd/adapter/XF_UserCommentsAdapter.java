@@ -22,14 +22,11 @@ import com.hzpd.modle.XF_UserInfoBean;
 import com.hzpd.ui.activity.NewsAlbumActivity;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.VideoPlayerActivity;
-import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -235,7 +232,7 @@ public class XF_UserCommentsAdapter extends RecyclerView.Adapter {
         norViewHolder.my_newdetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+                if (AvoidOnClickFastUtils.isFastDoubleClick(v)) {
                     return;
                 }
                 Intent intent = new Intent();

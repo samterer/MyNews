@@ -98,7 +98,7 @@ public class TopviewpagerAdapter extends RecyclingPagerAdapter {
         iv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (AvoidOnClickFastUtils.isFastDoubleClick()) {
+                if (AvoidOnClickFastUtils.isFastDoubleClick(v)) {
                     return;
                 }
                 Intent in = new Intent();

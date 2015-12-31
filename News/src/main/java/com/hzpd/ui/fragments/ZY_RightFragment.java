@@ -280,7 +280,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        if (AvoidOnClickFastUtils.isFastDoubleClick())
+        if (AvoidOnClickFastUtils.isFastDoubleClick(v))
             return;
         boolean flag = false;
         Intent mIntent = new Intent();
