@@ -26,28 +26,26 @@ import com.hzpd.modle.UserBean;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.PersonalInfoActivity;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.CipherUtils;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.lidroid.xutils.util.LogUtils;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.PropertyValuesHolder;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.squareup.okhttp.Request;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.Map;
 
 
 public class ZQ_PersonalInfoFragment extends BaseFragment implements View.OnClickListener {
@@ -74,12 +72,19 @@ public class ZQ_PersonalInfoFragment extends BaseFragment implements View.OnClic
     private final String IMAGE_FILE_NAME = "faceImage.jpg";
     private boolean isThirdpart = false;//是否是第三方登陆
     private File imgFile;
+    private Object tag;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.personal_info, container, false);
+        initViews(view);
+        tag = OkHttpClientManager.getTag();
+        return view;
+    }
+
+    private void initViews(View view) {
         zq_pinfo_rl_bg = (RelativeLayout) view.findViewById(R.id.zq_pinfo_rl_bg);
         pi_login_name_tr = (TableRow) view.findViewById(R.id.pi_login_name_tr);
         pi_modifypwd_tr = (TableRow) view.findViewById(R.id.pi_modifypwd_tr);
@@ -96,7 +101,6 @@ public class ZQ_PersonalInfoFragment extends BaseFragment implements View.OnClic
         lg_pi_bt_quite = (Button) view.findViewById(R.id.lg_pi_bt_quite);
         zq_pinfo_iv_back = view.findViewById(R.id.zq_pinfo_iv_back);
         zq_pinfo_iv_back.setOnClickListener(this);
-        return view;
     }
 
     @Override
@@ -179,11 +183,13 @@ public class ZQ_PersonalInfoFragment extends BaseFragment implements View.OnClic
     }
 
     private void init() {
-        LogUtils.i("userimg-->" + spu.getUser().getAvatar_path());
-        LogUtils.i("usertoken-->" + spu.getUser().getToken());
-        LogUtils.i("uid-->" + spu.getUser().getUid());
+        if (spu.getUser() == null) {
+            return;
+        }
+        Log.i("test", "userimg-->" + spu.getUser().getAvatar_path());
+        Log.i("test", "usertoken-->" + spu.getUser().getToken());
+        Log.i("test", "uid-->" + spu.getUser().getUid());
         JSONObject obj = spu.getWelcome();
-
         String pinfobg = null;
         if (null != obj) {
             pinfobg = obj.getString("userinfobg");
@@ -267,45 +273,48 @@ public class ZQ_PersonalInfoFragment extends BaseFragment implements View.OnClic
             e.printStackTrace();
         }
         lg_pi_iv_touxiang.setImageBitmap(photo);
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("token", spu.getUser().getToken());
-        params.addBodyParameter("avatar", CipherUtils.base64Encode(photo));
+
+        Map<String, String> params = RequestParamsUtils.getMaps();
+        params.put("token", spu.getUser().getToken());
+        params.put("avatar", CipherUtils.base64Encode(photo));
         SPUtil.addParams(params);
-        httpUtils.send(HttpMethod.POST
+
+        OkHttpClientManager.postAsyn(tag
                 , InterfaceJsonfile.CHANGEPINFO//InterfaceApi.modify_gender
-                , params
-                , new RequestCallBack<String>() {
-            @Override
-            public void onFailure(HttpException arg0, String arg1) {
-                if (!isAdded()) {
-                    return;
-                }
-                TUtils.toast(getString(R.string.toast_server_no_response));
-            }
+                , new OkHttpClientManager.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        if (!isAdded()) {
+                            return;
+                        }
+                        JSONObject obj = FjsonUtil.parseObject(response.toString());
+                        if (null == obj) {
+                            return;
+                        }
 
-            @Override
-            public void onSuccess(ResponseInfo<String> arg0) {
-                if (!isAdded()) {
-                    return;
-                }
-                JSONObject obj = FjsonUtil.parseObject(arg0.result);
-                if (null == obj) {
-                    return;
-                }
+                        if (200 == obj.getIntValue("code")) {
+                            TUtils.toast(getString(R.string.toast_modify_success));
+                            UserBean user = FjsonUtil.parseObject(obj.getString("data"), UserBean.class);
+                            spu.setUser(user);
 
-                if (200 == obj.getIntValue("code")) {
-                    TUtils.toast(getString(R.string.toast_modify_success));
-                    UserBean user = FjsonUtil.parseObject(obj.getString("data"), UserBean.class);
-                    spu.setUser(user);
+                            Intent intent = new Intent();
+                            intent.setAction(ZY_RightFragment.ACTION_USER);
+                            activity.sendBroadcast(intent);
+                        } else {
+                            TUtils.toast(obj.getString("msg"));
+                        }
+                    }
 
-                    Intent intent = new Intent();
-                    intent.setAction(ZY_RightFragment.ACTION_USER);
-                    activity.sendBroadcast(intent);
-                } else {
-                    TUtils.toast(obj.getString("msg"));
-                }
-            }
-        });
+                    @Override
+                    public void onFailure(Request request, Exception e) {
+                        if (!isAdded()) {
+                            return;
+                        }
+                        TUtils.toast(getString(R.string.toast_server_no_response));
+                    }
+
+                }, params
+        );
 
     }
 
@@ -340,4 +349,9 @@ public class ZQ_PersonalInfoFragment extends BaseFragment implements View.OnClic
 
     }
 
+    @Override
+    public void onDestroyView() {
+        OkHttpClientManager.cancel(tag);
+        super.onDestroyView();
+    }
 }

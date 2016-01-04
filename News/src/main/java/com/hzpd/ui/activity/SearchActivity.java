@@ -20,6 +20,7 @@ import com.hzpd.ui.App;
 import com.hzpd.ui.fragments.MySearchFragment;
 import com.hzpd.ui.fragments.SearchKeyFragment;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
@@ -33,6 +34,7 @@ import com.lidroid.xutils.util.LogUtils;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -75,6 +77,7 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
     private void getKeys() {
         try {
             final File target = App.getFile(App.getInstance().getJsonFileCacheRootDir() + File.separator + "saerch_keys");
+            Log.i("target.getAbsolutePath()", "target.getAbsolutePath()" + target.getAbsolutePath());
             RequestParams requestParams = new RequestParams();
             requestParams.addQueryStringParameter("Pagesize", "10");
             HttpHandler httpHandler = httpUtils.download(InterfaceJsonfile.SEARCH_KEY,
@@ -85,6 +88,7 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
                             //TODO 获取关键词
                             try {
                                 String json = App.getFileContext(responseInfo.result);
+                                saveFile(json);
                                 Log.e("test", json);
                                 org.json.JSONArray jsonArray = new JSONObject(json).getJSONArray("data");
                                 int lenght = jsonArray.length();
@@ -113,6 +117,26 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
         }
 
     }
+
+    public static void saveFile(String str) {
+        final File target = App.getFile(App.getInstance().getJsonFileCacheRootDir() + File.separator + "saerch_keys1111");
+        String filePath = target.getAbsolutePath();
+
+        try {
+            File file = new File(filePath);
+            if (!file.exists()) {
+                File dir = new File(file.getParent());
+                dir.mkdirs();
+                file.createNewFile();
+            }
+            FileOutputStream outStream = new FileOutputStream(file);
+            outStream.write(str.getBytes());
+            outStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private AutoAdapter adapter;
     private AutoCompleteTextView editText;

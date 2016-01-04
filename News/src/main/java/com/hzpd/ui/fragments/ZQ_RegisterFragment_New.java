@@ -13,6 +13,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.UserBean;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
@@ -24,7 +25,9 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
+import com.squareup.okhttp.Request;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,23 +46,26 @@ public class ZQ_RegisterFragment_New extends BaseFragment implements View.OnClic
     private String email;
     private String pwd;
 
+    private Object tag;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.login_rgister_new, container, false);
         initViews(view);
+        tag = OkHttpClientManager.getTag();
         return view;
     }
 
     private void initViews(View view) {
-        stitle_ll_back=view.findViewById(R.id.stitle_ll_back);
+        stitle_ll_back = view.findViewById(R.id.stitle_ll_back);
         stitle_ll_back.setOnClickListener(this);
-        stitle_tv_content= (TextView) view.findViewById(R.id.stitle_tv_content);
-        lgr_et_name_id= (EditText) view.findViewById(R.id.lgr_et_name_id);
-        lgr_et_email_id= (EditText) view.findViewById(R.id.lgr_et_email_id);
-        lgr_et_pwd_id= (EditText) view.findViewById(R.id.lgr_et_pwd_id);
-        lgr_et_pwd_id1= (EditText) view.findViewById(R.id.lgr_et_pwd_id1);
-        lgr_bt_register= (Button) view.findViewById(R.id.lgr_bt_register);
+        stitle_tv_content = (TextView) view.findViewById(R.id.stitle_tv_content);
+        lgr_et_name_id = (EditText) view.findViewById(R.id.lgr_et_name_id);
+        lgr_et_email_id = (EditText) view.findViewById(R.id.lgr_et_email_id);
+        lgr_et_pwd_id = (EditText) view.findViewById(R.id.lgr_et_pwd_id);
+        lgr_et_pwd_id1 = (EditText) view.findViewById(R.id.lgr_et_pwd_id1);
+        lgr_bt_register = (Button) view.findViewById(R.id.lgr_bt_register);
         lgr_bt_register.setOnClickListener(this);
     }
 
@@ -69,7 +75,6 @@ public class ZQ_RegisterFragment_New extends BaseFragment implements View.OnClic
         stitle_tv_content.setText(R.string.title_user_register);
 
     }
-
 
 
     private void showDialog() {
@@ -92,9 +97,8 @@ public class ZQ_RegisterFragment_New extends BaseFragment implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.lgr_bt_register:
-            {
+        switch (v.getId()) {
+            case R.id.lgr_bt_register: {
                 if (!MyCommonUtil.isNetworkConnected(activity)) {
                     TUtils.toast(getString(R.string.toast_network_error));
                     return;
@@ -143,24 +147,16 @@ public class ZQ_RegisterFragment_New extends BaseFragment implements View.OnClic
 
 
                 // 注册
-                RequestParams params = RequestParamsUtils.getParams();
-                params.addBodyParameter("username", name);
-                params.addBodyParameter("password", pwd);
-                params.addBodyParameter("email", email);
-//		params.addBodyParameter("email", "");
+                Map<String, String> params = RequestParamsUtils.getMaps();
+                params.put("username", name);
+                params.put("password", pwd);
+                params.put("email", email);
                 SPUtil.addParams(params);
-                httpUtils.send(HttpMethod.POST, InterfaceJsonfile.REGISTER// InterfaceApi.mRegister
-                        , params, new RequestCallBack<String>() {
+                OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.REGISTER// InterfaceApi.mRegister
+                        , new OkHttpClientManager.ResultCallback() {
                     @Override
-                    public void onFailure(HttpException arg0, String arg1) {
-                        //服务器未响应
-                        TUtils.toast(getString(R.string.toast_server_no_response));
-                    }
-
-                    @Override
-                    public void onSuccess(ResponseInfo<String> arg0) {
-                        LogUtils.i("login-success-->" + arg0.result);
-                        JSONObject object = FjsonUtil.parseObject(arg0.result);
+                    public void onSuccess(Object response) {
+                        JSONObject object = FjsonUtil.parseObject(response.toString());
                         if (null == object) {
                             return;
                         }
@@ -183,12 +179,19 @@ public class ZQ_RegisterFragment_New extends BaseFragment implements View.OnClic
                             TUtils.toast(getString(R.string.toast_register_failed));
                         }
                     }
-                });
+
+                    @Override
+                    public void onFailure(Request request, Exception e) {
+                        //服务器未响应
+                        TUtils.toast(getString(R.string.toast_server_no_response));
+                    }
+
+
+                }, params);
 
             }
-                break;
-            case R.id.stitle_ll_back:
-            {
+            break;
+            case R.id.stitle_ll_back: {
                 if (null != spu.getUser()) {
                     // setResult(10);
                     activity.finish();
@@ -196,7 +199,13 @@ public class ZQ_RegisterFragment_New extends BaseFragment implements View.OnClic
                     activity.onBackPressed();
                 }
             }
-                break;
+            break;
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        OkHttpClientManager.cancel(tag);
+        super.onDestroyView();
     }
 }

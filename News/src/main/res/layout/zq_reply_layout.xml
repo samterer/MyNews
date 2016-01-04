@@ -174,7 +174,7 @@
                     android:id="@+id/app_progress_bar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#65ffffff"
+                    android:background="?app_progress_bar_bg"
                     android:visibility="gone">
 
                     <ProgressBar

@@ -174,9 +174,9 @@ public class OkHttpClientManager {
         public ResultCallback() {
         }
 
-        public abstract void onFailure(Request request, Exception e);
-
         public abstract void onSuccess(T response);
+
+        public abstract void onFailure(Request request, Exception e);
     }
 
     public static class Param {

@@ -13,16 +13,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.UserBean;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.lidroid.xutils.util.LogUtils;
+import com.squareup.okhttp.Request;
+
+import java.util.Map;
 
 public class ZQ_LoginFragment extends BaseFragment implements View.OnClickListener {
 
@@ -33,6 +32,8 @@ public class ZQ_LoginFragment extends BaseFragment implements View.OnClickListen
     private Button login_login_comfirm_id;    //登录
     private TextView login_register_tv_id;//注册
     private View stitle_ll_back;
+
+    private Object tag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,8 +46,9 @@ public class ZQ_LoginFragment extends BaseFragment implements View.OnClickListen
         login_login_comfirm_id = (Button) view.findViewById(R.id.login_login_comfirm_id);
         login_login_comfirm_id.setOnClickListener(this);
         login_register_tv_id = (TextView) view.findViewById(R.id.login_register_tv_id);
-        stitle_ll_back=view.findViewById(R.id.stitle_ll_back);
+        stitle_ll_back = view.findViewById(R.id.stitle_ll_back);
         stitle_ll_back.setOnClickListener(this);
+        tag = OkHttpClientManager.getTag();
 
         return view;
     }
@@ -61,15 +63,13 @@ public class ZQ_LoginFragment extends BaseFragment implements View.OnClickListen
     }
 
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.stitle_ll_back:
-            {
+            case R.id.stitle_ll_back: {
                 activity.onBackPressed();
             }
-                break;
+            break;
             case R.id.login_login_comfirm_id: {
                 if (!MyCommonUtil.isNetworkConnected(activity)) {
                     TUtils.toast(getString(R.string.toast_network_error));
@@ -89,27 +89,18 @@ public class ZQ_LoginFragment extends BaseFragment implements View.OnClickListen
 
                 showDialog();
 
-                RequestParams params = RequestParamsUtils.getParams();
-                params.addBodyParameter("username", uname);
-                params.addBodyParameter("password", pwd);
+                Map<String, String> params = RequestParamsUtils.getMaps();
+                params.put("username", uname);
+                params.put("password", pwd);
 
-                httpUtils.send(HttpMethod.POST
-                        , InterfaceJsonfile.LOGIN//InterfaceApi.mUserLogin
-                        , params
-                        , new RequestCallBack<String>() {
+                OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.LOGIN, new OkHttpClientManager.ResultCallback() {
                     @Override
-                    public void onFailure(HttpException arg0, String arg1) {
-                        LogUtils.i("login-failed");
-                        TUtils.toast(getString(R.string.toast_server_no_response));
-                    }
-
-                    @Override
-                    public void onSuccess(ResponseInfo<String> arg0) {
-                        LogUtils.i("login-success-->" + arg0.result);
-                        JSONObject object = FjsonUtil.parseObject(arg0.result);
+                    public void onSuccess(Object response) {
+                        JSONObject object = FjsonUtil.parseObject(response.toString());
                         if (null == object) {
                             return;
                         }
+                        Log.i("test","login-success-->" + response.toString());
                         if (200 == object.getIntValue("code")) {
 
                             UserBean user = FjsonUtil.parseObject(object.getString("data"), UserBean.class);
@@ -124,10 +115,23 @@ public class ZQ_LoginFragment extends BaseFragment implements View.OnClickListen
                             TUtils.toast(object.getString("msg"));
                         }
                     }
-                });
+
+                    @Override
+                    public void onFailure(Request request, Exception e) {
+                        Log.i("test", "login-failed");
+                        TUtils.toast(getString(R.string.toast_server_no_response));
+                    }
+
+                }, params);
 
             }
             break;
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        OkHttpClientManager.cancel(tag);
+        super.onDestroyView();
     }
 }

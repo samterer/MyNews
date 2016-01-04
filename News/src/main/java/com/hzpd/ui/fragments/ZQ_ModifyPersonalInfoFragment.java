@@ -18,6 +18,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.UserBean;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.TUtils;
@@ -28,6 +29,9 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.squareup.okhttp.Request;
+
+import java.util.Map;
 
 public class ZQ_ModifyPersonalInfoFragment extends BaseFragment implements View.OnClickListener {
     private LinearLayout mi_ll_nick;//昵称布局
@@ -46,11 +50,14 @@ public class ZQ_ModifyPersonalInfoFragment extends BaseFragment implements View.
     private String gender = "3";
     private String nickname;
 
+    private Object tag;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.modifypersonalinfo_layout, container, false);
         initViews(view);
+        tag = OkHttpClientManager.getTag();
         return view;
     }
 
@@ -112,14 +119,14 @@ public class ZQ_ModifyPersonalInfoFragment extends BaseFragment implements View.
             }
             break;
             case R.id.mi_bt_comfirm: {
-                RequestParams params = RequestParamsUtils.getParamsWithU();
-                params.addBodyParameter("token", spu.getUser().getToken());
+                Map<String, String> params = RequestParamsUtils.getMapWithU();
+                params.put("token", spu.getUser().getToken());
                 if (1 == type) {
                     nickname = mi_et_context.getText().toString();
                     if (TextUtils.isEmpty(nickname)) {
                         TUtils.toast(getString(R.string.toast_nickname_cannot_be_empty));
                     } else {
-                        params.addBodyParameter("nickname", nickname);
+                        params.put("nickname", nickname);
                     }
                 } else {
                     int id = mi_rg.getCheckedRadioButtonId();
@@ -136,22 +143,15 @@ public class ZQ_ModifyPersonalInfoFragment extends BaseFragment implements View.
                             gender = "3";
                             break;
                     }
-                    params.addBodyParameter("sex", gender);//1男 2女 3保密
+                    params.put("sex", gender);//1男 2女 3保密
                 }
 
-                httpUtils.send(HttpMethod.POST
+                OkHttpClientManager.postAsyn(tag
                         , InterfaceJsonfile.CHANGEPINFO//InterfaceApi.modify_gender
-                        , params
-                        , new RequestCallBack<String>() {
+                        , new OkHttpClientManager.ResultCallback() {
                     @Override
-                    public void onFailure(HttpException arg0, String arg1) {
-                        TUtils.toast(getString(R.string.toast_server_no_response));
-                    }
-
-                    @Override
-                    public void onSuccess(ResponseInfo<String> arg0) {
-                        LogUtils.i("-->" + arg0.result);
-                        JSONObject obj = FjsonUtil.parseObject(arg0.result);
+                    public void onSuccess(Object response) {
+                        JSONObject obj = FjsonUtil.parseObject(response.toString());
                         if (null == obj) {
                             return;
                         }
@@ -168,7 +168,13 @@ public class ZQ_ModifyPersonalInfoFragment extends BaseFragment implements View.
                             TUtils.toast(obj.getString("msg"));
                         }
                     }
-                });
+
+                    @Override
+                    public void onFailure(Request request, Exception e) {
+                        TUtils.toast(getString(R.string.toast_server_no_response));
+                    }
+
+                }, params);
             }
             break;
             case R.id.mi_im_clean: {
@@ -176,5 +182,11 @@ public class ZQ_ModifyPersonalInfoFragment extends BaseFragment implements View.
             }
             break;
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        OkHttpClientManager.cancel(tag);
+        super.onDestroyView();
     }
 }

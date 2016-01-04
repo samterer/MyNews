@@ -33,8 +33,6 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
 
     private ActivityLifecycleAction action = new ActivityLifecycleAction(this);
 
-//    protected SwipeBackLayout layout;
-
     protected HttpUtils httpUtils;
     protected SPUtil spu;//
 

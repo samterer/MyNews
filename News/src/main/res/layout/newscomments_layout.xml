@@ -10,32 +10,6 @@
 
     <include layout="@layout/stitle_layout" />
 
-    <LinearLayout
-        android:id="@+id/mycomments_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:visibility="gone">
-
-        <com.hzpd.ui.widget.FontTextView
-            android:id="@+id/mycoms_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:padding="10dp"
-            android:text="我的评论数"
-            android:textSize="16sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.1px"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/light_color_line"
-            android:visibility="gone"/>
-    </LinearLayout>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

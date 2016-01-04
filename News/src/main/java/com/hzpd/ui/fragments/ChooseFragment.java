@@ -37,6 +37,7 @@ import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.ui.widget.RecyclerViewPauseOnScrollListener;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
@@ -53,12 +54,14 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.melnykov.fab.FloatingActionButton;
 import com.news.update.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.okhttp.Request;
 
 import org.lucasr.twowayview.widget.SpacingItemDecoration;
 import org.lucasr.twowayview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -126,6 +129,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
     private boolean pullRefresh;
 
     private int color;
+    private Object tag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -153,6 +157,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
 
         };
         FrameLayout view = (FrameLayout) inflater.inflate(R.layout.choose_fragment, container, false);
+        tag = OkHttpClientManager.getTag();
         TypedValue typedValue = new TypedValue();
         getActivity().getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
         color = typedValue.data;
@@ -308,6 +313,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
     public void onDestroyView() {
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
+        OkHttpClientManager.cancel(tag);
     }
 
     //新闻列表
@@ -348,57 +354,58 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
 
     //TODO 提前获取推荐频道第一页
     public void getChooseNewsJson() {
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-        params.addBodyParameter("tid", "" + NewsChannelBean.TYPE_RECOMMEND);
-        params.addBodyParameter("newTime", App.getInstance().newTime);
-        params.addBodyParameter("oldTime", App.getInstance().oldTime);
-        params.addBodyParameter("Page", "1");
-        params.addBodyParameter("PageSize", "" + pageSize);
+        Map<String, String> params = RequestParamsUtils.getMaps();
+        params.put("siteid", InterfaceJsonfile.SITEID);
+        params.put("tid", "" + NewsChannelBean.TYPE_RECOMMEND);
+        params.put("newTime", App.getInstance().newTime);
+        params.put("oldTime", App.getInstance().oldTime);
+        params.put("Page", "1");
+        params.put("PageSize", "" + pageSize);
         UserBean user = SPUtil.getInstance().getUser();
         if (user != null && !TextUtils.isEmpty(user.getUid())) {
-            params.addBodyParameter("uid", "" + user.getUid());
-            params.addBodyParameter("tagIndex", "" + tagIndex);
-            params.addBodyParameter("pageIndex", "" + pageIndex);
+            params.put("uid", "" + user.getUid());
+            params.put("tagIndex", "" + tagIndex);
+            params.put("pageIndex", "" + pageIndex);
         }
         SPUtil.addParams(params);
-        httpUtils.send(HttpRequest.HttpMethod.POST
+        OkHttpClientManager.postAsyn(tag
                 , InterfaceJsonfile.CHANNEL_RECOMMEND_NEW
-                , params
-                , new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                isRefresh = false;
-                mSwipeRefreshWidget.setRefreshing(false);
-                final JSONObject obj = FjsonUtil
-                        .parseObject(responseInfo.result);
-                if (null != obj) {
-                    setData(obj);
-                    try {
-                        App.getInstance().newTime = obj.getString("newTime");
-                        App.getInstance().oldTime = obj.getString("oldTime");
-                    } catch (Exception e) {
-                    }
-                    List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
-                    if (list != null) {
-                        for (NewsBean bean : list) {
-                            bean.setTid("" + NewsChannelBean.TYPE_RECOMMEND);
-                            bean.setCnname("REKOMENDASI");
+                , new OkHttpClientManager.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        isRefresh = false;
+                        mSwipeRefreshWidget.setRefreshing(false);
+                        final JSONObject obj = FjsonUtil.parseObject(response.toString());
+                        if (null != obj) {
+                            setData(obj);
+                            try {
+                                App.getInstance().newTime = obj.getString("newTime");
+                                App.getInstance().oldTime = obj.getString("oldTime");
+                            } catch (Exception e) {
+                            }
+                            List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
+                            if (list != null) {
+                                for (NewsBean bean : list) {
+                                    bean.setTid("" + NewsChannelBean.TYPE_RECOMMEND);
+                                    bean.setCnname("REKOMENDASI");
+                                }
+                            }
+                            if (null != list) {
+                                new NewsListDbTask(getActivity()).saveList(list, null);
+                            }
                         }
                     }
-                    if (null != list) {
-                        new NewsListDbTask(getActivity()).saveList(list, null);
-                    }
-                }
-            }
 
-            @Override
-            public void onFailure(HttpException error, String msg) {
-                isRefresh = false;
-                pullRefresh = false;
-                mSwipeRefreshWidget.setRefreshing(false);
-            }
-        });
+                    @Override
+                    public void onFailure(Request request, Exception e) {
+                        isRefresh = false;
+                        pullRefresh = false;
+                        mSwipeRefreshWidget.setRefreshing(false);
+                    }
+
+
+                }, params
+        );
     }
 
     //获取新闻list
@@ -407,63 +414,65 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
             mSwipeRefreshWidget.setRefreshing(false);
             return;
         }
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-        params.addBodyParameter("newTime", App.getInstance().newTime);
-        params.addBodyParameter("oldTime", App.getInstance().oldTime);
-        params.addBodyParameter("Page", "" + page);
-        params.addBodyParameter("PageSize", "" + pageSize);
+        Map<String, String> params = RequestParamsUtils.getMaps();
+        params.put("siteid", InterfaceJsonfile.SITEID);
+        params.put("newTime", App.getInstance().newTime);
+        params.put("oldTime", App.getInstance().oldTime);
+        params.put("Page", "" + page);
+        params.put("PageSize", "" + pageSize);
         UserBean user = SPUtil.getInstance().getUser();
         if (user != null && !TextUtils.isEmpty(user.getUid())) {
-            params.addBodyParameter("uid", "" + user.getUid());
-            params.addBodyParameter("tagIndex", "" + tagIndex);
-            params.addBodyParameter("pageIndex", "" + pageIndex);
+            params.put("uid", "" + user.getUid());
+            params.put("tagIndex", "" + tagIndex);
+            params.put("pageIndex", "" + pageIndex);
         }
         SPUtil.addParams(params);
-        httpUtils.send(HttpRequest.HttpMethod.POST
+        OkHttpClientManager.postAsyn(tag
                 , InterfaceJsonfile.CHANNEL_RECOMMEND_NEW
-                , params
-                , new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                loading = false;
-                isRefresh = false;
-                if (!isAdded()) {
-                    return;
-                }
-                try {
-                    mSwipeRefreshWidget.setRefreshing(false);
-                    final JSONObject obj = FjsonUtil
-                            .parseObject(responseInfo.result);
-                    if (null != obj) {
-                        setData(obj);//处理数据
+                , new OkHttpClientManager.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        loading = false;
+                        isRefresh = false;
+                        if (!isAdded()) {
+                            return;
+                        }
                         try {
-                            if (!TextUtils.isEmpty(obj.getString("newTime"))) {
-                                App.getInstance().newTime = obj.getString("newTime");
-                            } else if (!TextUtils.isEmpty(obj.getString("oldTime"))) {
-                                App.getInstance().oldTime = obj.getString("oldTime");
+                            mSwipeRefreshWidget.setRefreshing(false);
+                            final JSONObject obj = FjsonUtil.parseObject(response.toString());
+                            if (null != obj) {
+                                setData(obj);//处理数据
+                                try {
+                                    if (!TextUtils.isEmpty(obj.getString("newTime"))) {
+                                        App.getInstance().newTime = obj.getString("newTime");
+                                    } else if (!TextUtils.isEmpty(obj.getString("oldTime"))) {
+                                        App.getInstance().oldTime = obj.getString("oldTime");
+                                    }
+                                } catch (Exception e) {
+                                }
                             }
                         } catch (Exception e) {
+                            onFailure(null, null);
                         }
                     }
-                } catch (Exception e) {
-                    onFailure(null, null);
-                }
-            }
 
-            @Override
-            public void onFailure(HttpException error, String msg) {
-                loading = false;
-                isRefresh = false;
-                pullRefresh = false;
-                if (!isAdded()) {
-                    return;
-                }
-                TUtils.toast(getString(R.string.toast_cannot_connect_network));
-                mSwipeRefreshWidget.setRefreshing(false);
-            }
-        });
+                    @Override
+                    public void onFailure(Request request, Exception e) {
+                        loading = false;
+                        isRefresh = false;
+                        pullRefresh = false;
+                        if (!isAdded()) {
+                            return;
+                        }
+                        TUtils.toast(getString(R.string.toast_cannot_connect_network));
+                        mSwipeRefreshWidget.setRefreshing(false);
+                    }
+
+                }, params
+        );
     }
+
+
 
     //服务端返回数据处理
     public void setData(JSONObject obj) {

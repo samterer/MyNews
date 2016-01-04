@@ -12,18 +12,15 @@ import com.hzpd.adapter.MyCommentListAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.MyCommentListBean;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
-import com.lidroid.xutils.util.LogUtils;
+import com.squareup.okhttp.Request;
 
 import java.util.List;
+import java.util.Map;
 
 public class XF_NewsCommentsActivity extends MBaseActivity implements View.OnClickListener {
 
@@ -40,6 +37,7 @@ public class XF_NewsCommentsActivity extends MBaseActivity implements View.OnCli
 
     private int lastVisibleItem;
     private LinearLayoutManager vlinearLayoutManager;
+    private Object tag;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,8 +45,8 @@ public class XF_NewsCommentsActivity extends MBaseActivity implements View.OnCli
         setContentView(R.layout.newscomments_layout);
         super.changeStatusBar();
         nid = getIntent().getStringExtra("News_nid");
-        LogUtils.e("nid--->" + nid);
-
+        Log.i("test", "nid--->" + nid);
+        tag = OkHttpClientManager.getTag();
         initViews();
         getInfoFromServer();
     }
@@ -56,11 +54,10 @@ public class XF_NewsCommentsActivity extends MBaseActivity implements View.OnCli
     private void initViews() {
         stitle_ll_back = findViewById(R.id.stitle_ll_back);
         stitle_ll_back.setOnClickListener(this);
-        stitle_tv_content= (TextView) findViewById(R.id.stitle_tv_content);
+        stitle_tv_content = (TextView) findViewById(R.id.stitle_tv_content);
         stitle_tv_content.setText(getString(R.string.comment));
-        app_progress_bar=findViewById(R.id.app_progress_bar);
-        data_empty= (ImageView) findViewById(R.id.data_empty);
-
+        app_progress_bar = findViewById(R.id.app_progress_bar);
+        data_empty = (ImageView) findViewById(R.id.data_empty);
         recyclerview = (RecyclerView) findViewById(R.id.recyclerview);
         vlinearLayoutManager = new LinearLayoutManager(this);
         vlinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -89,22 +86,19 @@ public class XF_NewsCommentsActivity extends MBaseActivity implements View.OnCli
 
 
     private void getInfoFromServer() {
-        RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("Page", Page + "");
-        params.addBodyParameter("PageSize", PageSize + "");
-        params.addBodyParameter("nid", nid);
-        params.addBodyParameter("type", "News");
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+        Map<String, String> params = RequestParamsUtils.getMaps();
+        params.put("Page", Page + "");
+        params.put("PageSize", PageSize + "");
+        params.put("nid", nid);
+        params.put("type", "News");
+        params.put("siteid", InterfaceJsonfile.SITEID);
         SPUtil.addParams(params);
-        httpUtils.send(HttpRequest.HttpMethod.POST
-                , InterfaceJsonfile.CHECKCOMMENT
-                , params
-                , new RequestCallBack<String>() {
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.CHECKCOMMENT, new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
+            public void onSuccess(Object response) {
+                Log.i("test", "onSuccess");
                 app_progress_bar.setVisibility(View.GONE);
-                LogUtils.i("data-->" + responseInfo.result);
-                JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
+                JSONObject obj = FjsonUtil.parseObject(response.toString());
                 myCommentListAdapter.setShowLoading(false);
                 if (null == obj) {
                     data_empty.setVisibility(View.VISIBLE);
@@ -125,12 +119,14 @@ public class XF_NewsCommentsActivity extends MBaseActivity implements View.OnCli
             }
 
             @Override
-            public void onFailure(HttpException error, String msg) {
+            public void onFailure(Request request, Exception e) {
+                Log.i("test", "onFailure");
                 data_empty.setVisibility(View.VISIBLE);
                 app_progress_bar.setVisibility(View.GONE);
                 myCommentListAdapter.setShowLoading(false);
             }
-        });
+
+        }, params);
     }
 
     @Override
@@ -141,5 +137,11 @@ public class XF_NewsCommentsActivity extends MBaseActivity implements View.OnCli
             }
             break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        OkHttpClientManager.cancel(tag);
+        super.onDestroy();
     }
 }

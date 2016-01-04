@@ -17,6 +17,7 @@ import com.hzpd.modle.TagBean;
 import com.hzpd.modle.event.TagEvent;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.DisplayOptionFactory;
@@ -31,8 +32,10 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.LogUtils;
 import com.news.update.Utils;
+import com.squareup.okhttp.Request;
 
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -54,6 +57,7 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
     NewsItemListViewAdapter.CallBack callBack;
     boolean addLoading = false;
     private View cover_top;
+    private Object tag;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +70,7 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
         } else {
             cover_top.setVisibility(View.VISIBLE);
         }
-
+        tag = OkHttpClientManager.getTag();
         initView();
 
         getIntentContent();
@@ -122,17 +126,16 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
     }
 
     private void getNewsServer() {
-
         details_tag_layout.setVisibility(View.VISIBLE);
-        RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("tagId", tagBean.getId() + "");
-        params.addBodyParameter("page", page + "");
-        params.addBodyParameter("pageSize", pageSize + "");
+        Map<String, String> params = RequestParamsUtils.getMapWithU();
+        params.put("tagId", tagBean.getId() + "");
+        params.put("page", page + "");
+        params.put("pageSize", pageSize + "");
         SPUtil.addParams(params);
-        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.tag_news_url, params, new RequestCallBack<String>() {
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.tag_news_url, new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
+            public void onSuccess(Object response) {
+                JSONObject obj = FjsonUtil.parseObject(response.toString());
                 if (null == obj) {
                     news_nonetwork.setVisibility(View.VISIBLE);
                     return;
@@ -159,11 +162,13 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
             }
 
             @Override
-            public void onFailure(HttpException e, String s) {
+            public void onFailure(Request request, Exception e) {
 
             }
-        });
+
+        }, params);
     }
+
 
     private TagBean tagBean;
     private boolean isFollowed;
@@ -213,32 +218,39 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
                         details_tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
                         details_tv_subscribe.setText(getString(R.string.discovery_followed));
                         EventBus.getDefault().post(new TagEvent(tagBean));
-                        RequestParams params = RequestParamsUtils.getParamsWithU();
+                        Map<String, String> params = RequestParamsUtils.getMapWithU();
                         if (spu.getUser() != null) {
-                            params.addBodyParameter("uid", spu.getUser().getUid() + "");
+                            params.put("uid", spu.getUser().getUid() + "");
                         }
-                        params.addBodyParameter("tagId", tagBean.getId() + "");
+                        params.put("tagId", tagBean.getId() + "");
                         SPUtil.addParams(params);
 
-                        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.tag_click_url, params, new RequestCallBack<String>() {
+                        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.tag_click_url, new OkHttpClientManager.ResultCallback() {
                             @Override
-                            public void onSuccess(ResponseInfo<String> responseInfo) {
+                            public void onSuccess(Object response) {
+                                if (response == null) {
+                                    return;
+                                }
+                                Log.i("response", "response" + response.toString());
                                 JSONObject obj = null;
                                 try {
-                                    obj = JSONObject.parseObject(responseInfo.result);
+                                    obj = JSONObject.parseObject(response.toString());
                                 } catch (Exception e) {
                                     return;
                                 }
+                                if (obj == null) {
+                                    return;
+                                }
                                 if (200 == obj.getIntValue("code")) {
-
                                 }
                             }
 
                             @Override
-                            public void onFailure(HttpException error, String msg) {
+                            public void onFailure(Request request, Exception e) {
                                 LogUtils.i("isCollection failed");
                             }
-                        });
+
+                        }, params);
                     }
                 }
             });
@@ -286,5 +298,9 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
         AAnim.ActivityStartAnimation(this);
     }
 
-
+    @Override
+    protected void onDestroy() {
+        OkHttpClientManager.cancel(tag);
+        super.onDestroy();
+    }
 }

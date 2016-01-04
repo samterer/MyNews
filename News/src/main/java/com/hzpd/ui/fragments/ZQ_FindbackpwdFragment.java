@@ -17,17 +17,16 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.CipherUtils;
 import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.lidroid.xutils.util.LogUtils;
+import com.squareup.okhttp.Request;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -52,12 +51,19 @@ public class ZQ_FindbackpwdFragment extends BaseFragment implements View.OnClick
     private int t = 120;
     private String verify;
     private View stitle_ll_back;
+    private Object tag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.findpwdback_layout, container,
                 false);
+        initViews(view);
+        tag = OkHttpClientManager.getTag();
+        return view;
+    }
+
+    private void initViews(View view) {
         stitle_tv_content = (TextView) view.findViewById(R.id.stitle_tv_content);
         findpwdback_root_ll = (LinearLayout) view.findViewById(R.id.findpwdback_root_ll);
         fpb_ll_vertify = (LinearLayout) view.findViewById(R.id.fpb_ll_veify);
@@ -74,7 +80,6 @@ public class ZQ_FindbackpwdFragment extends BaseFragment implements View.OnClick
         fpb_bt_submmit.setOnClickListener(this);
         stitle_ll_back = view.findViewById(R.id.stitle_ll_back);
         stitle_ll_back.setOnClickListener(this);
-        return view;
     }
 
     private Handler handler = new Handler() {
@@ -231,29 +236,22 @@ public class ZQ_FindbackpwdFragment extends BaseFragment implements View.OnClick
 
                 verify = fpb_et_sms_id.getText().toString();
 
-                LogUtils.i("sms-->" + verify);
+                Log.i("test", "sms-->" + verify);
                 if (verify == null || "".equals(verify)) {
                     TUtils.toast(getString(R.string.toast_captcha_cannot_be_empty));
                     return;
                 }
 
-                RequestParams params = new RequestParams();
-                params.addBodyParameter("mobile", phoneNumber);
-                params.addBodyParameter("verify", verify);
+                Map<String, String> params = new HashMap<>();
+                params.put("mobile", phoneNumber);
+                params.put("verify", verify);
 
-                httpUtils.send(HttpMethod.POST
-                        , InterfaceJsonfile.SMS_VERIFY
-                        , params
-                        , new RequestCallBack<String>() {
+                OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.SMS_VERIFY, new OkHttpClientManager.ResultCallback() {
                     @Override
-                    public void onSuccess(ResponseInfo<String> responseInfo) {
-                        String json = responseInfo.result;
-
-                        LogUtils.i("loginSubmit-->" + json);
-
-
-                        JSONObject obj = FjsonUtil
-                                .parseObject(responseInfo.result);
+                    public void onSuccess(Object response) {
+                        String json = response.toString();
+                        Log.i("", "loginSubmit-->" + json);
+                        JSONObject obj = FjsonUtil.parseObject(json);
                         if (null != obj) {
                             if (200 == obj.getIntValue("code")) {
                                 handler.sendEmptyMessage(444);
@@ -266,10 +264,12 @@ public class ZQ_FindbackpwdFragment extends BaseFragment implements View.OnClick
                     }
 
                     @Override
-                    public void onFailure(HttpException error, String msg) {
+                    public void onFailure(Request request, Exception e) {
 
                     }
-                });
+
+
+                }, params);
 
             }
             break;
@@ -300,30 +300,24 @@ public class ZQ_FindbackpwdFragment extends BaseFragment implements View.OnClick
                     fpb_et_pwd_id2.setText("");
                     return;
                 }
-                RequestParams params = RequestParamsUtils.getParamsWithU();
+                Map<String, String> params = RequestParamsUtils.getMapWithU();
                 if (null != spu.getUser()) {
-                    params.addBodyParameter("token", spu.getUser().getToken());
+                    params.put("token", spu.getUser().getToken());
                 }
 
                 String code = CipherUtils.base64Encode(CipherUtils.base64Encode(phoneNumber)
                         + "_" + CipherUtils.md5(phoneNumber + verify + "99cms")
                         + "_" + System.currentTimeMillis() / 1000);
 
-                params.addBodyParameter("code", code);
-                params.addBodyParameter("new_pwd", s);
-                params.addBodyParameter("is_ucenter", "1");
+                params.put("code", code);
+                params.put("new_pwd", s);
+                params.put("is_ucenter", "1");
 
-                httpUtils.send(HttpMethod.POST, InterfaceJsonfile.CHANGEPWD// InterfaceApi.mSmsReset
-                        , params, new RequestCallBack<String>() {
+                OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.CHANGEPWD// InterfaceApi.mSmsReset
+                        , new OkHttpClientManager.ResultCallback() {
                     @Override
-                    public void onFailure(HttpException arg0, String arg1) {
-                        TUtils.toast(getString(R.string.toast_cannot_connect_network));
-                    }
-
-                    @Override
-                    public void onSuccess(ResponseInfo<String> arg0) {
-                        LogUtils.i("findpwdback-getcode->" + arg0.result);
-                        JSONObject obj = FjsonUtil.parseObject(arg0.result);
+                    public void onSuccess(Object response) {
+                        JSONObject obj = FjsonUtil.parseObject(response.toString());
                         if (null == obj) {
                             TUtils.toast(getString(R.string.toast_server_error));
                             return;
@@ -340,7 +334,13 @@ public class ZQ_FindbackpwdFragment extends BaseFragment implements View.OnClick
                             TUtils.toast(getString(R.string.toast_password_change_failed));
                         }
                     }
-                });
+
+                    @Override
+                    public void onFailure(Request request, Exception e) {
+                        TUtils.toast(getString(R.string.toast_cannot_connect_network));
+                    }
+
+                }, params);
             }
 
             break;
@@ -349,5 +349,11 @@ public class ZQ_FindbackpwdFragment extends BaseFragment implements View.OnClick
             }
             break;
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        OkHttpClientManager.cancel(tag);
+        super.onDestroyView();
     }
 }

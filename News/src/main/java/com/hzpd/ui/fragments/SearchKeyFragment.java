@@ -102,6 +102,7 @@ public class SearchKeyFragment extends BaseFragment {
         adapter.setData(keys);
         if (keys == null) {
             final File target = App.getFile(App.getInstance().getJsonFileCacheRootDir() + File.separator + "saerch_keys");
+            Log.i("target.getAbsolutePath()","target.getAbsolutePath()"+target.getAbsolutePath());
             try {
                 String json = App.getFileContext(target);
                 Log.e("test", json);

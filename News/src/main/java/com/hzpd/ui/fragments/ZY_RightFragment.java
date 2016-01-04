@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.facebook.CallbackManager;
@@ -23,7 +22,6 @@ import com.facebook.login.DefaultAudience;
 import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 import com.hzpd.custorm.CircleImageView;
-import com.hzpd.hflt.BuildConfig;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.ThirdLoginBean;
 import com.hzpd.modle.UserBean;
@@ -38,6 +36,7 @@ import com.hzpd.ui.activity.RecentlyReadActivity;
 import com.hzpd.ui.activity.SettingActivity;
 import com.hzpd.ui.activity.ZQ_FeedBackActivity;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.AvoidOnClickFastUtils;
@@ -49,17 +48,13 @@ import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
-import com.lidroid.xutils.util.LogUtils;
 import com.sithagi.countrycodepicker.CountryPicker;
 import com.sithagi.countrycodepicker.CountryPickerListener;
+import com.squareup.okhttp.Request;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
@@ -105,6 +100,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
     private View zy_rfrag_ll_night;
     private View zy_rfrag_ll_read;
 
+    private Object tag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -112,6 +108,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
         try {
             view = inflater.inflate(R.layout.zy_rightfragment, container, false);
             initViews(view);
+            tag=OkHttpClientManager.getTag();
             String name = SPUtil.getCountryName();
             String countryname = name.toUpperCase().charAt(0) + name.substring(1, name.length());
             personal_item_text.setText("" + countryname);
@@ -192,7 +189,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
         }
 
         if (null != spu.getUser()) {
-            LogUtils.i("userimg-->" + spu.getUser().getAvatar_path());
+            Log.i("test","userimg-->" + spu.getUser().getAvatar_path());
             SPUtil.displayImage(spu.getUser().getAvatar_path(), zy_rfrag_iv_login,
                     DisplayOptionFactory.getOption(OptionTp.Avatar));
             zy_rfrag_tv_login.setText("" + spu.getUser().getNickname());
@@ -202,21 +199,21 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
     }
 
     public void thirdlogin(ThirdLoginBean tlb) {
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("userid", tlb.getUserid());
-        params.addBodyParameter("gender", tlb.getGender());
-        params.addBodyParameter("nickname", tlb.getNickname());
-        params.addBodyParameter("photo", tlb.getPhoto());
-        params.addBodyParameter("third", tlb.getThird());
-        params.addBodyParameter("is_ucenter", "0");
+        Map<String ,String > params = RequestParamsUtils.getMaps();
+        params.put("userid", tlb.getUserid());
+        params.put("gender", tlb.getGender());
+        params.put("nickname", tlb.getNickname());
+        params.put("photo", tlb.getPhoto());
+        params.put("third", tlb.getThird());
+        params.put("is_ucenter", "0");
         SPUtil.addParams(params);
-        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.thirdLogin, params,
-                new RequestCallBack<String>() {
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.thirdLogin,
+                new OkHttpClientManager.ResultCallback() {
                     @Override
-                    public void onSuccess(ResponseInfo<String> responseInfo) {
-                        LogUtils.i("result-->" + responseInfo.result);
+                    public void onSuccess(Object response) {
+                        Log.i("test","result-->" + response.toString());
                         JSONObject obj = FjsonUtil
-                                .parseObject(responseInfo.result);
+                                .parseObject(response.toString());
                         if (null == obj) {
                             return;
                         }
@@ -230,10 +227,11 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
                     }
 
                     @Override
-                    public void onFailure(HttpException error, String msg) {
-                        LogUtils.e("test login failed");
+                    public void onFailure(Request request, Exception e) {
+                       Log.i("test","test login failed");
                     }
-                });
+
+                }, params);
     }
 
     ProfileTracker profileTracker = new ProfileTracker() {
@@ -257,7 +255,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
                     e.printStackTrace();
                 }
             } else {
-                android.util.Log.e("test", "oldProfile " + oldProfile);
+                Log.i("test", "oldProfile " + oldProfile);
                 spu.setUser(null);
 
                 zy_rfrag_tv_login.setText(R.string.prompt_login_now);
@@ -266,6 +264,12 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
         }
     };
 
+
+    @Override
+    public void onDestroyView() {
+        OkHttpClientManager.cancel(tag);
+        super.onDestroyView();
+    }
 
     final LoginManager loginManager = LoginManager.getInstance();
     private List<String> permissions = Arrays.asList("public_profile", "user_friends");
@@ -338,9 +342,6 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
             }
             break;
             case R.id.zy_rfrag_ll_night: {
-                if (BuildConfig.DEBUG) {
-                    Toast.makeText(getActivity(), "修改中。。。", Toast.LENGTH_SHORT).show();
-                }
                 if (isChangeSkin) {
                     night_mode.setText(getResources().getString(R.string.night_mode));
                     image_skin_mode.setImageResource(R.drawable.personal_icon_night);
@@ -386,16 +387,16 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
                 setLogin();
             } else if (action.equals(ZY_RightFragment.ACTION_QUIT)) {
                 setQuit();
-                LogUtils.i("setquit");
+                Log.i("test","setquit");
             } else if (action.equals(ZY_RightFragment.ACTION_QUIT_LOGIN)) {
                 setQuit();
-                LogUtils.i("setquitlogin");
+                Log.i("test","setquitlogin");
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         zy_rfrag_ll_login.performClick();
-                        LogUtils.i("r_login_layout.callOnClick()");
+                        Log.i("test","r_login_layout.callOnClick()");
                     }
                 }, 500);
             }
@@ -403,7 +404,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void setLogin() {
-        LogUtils.i("imgUrl-->" + spu.getUser().getAvatar_path() + "  name-->" + spu.getUser().getNickname());
+        Log.i("test","imgUrl-->" + spu.getUser().getAvatar_path() + "  name-->" + spu.getUser().getNickname());
         SPUtil.displayImage(spu.getUser().getAvatar_path(), zy_rfrag_iv_login,
                 DisplayOptionFactory.getOption(OptionTp.Avatar));
         zy_rfrag_tv_login.setText(spu.getUser().getNickname());
@@ -411,10 +412,10 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
         JPushInterface.setAlias(activity, spu.getUser().getUid(), new TagAliasCallback() {
             @Override
             public void gotResult(int arg0, String arg1, Set<String> arg2) {
-                LogUtils.i("arg0-->" + arg0 + " arg1-->" + arg1);
+                Log.i("test","arg0-->" + arg0 + " arg1-->" + arg1);
                 if (arg2 != null) {
                     for (String s : arg2) {
-                        LogUtils.i("arg2->" + s);
+                        Log.i("test","arg2->" + s);
                     }
                 }
             }
@@ -428,10 +429,10 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
         JPushInterface.setAlias(activity, "", new TagAliasCallback() {
             @Override
             public void gotResult(int arg0, String arg1, Set<String> arg2) {
-                LogUtils.i("arg0-->" + arg0 + " arg1-->" + arg1);
+                Log.i("test","arg0-->" + arg0 + " arg1-->" + arg1);
                 if (arg2 != null) {
                     for (String s : arg2) {
-                        LogUtils.i("arg2->" + s);
+                        Log.i("test","arg2->" + s);
                     }
                 }
             }

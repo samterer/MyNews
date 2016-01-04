@@ -5,7 +5,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="?xf_login_bg_drawable">
+       android:background="?title_bar_color">
 
         <ImageView
             android:id="@+id/xf_pinfo_iv_back"

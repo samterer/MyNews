@@ -6,15 +6,6 @@
     android:orientation="vertical">
 
 
-    <ImageView
-        android:layout_width="80dp"
-        android:layout_height="31dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/xf_icon_ta"
-        android:visibility="gone" />
-    <!--android:background="#666666"-->
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recylerlist"
         android:layout_width="match_parent"

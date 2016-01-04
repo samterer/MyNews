@@ -80,10 +80,6 @@ public class CollectionAdapter extends ListBaseAdapter<CollectionJsonBean> {
 
         CollectionJsonBean cb = list.get(position);
         CollectionDataBean cdb = cb.getData();
-        if (cb != null)
-            Log.e("CollectionJsonBean", "CollectionJsonBean--->" + cb.toString());
-        else
-            Log.e("CollectionJsonBean", "CollectionJsonBean--->null");
         TypedValue typedValue = new TypedValue();
         context.getTheme().resolveAttribute(R.attr.item_title, typedValue, true);
         int color = typedValue.data;
@@ -139,13 +135,13 @@ public class CollectionAdapter extends ListBaseAdapter<CollectionJsonBean> {
                     holder.newsitem_title.setText(cdb.getTitle());
                 }
                 if (cdb.getImgs() != null && cdb.getImgs().length > 0) {
-                    Log.e("getImgs", "getImgs" + cdb.getImgs().length + "::::" + cdb.getTitle());
+                    Log.i("getImgs", "getImgs" + cdb.getImgs().length + "::::" + cdb.getTitle());
                     String s[] = cdb.getImgs();
                     holder.newsitem_title.setPadding(App.px_15dp, 0, 0, 0);
                     holder.ll_tag.setPadding(App.px_15dp, 0, 0, 0);
                     SPUtil.displayImage(s[0], holder.newsitem_img1, DisplayOptionFactory.getOption(OptionTp.Small));
                 } else {
-                    Log.e("cdb.getImgs()", "cdb.getImgs()--->" + cdb.getTitle());
+                    Log.i("cdb.getImgs()", "cdb.getImgs()--->" + cdb.getTitle());
                     holder.newsitem_img1.setVisibility(View.GONE);
                     holder.newsitem_title.setPadding(0, 0, 0, App.px_15dp);
                     holder.ll_tag.setPadding(0, 0, 0, 0);

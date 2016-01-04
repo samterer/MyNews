@@ -19,6 +19,7 @@ import com.hzpd.services.InitService;
 import com.hzpd.ui.App;
 import com.hzpd.ui.fragments.welcome.AdFlashFragment;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
@@ -34,10 +35,12 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.news.update.UpdateService;
 import com.news.update.Utils;
+import com.squareup.okhttp.Request;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -53,6 +56,7 @@ public class WelcomeActivity extends MWBaseActivity {
     private volatile int done;
     private volatile boolean exists;
     private Fragment fragment;
+    private Object tag;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +82,7 @@ public class WelcomeActivity extends MWBaseActivity {
         } else {
             done += 2;
         }
+        tag = OkHttpClientManager.getTag();
     }
 
     @Override
@@ -229,26 +234,26 @@ public class WelcomeActivity extends MWBaseActivity {
             loadMainUI();
             return;
         }
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-        params.addBodyParameter("tid", "" + NewsChannelBean.TYPE_RECOMMEND);
-        params.addBodyParameter("Page", "1");
-        params.addBodyParameter("PageSize", "15");
+        Map<String, String> params = RequestParamsUtils.getMaps();
+        params.put("siteid", InterfaceJsonfile.SITEID);
+        params.put("tid", "" + NewsChannelBean.TYPE_RECOMMEND);
+        params.put("Page", "1");
+        params.put("PageSize", "15");
         UserBean user = SPUtil.getInstance().getUser();
         if (user != null && !TextUtils.isEmpty(user.getUid())) {
-            params.addBodyParameter("uid", "" + user.getUid());
-            params.addBodyParameter("tagIndex", "1");
-            params.addBodyParameter("pageIndex", "1");
+            params.put("uid", "" + user.getUid());
+            params.put("tagIndex", "1");
+            params.put("pageIndex", "1");
         }
         SPUtil.addParams(params);
-        HttpHandler httpHandler = httpUtils.send(HttpRequest.HttpMethod.POST
+        OkHttpClientManager.postAsyn(tag
                 , InterfaceJsonfile.CHANNEL_RECOMMEND_NEW
-                , params
-                , new RequestCallBack<String>() {
+                , new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
+            public void onSuccess(Object response) {
+                Log.i("onSuccess","onSuccess");
                 final JSONObject obj = FjsonUtil
-                        .parseObject(responseInfo.result);
+                        .parseObject(response.toString());
                 if (null != obj && obj.getIntValue("code") == 200) {
                     try {
                         App.getInstance().newTime = obj.getString("newTime");
@@ -269,11 +274,10 @@ public class WelcomeActivity extends MWBaseActivity {
             }
 
             @Override
-            public void onFailure(HttpException error, String msg) {
+            public void onFailure(Request request, Exception e) {
                 loadMainUI();
             }
-        });
-        handlerList.add(httpHandler);
+        }, params);
     }
 
     //	直接添加本地频道

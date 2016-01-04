@@ -21,6 +21,7 @@ import com.hzpd.ui.activity.NewsAlbumActivity;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.ZhuanTiActivity;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
@@ -28,15 +29,10 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.HttpHandler;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.lidroid.xutils.util.LogUtils;
+import com.squareup.okhttp.Request;
 
 import java.util.List;
+import java.util.Map;
 
 public class MySearchFragment extends BaseFragment implements View.OnClickListener {
 
@@ -53,12 +49,15 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
     public static final String is_Refresh = "is_Refresh";
     String con;
 
+    private Object tag;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View mView = inflater.inflate(R.layout.search_main_layout, container, false);
-        recyclerView= (RecyclerView) mView.findViewById(R.id.search_listview_id);
-        loadingView=mView.findViewById(R.id.app_progress_bar);
+        recyclerView = (RecyclerView) mView.findViewById(R.id.search_listview_id);
+        loadingView = mView.findViewById(R.id.app_progress_bar);
+        tag = OkHttpClientManager.getTag();
         return mView;
     }
 
@@ -142,26 +141,22 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
         getSearchData(con);
     }
 
-
     public void getSearchData(String content) {
 
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-        params.addBodyParameter("content", content);
-        params.addBodyParameter("Page", "" + page);
-        params.addBodyParameter("PageSize", "" + pageSize);
+        Map<String, String> params = RequestParamsUtils.getMaps();
+        params.put("siteid", InterfaceJsonfile.SITEID);
+        params.put("content", content);
+        params.put("Page", "" + page);
+        params.put("PageSize", "" + pageSize);
         SPUtil.addParams(params);
-        HttpHandler httpHandler = httpUtils.send(HttpMethod.POST
-                , InterfaceJsonfile.SEARCH
-                , params
-                , new RequestCallBack<String>() {
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.SEARCH, new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
+            public void onSuccess(Object response) {
                 if (!isAdded()) {
                     return;
                 }
                 loadingView.setVisibility(View.GONE);
-                JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
+                JSONObject obj = FjsonUtil.parseObject(response.toString());
                 if (null == obj) {
                     TUtils.toast(getString(R.string.toast_no_data_now));
                     return;
@@ -176,7 +171,7 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
                         TUtils.toast(getString(R.string.toast_no_data_now));
                         return;
                     }
-                    LogUtils.i("l size-->" + l.size() + ":::" + l.get(0).toString());
+                    Log.i("test", "l size-->" + l.size() + ":::" + l.get(0).toString());
 //                    recyclerView.setAdapter(null);
 //                    adapter.clear();
                     adapter.appendData(l, false, false);
@@ -186,14 +181,13 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
                         adapter.notifyItemRemoved(count);
                     }
                     if (l.size() < pageSize) {
-                        LogUtils.i("PULL_FROM_START");
+                        Log.i("test", "PULL_FROM_START");
                     } else {
-                        LogUtils.i("both");
+                        Log.i("test", "both");
                         adapter.showLoading = true;
                     }
                     adapter.notifyDataSetChanged();
                 } else {
-//                    TUtils.toast(obj.getString("msg"));
                     if (!isRefresh) {
                         page--;
                     }
@@ -201,7 +195,7 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
             }
 
             @Override
-            public void onFailure(HttpException error, String msg) {
+            public void onFailure(Request request, Exception e) {
                 if (!isAdded()) {
                     return;
                 }
@@ -211,10 +205,15 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
                     page--;
                 }
             }
-        });
-        handlerList.add(httpHandler);
+        }, params);
+
     }
 
+    @Override
+    public void onDestroyView() {
+        OkHttpClientManager.cancel(tag);
+        super.onDestroyView();
+    }
 
     @Override
     public void onClick(View view) {

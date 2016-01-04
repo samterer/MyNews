@@ -18,6 +18,7 @@ import com.hzpd.modle.MycommentsBean;
 import com.hzpd.modle.XF_UserInfoBean;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.FjsonUtil;
@@ -33,8 +34,12 @@ import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.squareup.okhttp.Request;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class MyCommentsActivity extends MBaseActivity implements View.OnClickListener {
 
@@ -47,7 +52,6 @@ public class MyCommentsActivity extends MBaseActivity implements View.OnClickLis
     private NumberProgressBar xf_pinfo_npb;//进度条
     private TextView xf_pinfo_tv_regtime;//注册时间
     private TextView xf_pinfo_tv_levelup;//升级提示
-
     private View app_progress_bar;
 
     @Override
@@ -67,15 +71,14 @@ public class MyCommentsActivity extends MBaseActivity implements View.OnClickLis
     private MycommentsAdapter adapter;
     private View coverTop;
     private View stitle_ll_back;
+    private Object tag;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mycomment_layout);
         super.changeStatusBar();
-
         initViews();
-
         coverTop = findViewById(R.id.cover_top);
         if (App.getInstance().getThemeName().equals("0")) {
             coverTop.setVisibility(View.GONE);
@@ -84,8 +87,8 @@ public class MyCommentsActivity extends MBaseActivity implements View.OnClickLis
         }
         stitle_tv_content.setText(R.string.comment_mine);
         listView = (ListView) findViewById(R.id.list_view);
+        tag = OkHttpClientManager.getTag();
         setHeadView();
-
         listView.setEmptyView(pushmsg_tv_empty);
         adapter = new MycommentsAdapter(this);
         listView.setAdapter(adapter);
@@ -136,6 +139,7 @@ public class MyCommentsActivity extends MBaseActivity implements View.OnClickLis
 
     @Override
     protected void onDestroy() {
+        OkHttpClientManager.cancel(tag);
         super.onDestroy();
     }
 
@@ -145,22 +149,21 @@ public class MyCommentsActivity extends MBaseActivity implements View.OnClickLis
         if (spu.getUser() == null) {
             return;
         }
-
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("uid", "" + spu.getUser().getUid());
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+        Map<String, String> params = new HashMap<>();
+        params.put("uid", "" + spu.getUser().getUid());
+        params.put("siteid", InterfaceJsonfile.SITEID);
         SPUtil.addParams(params);
-        httpUtils.send(HttpMethod.POST
-                , InterfaceJsonfile.XF_USERINFO
-                , params
-                , new RequestCallBack<String>() {
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.XF_USERINFO, new OkHttpClientManager.ResultCallback<String>() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                String json = responseInfo.result;
-                android.util.Log.i("getUserInfoFromServer", json.toString());
+            public void onFailure(Request request, Exception e) {
 
+            }
+
+            @Override
+            public void onSuccess(String response) {
+                android.util.Log.i("getUserInfoFromServer", response.toString());
                 JSONObject obj = FjsonUtil
-                        .parseObject(responseInfo.result);
+                        .parseObject(response);
                 if (null != obj) {
                     if (200 == obj.getIntValue("code")) {
                         userInfoBean = FjsonUtil.parseObject(obj.getString("data")
@@ -171,12 +174,7 @@ public class MyCommentsActivity extends MBaseActivity implements View.OnClickLis
                 } else {
                 }
             }
-
-            @Override
-            public void onFailure(HttpException error, String msg) {
-
-            }
-        });
+        }, params);
     }
 
     private void setUserInfo() {
@@ -205,12 +203,11 @@ public class MyCommentsActivity extends MBaseActivity implements View.OnClickLis
 
         xf_pinfo_npb.setMax(maxProgress);
         xf_pinfo_npb.setProgress(progress);
-
-        android.util.Log.e("test", userInfoBean.getAvatar_path());
-        SPUtil.displayImage(userInfoBean.getAvatar_path()
-                , xf_pinfo_iv_avatar
-                , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Avatar));
-
+        if (!TextUtils.isEmpty(userInfoBean.getAvatar_path())) {
+            SPUtil.displayImage(userInfoBean.getAvatar_path()
+                    , xf_pinfo_iv_avatar
+                    , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Avatar));
+        }
         xf_pinfo_tv_nickname.setText(userInfoBean.getNickname());
         xf_pinfo_tv_level_alias.setText("" + userInfoBean.getAlias());
         xf_pinfo_tv_regtime.setText(getString(R.string.sgin_time) + userInfoBean.getRegtime());
@@ -218,34 +215,31 @@ public class MyCommentsActivity extends MBaseActivity implements View.OnClickLis
 
     private void getInfoFromServer() {
         if (null == spu.getUser()) {
-//            TUtils.toast(getString(R.string.toast_please_login));
             return;
         }
         String uid = spu.getUser().getUid();
-
-        LogUtils.e("uid" + uid);
-
-        String siteid = null;
-        String myComm_url = null;
-        siteid = InterfaceJsonfile.SITEID;
-        myComm_url = InterfaceJsonfile.XF_MYCOMMENTS;
-        RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("uid", uid);
-        params.addBodyParameter("siteid", siteid);
-        params.addBodyParameter("Page", Page + "");
-        params.addBodyParameter("PageSize", PageSize + "");
-        params.addBodyParameter("session", "");
+        Map<String, String> params = RequestParamsUtils.getMapWithU();
+        params.put("uid", uid);
+        params.put("siteid", InterfaceJsonfile.SITEID);
+        params.put("Page", Page + "");
+        params.put("PageSize", PageSize + "");
+        params.put("session", "");
         SPUtil.addParams(params);
-        httpUtils.send(HttpMethod.POST
-                , myComm_url
-                , params
-                , new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                app_progress_bar.setVisibility(View.GONE);
-                LogUtils.i("data-->" + responseInfo.result);
-                JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.XF_MYCOMMENTS
 
+                , new OkHttpClientManager.ResultCallback() {
+            @Override
+            public void onFailure(Request request, Exception e) {
+                if (!mFlagRefresh) {
+                    app_progress_bar.setVisibility(View.GONE);
+                    Page--;
+                }
+            }
+
+            @Override
+            public void onSuccess(Object response) {
+                app_progress_bar.setVisibility(View.GONE);
+                JSONObject obj = FjsonUtil.parseObject(response.toString());
                 if (null == obj) {
                     return;
                 }
@@ -276,16 +270,9 @@ public class MyCommentsActivity extends MBaseActivity implements View.OnClickLis
                 } else {
                 }
             }
-
-            @Override
-            public void onFailure(HttpException error, String msg) {
-                if (!mFlagRefresh) {
-                    app_progress_bar.setVisibility(View.GONE);
-                    Page--;
-                }
-            }
-        });
+        }, params);
     }
+
 
     @Override
     public void onClick(View v) {

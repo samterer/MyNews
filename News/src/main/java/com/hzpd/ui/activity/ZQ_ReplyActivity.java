@@ -12,8 +12,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.ReplayBean;
 import com.hzpd.modle.db.NewsBeanDB;
-import com.hzpd.modle.event.UpdateNewsBeanDbEvent;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.EventUtils;
@@ -28,8 +28,9 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
+import com.squareup.okhttp.Request;
 
-import de.greenrobot.event.EventBus;
+import java.util.Map;
 
 public class ZQ_ReplyActivity extends MBaseActivity implements View.OnClickListener {
     @Override
@@ -47,6 +48,7 @@ public class ZQ_ReplyActivity extends MBaseActivity implements View.OnClickListe
     private View loadingView;
     private RelativeLayout rl_share1;
     private View zq_reply_tv_send;
+    private Object tag;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,7 @@ public class ZQ_ReplyActivity extends MBaseActivity implements View.OnClickListe
             bean = (ReplayBean) intent.getSerializableExtra("replay");
         }
         super.changeStatusBar();
-        
+        tag= OkHttpClientManager.getTag();
         initViews();
 
         rl_share1.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +95,7 @@ public class ZQ_ReplyActivity extends MBaseActivity implements View.OnClickListe
 
     @Override
     protected void onDestroy() {
+        OkHttpClientManager.cancel(tag);
         super.onDestroy();
     }
 
@@ -112,36 +115,31 @@ public class ZQ_ReplyActivity extends MBaseActivity implements View.OnClickListe
 
     // 发表评论
     private void sendComment(final String content, final String comcount) {
-
         spu.getUser();
-        RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("uid", spu.getUser().getUid());
-//        params.addBodyParameter("uid","53");
-        params.addBodyParameter("title", bean.getTitle());
-        params.addBodyParameter("type", bean.getType());//"News"
-        params.addBodyParameter("nid", bean.getId());
-        params.addBodyParameter("content", content);
-        params.addBodyParameter("json_url", bean.getJsonUrl());
-        params.addBodyParameter("smallimg", bean.getImgUrl());
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+        Map<String ,String> params = RequestParamsUtils.getMapWithU();
+        params.put("uid", spu.getUser().getUid());
+        params.put("title", bean.getTitle());
+        params.put("type", bean.getType());//"News"
+        params.put("nid", bean.getId());
+        params.put("content", content);
+        params.put("json_url", bean.getJsonUrl());
+        params.put("smallimg", bean.getImgUrl());
+        params.put("siteid", InterfaceJsonfile.SITEID);
         SPUtil.addParams(params);
-        httpUtils.send(HttpMethod.POST
-                , InterfaceJsonfile.PUBLISHCOMMENT// InterfaceApi.mSendComment
-                , params, new RequestCallBack<String>() {
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.PUBLISHCOMMENT, new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onFailure(HttpException arg0, String arg1) {
-                Log.i("msg", arg1);
+            public void onFailure(Request request, Exception e) {
                 loadingView.setVisibility(View.GONE);
                 TUtils.toast(getString(R.string.toast_server_no_response));
             }
 
             @Override
-            public void onSuccess(ResponseInfo<String> arg0) {
-                LogUtils.i("news-comment-->" + arg0.result);
+            public void onSuccess(Object response) {
+                LogUtils.i("news-comment-->" + response.toString());
                 loadingView.setVisibility(View.GONE);
                 JSONObject obj = null;
                 try {
-                    obj = JSONObject.parseObject(arg0.result);
+                    obj = JSONObject.parseObject(response.toString());
                 } catch (Exception e) {
                     return;
                 }
@@ -149,7 +147,6 @@ public class ZQ_ReplyActivity extends MBaseActivity implements View.OnClickListe
                 if (200 == obj.getIntValue("code")) {
                     setComcountsId(bean.getId(), comcount);
                     TUtils.toast(getString(R.string.comment_ok));
-                    EventBus.getDefault().post(new UpdateNewsBeanDbEvent("Update_OK"));
                     Intent resultIntent = new Intent();
                     Bundle bundle = new Bundle();
                     bundle.putString("result", content);
@@ -162,7 +159,7 @@ public class ZQ_ReplyActivity extends MBaseActivity implements View.OnClickListe
                     TUtils.toast(getString(R.string.toast_fail_to_comment));
                 }
             }
-        });
+        }, params);
     }
 
     public void setComcountsId(String nid, String comcount) {

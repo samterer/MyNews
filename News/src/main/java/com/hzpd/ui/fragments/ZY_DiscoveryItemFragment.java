@@ -83,7 +83,7 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
 
     private void getDiscoveryServer() {
 
-        RequestParams params = RequestParamsUtils.getParamsWithU();
+        RequestParams params = RequestParamsUtils.getParams();
         params.addBodyParameter("Page", Page + "");
         params.addBodyParameter("PageSize", pageSize + "");
         SPUtil.addParams(params);

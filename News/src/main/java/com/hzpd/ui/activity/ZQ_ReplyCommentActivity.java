@@ -12,6 +12,7 @@ import android.widget.EditText;
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.Log;
@@ -27,6 +28,9 @@ import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.squareup.okhttp.Request;
+
+import java.util.Map;
 
 public class ZQ_ReplyCommentActivity extends MBaseActivity implements View.OnClickListener {
 
@@ -39,6 +43,7 @@ public class ZQ_ReplyCommentActivity extends MBaseActivity implements View.OnCli
     private View zq_reply_tv_cancle;
     private View zq_reply_tv_send;
     private String bean;
+    private Object tag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,7 @@ public class ZQ_ReplyCommentActivity extends MBaseActivity implements View.OnCli
         zq_reply_tv_cancle.setOnClickListener(this);
         zq_reply_tv_send = findViewById(R.id.zq_reply_tv_send);
         zq_reply_tv_send.setOnClickListener(this);
+        tag = OkHttpClientManager.getTag();
         Intent intent = getIntent();
         if (null != intent) {
             bean = intent.getStringExtra("USER_UID");
@@ -86,47 +92,51 @@ public class ZQ_ReplyCommentActivity extends MBaseActivity implements View.OnCli
             return;
         }
         String uid = spu.getUser().getUid();
-
-        RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("uid", uid);
-        params.addBodyParameter("type", "2");
-        params.addBodyParameter("nid", bean);
-        params.addBodyParameter("content", content);
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+        Map<String, String> params = RequestParamsUtils.getMapWithU();
+        params.put("uid", uid);
+        params.put("type", "2");
+        params.put("nid", bean);
+        params.put("content", content);
+        params.put("siteid", InterfaceJsonfile.SITEID);
         SPUtil.addParams(params);
-        httpUtils.send(HttpMethod.POST
+        OkHttpClientManager.postAsyn(tag
                 , InterfaceJsonfile.PUBLISHCOMMENTCOMENT// InterfaceApi.mSendComment
-                , params, new RequestCallBack<String>() {
+                , new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onFailure(HttpException arg0, String arg1) {
-                LogUtils.i("arg1-->" + arg1);
-                Log.i("msg", arg1);
-                TUtils.toast(getString(R.string.toast_server_no_response));
-            }
-
-            @Override
-            public void onSuccess(ResponseInfo<String> arg0) {
-                LogUtils.i("news-comment-->" + arg0.result);
+            public void onSuccess(Object response) {
+                if (response == null) {
+                    return;
+                }
+                LogUtils.i("news-comment-->" + response.toString());
                 JSONObject obj = null;
                 try {
-                    obj = JSONObject.parseObject(arg0.result);
+                    obj = JSONObject.parseObject(response.toString());
                 } catch (Exception e) {
                     return;
                 }
-
+                if (obj == null) {
+                    return;
+                }
                 if (200 == obj.getIntValue("code")) {
-//                    TUtils.toast(obj.getString("msg"));
                     EventUtils.sendComment(activity);
                     finish();
                 } else {
                     TUtils.toast(getString(R.string.toast_fail_to_comment));
                 }
             }
-        });
+
+            @Override
+            public void onFailure(Request request, Exception e) {
+                TUtils.toast(getString(R.string.toast_server_no_response));
+            }
+
+        }, params);
     }
+
 
     @Override
     protected void onDestroy() {
+        OkHttpClientManager.cancel(tag);
         super.onDestroy();
     }
 

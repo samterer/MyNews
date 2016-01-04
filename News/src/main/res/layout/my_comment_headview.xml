@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="?xf_login_bg_drawable">
+        android:background="?title_bar_color">
 
         <ImageView
             android:id="@+id/xf_pinfo_iv_back"
@@ -23,7 +23,7 @@
             android:layout_below="@id/xf_pinfo_iv_back"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="45dp"
-            android:src="@drawable/zy_pic_touxiang_new" />
+            android:src="@drawable/personal_icon_avatarr" />
 
         <com.hzpd.ui.widget.FontTextView
             android:id="@+id/xf_pinfo_tv_nickname"
