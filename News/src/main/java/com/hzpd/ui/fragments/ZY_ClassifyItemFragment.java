@@ -20,6 +20,7 @@ import com.hzpd.modle.TagBean;
 import com.hzpd.modle.event.ClassifItemEvent;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
@@ -31,8 +32,10 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
+import com.squareup.okhttp.Request;
 
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -54,6 +57,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
     private int lastVisibleItem;
     private FrameLayout progress_container;
     private LinearLayoutManager vlinearLayoutManager;
+    private Object tag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,6 +69,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
         View view = null;
         try {
             view = inflater.inflate(R.layout.zy_classify_item_fragment, container, false);
+            tag= OkHttpClientManager.getTag();
             progress_container = (FrameLayout) view.findViewById(R.id.progress_container);
             hRecyclerView = (RecyclerView) view.findViewById(R.id.id_recyclerview_horizontal);
             //设置布局管理器
@@ -163,23 +168,25 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
      */
     private void getClassifyHorServer() {
 
-        final RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("Page", String.valueOf(Page));
-        params.addBodyParameter("PageSize", String.valueOf(pageSize));
+        final Map<String,String> params = RequestParamsUtils.getMaps();
+        params.put("Page", String.valueOf(Page));
+        params.put("PageSize", String.valueOf(pageSize));
         SPUtil.addParams(params);
-        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.classify_top_url, params, new RequestCallBack<String>() {
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.classify_top_url, new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                parseJson(responseInfo.result);
+            public void onSuccess(Object response) {
+                parseJson(response.toString());
                 if (isAdded()) {
-                    SharePreferecesUtils.setParam(getActivity(), KEY_CATEGERY, responseInfo.result);
+                    SharePreferecesUtils.setParam(getActivity(), KEY_CATEGERY, response.toString());
                 }
             }
 
             @Override
-            public void onFailure(HttpException e, String s) {
+            public void onFailure(Request request, Exception e) {
+
             }
-        });
+
+        }, params);
     }
 
     public void parseJson(String json) {
@@ -239,29 +246,30 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
             parseJsonTag(json);
             releaseHandler();
         }
-        RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("categoryId", id);
-        params.addBodyParameter("Page", String.valueOf(vPage));
-        params.addBodyParameter("PageSize", String.valueOf(tpageSize));
+        Map<String,String> params = RequestParamsUtils.getMaps();
+        params.put("categoryId", id);
+        params.put("Page", String.valueOf(vPage));
+        params.put("PageSize", String.valueOf(tpageSize));
         SPUtil.addParams(params);
-        handler = httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.classify_url, params, new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                progress_container.setVisibility(View.GONE);
-                sampleAdapter.setShowLoading(false);
-                parseJsonTag(responseInfo.result);
-                if (vPage == 1) {
-                    if (isAdded()) {
-                        SharePreferecesUtils.setParam(getActivity(), KEY_CATEGERY + id, responseInfo.result);
-                    }
-                }
-            }
+       OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.classify_url, new OkHttpClientManager.ResultCallback() {
+           @Override
+           public void onSuccess(Object response) {
+               progress_container.setVisibility(View.GONE);
+               sampleAdapter.setShowLoading(false);
+               parseJsonTag(response.toString());
+               if (vPage == 1) {
+                   if (isAdded()) {
+                       SharePreferecesUtils.setParam(getActivity(), KEY_CATEGERY + id, response.toString());
+                   }
+               }
+           }
 
-            @Override
-            public void onFailure(HttpException e, String s) {
-                sampleAdapter.setShowLoading(false);
-            }
-        });
+           @Override
+           public void onFailure(Request request, Exception e) {
+               sampleAdapter.setShowLoading(false);
+           }
+
+       }, params);
         handlerList.add(handler);
     }
 
@@ -352,5 +360,11 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
         int left = holder.itemView.getLeft();
         adapter.last = holder;
         hRecyclerView.smoothScrollBy(left - target, 0);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        OkHttpClientManager.cancel(tag);
     }
 }

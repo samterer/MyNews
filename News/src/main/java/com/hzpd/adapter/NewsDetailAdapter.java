@@ -6,11 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.ListView;
 
 import com.hzpd.hflt.R;
 import com.hzpd.ui.activity.NewsDetailActivity;
-import com.hzpd.ui.widget.FixedListView;
 
 /**
  */

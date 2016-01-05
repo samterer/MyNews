@@ -18,23 +18,20 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.SubjectItemColumnsBean;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
+import com.squareup.okhttp.Request;
 
 import java.util.List;
+import java.util.Map;
 
 public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
 
-    private static final String tag = "ZhuanTiActivity";
     private View stitle_ll_back;
     private TextView stitle_tv_content;
 
@@ -48,8 +45,8 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
     RecyclerView mRecyclerView;
     private ImageView zhuanti_header_iv;
     private TextView zhuanti_tv_title;
-
     private ListView zhuanti_item_listview;
+    private Object tag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +54,7 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
         setContentView(R.layout.subject_detail_layout);
         super.changeStatusBar();
         getIntentData();//获取传值
-
+        tag = OkHttpClientManager.getTag();
         stitle_ll_back = findViewById(R.id.stitle_ll_back);
         stitle_ll_back.setOnClickListener(new OnClickListener() {
             @Override
@@ -97,21 +94,21 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
 
     //专题栏目列表
     public void getColumns() {
-        Log.i(tag, "getColumns:" + nb.getNid());
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("sid", nb.getNid());
-        params.addBodyParameter("page", "" + page);
-        params.addBodyParameter("pagesize", "" + pageSize);
+        Log.i("test", "getColumns:" + nb.getNid());
+        Map<String, String> params = RequestParamsUtils.getMaps();
+        params.put("sid", nb.getNid());
+        params.put("page", "" + page);
+        params.put("pagesize", "" + pageSize);
         SPUtil.addParams(params);
-        httpUtils.send(HttpMethod.POST
+        OkHttpClientManager.postAsyn(tag
                 , InterfaceJsonfile.SUBJECTCOLUMNSLIST
-                , params
-                , new RequestCallBack<String>() {
+
+                , new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                Log.i(tag, "onSuccess");
+            public void onSuccess(Object response) {
+                Log.i("test", "onSuccess");
                 JSONObject obj = FjsonUtil
-                        .parseObject(responseInfo.result);
+                        .parseObject(response.toString());
                 if (null == obj) {
                     return;
                 }
@@ -126,7 +123,7 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
                     }
                     if (null != columnList && columnList.size() > 0) {
                         for (SubjectItemColumnsBean sicb : columnList) {
-                            Log.i(tag, "ZhuanTi   SubjectItemColumnsBean" + sicb.toString());
+                            Log.i("test", "ZhuanTi   SubjectItemColumnsBean" + sicb.toString());
                             getServerList(sicb);
 //                            getDbList(sicb);
                         }
@@ -136,30 +133,29 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
             }
 
             @Override
-            public void onFailure(HttpException error, String msg) {
-                Log.i(tag, "onFailure");
+            public void onFailure(Request request, Exception e) {
+                Log.i("test", "onFailure");
             }
-        });
+        }, params);
     }
 
     //获取专题子分类list
     public void getServerList(final SubjectItemColumnsBean columnid) {
-        Log.i(tag, "ZhuanTi  getServerList");
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-        params.addBodyParameter("columnid", columnid.getCid());
+        Log.i("test", "ZhuanTi  getServerList");
+        Map<String, String> params = RequestParamsUtils.getMaps();
+        params.put("siteid", InterfaceJsonfile.SITEID);
+        params.put("columnid", columnid.getCid());
         SPUtil.addParams(params);
-        httpUtils.send(HttpMethod.POST
+        OkHttpClientManager.postAsyn(tag
                 , InterfaceJsonfile.NEWSLIST
-                , params
-                , new RequestCallBack<String>() {
+
+                , new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                Log.i(tag, "onSuccess");
-                final JSONObject obj = FjsonUtil
-                        .parseObject(responseInfo.result);
+            public void onSuccess(Object response) {
+                Log.i("test", "onSuccess");
+                final JSONObject obj = FjsonUtil.parseObject(response.toString());
                 if (null == obj) {
-                    Log.i(tag, "null == obj");
+                    Log.i("test", "null == obj");
                     return;
                 }
                 JSONObject cache = obj.getJSONObject("cachetime");
@@ -172,10 +168,10 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
             }
 
             @Override
-            public void onFailure(HttpException error, String msg) {
-                Log.i(tag, "onFailure");
+            public void onFailure(Request request, Exception e) {
+                Log.i("test", "onFailure");
             }
-        });
+        }, params);
     }
 
 
@@ -186,6 +182,7 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        OkHttpClientManager.cancel(tag);
     }
 
     //点击操作

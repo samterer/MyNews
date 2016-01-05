@@ -28,13 +28,16 @@ import cn.jpush.android.api.JPushInterface;
  * 2) 接收不到自定义消息
  */
 public class MyReceiver extends BroadcastReceiver {
+
     private static final String TAG = "JPush";
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
+        if (bundle == null) {
+            return;
+        }
         Log.e(TAG, "[MyReceiver] onReceive - " + intent.getAction() + ", 信息extras: " + printBundle(bundle));
-
         String title = "";
         String extra = "";
         for (String key : bundle.keySet()) {
@@ -46,56 +49,42 @@ public class MyReceiver extends BroadcastReceiver {
                 extra = bundle.getString(key);
             }
         }
-
         JSONObject object = null;
         String type = null;
-        String id = null;
-
-        LogUtils.e("JpushReceiver：extra-->" + extra);
+        Log.e(TAG,"JpushReceiver：extra-->" + extra);
         object = FjsonUtil.parseObject(extra);
-
         if (null == object) {
             return;
         }
-
         type = object.getString("atype");
-
         Log.e(TAG, "[MyReceiver] 用户点击打开了通知 " + type);
         if (TextUtils.isEmpty(type)) {
             return;
         }
         NewsBean newsBean = FjsonUtil.parseObject(object.getString("data"), NewsBean.class);
-        List<NewsBean> list=new ArrayList<>();
-        list.add(0,newsBean);
-        if (list!=null&&list.size() != 0) {
-            Log.i("MyReceiver", "MyReceiver" + newsBean.getNid());
+        List<NewsBean> list = new ArrayList<>();
+        list.add(0, newsBean);
+        if (list != null && list.size() != 0) {
+            Log.i(TAG, "MyReceiver" + newsBean.getNid());
             new PushListDbTask(context).saveList(list, new I_Result() {
                 @Override
                 public void setResult(Boolean flag) {
-                    Log.i("", "PushDB" + flag);
+                    Log.i(TAG, "PushDB" + flag);
                 }
             });
         }
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
             Log.e(TAG, "[MyReceiver] 接收Registration Id : " + regId);
-            //send the Registration Id to your server...
-
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
             Log.e(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
-//        	processCustomMessage(context, bundle);
-
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
             Log.e(TAG, "[MyReceiver] 接收到推送下来的通知");
             int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
-
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
             Log.e(TAG, "[MyReceiver] 用户点击打开了通知");
             Log.e(TAG, "[MyReceiver] 用户点击打开了通知 " + bundle.getString(JPushInterface.EXTRA_EXTRA));
-
-
-
             Intent myintent = null;
             if (type.equals("1")) {
                 myintent = new Intent(context, NewsDetailActivity.class);
@@ -104,17 +93,9 @@ public class MyReceiver extends BroadcastReceiver {
             }
             if (myintent != null) {
                 myintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                LogUtils.e("通知跳转到详情页面成功");
+                Log.e(TAG, "通知跳转到详情页面成功");
                 context.startActivity(myintent);
             }
-
-//        	//打开自定义的Activity
-//        	Intent i = new Intent(context, SettingActivity.class);
-//        	i.putExtras(bundle);
-//        	//i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        	i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
-//        	context.startActivity(i);
-
         } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
             Log.e(TAG, "[MyReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));
             //在这里根据 JPushInterface.EXTRA_EXTRA 的内容处理代码，比如打开新的Activity， 打开一个网页等..
@@ -141,26 +122,4 @@ public class MyReceiver extends BroadcastReceiver {
         }
         return sb.toString();
     }
-
-    //send msg to MainActivity
-//	private void processCustomMessage(Context context, Bundle bundle) {
-//		if (MainActivity.isForeground) {
-//			String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
-//			String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-//			Intent msgIntent = new Intent(MainActivity.MESSAGE_RECEIVED_ACTION);
-//			msgIntent.putExtra(MainActivity.KEY_MESSAGE, message);
-//			if (!ExampleUtil.isEmpty(extras)) {
-//				try {
-//					JSONObject extraJson = new JSONObject(extras);
-//					if (null != extraJson && extraJson.length() > 0) {
-//						msgIntent.putExtra(MainActivity.KEY_EXTRAS, extras);
-//					}
-//				} catch (JSONException e) {
-//
-//				}
-//
-//			}
-//			context.sendBroadcast(msgIntent);
-//		}
-//	}
 }

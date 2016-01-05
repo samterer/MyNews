@@ -26,6 +26,7 @@ import com.hzpd.modle.ReplayBean;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.XF_PInfoActivity;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.Log;
@@ -38,8 +39,11 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.squareup.okhttp.Request;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class XF_NewsCommentsFragment extends BaseFragment implements View.OnClickListener {
@@ -54,6 +58,7 @@ public class XF_NewsCommentsFragment extends BaseFragment implements View.OnClic
     private ReplayBean bean;
 
     private String commentItemCid;
+    private Object tag;
 
 
     @Override
@@ -66,6 +71,7 @@ public class XF_NewsCommentsFragment extends BaseFragment implements View.OnClic
         xf_comment_et_comment = (EditText) view.findViewById(R.id.xf_comment_et_comment);
         xf_comment_tv_publish = (TextView) view.findViewById(R.id.xf_comment_tv_publish);
         xf_comment_tv_publish.setOnClickListener(this);
+        tag= OkHttpClientManager.getTag();
 
         return view;
     }
@@ -181,45 +187,43 @@ public class XF_NewsCommentsFragment extends BaseFragment implements View.OnClic
 
 
         xf_comment_tv_publish.setClickable(false);
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("uid", spu.getUser().getUid());
-        params.addBodyParameter("title", bean.getTitle());
-        params.addBodyParameter("type", bean.getType());
-        params.addBodyParameter("nid", bean.getId());
-        params.addBodyParameter("content", content);
-        params.addBodyParameter("json_url", bean.getJsonUrl());
-//		params.addBodyParameter("smallimg", bean.getImgUrl());
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+        Map<String,String> params = new HashMap<>();
+        params.put("uid", spu.getUser().getUid());
+        params.put("title", bean.getTitle());
+        params.put("type", bean.getType());
+        params.put("nid", bean.getId());
+        params.put("content", content);
+        params.put("json_url", bean.getJsonUrl());
+        params.put("siteid", InterfaceJsonfile.SITEID);
         SPUtil.addParams(params);
-        httpUtils.send(HttpMethod.POST
+        OkHttpClientManager.postAsyn(tag
                 , InterfaceJsonfile.PUBLISHCOMMENT// InterfaceApi.mSendComment
-                , params
-                , new RequestCallBack<String>() {
-            @Override
-            public void onFailure(HttpException arg0, String arg1) {
-                LogUtils.i("arg1-->" + arg1);
-                TUtil.toast(activity, "服务器未响应");
-                xf_comment_tv_publish.setClickable(true);
-            }
+                , new OkHttpClientManager.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        LogUtils.i("news-comment-->" + response.toString());
+                        JSONObject obj = FjsonUtil.parseObject(response.toString());
+                        if (null == obj) {
+                            return;
+                        }
 
-            @Override
-            public void onSuccess(ResponseInfo<String> arg0) {
-                LogUtils.i("news-comment-->" + arg0.result);
-                JSONObject obj = FjsonUtil.parseObject(arg0.result);
-                if (null == obj) {
-                    return;
-                }
+                        if (200 == obj.getIntValue("code")) {
+                            TUtil.toast(activity, obj.getString("msg"));
+                            xf_comment_et_comment.setText("");
+                            EventUtils.sendComment(activity);
+                        } else {
+                            TUtil.toast(activity, "评论失败");
+                        }
+                        xf_comment_tv_publish.setClickable(true);
+                    }
 
-                if (200 == obj.getIntValue("code")) {
-                    TUtil.toast(activity, obj.getString("msg"));
-                    xf_comment_et_comment.setText("");
-                    EventUtils.sendComment(activity);
-                } else {
-                    TUtil.toast(activity, "评论失败");
-                }
-                xf_comment_tv_publish.setClickable(true);
-            }
-        });
+                    @Override
+                    public void onFailure(Request request, Exception e) {
+                        TUtil.toast(activity, "服务器未响应");
+                        xf_comment_tv_publish.setClickable(true);
+                    }
+                }, params
+        );
     }
 
     private void reply(String content) {
@@ -229,47 +233,47 @@ public class XF_NewsCommentsFragment extends BaseFragment implements View.OnClic
         }
 
         xf_comment_tv_publish.setClickable(false);
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("uid", spu.getUser().getUid());
-        params.addBodyParameter("title", bean.getTitle());
-        params.addBodyParameter("type", bean.getType());
-        params.addBodyParameter("nid", bean.getId());
-        params.addBodyParameter("cid", commentItemCid);
-        params.addBodyParameter("content", content);
-        params.addBodyParameter("json_url", bean.getJsonUrl());
+        Map<String,String> params = new HashMap<>();
+        params.put("uid", spu.getUser().getUid());
+        params.put("title", bean.getTitle());
+        params.put("type", bean.getType());
+        params.put("nid", bean.getId());
+        params.put("cid", commentItemCid);
+        params.put("content", content);
+        params.put("json_url", bean.getJsonUrl());
 //		params.addBodyParameter("smallimg", bean.getImgUrl());
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+        params.put("siteid", InterfaceJsonfile.SITEID);
         SPUtil.addParams(params);
-        httpUtils.send(HttpMethod.POST
+        OkHttpClientManager.postAsyn(tag
                 , InterfaceJsonfile.PUBLISHCOMMENT// InterfaceApi.mSendComment
-                , params
-                , new RequestCallBack<String>() {
-            @Override
-            public void onFailure(HttpException arg0, String arg1) {
-                LogUtils.i("arg1-->" + arg1);
-                TUtil.toast(activity, "服务器未响应");
-                xf_comment_tv_publish.setClickable(true);
-            }
+                , new OkHttpClientManager.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        LogUtils.i("news-comment-->" + response.toString());
+                        JSONObject obj = FjsonUtil.parseObject(response.toString());
+                        commentItemCid = null;
+                        if (null == obj) {
+                            return;
+                        }
 
-            @Override
-            public void onSuccess(ResponseInfo<String> arg0) {
-                LogUtils.i("news-comment-->" + arg0.result);
-                JSONObject obj = FjsonUtil.parseObject(arg0.result);
-                commentItemCid = null;
-                if (null == obj) {
-                    return;
-                }
+                        if (200 == obj.getIntValue("code")) {
+                            TUtil.toast(activity, obj.getString("msg"));
+                            xf_comment_et_comment.setText("");
+                            EventUtils.sendComment(activity);
+                        } else {
+                            TUtil.toast(activity, "评论失败");
+                        }
+                        xf_comment_tv_publish.setClickable(true);
+                    }
 
-                if (200 == obj.getIntValue("code")) {
-                    TUtil.toast(activity, obj.getString("msg"));
-                    xf_comment_et_comment.setText("");
-                    EventUtils.sendComment(activity);
-                } else {
-                    TUtil.toast(activity, "评论失败");
-                }
-                xf_comment_tv_publish.setClickable(true);
-            }
-        });
+                    @Override
+                    public void onFailure(Request request, Exception e) {
+                        TUtil.toast(activity, "服务器未响应");
+                        xf_comment_tv_publish.setClickable(true);
+                    }
+
+                }, params
+        );
 
 
     }
@@ -320,5 +324,11 @@ public class XF_NewsCommentsFragment extends BaseFragment implements View.OnClic
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        OkHttpClientManager.cancel(tag);
     }
 }

@@ -30,6 +30,7 @@ import com.hzpd.modle.NewsItemBeanForCollection;
 import com.hzpd.modle.VideoItemBean;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
@@ -46,16 +47,18 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
+import com.squareup.okhttp.Request;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author color
  *         推送和收藏页面
  */
 
-public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListener{
+public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListener {
     @Override
     public String getAnalyticPageName() {
         if ("pushmsg".equals(type)) {
@@ -80,6 +83,7 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
     private String type;
     private View coverTop;
     private View stitle_ll_back;
+    private Object tag;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +96,7 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
             super.onCreate(savedInstanceState);
             setContentView(R.layout.mypushmsg_layout);
             initViews();
+            tag = OkHttpClientManager.getTag();
             init();
             if (App.getInstance().getThemeName().equals("0")) {
                 coverTop.setVisibility(View.GONE);
@@ -105,11 +110,11 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
     }
 
     private void initViews() {
-        stitle_ll_back=findViewById(R.id.stitle_ll_back);
+        stitle_ll_back = findViewById(R.id.stitle_ll_back);
         stitle_ll_back.setOnClickListener(this);
-        stitle_tv_content= (TextView) findViewById(R.id.stitle_tv_content);
-        pushmsg_lv= (ListView) findViewById(R.id.pushmsg_lv);
-        pushmsg_tv_empty=findViewById(R.id.pushmsg_tv_empty);
+        stitle_tv_content = (TextView) findViewById(R.id.stitle_tv_content);
+        pushmsg_lv = (ListView) findViewById(R.id.pushmsg_lv);
+        pushmsg_tv_empty = findViewById(R.id.pushmsg_tv_empty);
         findViewById(R.id.mycomments_title).setVisibility(View.GONE);
         coverTop = findViewById(R.id.cover_top);
     }
@@ -318,56 +323,56 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
     //获取数据
     private void getCollectionInfoFromServer() {
         if (null != spu.getUser()) { //登录
-            RequestParams params = RequestParamsUtils.getParamsWithU();
-            params.addBodyParameter("page", Page + "");
-            params.addBodyParameter("pagesize", PageSize + "");
-            params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+            Map<String, String> params = RequestParamsUtils.getMapWithU();
+            params.put("page", Page + "");
+            params.put("pagesize", PageSize + "");
+            params.put("siteid", InterfaceJsonfile.SITEID);
             SPUtil.addParams(params);
-            httpUtils.send(HttpMethod.POST
+            OkHttpClientManager.postAsyn(tag
                     , InterfaceJsonfile.COLLECTIONLIST//InterfaceApi.collection
-                    , params
-                    , new RequestCallBack<String>() {
-                @Override
-                public void onSuccess(ResponseInfo<String> responseInfo) {
-                    try {
-                        LogUtils.i("collection--list-->" + responseInfo.result);
-                        JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
-                        if (null == obj) {
-                            return;
-                        }
-                        if (200 == obj.getIntValue("code")) {
-                            List<CollectionJsonBean> mlist = FjsonUtil.parseArray(obj.getString("data")
-                                    , CollectionJsonBean.class);
-                            LogUtils.e("" + mlist.toString());
-                            if (null == mlist) {
-                                return;
+                    , new OkHttpClientManager.ResultCallback() {
+                        @Override
+                        public void onSuccess(Object response) {
+                            try {
+                                LogUtils.i("collection--list-->" + response.toString());
+                                JSONObject obj = FjsonUtil.parseObject(response.toString());
+                                if (null == obj) {
+                                    return;
+                                }
+                                if (200 == obj.getIntValue("code")) {
+                                    List<CollectionJsonBean> mlist = FjsonUtil.parseArray(obj.getString("data")
+                                            , CollectionJsonBean.class);
+                                    LogUtils.e("" + mlist.toString());
+                                    if (null == mlist) {
+                                        return;
+                                    }
+
+                                    LogUtils.i("listsize-->" + mlist.size());
+
+                                    colladAdapter.appendData(mlist, mFlagRefresh);
+                                    colladAdapter.notifyDataSetChanged();
+
+                                } else {
+                                    if (!mFlagRefresh) {
+                                        Page--;
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
+                            mFlagRefresh = false;
+                        }
 
-                            LogUtils.i("listsize-->" + mlist.size());
-
-                            colladAdapter.appendData(mlist, mFlagRefresh);
-                            colladAdapter.notifyDataSetChanged();
-
-                        } else {
+                        @Override
+                        public void onFailure(Request request, Exception e) {
                             if (!mFlagRefresh) {
                                 Page--;
                             }
+                            mFlagRefresh = false;
+                            TUtils.toast(getString(R.string.toast_cannot_connect_to_server));
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    mFlagRefresh = false;
-                }
-
-                @Override
-                public void onFailure(HttpException error, String msg) {
-                    if (!mFlagRefresh) {
-                        Page--;
-                    }
-                    mFlagRefresh = false;
-                    TUtils.toast(getString(R.string.toast_cannot_connect_to_server));
-                }
-            });
+                    }, params
+            );
         }
     }
 
@@ -407,21 +412,19 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
 
                     //网络获取
                     if (spu.getUser() != null) {
-                        RequestParams params = RequestParamsUtils.getParamsWithU();
-                        params.addBodyParameter("id", cb.getId());
+                        Map<String, String> params = RequestParamsUtils.getMapWithU();
+                        params.put("id", cb.getId());
                         SPUtil.addParams(params);
-                        httpUtils.send(HttpMethod.POST
+                        OkHttpClientManager.postAsyn(tag
                                 , InterfaceJsonfile.DELETECOLLECTION//InterfaceApi.deletecollection
-                                , params
-                                , new RequestCallBack<String>() {
-
+                                , new OkHttpClientManager.ResultCallback() {
 
                             @Override
-                            public void onSuccess(ResponseInfo<String> arg0) {
-                                LogUtils.i("delete reply-->" + arg0.result);
+                            public void onSuccess(Object response) {
+                                LogUtils.i("delete reply-->" + response.toString());
                                 JSONObject obj = null;
                                 try {
-                                    obj = JSONObject.parseObject(arg0.result);
+                                    obj = JSONObject.parseObject(response.toString());
                                 } catch (Exception e) {
                                     return;
                                 }
@@ -435,11 +438,10 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
                             }
 
                             @Override
-                            public void onFailure(HttpException arg0,
-                                                  String arg1) {
+                            public void onFailure(Request request, Exception e) {
                                 TUtils.toast(getString(R.string.toast_cannot_connect_to_server));
                             }
-                        });
+                        }, params);
                     }
                 }
             });
@@ -469,6 +471,7 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         handler.removeCallbacks(null);
+        OkHttpClientManager.cancel(tag);
         super.onDestroy();
     }
 }

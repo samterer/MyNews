@@ -14,15 +14,14 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.vote.Vote_detailMultiPicBean;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.lidroid.xutils.util.LogUtils;
+import com.squareup.okhttp.Request;
+
+import java.util.Map;
 
 public class VotePinfoFragment extends BaseFragment {
 
@@ -38,6 +37,7 @@ public class VotePinfoFragment extends BaseFragment {
 	private String subjectid;
 	private String isRadio;
 	private String actionname;
+	private Object tag;
 
 
 	@Override
@@ -46,6 +46,7 @@ public class VotePinfoFragment extends BaseFragment {
 		vote_detail_tv_right= (TextView) view.findViewById(R.id.vote_detail_tv_right);
 		vote_detail_tv_bottom= (TextView) view.findViewById(R.id.vote_detail_tv_bottom);
 		vote_detail_lv= (ListView) view.findViewById(R.id.vote_detail_lv);
+		tag= OkHttpClientManager.getTag();
 		return view;
 	}
 
@@ -62,17 +63,9 @@ public class VotePinfoFragment extends BaseFragment {
 		subjectid = args.getString("subjectid");
 		isRadio = args.getString("isRadio");
 		actionname = args.getString("actionname");
-
 		androidId = MyCommonUtil.getMyUUID(activity);
-
-
 		adapter = new VoteDetailMultiPicAdapter(activity);
 		vote_detail_lv.setAdapter(adapter);
-
-//		if("1".equals(isRadio)){
-//			vote_detail_bt_submit.setVisibility(View.GONE);
-//		}
-
 		getInfoFromServer();
 
 	}
@@ -80,24 +73,18 @@ public class VotePinfoFragment extends BaseFragment {
 
 	private void getInfoFromServer() {
 
-		RequestParams params = RequestParamsUtils.getParams();
-		params.addBodyParameter("optid", optid);
-		params.addBodyParameter("device", androidId);
+		Map<String,String> params = RequestParamsUtils.getMaps();
+		params.put("optid", optid);
+		params.put("device", androidId);
 
-		httpUtils.send(HttpMethod.POST
+		OkHttpClientManager.postAsyn(tag
 				, InterfaceJsonfile.mOptbyoptid
-				, params
-				, new RequestCallBack<String>() {
+				, new OkHttpClientManager.ResultCallback() {
 			@Override
-			public void onFailure(HttpException arg0, String arg1) {
-				LogUtils.i("");
-			}
+			public void onSuccess(Object response) {
+				Log.e("rest","getInfoFromServer:" + response.toString());
 
-			@Override
-			public void onSuccess(ResponseInfo<String> arg0) {
-				LogUtils.e("getInfoFromServer:" + arg0.result);
-
-				JSONObject obj = FjsonUtil.parseObject(arg0.result);
+				JSONObject obj = FjsonUtil.parseObject(response.toString());
 				if (null == obj) {
 					return;
 				}
@@ -112,8 +99,17 @@ public class VotePinfoFragment extends BaseFragment {
 				}
 
 			}
-		});
+
+			@Override
+			public void onFailure(Request request, Exception e) {
+			}
+		}, params);
 
 	}
 
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		OkHttpClientManager.cancel(tag);
+	}
 }

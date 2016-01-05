@@ -19,7 +19,6 @@ public class SBaseActivity extends FragmentActivity {
 
 	protected ImageLoader mImageLoader;
 
-	protected HttpUtils httpUtils;
 	protected SPUtil spu;//
 
 	protected long startMills;
@@ -36,8 +35,6 @@ public class SBaseActivity extends FragmentActivity {
 
 		activity = this;
 		fm = getSupportFragmentManager();
-
-		httpUtils = SPUtil.getHttpUtils();
 		spu = SPUtil.getInstance();
 		mImageLoader = ImageLoader.getInstance();
 		startMills = System.currentTimeMillis();

@@ -26,8 +26,10 @@ public class FixedImageView extends ImageView {
     @Override
     public void setImageBitmap(Bitmap bm) {
         release();
-        super.setImageBitmap(bm);
-        bitmapDrawable = (BitmapDrawable) getDrawable();
+        if (!bm.isRecycled()) {
+            super.setImageBitmap(bm);
+            bitmapDrawable = (BitmapDrawable) getDrawable();
+        }
     }
 
     @Override

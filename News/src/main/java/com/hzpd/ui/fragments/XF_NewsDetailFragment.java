@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSONObject;
 import com.color.tools.mytools.FileUtil;
 import com.color.tools.mytools.FjsonUtil;
-import com.color.tools.mytools.LogUtils;
 import com.color.tools.mytools.NetworkUtils;
 import com.color.tools.mytools.SystemUtils;
 import com.color.tools.mytools.TUtil;
@@ -35,13 +34,13 @@ import com.hzpd.ui.App;
 import com.hzpd.ui.activity.XF_NewsHtmlDetailActivity;
 import com.hzpd.url.Constant;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.showwebview.MyJavascriptInterface;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
@@ -50,12 +49,13 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.squareup.okhttp.Request;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickListener {
@@ -82,12 +82,14 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
     private DbUtils dbUtils;
 
     private String from;
+    private Object tag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.xf_newshtmldetails_layout, container, false);
         initViews(view);
+        tag = OkHttpClientManager.getTag();
         return view;
     }
 
@@ -188,7 +190,7 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
                         return true;
                     }
                 }
-                LogUtils.i("newsdetail url--->" + url);
+                Log.i("test","newsdetail url--->" + url);
                 view.loadUrl(url);
                 return true;
             }
@@ -293,7 +295,7 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
             }
             break;
             case R.id.xf_newshtmldetail_iv_share: {
-                LogUtils.i("click share");
+                Log.i("test","click share");
                 String imgurl = null;
                 if (null != nb.getImgs() && nb.getImgs().length > 0) {
                     imgurl = nb.getImgs()[0];
@@ -322,17 +324,16 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
     private void getNewsDetails(String tid) {
 
         // 获取列表项
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-        params.addBodyParameter("nid", tid);
-        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.bnewsItem, params,
-                new RequestCallBack<String>() {
+        Map<String, String> params = new HashMap<>();
+        params.put("siteid", InterfaceJsonfile.SITEID);
+        params.put("nid", tid);
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.bnewsItem,
+                new OkHttpClientManager.ResultCallback() {
                     @Override
-                    public void onSuccess(ResponseInfo<String> responseInfo) {
-                        LogUtils.i("result-->" + responseInfo.result);
+                    public void onSuccess(Object response) {
                         JSONObject obj = null;
                         try {
-                            obj = JSONObject.parseObject(responseInfo.result);
+                            obj = JSONObject.parseObject(response.toString());
                         } catch (Exception e) {
                             e.printStackTrace();
                             return;
@@ -351,11 +352,12 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
                     }
 
                     @Override
-                    public void onFailure(com.lidroid.xutils.exception.HttpException e, String s) {
+                    public void onFailure(Request request, Exception e) {
                         TUtil.toast(activity, R.string.toast_server_no_response);
                     }
 
-                });
+
+                }, params);
     }
 
     // 添加收藏
@@ -371,8 +373,8 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
                     dbUtils.save(nibfc);
                     TUtil.toast(activity, "收藏成功");
                     long co = dbUtils.count(NewsItemBeanForCollection.class);
-                    LogUtils.i("num:" + co);
-                    LogUtils.i("type-->" + nibfc.getType());
+                    Log.i("test","num:" + co);
+                    Log.i("test","type-->" + nibfc.getType());
                     xf_newshtmldetail_iv_collection
                             .setImageResource(R.drawable.xf_bt_yishoucang);
                 } else {
@@ -391,7 +393,7 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
 
         xf_newshtmldetail_iv_collection.setImageResource(R.drawable.xf_bt_shoucang);
 
-        LogUtils.i("Type-->" + nb.getType() + "  Fid-->" + nb.getNid());
+        Log.i("test","Type-->" + nb.getType() + "  Fid-->" + nb.getNid());
         RequestParams params = new RequestParams();
         params.addBodyParameter("uid", spu.getUser().getUid());
         params.addBodyParameter("type", "1");
@@ -399,16 +401,16 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
         params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
         params.addBodyParameter("data", nb.getJson_url());
 
-        LogUtils.i("uid-->" + spu.getUser().getUid());
-        LogUtils.i("type-->" + 1);
-        LogUtils.i("typeid-->" + nb.getNid());
-        LogUtils.i("siteid-->" + InterfaceJsonfile.SITEID);
+        Log.i("test","uid-->" + spu.getUser().getUid());
+        Log.i("test","type-->" + 1);
+        Log.i("test","typeid-->" + nb.getNid());
+        Log.i("test","siteid-->" + InterfaceJsonfile.SITEID);
 
         httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.ADDCOLLECTION// InterfaceApi.addcollection
                 , params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                LogUtils.i("result-->" + responseInfo.result);
+                Log.i("test","result-->" + responseInfo.result);
                 JSONObject obj = null;
 
                 try {
@@ -454,7 +456,7 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
         if (FileUtil.getFileSizes(pageFile) > 30) {
 
             String data = App.getFileContext(pageFile);
-            LogUtils.i("data newsdetail cache-->" + data);
+            Log.i("test","data newsdetail cache-->" + data);
             JSONObject obj = FjsonUtil.parseObject(data);
             if (null == obj) {
                 return;
@@ -477,7 +479,7 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
                             TUtil.toast(activity, "请求失败");
                             return;
                         }
-                        LogUtils.i("http data-->" + data);
+                        Log.i("test","http data-->" + data);
                         JSONObject obj = null;
                         try {
                             obj = JSONObject.parseObject(data);
@@ -514,7 +516,7 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
                     params, new RequestCallBack<String>() {
                         @Override
                         public void onSuccess(ResponseInfo<String> responseInfo) {
-                            LogUtils.i("isCollection result-->"
+                            Log.i("test","isCollection result-->"
                                     + responseInfo.result);
                             JSONObject obj = null;
                             try {
@@ -567,7 +569,7 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
                     params, new RequestCallBack<String>() {
                         @Override
                         public void onSuccess(ResponseInfo<String> responseInfo) {
-                            LogUtils.i("isCollection result-->"
+                            Log.i("test","isCollection result-->"
                                     + responseInfo.result);
                             JSONObject obj = null;
                             try {
@@ -629,7 +631,7 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
         }
         xf_newshtmldetail_wv_detail.addJavascriptInterface(new MyJavascriptInterface(activity,
                 newsdetailBean), "imagelistner");
-        LogUtils.i("url-->" + url);
+        Log.i("test","url-->" + url);
         xf_newshtmldetail_wv_detail.loadUrl(url);
 
         getCommentsCounts();//
@@ -647,7 +649,7 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {
                         String json = responseInfo.result;
-                        LogUtils.i("getCommentsCounts-->" + json);
+                        Log.i("test","getCommentsCounts-->" + json);
 
                         JSONObject obj = FjsonUtil
                                 .parseObject(responseInfo.result);
@@ -697,7 +699,7 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {
                         String json = responseInfo.result;
-                        LogUtils.i("addBrowse-->" + json);
+                        Log.i("test","addBrowse-->" + json);
 
                         JSONObject obj = FjsonUtil
                                 .parseObject(responseInfo.result);
@@ -705,15 +707,15 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
                             if (200 == obj.getIntValue("code")) {
                                 JSONObject object = obj.getJSONObject("data");
                                 if (null != object) {
-                                    LogUtils.i("浏览量："
+                                    Log.i("test","浏览量："
                                             + object.getString("v_num"));
                                 }
 
                             } else {
-                                LogUtils.i(obj.getString("msg"));
+                                Log.i("test",obj.getString("msg"));
                             }
                         } else {
-                            LogUtils.i("服务器错误");
+                            Log.i("test","服务器错误");
                         }
                     }
 
@@ -743,7 +745,7 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
                 new RequestCallBack<String>() {
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {
-                        LogUtils.i("praiseArtical-result-->"
+                        Log.i("test","praiseArtical-result-->"
                                 + responseInfo.result);
                         JSONObject obj = FjsonUtil
                                 .parseObject(responseInfo.result);
@@ -755,13 +757,13 @@ public class XF_NewsDetailFragment extends BaseFragment implements View.OnClickL
                             Log.i("praise-->", object.getString("exp"));
                             EventUtils.sendPraise(activity);
                         } else {
-                            LogUtils.i(obj.getString("msg"));
+                            Log.i("test",obj.getString("msg"));
                         }
                     }
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        LogUtils.e("praiseArtical-failed->" + msg);
+                        Log.i("test", "praiseArtical-failed->" + msg);
                     }
                 });
     }

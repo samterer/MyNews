@@ -13,6 +13,7 @@ import com.hzpd.adapter.DiscoveryItemNewAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.DiscoveryItemBean;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
@@ -22,8 +23,10 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
+import com.squareup.okhttp.Request;
 
 import java.util.List;
+import java.util.Map;
 
 public class ZY_DiscoveryItemFragment extends BaseFragment {
 
@@ -38,12 +41,14 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
 
     private int lastVisibleItem;
     private LinearLayoutManager vlinearLayoutManager;
+    private Object tag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = null;
         try {
             view = inflater.inflate(R.layout.zy_discovery_item_fragment, container, false);
+            tag= OkHttpClientManager.getTag();
             discovery_recyclerview = (RecyclerView) view.findViewById(R.id.discovery_recyclerview);
             //设置布局管理器
             vlinearLayoutManager = new LinearLayoutManager(getActivity());
@@ -83,14 +88,14 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
 
     private void getDiscoveryServer() {
 
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("Page", Page + "");
-        params.addBodyParameter("PageSize", pageSize + "");
+        Map<String,String> params = RequestParamsUtils.getMaps();
+        params.put("Page", Page + "");
+        params.put("PageSize", pageSize + "");
         SPUtil.addParams(params);
-        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.discovery_url, params, new RequestCallBack<String>() {
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.discovery_url, new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
+            public void onSuccess(Object response) {
+                JSONObject obj = FjsonUtil.parseObject(response.toString());
                 if (null == obj) {
                     return;
                 }
@@ -111,16 +116,16 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
                         }
                     }
                     newAdapter.appendData(mlist, false);
-                }else {
+                } else {
                     Page--;
                 }
             }
 
             @Override
-            public void onFailure(HttpException e, String s) {
+            public void onFailure(Request request, Exception e) {
                 Page--;
             }
-        });
+        }, params);
     }
 
     @Override
@@ -135,4 +140,9 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
     }
 
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        OkHttpClientManager.cancel(tag);
+    }
 }

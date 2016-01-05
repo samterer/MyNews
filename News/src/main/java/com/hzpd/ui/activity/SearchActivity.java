@@ -30,6 +30,7 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.util.LogUtils;
+import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
 
@@ -37,7 +38,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -46,6 +49,8 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
     public static final String TAG_KEY = "key";
 
     private String tagcontext;
+
+    private Object tag;
 
     @Override
     public String getAnalyticPageName() {
@@ -59,6 +64,7 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
         handleIntent();
         addView();
         getKeys();
+        tag = OkHttpClientManager.getTag();
         super.changeStatusBar();
     }
 
@@ -76,18 +82,18 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
 
     private void getKeys() {
         try {
-            final File target = App.getFile(App.getInstance().getJsonFileCacheRootDir() + File.separator + "saerch_keys");
-            Log.i("target.getAbsolutePath()", "target.getAbsolutePath()" + target.getAbsolutePath());
-            RequestParams requestParams = new RequestParams();
-            requestParams.addQueryStringParameter("Pagesize", "10");
-            HttpHandler httpHandler = httpUtils.download(InterfaceJsonfile.SEARCH_KEY,
-                    target.getAbsolutePath(),
-                    new RequestCallBack<File>() {
+//            final File target = App.getFile(App.getInstance().getJsonFileCacheRootDir() + File.separator + "saerch_keys");
+//            Log.i("target.getAbsolutePath()", "target.getAbsolutePath()" + target.getAbsolutePath());
+            Map<String, String> requestParams = new HashMap<>();
+            requestParams.put("Pagesize", "10");
+            OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.SEARCH_KEY,
+                    new OkHttpClientManager.ResultCallback() {
                         @Override
-                        public void onSuccess(ResponseInfo<File> responseInfo) {
+                        public void onSuccess(Object response) {
                             //TODO 获取关键词
                             try {
-                                String json = App.getFileContext(responseInfo.result);
+//                             String json = App.getFileContext(responseInfo.result);
+                                String json = response.toString();
                                 saveFile(json);
                                 Log.e("test", json);
                                 org.json.JSONArray jsonArray = new JSONObject(json).getJSONArray("data");
@@ -106,12 +112,14 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
                         }
 
                         @Override
-                        public void onFailure(HttpException e, String s) {
+                        public void onFailure(Request request, Exception e) {
 
                         }
-                    }
+
+
+                    }, requestParams
+
             );
-            handlerList.add(httpHandler);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -119,9 +127,8 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
     }
 
     public static void saveFile(String str) {
-        final File target = App.getFile(App.getInstance().getJsonFileCacheRootDir() + File.separator + "saerch_keys1111");
+        final File target = App.getFile(App.getInstance().getJsonFileCacheRootDir() + File.separator + "saerch_keys");
         String filePath = target.getAbsolutePath();
-
         try {
             File file = new File(filePath);
             if (!file.exists()) {
@@ -213,6 +220,7 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
             searchApp();
         }
     }
+
 
     private void changeFragment() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
@@ -327,6 +335,7 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
         editText.setAdapter(null);
         editText = null;
         adapter = null;
+        OkHttpClientManager.cancel(tag);
         super.onDestroy();
     }
 

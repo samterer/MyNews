@@ -19,6 +19,7 @@ import com.hzpd.custorm.GridViewInScrollView;
 import com.hzpd.hflt.R;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.CODE;
 import com.hzpd.utils.FjsonUtil;
@@ -31,12 +32,14 @@ import com.lidroid.xutils.http.ResponseStream;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
+import com.squareup.okhttp.Request;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -92,12 +95,13 @@ public class ActionRegisterFragment extends BaseFragment implements View.OnClick
     private String activityid;
     private JSONObject conf;
     private MyasyncUpload myasyncUpload;
+    private Object tag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.action_register_fm_layout, container, false);
         initViews(view);
-
+tag= OkHttpClientManager.getTag();
         return view;
     }
 
@@ -168,15 +172,15 @@ public class ActionRegisterFragment extends BaseFragment implements View.OnClick
     }
 
     private void getInfoFromSever() {
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("activityid", activityid);
-        httpUtils.send(HttpMethod.POST, InterfaceJsonfile.actionConf, params, new RequestCallBack<String>() {
+        Map<String,String> params = RequestParamsUtils.getMaps();
+        params.put("activityid", activityid);
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.actionConf, new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                LogUtils.i("action regconf result-->" + responseInfo.result);
+            public void onSuccess(Object response) {
+                LogUtils.i("action regconf result-->" + response.toString());
                 JSONObject obj = null;
                 try {
-                    obj = JSONObject.parseObject(responseInfo.result);
+                    obj = JSONObject.parseObject(response.toString());
                 } catch (Exception e) {
                     return;
                 }
@@ -190,10 +194,10 @@ public class ActionRegisterFragment extends BaseFragment implements View.OnClick
             }
 
             @Override
-            public void onFailure(HttpException error, String msg) {
+            public void onFailure(Request request, Exception e) {
                 LogUtils.i("action regconf failed");
             }
-        });
+        }, params);
     }
 
     private void conf() {

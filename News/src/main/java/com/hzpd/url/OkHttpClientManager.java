@@ -60,6 +60,20 @@ public class OkHttpClientManager {
         return getInstance()._post(url, params);
     }
 
+    //TODO 异步发送GET请求
+    public static Call getAsyn(Object tag, String url, final ResultCallback callback) {
+        return getInstance()._getAsyn(tag, url, callback);
+    }
+
+    //TODO 同步发送GET请求
+    public static String get(String url) {
+        try {
+            return getInstance()._get(url).body().toString();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     /**
      * 异步的post请求
      *
@@ -93,6 +107,23 @@ public class OkHttpClientManager {
         }
     }
 
+    private Call _getAsyn(Object tag, String url, final ResultCallback callback) {
+        final Request request = new Request.Builder()
+                .url(url)
+                .tag(tag)
+                .build();
+        return deliveryResult(callback, request);
+    }
+
+
+    private Response _get(String url) throws IOException {
+        final Request request = new Request.Builder()
+                .url(url)
+                .build();
+        Call call = mOkHttpClient.newCall(request);
+        Response execute = call.execute();
+        return execute;
+    }
 
     private Call deliveryResult(final ResultCallback callback, Request request) {
         final Call call = mOkHttpClient.newCall(request);

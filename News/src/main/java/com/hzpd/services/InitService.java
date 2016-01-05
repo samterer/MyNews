@@ -22,6 +22,7 @@ import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
 import com.news.update.Utils;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class InitService extends IntentService {
@@ -61,6 +62,7 @@ public class InitService extends IntentService {
         LogUtils.i("initService");
         if (intent != null) {
             if (InitService.InitAction.equals(intent.getAction())) {
+                debugTest();
                 //TODO 获取服务器配置  AD_KEY
             } else if (InitService.UserLogAction.equals(intent.getAction())) {
                 Log.e("test", "send use log");
@@ -97,6 +99,15 @@ public class InitService extends IntentService {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+
+    public void debugTest() {
+        if (BuildConfig.DEBUG) {
+            UserLog userLog = new UserLog("12353", SPUtil.format(Calendar.getInstance()), 3);
+            String json = FjsonUtil.toJsonString(userLog);
+            Log.e("userLog", json);
         }
     }
 }

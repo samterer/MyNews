@@ -2050,9 +2050,9 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             SharePreferecesUtils.setParam(this, StationConfig.DETAILS_LOCATION + nb.getNid(), mWebView.getScrollY());
             SharePreferecesUtils.setParam(this, StationConfig.DETAILS_LOCATION + nb.getNid(), mWebView.getScrollY());
             super.onPause();
-            long totalTile = System.currentTimeMillis() - enterTime;
-            totalTile = totalTile / 1000;
-            AnalyticUtils.sendGaEvent(this, AnalyticUtils.CATEGORY.newsDetail, AnalyticUtils.ACTION.viewPage, PREFIX + nb.getTid() + "#" + nb.getNid(), totalTile);
+            long totalTime = System.currentTimeMillis() - enterTime;
+            totalTime = totalTime / 1000;
+            AnalyticUtils.sendGaEvent(this, AnalyticUtils.CATEGORY.newsDetail, AnalyticUtils.ACTION.viewPage, PREFIX + nb.getTid() + "#" + nb.getNid(), totalTime);
         } catch (Exception e) {
             e.printStackTrace();
         }

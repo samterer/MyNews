@@ -14,6 +14,7 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.XF_UserCommentsBean;
 import com.hzpd.modle.XF_UserInfoBean;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
@@ -23,8 +24,11 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
+import com.squareup.okhttp.Request;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class XF_PersonalInfoFragment extends BaseFragment {
@@ -38,10 +42,13 @@ public class XF_PersonalInfoFragment extends BaseFragment {
     private RecyclerView recylerlist;
     private int lastVisibleItem;
     private LinearLayoutManager vlinearLayoutManager;
+    private Object tag;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.xf_personalinfofm_layout, container, false);
+        tag = OkHttpClientManager.getTag();
         recylerlist = (RecyclerView) view.findViewById(R.id.recylerlist);
         vlinearLayoutManager = new LinearLayoutManager(getActivity());
         recylerlist.setLayoutManager(vlinearLayoutManager);
@@ -82,24 +89,21 @@ public class XF_PersonalInfoFragment extends BaseFragment {
     }
 
     private void getUserInfoFromServer() {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("uid", uid);
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+        Map<String, String> params = new HashMap<>();
+        params.put("uid", uid);
+        params.put("siteid", InterfaceJsonfile.SITEID);
         SPUtil.addParams(params);
-        httpUtils.send(HttpMethod.POST
+        OkHttpClientManager.postAsyn(tag
                 , InterfaceJsonfile.XF_USERINFO
-                , params
-                , new RequestCallBack<String>() {
+                , new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
+            public void onSuccess(Object response) {
                 if (!isAdded()) {
                     return;
                 }
-                String json = responseInfo.result;
+                String json = response.toString();
                 Log.i("getUserInfoFromServer", json.toString());
-
-                JSONObject obj = FjsonUtil
-                        .parseObject(responseInfo.result);
+                JSONObject obj = FjsonUtil.parseObject(json);
                 if (null == obj) {
                     return;
                 }
@@ -107,58 +111,62 @@ public class XF_PersonalInfoFragment extends BaseFragment {
                     userInfoBean = FjsonUtil.parseObject(obj.getString("data")
                             , XF_UserInfoBean.class);
                     Log.i("userInfoBean", "onSuccess  userInfoBean:" + userInfoBean);
-                    adapter = new XF_UserCommentsAdapter(activity,userInfoBean);
+                    adapter = new XF_UserCommentsAdapter(activity, userInfoBean);
                     recylerlist.setAdapter(adapter);
                     getCommentsFromServer();
                 }
             }
 
             @Override
-            public void onFailure(HttpException error, String msg) {
+            public void onFailure(Request request, Exception e) {
 
             }
-        });
+
+        }, params);
     }
 
     private void getCommentsFromServer() {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("uid", uid);
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-        params.addBodyParameter("page", page + "");
-        params.addBodyParameter("pagesize", pagesize + "");
+        Map<String, String> params = new HashMap<>();
+        params.put("uid", uid);
+        params.put("siteid", InterfaceJsonfile.SITEID);
+        params.put("page", page + "");
+        params.put("pagesize", pagesize + "");
         SPUtil.addParams(params);
-        httpUtils.send(HttpMethod.POST
+        OkHttpClientManager.postAsyn(tag
                 , InterfaceJsonfile.XF_MYCOMMENTS
-                , params
-                , new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                String json = responseInfo.result;
-                LogUtils.i("getCommentsFromServer-->" + json);
-
-                JSONObject obj = FjsonUtil
-                        .parseObject(responseInfo.result);
-                if (null != obj) {
-                    page++;
-                    if (200 == obj.getIntValue("code")) {
-                        List<XF_UserCommentsBean> list = FjsonUtil.parseArray(obj.getString("data")
-                                , XF_UserCommentsBean.class);
-                        if (userInfoBean != null) {
-                            Log.i("userInfoBean", "initData  userInfoBean:" + userInfoBean.toString());
+                , new OkHttpClientManager.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        String json = response.toString();
+                        JSONObject obj = FjsonUtil.parseObject(json);
+                        if (null != obj) {
+                            page++;
+                            if (200 == obj.getIntValue("code")) {
+                                List<XF_UserCommentsBean> list = FjsonUtil.parseArray(obj.getString("data")
+                                        , XF_UserCommentsBean.class);
+                                if (userInfoBean != null) {
+                                    Log.i("userInfoBean", "initData  userInfoBean:" + userInfoBean.toString());
+                                }
+                                Log.i("XF_UserCommentsBean", "onSuccess   XF_UserCommentsBean" + list.toString());
+                                adapter.appendData(list, false);
+                            }
+                        } else {
+                            page--;
                         }
-                        Log.i("XF_UserCommentsBean", "onSuccess   XF_UserCommentsBean" + list.toString());
-                        adapter.appendData(list, false);
                     }
-                } else {
-                    page--;
-                }
-            }
 
-            @Override
-            public void onFailure(HttpException error, String msg) {
-                page--;
-            }
-        });
+                    @Override
+                    public void onFailure(Request request, Exception e) {
+                        page--;
+                    }
+                }, params
+        );
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        OkHttpClientManager.cancel(tag);
     }
 
 }

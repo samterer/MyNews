@@ -14,6 +14,7 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.LotteryDrawBean;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
@@ -24,6 +25,9 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
+import com.squareup.okhttp.Request;
+
+import java.util.Map;
 
 public class ActionLotteryFragment extends BaseFragment implements View.OnClickListener {
 
@@ -58,16 +62,23 @@ public class ActionLotteryFragment extends BaseFragment implements View.OnClickL
         }
     };
 
+    private Object tag;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.action_lottery_layout, container, false);
+        initViews(view);
+        tag = OkHttpClientManager.getTag();
+        return view;
+    }
+
+    private void initViews(View view) {
         lotteryv_tv = (TextView) view.findViewById(R.id.lotteryv_tv);
         lotteryv = (LotteryView) view.findViewById(R.id.lotteryv);
         lotteryv_tv_number = (TextView) view.findViewById(R.id.lotteryv_tv_number);
         lotteryv_tv_price = (TextView) view.findViewById(R.id.lotteryv_tv_price);
         lottery_bt = (Button) view.findViewById(R.id.lottery_bt);
         lottery_bt.setOnClickListener(this);
-        return view;
     }
 
     @Override
@@ -87,18 +98,17 @@ public class ActionLotteryFragment extends BaseFragment implements View.OnClickL
     }
 
     private void getInfo() {
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("device", androidId);
-        params.addBodyParameter("subjectid", subjectid);
+        Map<String, String> params = RequestParamsUtils.getMaps();
+        params.put("device", androidId);
+        params.put("subjectid", subjectid);
 
-        httpUtils.send(HttpMethod.POST
+        OkHttpClientManager.postAsyn(tag
                 , InterfaceJsonfile.drawPrice
-                , params
-                , new RequestCallBack<String>() {
+                , new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                LogUtils.i("result-->" + responseInfo.result);
-                JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
+            public void onSuccess(Object response) {
+                LogUtils.i("result-->" + response.toString());
+                JSONObject obj = FjsonUtil.parseObject(response.toString());
 
                 if (null == obj) {
                     return;
@@ -136,10 +146,16 @@ public class ActionLotteryFragment extends BaseFragment implements View.OnClickL
             }
 
             @Override
-            public void onFailure(HttpException error, String msg) {
+            public void onFailure(Request request, Exception e) {
                 TUtils.toast(getString(R.string.toast_server_no_response));
             }
-        });
+        }, params);
+    }
+
+    @Override
+    public void onDestroyView() {
+        OkHttpClientManager.cancel(tag);
+        super.onDestroyView();
     }
 
     @Override

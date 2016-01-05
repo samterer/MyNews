@@ -17,10 +17,12 @@ import com.hzpd.hflt.wxapi.FacebookSharedUtil;
 import com.hzpd.modle.ActionDetailBean;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.CODE;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.TUtils;
@@ -32,6 +34,9 @@ import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.squareup.okhttp.Request;
+
+import java.util.Map;
 
 public class ActionDetailFragment extends BaseFragment implements View.OnClickListener {
 
@@ -46,10 +51,17 @@ public class ActionDetailFragment extends BaseFragment implements View.OnClickLi
 
     private String id;
     private ActionDetailBean adb;
+    private Object tag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.actiondetail_fm_layout, container, false);
+        initViews(view);
+        tag= OkHttpClientManager.getTag();
+        return view;
+    }
+
+    private void initViews(View view) {
         actiondetail_title_tv= (TextView) view.findViewById(R.id.actiondetail_title_tv);
         actiondetail_time_tv= (TextView) view.findViewById(R.id.actiondetail_time_tv);
         actiondetail_content_wv= (WebView) view.findViewById(R.id.actiondetail_content_wv);
@@ -62,7 +74,6 @@ public class ActionDetailFragment extends BaseFragment implements View.OnClickLi
         actiondetail_tv_leto.setOnClickListener(this);
         actiondetail_tv_share= (TextView) view.findViewById(R.id.actiondetail_tv_share);
         actiondetail_tv_share.setOnClickListener(this);
-        return view;
     }
 
     @Override
@@ -78,13 +89,13 @@ public class ActionDetailFragment extends BaseFragment implements View.OnClickLi
 
 
     private void getInfoFromSever() {
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("id", id);
-        httpUtils.send(HttpMethod.POST, InterfaceJsonfile.actionDetail, params, new RequestCallBack<String>() {
+        Map<String,String> params = RequestParamsUtils.getMaps();
+        params.put("id", id);
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.actionDetail, new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                LogUtils.i("action list result-->" + responseInfo.result);
-                JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
+            public void onSuccess(Object response) {
+                LogUtils.i("action list result-->" + response.toString());
+                JSONObject obj = FjsonUtil.parseObject(response.toString());
                 if (null == obj) {
                     return;
                 }
@@ -167,10 +178,10 @@ public class ActionDetailFragment extends BaseFragment implements View.OnClickLi
             }
 
             @Override
-            public void onFailure(HttpException error, String msg) {
-                LogUtils.i("action list failed");
+            public void onFailure(Request request, Exception e) {
+                Log.i("test","action list failed");
             }
-        });
+        }, params);
     }
 
     @Override
@@ -218,5 +229,11 @@ public class ActionDetailFragment extends BaseFragment implements View.OnClickLi
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        OkHttpClientManager.cancel(tag);
+        super.onDestroyView();
     }
 }

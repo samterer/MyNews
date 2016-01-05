@@ -26,20 +26,20 @@ public class UserLog extends BaseDB {
         this.active_time = retentionTime;
     }
 
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
     public String getNewsId() {
         return newsId;
     }
 
     public void setNewsId(String newsId) {
         this.newsId = newsId;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public int getActive_time() {

@@ -21,28 +21,24 @@ import com.hzpd.modle.vote.VoteTitleBean;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.ui.fragments.action.ActionDetailActivity;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.lidroid.xutils.util.LogUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.squareup.okhttp.Request;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class VoteGroupFragment extends BaseFragment {
 
 	private VoteTitleBean vtb;
 
-	private HttpUtils httpUtils;        ////
 
 	private String androidId;    //
 	private String newsid;        //
@@ -69,7 +65,7 @@ public class VoteGroupFragment extends BaseFragment {
 
 	public VoteGroupFragment(VoteTitleBean vtb, String androidId, String newsid
 			, String isVote, String isRadio, Context context, Handler handler, int num, String subjectid) {
-		LogUtils.i("isVote-->" + isVote);
+		Log.i("test","isVote-->" + isVote);
 		this.androidId = androidId;
 		this.newsid = newsid;
 		this.vtb = vtb;
@@ -84,9 +80,6 @@ public class VoteGroupFragment extends BaseFragment {
 		cb_optList = new ArrayList<String>();
 
 		initDownImage();
-		httpUtils = new HttpUtils();
-		httpUtils.configSoTimeout(1000);
-		httpUtils.configTimeout(5000);
 		getPic();
 	}
 
@@ -97,12 +90,14 @@ public class VoteGroupFragment extends BaseFragment {
 	public String getTitleId() {
 		return vtb.getId();
 	}
+	private Object tag;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		inflater = LayoutInflater.from(getActivity());
 		view = inflater.inflate(R.layout.vote_pager_layout, container, false);
 		vote_ll = (LinearLayout) view.findViewById(R.id.vote_ll);
+		tag= OkHttpClientManager.getTag();
 		return view;
 	}
 
@@ -134,7 +129,7 @@ public class VoteGroupFragment extends BaseFragment {
 		for (ItemHolder ih : list) {
 			vote_ll.addView(ih.ll);
 		}
-		LogUtils.i("list-size->" + list.size());
+		Log.i("test","list-size->" + list.size());
 		height = list.size();
 		if (height > 0) {
 			isAdded = true;
@@ -144,26 +139,20 @@ public class VoteGroupFragment extends BaseFragment {
 
 	private void getPic() {
 
-		RequestParams params = RequestParamsUtils.getParams();
-		params.addBodyParameter("device", androidId);
-		params.addBodyParameter("subjectid", vtb.getSubjectid());
-		params.addBodyParameter("tyid", vtb.getId());
-		params.addBodyParameter("page", "1");
-		params.addBodyParameter("pagesize", "300");
-
-		httpUtils.send(HttpMethod.POST
+		Map<String,String> params = RequestParamsUtils.getMaps();
+		params.put("device", androidId);
+		params.put("subjectid", vtb.getSubjectid());
+		params.put("tyid", vtb.getId());
+		params.put("page", "1");
+		params.put("pagesize", "300");
+		OkHttpClientManager.postAsyn(tag
 				, InterfaceJsonfile.mVoteopts
-				, params
-				, new RequestCallBack<String>() {
-			@Override
-			public void onFailure(HttpException arg0, String arg1) {
-				LogUtils.i("获取投票选项列表信息 failed");
-			}
 
+				, new OkHttpClientManager.ResultCallback() {
 			@Override
-			public void onSuccess(ResponseInfo<String> arg0) {
-				LogUtils.i("获取投票选项列表信息-->" + arg0.result);
-				JSONObject obj = JSONObject.parseObject(arg0.result);
+			public void onSuccess(Object response) {
+				Log.i("test","获取投票选项列表信息-->" + response.toString());
+				JSONObject obj = JSONObject.parseObject(response.toString());
 
 				if (200 == obj.getIntValue("code")) {
 					List<VoteItem> vlist = JSONObject.parseArray(obj.getJSONArray("data").toJSONString(), VoteItem.class);
@@ -176,13 +165,18 @@ public class VoteGroupFragment extends BaseFragment {
 						msg.what = 111;
 						msg.obj = (int) (Math.ceil(voteList.size() / 2.0));
 						handler.sendMessage(msg);
-						LogUtils.i("sendMessage");
+						Log.i("test","sendMessage");
 					}
 				} else {
 					TUtils.toast(obj.getString("msg"));
 				}
 			}
-		});
+
+			@Override
+			public void onFailure(Request request, Exception e) {
+				Log.i("test","获取投票选项列表信息 failed");
+			}
+		}, params);
 	}
 
 	public List<ItemHolder> getItemHolder() {
@@ -236,7 +230,7 @@ public class VoteGroupFragment extends BaseFragment {
 		public void setLeft(final VoteItem vi) {
 			viLeft = vi;
 			String lurl = vi.getOption().getImgurl();
-			LogUtils.e("lurl-->" + lurl);
+			Log.e("test","lurl-->" + lurl);
 			mImageLoader.displayImage(lurl, vote_img_touxiang1, displayImageOptions);
 
 //			vote_tv_name1.setText(vi.getOptionid()+"."+vi.getOption().getName());
@@ -266,7 +260,7 @@ public class VoteGroupFragment extends BaseFragment {
 
 			left.setVisibility(View.VISIBLE);
 
-			LogUtils.i("isVoteleft-->" + isVote);
+			Log.i("test","isVoteleft-->" + isVote);
 
 			if ("0".equals(isVote)) {
 				vote_ll_check1.setOnClickListener(new OnClickListener() {
@@ -306,7 +300,7 @@ public class VoteGroupFragment extends BaseFragment {
 		public void setRight(final VoteItem vi) {
 			viRight = vi;
 			String rurl = vi.getOption().getImgurl();
-			LogUtils.e("rurl-->" + rurl);
+			Log.e("test","rurl-->" + rurl);
 			mImageLoader.displayImage(rurl, vote_img_touxiang2, displayImageOptions);
 //			vote_tv_name2.setText(vi.getOptionid()+"."+vi.getOption().getName());
 			vote_tv_name2.setText(vi.getOption().getName());
@@ -335,7 +329,7 @@ public class VoteGroupFragment extends BaseFragment {
 			}
 
 			right.setVisibility(View.VISIBLE);
-			LogUtils.i("isVoteright-->" + isVote);
+			Log.i("test","isVoteright-->" + isVote);
 			if ("0".equals(isVote)) {
 				vote_ll_check2.setOnClickListener(new OnClickListener() {
 					@Override
@@ -483,5 +477,12 @@ public class VoteGroupFragment extends BaseFragment {
 				.bitmapConfig(Config.RGB_565)
 				.displayer(new FadeInBitmapDisplayer(200))
 				.build();
+
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		OkHttpClientManager.cancel(tag);
 	}
 }

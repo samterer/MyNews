@@ -27,6 +27,7 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.db.NewsListDbTask;
+import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.RequestParams;
@@ -91,6 +92,7 @@ public class WelcomeActivity extends MWBaseActivity {
             getSupportFragmentManager().beginTransaction().remove(fragment);
             fragment = null;
         }
+        OkHttpClientManager.cancel(tag);
         super.onDestroy();
     }
 
@@ -106,18 +108,17 @@ public class WelcomeActivity extends MWBaseActivity {
     }
 
     public void getChannelJson() {
-        final String channelCachePath = App.getInstance().getAllDiskCacheDir()
-                + File.separator
-                + SPUtil.getCountry()
-                + File.separator
-                + App.mTitle;
-        final File channelCacheFile = new File(channelCachePath);
         final File target = App.getFile(App.getInstance().getAllDiskCacheDir() + File.separator + SPUtil.getCountry() + File.separator + "News");
-
-        if (channelCacheFile.exists() && channelCacheFile.length() > 30) {
-            exists = true;
-            loadMainUI();
+        List<NewsChannelBeanDB> channelBeanDBs = null;
+        try {
+            channelBeanDBs= dbHelper.getChannelDbUtils().findAll(NewsChannelBeanDB.class);
+            if (channelBeanDBs!=null&&channelBeanDBs.size()>0){
+                loadMainUI();
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
         }
+
         if (!Utils.isNetworkConnected(this)) {
             loadMainUI();
             return;
@@ -251,7 +252,7 @@ public class WelcomeActivity extends MWBaseActivity {
                 , new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-                Log.i("onSuccess","onSuccess");
+                Log.i("onSuccess", "onSuccess");
                 final JSONObject obj = FjsonUtil
                         .parseObject(response.toString());
                 if (null != obj && obj.getIntValue("code") == 200) {

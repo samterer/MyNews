@@ -125,9 +125,11 @@ public class BaseFragment extends Fragment implements AnalyticCallback {
     @Override
     public void onStop() {
         for (HttpHandler httpHandler : handlerList) {
-            if (httpHandler.getState() == HttpHandler.State.LOADING || httpHandler.getState() == HttpHandler.State.STARTED) {
-                httpHandler.setRequestCallBack(null);
-                httpHandler.cancel();
+            if (httpHandler != null) {
+                if (httpHandler.getState() == HttpHandler.State.LOADING || httpHandler.getState() == HttpHandler.State.STARTED) {
+                    httpHandler.setRequestCallBack(null);
+                    httpHandler.cancel();
+                }
             }
         }
         handlerList.clear();

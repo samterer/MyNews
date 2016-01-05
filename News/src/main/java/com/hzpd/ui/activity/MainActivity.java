@@ -123,7 +123,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void onClickIndex(int index) {
-        // TODO Auto-generated method stub
+        int current = viewPager.getCurrentItem();
         viewPager.setCurrentItem(index, false);
         for (int i = 0; i < tv_menu.length; i++) {
             if (index == i) {
@@ -132,7 +132,7 @@ public class MainActivity extends BaseActivity {
                 tv_menu[i].setSelected(false);
             }
         }
-        if (index == 0) {
+        if (index == 0 && current == 0) {
             EventBus.getDefault().post(new RefreshEvent());
         }
     }

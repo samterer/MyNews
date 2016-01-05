@@ -26,27 +26,23 @@ import com.hzpd.modle.vote.VoteTitleBean;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.ui.fragments.action.ActionDetailActivity;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.squareup.okhttp.Request;
 import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -64,6 +60,7 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
     private String subjectid; //
     private MyAdapter adapter;
     private VoteResultDialog dialog;
+    private Object tag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,7 +72,7 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
         vote_info_tv = (TextView) view.findViewById(R.id.vote_info_tv);
         vote_btn_vote = (Button) view.findViewById(R.id.vote_btn_vote);
         vote_btn_vote.setOnClickListener(this);
-
+        tag = OkHttpClientManager.getTag();
         return view;
     }
 
@@ -86,7 +83,7 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
             if (msg.what == 111) {
                 int h = (Integer) msg.obj;
 
-                LogUtils.i("hhh555-->" + h);
+                Log.i("test","hhh555-->" + h);
                 LayoutParams p = pager.getLayoutParams();
                 p.height = (int) MyCommonUtil.dp2px(getResources(), 220);
                 if (h == 0) {
@@ -116,7 +113,7 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
             return;
         }
         subjectid = args.getString("subjectid");
-        LogUtils.i("subjectid-->" + subjectid);
+        Log.i("test","subjectid-->" + subjectid);
 
         androidId = MyCommonUtil.getMyUUID(activity);
 
@@ -130,7 +127,7 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
             public void onPageSelected(int arg0) {
                 int h = adapter.getHeight(arg0);
 
-                LogUtils.i("maxHetght-->" + h);
+                Log.i("test","maxHetght-->" + h);
                 LayoutParams p = pager.getLayoutParams();
                 p.height = (int) MyCommonUtil.dp2px(getResources(), 220);
                 if (h == 0) {
@@ -198,22 +195,15 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
 
     // 获取投票基本信息
     private void getVoteBaseInfo() {
+        Map<String, String> params = RequestParamsUtils.getMaps();
+        params.put("subjectid", subjectid);
+        params.put("device", androidId);
 
-
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("subjectid", subjectid);
-        params.addBodyParameter("device", androidId);
-
-        httpUtils.send(HttpMethod.POST, InterfaceJsonfile.mVoteinfo, params, new RequestCallBack<String>() {
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.mVoteinfo, new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onFailure(HttpException arg0, String arg1) {
-                LogUtils.i("获取投票基本信息 failed!");
-            }
-
-            @Override
-            public void onSuccess(ResponseInfo<String> arg0) {
-                LogUtils.i("获取投票基本信息 -->" + arg0.result);
-                JSONObject obj = FjsonUtil.parseObject(arg0.result);
+            public void onSuccess(Object response) {
+                Log.i("test","获取投票基本信息 -->" + response.toString());
+                JSONObject obj = FjsonUtil.parseObject(response.toString());
 
                 if (null == obj) {
                     return;
@@ -222,13 +212,18 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
                     voteBaseinfo = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), VoteBaseInfo.class);
                     setBaseInfo(voteBaseinfo);
                     String subjectId = voteBaseinfo.getSubjectid();
-                    LogUtils.i("subjectId-->" + subjectId);
+                    Log.i("test","subjectId-->" + subjectId);
                     adapter.setSubjectId(subjectId);
                 } else {
                     TUtils.toast(obj.getString("msg"));
                 }
             }
-        });
+
+            @Override
+            public void onFailure(Request request, Exception e) {
+                Log.i("test","获取投票基本信息 failed!");
+            }
+        }, params);
     }
 
     // 提交投票
@@ -256,15 +251,15 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
                         return;
                     }
                 }
-                RequestParams params = RequestParamsUtils.getParams();
-                params.addBodyParameter("device", androidId);
-                params.addBodyParameter("subjectid", voteBaseinfo.getSubjectid());
-                params.addBodyParameter("type", voteBaseinfo.getType());
+                Map<String,String> params = RequestParamsUtils.getMaps();
+                params.put("device", androidId);
+                params.put("subjectid", voteBaseinfo.getSubjectid());
+                params.put("type", voteBaseinfo.getType());
 
                 if ("0".equals(voteBaseinfo.getType())) {
                     String opt = adapter.getOpt();
-                    params.addBodyParameter("optionid", opt);
-                    LogUtils.i("opt-->" + opt);
+                    params.put("optionid", opt);
+                    Log.i("test","opt-->" + opt);
                 } else {
                     if (adapter.getOptionList().size() > 31) {
                         TUtils.toast(getString(R.string.toast_max_selected_person));
@@ -274,34 +269,19 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
                     for (String s : adapter.getOptionList()) {
                         sb.append(s + ",");
                     }
-                    LogUtils.i("voteString---" + sb.toString());
-                    params.addBodyParameter("optionid", sb.substring(0, sb.length() - 1));
+                    Log.i("test","voteString---" + sb.toString());
+                    params.put("optionid", sb.substring(0, sb.length() - 1));
                 }
 
                 vote_btn_vote.setClickable(false);
-                httpUtils.send(HttpMethod.POST, InterfaceJsonfile.mSetvote, params, new RequestCallBack<String>() {
+                OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.mSetvote, new OkHttpClientManager.ResultCallback() {
                     @Override
-                    public void onFailure(HttpException arg0, String arg1) {
+                    public void onSuccess(Object response) {
                         vote_btn_vote.setClickable(true);
-                    }
-
-                    @Override
-                    public void onSuccess(ResponseInfo<String> arg0) {
-                        vote_btn_vote.setClickable(true);
-                        LogUtils.i("submit-->" + arg0.result);
-                        JSONObject obj = JSONObject.parseObject(arg0.result);
+                        Log.i("test","submit-->" + response.toString());
+                        JSONObject obj = JSONObject.parseObject(response.toString());
                         if (200 == obj.getIntValue("code")) {
                             TUtils.toast(obj.getString("msg"));
-                            // 对话框
-                            // if("0".equals(voteBaseinfo.getType())){
-                            // if("1".equals(voteBaseinfo.getSubstat())){
-                            // adapter.setVoted(adapter.getOpt());
-                            // }
-                            // }else{
-                            // if("1".equals(voteBaseinfo.getSubstat())){
-                            // adapter.setMultiVoted();
-                            // }
-                            // }
                             adapter.clearAll();
                             if ("1".equals(voteBaseinfo.getLottery())) {
                                 if (null != spu.getUser()) {
@@ -321,10 +301,21 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
                             TUtils.toast(obj.getString("msg"));
                         }
                     }
-                });
+
+                    @Override
+                    public void onFailure(Request request, Exception e) {
+                        vote_btn_vote.setClickable(true);
+                    }
+                }, params);
             }
             break;
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        OkHttpClientManager.cancel(tag);
     }
 
     class MyAdapter extends FragmentPagerAdapter {
@@ -350,7 +341,7 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
         public Fragment getItem(int position) {
             VoteGroupFragment f = list.get(position);
             f.setSelectedRadio(optionId);
-            LogUtils.i("--->" + optionId + "   position-->" + position);
+            Log.i("test","--->" + optionId + "   position-->" + position);
             return f;
         }
 
@@ -389,7 +380,7 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
 
         public void setVoted(String optionId) {
             for (VoteGroupFragment vg : list) {
-                LogUtils.i("setVoted ");
+                Log.i("test","setVoted ");
                 vg.clear(optionId);
                 // 移除click事件
                 vg.setVoted();
@@ -398,7 +389,7 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
         }
 
         public void setMultiVoted() {
-            LogUtils.i("setMultiVoted");
+            Log.i("test","setMultiVoted");
             for (VoteGroupFragment vg : list) {
                 // 移除click事件
                 vg.setVoted();
@@ -423,19 +414,13 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
         // 获取投票选项的所有可用类型
         private void getVoteMassage(String subjectid) {
 
-            RequestParams params = new RequestParams();
-            params.addBodyParameter("subjectid", subjectid);
-
-            httpUtils.send(HttpMethod.POST, InterfaceJsonfile.mVotetys, params, new RequestCallBack<String>() {
+            Map<String,String> params = new HashMap<>();
+            params.put("subjectid", subjectid);
+            OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.mVotetys, new OkHttpClientManager.ResultCallback() {
                 @Override
-                public void onFailure(HttpException arg0, String arg1) {
-                    LogUtils.i("获取投票选项的所有可用类型  failed!");
-                }
-
-                @Override
-                public void onSuccess(ResponseInfo<String> arg0) {
-                    LogUtils.i("获取投票选项的所有可用类型  -->" + arg0.result);
-                    JSONObject obj = FjsonUtil.parseObject(arg0.result);
+                public void onSuccess(Object response) {
+                    Log.i("test","获取投票选项的所有可用类型  -->" + response.toString());
+                    JSONObject obj = FjsonUtil.parseObject(response.toString());
                     if (null == obj) {
                         return;
                     }
@@ -443,7 +428,7 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
                         List<VoteTitleBean> vtbList = FjsonUtil.parseArray(obj.getJSONArray("data").toJSONString(),
                                 VoteTitleBean.class);
                         if (vtbList != null) {
-                            LogUtils.i("vl.size--> " + vtbList.size());
+                            Log.i("test","vl.size--> " + vtbList.size());
 
                             for (int i = 0; i < vtbList.size(); i++) {
                                 VoteGroupFragment f = new VoteGroupFragment(vtbList.get(i), androidId,
@@ -458,7 +443,12 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
                         TUtils.toast(obj.getString("msg"));
                     }
                 }
-            });
+
+                @Override
+                public void onFailure(Request request, Exception e) {
+                    Log.i("test","获取投票选项的所有可用类型  failed!");
+                }
+            }, params);
 
         }
 
@@ -466,7 +456,7 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
 
     public void onEventMainThread(int requestCode, int resultCode, Intent data) {
         if (1990 == resultCode) {
-            LogUtils.i("detail voted");
+            Log.i("test","detail voted");
             String optid = data.getStringExtra("optid");
             adapter.setVoted(optid);
             voteBaseinfo.setSubstat("1");

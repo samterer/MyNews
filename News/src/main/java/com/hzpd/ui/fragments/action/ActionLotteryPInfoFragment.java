@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.TUtils;
@@ -21,6 +22,9 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
+import com.squareup.okhttp.Request;
+
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -37,17 +41,23 @@ public class ActionLotteryPInfoFragment extends BaseFragment implements View.OnC
     private String subjectid;
     private String price;
     private String from;
+    private Object tag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.action_lottery_pi_layout, container, false);
+        initViews(view);
+        tag = OkHttpClientManager.getTag();
+        return view;
+    }
+
+    private void initViews(View view) {
         lotterypi_tv_price = (TextView) view.findViewById(R.id.lotterypi_tv_price);
         lotterypi_uname = (EditText) view.findViewById(R.id.lotterypi_uname);
         lotterypi_phone = (EditText) view.findViewById(R.id.lotterypi_phone);
         lotterypi_add = (EditText) view.findViewById(R.id.lotterypi_add);
         lotterypi_submit = view.findViewById(R.id.lotterypi_submit);
         lotterypi_submit.setOnClickListener(this);
-        return view;
     }
 
     @Override
@@ -67,7 +77,6 @@ public class ActionLotteryPInfoFragment extends BaseFragment implements View.OnC
     }
 
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -84,22 +93,22 @@ public class ActionLotteryPInfoFragment extends BaseFragment implements View.OnC
                 }
 
                 String addr = lotterypi_add.getText().toString();
-                RequestParams params = RequestParamsUtils.getParams();
-                params.addBodyParameter("username", uname);
-                params.addBodyParameter("phone", phone);
-                params.addBodyParameter("address", addr);
-                params.addBodyParameter("device", androidid);
-                params.addBodyParameter("subjectid", subjectid);
-                params.addBodyParameter("number", number);
+                Map<String, String> params = RequestParamsUtils.getMaps();
+                params.put("username", uname);
+                params.put("phone", phone);
+                params.put("address", addr);
+                params.put("device", androidid);
+                params.put("subjectid", subjectid);
+                params.put("number", number);
 
-                httpUtils.send(HttpMethod.POST
+                OkHttpClientManager.postAsyn(tag
                         , InterfaceJsonfile.submitPriceInfo
-                        , params
-                        , new RequestCallBack<String>() {
+
+                        , new OkHttpClientManager.ResultCallback() {
                     @Override
-                    public void onSuccess(ResponseInfo<String> responseInfo) {
-                        LogUtils.i("result-->" + responseInfo.result);
-                        JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
+                    public void onSuccess(Object response) {
+                        LogUtils.i("result-->" + response.toString());
+                        JSONObject obj = FjsonUtil.parseObject(response.toString());
 
                         if (null == obj) {
                             return;
@@ -120,12 +129,19 @@ public class ActionLotteryPInfoFragment extends BaseFragment implements View.OnC
                     }
 
                     @Override
-                    public void onFailure(HttpException error, String msg) {
-                        LogUtils.i("" + msg);
+                    public void onFailure(Request request, Exception e) {
+                        LogUtils.i("onFailure");
                     }
-                });
+                }, params);
             }
             break;
         }
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        OkHttpClientManager.cancel(tag);
+        super.onDestroyView();
     }
 }

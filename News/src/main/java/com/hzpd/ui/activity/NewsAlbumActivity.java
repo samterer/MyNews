@@ -44,6 +44,7 @@ import com.hzpd.modle.NewsJumpBean;
 import com.hzpd.modle.ReplayBean;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.Constant;
 import com.hzpd.utils.DisplayOptionFactory;
@@ -67,10 +68,12 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
+import com.squareup.okhttp.Request;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import uk.co.senab.photoview.IPhotoView;
 import uk.co.senab.photoview.PhotoView;
@@ -105,6 +108,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
 
     private NewsDetailBean ndb;
     private ImgListBean imgListBean;
+    private Object tag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +116,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
         setContentView(R.layout.news_detail_img_main_layout);
 
         initViews();
-
+        tag = OkHttpClientManager.getTag();
         pop_xiazai_iv1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -655,39 +659,40 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
             return;
         }
         LogUtils.i("Type-->" + "  Fid-->" + imgListBean.getPid());
-        RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("type", "2");
-        params.addBodyParameter("typeid", imgListBean.getPid());
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-        params.addBodyParameter("data", imgListBean.getJson_url());
+        Map<String, String> params = RequestParamsUtils.getMaps();
+        params.put("type", "2");
+        params.put("typeid", imgListBean.getPid());
+        params.put("siteid", InterfaceJsonfile.SITEID);
+        params.put("data", imgListBean.getJson_url());
         SPUtil.addParams(params);
-        httpUtils.send(HttpMethod.POST
+        OkHttpClientManager.postAsyn(tag
                 , InterfaceJsonfile.ADDCOLLECTION//InterfaceApi.addcollection
-                , params
-                , new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                LogUtils.i("result-->" + responseInfo.result);
-                JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
-                if (null == obj) {
-                    return;
-                }
-                if (200 == obj.getIntValue("code")) {
-                    JSONObject object = obj.getJSONObject("data");
-                    //1:收藏操作成功 2:取消收藏操作成功
-                    if ("1".equals(object.getString("status"))) {
-                    } else {
+                , new OkHttpClientManager.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        LogUtils.i("result-->" + response.toString());
+                        JSONObject obj = FjsonUtil.parseObject(response.toString());
+                        if (null == obj) {
+                            return;
+                        }
+                        if (200 == obj.getIntValue("code")) {
+                            JSONObject object = obj.getJSONObject("data");
+                            //1:收藏操作成功 2:取消收藏操作成功
+                            if ("1".equals(object.getString("status"))) {
+                            } else {
+                            }
+                        }
+
+                        TUtils.toast(obj.getString("msg"));
                     }
-                }
 
-                TUtils.toast(obj.getString("msg"));
-            }
+                    @Override
+                    public void onFailure(Request request, Exception e) {
+                        TUtils.toast(getString(R.string.toast_cannot_connect_to_server));
+                    }
 
-            @Override
-            public void onFailure(HttpException error, String msg) {
-                TUtils.toast(getString(R.string.toast_cannot_connect_to_server));
-            }
-        });
+                }, params
+        );
 
     }
 
@@ -843,21 +848,17 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
             setVisible();
             return;
         }
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-        params.addBodyParameter("id", pid);
+        Map<String, String> params = RequestParamsUtils.getMaps();
+        params.put("siteid", InterfaceJsonfile.SITEID);
+        params.put("id", pid);
         SPUtil.addParams(params);
-        httpUtils.send(
-                HttpMethod.POST
-                , InterfaceJsonfile.bAlbum
-                , params
-                , new RequestCallBack<String>() {
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.bAlbum, new OkHttpClientManager.ResultCallback() {
                     @Override
-                    public void onSuccess(ResponseInfo<String> responseInfo) {
-                        LogUtils.i("result-->" + responseInfo.result);
+                    public void onSuccess(Object response) {
+                        LogUtils.i("result-->" + response.toString());
                         JSONObject obj = null;
                         try {
-                            obj = JSONObject.parseObject(responseInfo.result);
+                            obj = JSONObject.parseObject(response.toString());
                         } catch (Exception e) {
                             e.printStackTrace();
                             return;
@@ -885,20 +886,16 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                     }
 
                     @Override
-                    public void onFailure(HttpException error, String msg) {
+                    public void onFailure(Request request, Exception e) {
                         TUtils.toast(getString(R.string.toast_server_no_response));
                     }
-                });
+
+                }, params);
 
     }
 
     @Override
     protected void onPause() {
-//		if(!"news".equals(from)&&null!=App.mNewsDetailBean){
-//			setAnaly(App.mNewsDetailBean.getNid()
-//					, App.mNewsDetailBean.getTitle()
-//					, "album");
-//		}
         super.onPause();
     }
 
@@ -952,20 +949,19 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
         }
 
         EventUtils.sendReadAtical(activity);
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("type", Constant.TYPE.AlbumA.toString());
-        params.addBodyParameter("nids", imgListBean.getPid());
+        Map<String,String> params = RequestParamsUtils.getMaps();
+        params.put("type", Constant.TYPE.AlbumA.toString());
+        params.put("nids", imgListBean.getPid());
         SPUtil.addParams(params);
-        httpUtils.send(HttpMethod.POST
-                , InterfaceJsonfile.commentsConts
-                , params
-                , new RequestCallBack<String>() {
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.commentsConts
+
+                , new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                LogUtils.i("loginSubmit-->" + responseInfo.result);
+            public void onSuccess(Object response) {
+                LogUtils.i("loginSubmit-->" +response.toString());
 
                 JSONObject obj = FjsonUtil
-                        .parseObject(responseInfo.result);
+                        .parseObject(response.toString());
                 if (null == obj) {
                     return;
                 }
@@ -996,10 +992,10 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
             }
 
             @Override
-            public void onFailure(HttpException error, String msg) {
+            public void onFailure(Request request, Exception e) {
 
             }
-        });
+        }, params);
     }
 
 }
