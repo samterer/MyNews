@@ -127,10 +127,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         return null;
     }
 
-    public final static String IMG_PREFIX = "com.hzpd.provider.imageprovider";
     public final static String HOT_NEWS = "hotnews://";
 
-    private boolean mFlagPopuShow;
     private WebSettings webSettings;
     private View mBack;
     private ViewGroup mRoot;
@@ -141,7 +139,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private View news_detail_nonetwork;
     // ---------------------------
     private RelativeLayout newdetail_rl_comm;
-    private View newdetail_ll_comm;
     private TextView newdetail_tv_comm;// 评论
     private ImageView newdetail_fontsize;// 字体
     private ImageView newdetail_share;// 分享
@@ -150,11 +147,20 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private ImageView newdetail_more;//更多
     private RelativeLayout mRelativeLayoutTitleRoot;
     // -------------------------
-    private FontsizePop fontpop;
     private View details_tag_layout;
     private ImageView details_head_tag_img;
     private TextView details_head_tag_name;
     private TextView details_head_tag_num;
+
+    private Object tag;
+
+    private String from;
+    private String detailPathRoot;
+    private NewsBean nb;
+    private DbUtils dbUtils;
+    private boolean isDetail = false;
+    private MyJavascriptInterface jsInterface;// 跳转到图集接口
+
 
     App.Callback callback = new App.Callback() {
         @Override
@@ -176,7 +182,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             }
         }
     };
-    private Object tag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -239,10 +244,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     ViewGroup ad_layout;
     ViewGroup ad_view;
-    private View headView;
 
     public void setFooterview(View headView) {
-        this.headView = headView;
         ad_layout = (ViewGroup) headView.findViewById(R.id.ad_layout);
         ad_view = (ViewGroup) headView.findViewById(R.id.ad_view);
         details_explain = (FontTextView) headView.findViewById(R.id.details_explain);
@@ -279,12 +282,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     }
 
-    private View commentView;
     private LinearLayout comment_layout;
     private LinearLayout comment_list;
 
     public void setCommentView(View commentView) {
-        this.commentView = commentView;
         //没有评论
         ll_rob = (LinearLayout) commentView.findViewById(R.id.ll_rob);
         comment_layout = (LinearLayout) commentView.findViewById(R.id.comment_layout);
@@ -342,12 +343,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         }
     }
 
-    private String from;
-    private String detailPathRoot;
-    private NewsBean nb;
-    private DbUtils dbUtils;
-    private boolean isDetail = false;
-    private MyJavascriptInterface jsInterface;// 跳转到图集接口
+
 
     private void getThisIntent() {
         try {
@@ -674,7 +670,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         if (mBean == null) {
                             return;
                         }
-                        Log.i("test","click share");
+                        Log.i("test", "click share");
                         String imgurl = null;
                         if (null != nb.getImgs() && nb.getImgs().length > 0) {
                             imgurl = nb.getImgs()[0];
@@ -769,7 +765,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
                     @Override
                     public void onFailure(Request request, Exception e) {
-                        Log.e("test","test login failed");
+                        Log.e("test", "test login failed");
                     }
                 }, params);
     }
@@ -1209,7 +1205,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                                                 up_icon.setImageResource(R.drawable.details_icon_likeit);
                                                 int i = Integer.parseInt(item.getPraise());
                                                 i++;
-                                                Log.i("test","i---->" + i);
+                                                Log.i("test", "i---->" + i);
                                                 comment_up_num.setText(i + "");
                                                 item.setPraise(i + "");
                                                 up_icon.setEnabled(false);
@@ -1319,26 +1315,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     Log.i("test", "获取详细信息--->onFailure");
                     showEmpty();
                     if (isResume) {
-//                     if (error.getExceptionCode() == 404) {
-//                         TUtil.toast(NewsDetailActivity.this, getString(R.string.error_delete));
-//                     } else {
-//                         TUtils.toast(getString(R.string.toast_cannot_connect_network));
-//                     }
                         AnalyticUtils.sendGaEvent(getApplicationContext(), AnalyticUtils.ACTION.networkErrorOnDetail, null, null, 0L);
                         AnalyticUtils.sendUmengEvent(getApplicationContext(), AnalyticUtils.ACTION.networkErrorOnDetail);
                     }
                 }
-//             @Override
-//             public void onStart() {
-//                 super.onStart();
-//                 loadingView.setVisibility(View.VISIBLE);
-//             }
-//
-//             @Override
-//             public void onSuccess(ResponseInfo<File> responseInfo)
-//
-//             @Override
-//             public void onFailure(HttpException error, String msg)
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -1348,6 +1328,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private boolean isTagSelect;
 
     private void setContents() {
+        Log.i("setContents","setContents--->"+mBean.toString());
         int textSize = spu.getTextSize();
         setupWebView(textSize);
         mRoot.setVisibility(View.VISIBLE);
@@ -1386,6 +1367,19 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     startActivity(intent);
                 }
             });
+        }
+
+        if (mBean.getRef() != null && mBean.getRef().size() > 0) {
+            for (int i = 0; i < mBean.getRef().size(); i++) {
+                if (mBean.getRef().get(i).getTitle() == null) {
+                    NewsBean bean = mBean.getRef().get(i);
+                    mBean.getRef().remove(bean);
+                    i--;
+                }
+            }
+            rl_related.setVisibility(View.VISIBLE);
+            ll_tag.setVisibility(View.VISIBLE);
+            addRelatedNewsView();
         }
 
 //        tag相关
@@ -1466,7 +1460,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
                                 @Override
                                 public void onFailure(Request request, Exception e) {
-                                    Log.i("test","isCollection failed");
+                                    Log.i("test", "isCollection failed");
                                 }
                             }, params);
                         }
@@ -1475,18 +1469,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 }
             });
         }
-        if (mBean.getRef() != null && mBean.getRef().size() > 0) {
-            for (int i = 0; i < mBean.getRef().size(); i++) {
-                if (mBean.getRef().get(i).getTitle() == null) {
-                    NewsBean bean = mBean.getRef().get(i);
-                    mBean.getRef().remove(bean);
-                    i--;
-                }
-            }
-            rl_related.setVisibility(View.VISIBLE);
-            ll_tag.setVisibility(View.VISIBLE);
-            addRelatedNewsView();
-        }
+
 
     }
 
@@ -1964,8 +1947,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 dbUtils.save(nibfc);
                 TUtils.toast(getString(R.string.toast_collect_success));
                 long co = dbUtils.count(NewsItemBeanForCollection.class);
-                Log.i("test","num:" + co);
-                Log.i("test","type-->" + nibfc.getType());
+                Log.i("test", "num:" + co);
+                Log.i("test", "type-->" + nibfc.getType());
                 newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
 
             } else {
@@ -1979,7 +1962,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         }
 
         if (spu.getUser() != null) {
-            Log.i("test","Type-->" + nb.getType() + "  Fid-->" + nb.getNid());
+            Log.i("test", "Type-->" + nb.getType() + "  Fid-->" + nb.getNid());
             Map<String, String> params = RequestParamsUtils.getMapWithU();
             params.put("type", "1");
             params.put("typeid", nb.getNid());
@@ -2006,12 +1989,12 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private void isCollection() {
         if (spu.getUser() == null) {
             try {
-                Log.i("test","isCollection");
+                Log.i("test", "isCollection");
                 NewsItemBeanForCollection nbfc = dbUtils
                         .findFirst(Selector.from(NewsItemBeanForCollection.class).where("nid", "=", nb.getNid()));
-                Log.i("test","isCollection");
+                Log.i("test", "isCollection");
                 if (null != nbfc) {
-                    Log.i("test","isCollection   getTitle:" + nbfc.getTitle());
+                    Log.i("test", "isCollection   getTitle:" + nbfc.getTitle());
                     newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
                 }
             } catch (Exception e) {
@@ -2042,7 +2025,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
                 @Override
                 public void onFailure(Request request, Exception e) {
-                    Log.i("test","isCollection failed");
+                    Log.i("test", "isCollection failed");
                 }
             }, params);
         }

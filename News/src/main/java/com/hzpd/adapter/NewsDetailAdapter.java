@@ -56,7 +56,6 @@ public class NewsDetailAdapter extends RecyclerView.Adapter {
                 View viewHead = LayoutInflater.from(context).inflate(R.layout.details_news_head, parent, false);
                 context.setDetailsHead(viewHead);
                 viewHolder = new HeadViewHolder(viewHead);
-
                 break;
             case TYPE_WEBVIEW: {
                 ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.webview_layout, parent, false);

@@ -1,6 +1,5 @@
 package com.hzpd.adapter;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
@@ -50,14 +49,12 @@ public class CommentListAdapter extends BaseAdapter {
     private SPUtil spu;
     private HttpUtils httpUtils;
     private String nid;
-    private View.OnClickListener onClickListener;
 
 
     public CommentListAdapter(String nid) {
         this.nid = nid;
         spu = SPUtil.getInstance();
         httpUtils = SPUtil.getHttpUtils();
-//        this.onClickListener=onClickListener;
     }
 
     @Override
