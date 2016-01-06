@@ -23,6 +23,7 @@ import com.hzpd.ui.activity.MyEditColumnActivity;
 import com.hzpd.ui.activity.SearchActivity;
 import com.hzpd.ui.widget.PagerSlidingTabStrip;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
@@ -33,6 +34,7 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.util.LogUtils;
+import com.squareup.okhttp.Request;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -68,19 +70,20 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
     private View main_top_search;
     private View coverTop;
     private View main_title_left_img;
+    private Object tag;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.news_fragment_main, container, false);
-        main_title_left_img=view.findViewById(R.id.main_title_left_img);
+        main_title_left_img = view.findViewById(R.id.main_title_left_img);
         pager = (ViewPager) view.findViewById(R.id.news_pager);
         ll_news_button = view.findViewById(R.id.ll_news_button);
         ll_news_button.setOnClickListener(this);
-        tabStrip= (PagerSlidingTabStrip) view.findViewById(R.id.psts_tabs_app);
-        ll_main= (LinearLayout) view.findViewById(R.id.ll_main);
-        background_empty= (ImageView) view.findViewById(R.id.background_empty);
-        main_no_news=view.findViewById(R.id.main_no_news);
-        app_progress_bar=view.findViewById(R.id.app_progress_bar);
+        tabStrip = (PagerSlidingTabStrip) view.findViewById(R.id.psts_tabs_app);
+        ll_main = (LinearLayout) view.findViewById(R.id.ll_main);
+        background_empty = (ImageView) view.findViewById(R.id.background_empty);
+        main_no_news = view.findViewById(R.id.main_no_news);
+        app_progress_bar = view.findViewById(R.id.app_progress_bar);
         coverTop = view.findViewById(R.id.cover_top);
         main_top_search = view.findViewById(R.id.main_top_search);
         main_top_search.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +102,7 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
         } else {
             coverTop.setVisibility(View.VISIBLE);
         }
-
+        tag = OkHttpClientManager.getTag();
         return view;
     }
 
@@ -157,7 +160,7 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
             main_title_left_img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("onTabClicked","onTabClicked  onClick");
+                    Log.i("onTabClicked", "onTabClicked  onClick");
                     pager.setCurrentItem(0);
                 }
             });
@@ -186,7 +189,7 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
         tabStrip.setOnTabClickListener(new PagerSlidingTabStrip.TabClickListener() {
 
                                            public void onTabClicked(int position) {
-                                               Log.i("onTabClicked","onTabClicked"+position);
+                                               Log.i("onTabClicked", "onTabClicked" + position);
                                                pager.setCurrentItem(position);
                                            }
                                        }
@@ -195,21 +198,16 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
     }
 
     public void getChannelJson() {
-        final String channelCachePath = App.getInstance().getAllDiskCacheDir()
-                + File.separator
-                + App.mTitle;
-        final File channelCacheFile = new File(channelCachePath);
         final File target = App.getFile(App.getInstance().getAllDiskCacheDir() + File.separator + "News");
         String urlChannelList = InterfaceJsonfile.CHANNELLIST + "News";
         String country = SPUtil.getCountry();
         urlChannelList = urlChannelList.replace("#country#", country.toLowerCase());
 //			下载信息并保存
-        httpUtils.download(urlChannelList,
-                target.getAbsolutePath(),
-                new RequestCallBack<File>() {
+        OkHttpClientManager.getAsyn(tag, urlChannelList,
+                new OkHttpClientManager.ResultCallback() {
                     @Override
-                    public void onSuccess(ResponseInfo<File> responseInfo) {
-                        String json = App.getFileContext(responseInfo.result);
+                    public void onSuccess(Object response) {
+                        String json = response.toString();
                         if (json != null) {
                             LogUtils.i("channel-->" + json);
                             JSONObject obj = FjsonUtil.parseObject(json);
@@ -248,7 +246,7 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
                     }
 
                     @Override
-                    public void onFailure(HttpException error, String msg) {
+                    public void onFailure(Request request, Exception e) {
                         app_progress_bar.setVisibility(View.GONE);
                         main_no_news.setVisibility(View.VISIBLE);
                     }

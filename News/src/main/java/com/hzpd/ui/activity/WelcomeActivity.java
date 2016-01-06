@@ -92,8 +92,8 @@ public class WelcomeActivity extends MWBaseActivity {
             getSupportFragmentManager().beginTransaction().remove(fragment);
             fragment = null;
         }
-        OkHttpClientManager.cancel(tag);
         super.onDestroy();
+        OkHttpClientManager.cancel(tag);
     }
 
     public void loadMainUI() {
@@ -111,8 +111,8 @@ public class WelcomeActivity extends MWBaseActivity {
         final File target = App.getFile(App.getInstance().getAllDiskCacheDir() + File.separator + SPUtil.getCountry() + File.separator + "News");
         List<NewsChannelBeanDB> channelBeanDBs = null;
         try {
-            channelBeanDBs= dbHelper.getChannelDbUtils().findAll(NewsChannelBeanDB.class);
-            if (channelBeanDBs!=null&&channelBeanDBs.size()>0){
+            channelBeanDBs = dbHelper.getChannelDbUtils().findAll(NewsChannelBeanDB.class);
+            if (channelBeanDBs != null && channelBeanDBs.size() > 0) {
                 loadMainUI();
             }
         } catch (DbException e) {
@@ -126,16 +126,17 @@ public class WelcomeActivity extends MWBaseActivity {
         String urlChannelList = InterfaceJsonfile.CHANNELLIST + "News";
         String country = SPUtil.getCountry();
         urlChannelList = urlChannelList.replace("#country#", country.toLowerCase());
-//			下载信息并保存
-        HttpHandler httpHandler = httpUtils.download(urlChannelList,
-                target.getAbsolutePath(),
-                new RequestCallBack<File>() {
+        Log.i("channelCache", "channelCache  000");
+        OkHttpClientManager.getAsyn(tag, urlChannelList,
+                new OkHttpClientManager.ResultCallback() {
                     @Override
-                    public void onSuccess(ResponseInfo<File> responseInfo) {
+                    public void onSuccess(Object response) {
+                        Log.i("channelCache", "channelCache  111");
                         try {
-                            String json = App.getFileContext(responseInfo.result);
+                            String json = response.toString();
                             if (json != null) {
                                 JSONObject obj = null;
+                                Log.i("channelCache","channelCache"+json);
                                 try {
                                     obj = FjsonUtil.parseObject(json);
                                 } catch (Exception e) {
@@ -206,6 +207,8 @@ public class WelcomeActivity extends MWBaseActivity {
                                         SPUtil.updateChannel();
                                     }
                                 }
+                            }else {
+                                Log.i("channelCache","channelCache  null");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -216,13 +219,13 @@ public class WelcomeActivity extends MWBaseActivity {
                     }
 
                     @Override
-                    public void onFailure(HttpException error, String msg) {
+                    public void onFailure(Request request, Exception e) {
+                        Log.i("channelCache","channelCache  onFailure");
                         if (!exists) {
                             loadMainUI();
                         }
                     }
                 });
-        handlerList.add(httpHandler);
     }
 
     public void jump(String url) {

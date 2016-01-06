@@ -218,8 +218,6 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
             mIntent.setClass(this, VideoPlayerActivity.class);
         } else if ("7".equals(nb.getRtype())) {
             mIntent.setClass(this, NewsDetailActivity.class);
-        } else if ("9".equals(nb.getRtype())) {
-            mIntent.setClass(this, XF_NewsHtmlDetailActivity.class);
         } else {
             return;
         }

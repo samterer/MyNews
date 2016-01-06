@@ -47,6 +47,8 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -217,8 +219,6 @@ public class SPUtil {
 
     public static HttpUtils getHttpUtils() {
         HttpUtils httpUtils = new HttpUtils();
-        //httpUtils.configSoTimeout(2000);
-        //httpUtils.configTimeout(5000);
         return httpUtils;
     }
 
@@ -634,6 +634,38 @@ public class SPUtil {
             }
         }
     }
+
+
+    public static void saveFile(File target, String str) {
+        String filePath = target.getAbsolutePath();
+        try {
+            File file = new File(filePath);
+            if (!file.exists()) {
+                File dir = new File(file.getParent());
+                dir.mkdirs();
+                file.createNewFile();
+            }
+            FileOutputStream outStream = new FileOutputStream(file);
+            outStream.write(str.getBytes());
+            outStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 删除指定文件
+     *
+     * @param fileName
+     */
+    public static void deleteFiles(String fileName) {
+        App.getInstance().getFilesDir();
+        File file = new File(fileName);
+        if (file.exists())
+            file.delete();
+
+    }
+
 
     /**
      */

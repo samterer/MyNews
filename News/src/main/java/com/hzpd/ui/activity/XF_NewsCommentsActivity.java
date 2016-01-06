@@ -3,6 +3,7 @@ package com.hzpd.ui.activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +18,14 @@ import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
+import com.hzpd.utils.SharePreferecesUtils;
+import com.hzpd.utils.TUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
+import com.lidroid.xutils.util.LogUtils;
 import com.squareup.okhttp.Request;
 
 import java.util.List;
@@ -62,7 +71,7 @@ public class XF_NewsCommentsActivity extends MBaseActivity implements View.OnCli
         vlinearLayoutManager = new LinearLayoutManager(this);
         vlinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerview.setLayoutManager(vlinearLayoutManager);
-        myCommentListAdapter = new MyCommentListAdapter(this);
+        myCommentListAdapter = new MyCommentListAdapter(this, this);
         recyclerview.setAdapter(myCommentListAdapter);
         recyclerview.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -131,11 +140,61 @@ public class XF_NewsCommentsActivity extends MBaseActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.stitle_ll_back: {
-                finish();
+        if (v.getId() == R.id.stitle_ll_back) {
+            finish();
+        } else if (v.getTag() != null & v.getTag() instanceof MyCommentListAdapter.ItemViewHolder) {
+            final MyCommentListAdapter.ItemViewHolder viewHolder = (MyCommentListAdapter.ItemViewHolder) v.getTag();
+            Log.i("MyCommentListAdapter", "MyCommentListAdapter");
+            try {
+                viewHolder.up_icon.setEnabled(false);
+                Log.e("holder.digNum", "holder.digNum");
+                if (null == spu.getUser()) {
+                    return;
+                }
+                Log.e("test", "点赞" + viewHolder.item.getCid());
+                Log.i(getLogTag(), "uid-" + spu.getUser().getUid() + "  mType-News" + " nid-" + viewHolder.item.getCid());
+                final Map<String,String> params = RequestParamsUtils.getMapWithU();
+                params.put("uid", spu.getUser().getUid());
+                params.put("type", "News");
+                params.put("nid", viewHolder.item.getCid());
+                params.put("siteid", InterfaceJsonfile.SITEID);
+                SPUtil.addParams(params);
+                OkHttpClientManager.postAsyn(tag
+                        , InterfaceJsonfile.PRISE1//InterfaceApi.mPraise
+
+                        , new OkHttpClientManager.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d(getLogTag(), "赞-->" + response.toString());
+                        JSONObject obj = JSONObject.parseObject(response.toString());
+                        if (200 == obj.getInteger("code")) {
+                            Log.e("", "m---->" + viewHolder.item.getPraise());
+                            SharePreferecesUtils.setParam(XF_NewsCommentsActivity.this, "" + viewHolder.item.getCid(), "1");
+                            if (TextUtils.isDigitsOnly(viewHolder.item.getPraise())) {
+                                viewHolder.up_icon.setImageResource(R.drawable.details_icon_likeit);
+                                int i = Integer.parseInt(viewHolder.item.getPraise());
+                                i++;
+                                LogUtils.i("i---->" + i);
+                                viewHolder.comment_up_num.setText(i + "");
+                                viewHolder.item.setPraise(i + "");
+                                myCommentListAdapter.notifyDataSetChanged();
+                                viewHolder.up_icon.setEnabled(false);
+                            }
+                        } else {
+                            viewHolder.up_icon.setEnabled(true);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Request request, Exception e) {
+                        Log.e(getLogTag(), "赞failed!");
+                        TUtils.toast(getString(R.string.toast_server_no_response));
+                        viewHolder.up_icon.setEnabled(true);
+                    }
+                }, params);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            break;
         }
     }
 

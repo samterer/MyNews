@@ -30,7 +30,7 @@ public class NewsChannelBean implements Comparable<NewsChannelBean>, Serializabl
 
     private int type = TYPE_NORMAL;
     private String icon;
-    private String id;
+    private String id = "";
     private String name;
     private String num;
 
@@ -84,6 +84,9 @@ public class NewsChannelBean implements Comparable<NewsChannelBean>, Serializabl
     }
 
     public void setId(String id) {
+        if (id == null) {
+            id = "";
+        }
         this.id = id;
     }
 

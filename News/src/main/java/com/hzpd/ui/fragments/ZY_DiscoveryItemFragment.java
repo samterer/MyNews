@@ -1,21 +1,25 @@
 package com.hzpd.ui.fragments;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.adapter.DiscoveryItemNewAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.DiscoveryItemBean;
+import com.hzpd.modle.event.TagEvent;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.exception.HttpException;
@@ -23,12 +27,16 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
+import com.lidroid.xutils.util.LogUtils;
+import com.news.update.Utils;
 import com.squareup.okhttp.Request;
 
 import java.util.List;
 import java.util.Map;
 
-public class ZY_DiscoveryItemFragment extends BaseFragment {
+import de.greenrobot.event.EventBus;
+
+public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnClickListener {
 
 
     private RecyclerView discovery_recyclerview;
@@ -48,13 +56,13 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
         View view = null;
         try {
             view = inflater.inflate(R.layout.zy_discovery_item_fragment, container, false);
-            tag= OkHttpClientManager.getTag();
+            tag = OkHttpClientManager.getTag();
             discovery_recyclerview = (RecyclerView) view.findViewById(R.id.discovery_recyclerview);
             //设置布局管理器
             vlinearLayoutManager = new LinearLayoutManager(getActivity());
             vlinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             discovery_recyclerview.setLayoutManager(vlinearLayoutManager);
-            newAdapter = new DiscoveryItemNewAdapter(getContext());
+            newAdapter = new DiscoveryItemNewAdapter(getContext(), this);
             discovery_recyclerview.setAdapter(newAdapter);
 
             discovery_recyclerview.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -87,19 +95,25 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
     private int pageSize = 10;
 
     private void getDiscoveryServer() {
-
-        Map<String,String> params = RequestParamsUtils.getMaps();
+        Log.i("getDiscoveryServer", "getDiscoveryServer  000");
+        Map<String, String> params = RequestParamsUtils.getMaps();
         params.put("Page", Page + "");
         params.put("PageSize", pageSize + "");
         SPUtil.addParams(params);
         OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.discovery_url, new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
+                Log.i("getDiscoveryServer", "getDiscoveryServer  onSuccess");
+                if (response != null)
+                    Log.i("getDiscoveryServer", "getDiscoveryServer  response" + response);
+
                 JSONObject obj = FjsonUtil.parseObject(response.toString());
                 if (null == obj) {
+                    Log.i("getDiscoveryServer", "getDiscoveryServer  null == obj");
                     return;
                 }
                 if (200 == obj.getIntValue("code")) {
+                    Log.i("getDiscoveryServer", "getDiscoveryServer  " + obj.toString());
                     Page++;
                     List<DiscoveryItemBean> mlist = FjsonUtil.parseArray(obj.getString("data")
                             , DiscoveryItemBean.class);
@@ -123,6 +137,8 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
 
             @Override
             public void onFailure(Request request, Exception e) {
+                Log.i("getDiscoveryServer", "getDiscoveryServer  onFailure");
+
                 Page--;
             }
         }, params);
@@ -142,7 +158,60 @@ public class ZY_DiscoveryItemFragment extends BaseFragment {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         OkHttpClientManager.cancel(tag);
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onClick(View v) {
+        try {
+            if (v.getTag() != null && v.getTag() instanceof DiscoveryItemNewAdapter.ItemViewHolder) {
+                Log.i("DiscoveryItemNewAdapter.ItemViewHolder", "DiscoveryItemNewAdapter.ItemViewHolder");
+                DiscoveryItemNewAdapter.ItemViewHolder viewHolder = (DiscoveryItemNewAdapter.ItemViewHolder) v.getTag();
+                {
+                    Log.i("DiscoveryItemNewAdapter", "DiscoveryItemNewAdapter  viewHolder.tv_subscribe  onClick");
+                    viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
+                    viewHolder.tv_subscribe.setTextColor(getActivity().getResources().getColor(R.color.details_tv_check_color));
+                    Drawable nav_up = getActivity().getResources().getDrawable(R.drawable.discovery_image_select);
+                    nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+                    viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+                    viewHolder.tv_subscribe.setText(getActivity().getString(R.string.discovery_followed));
+                    EventBus.getDefault().post(new TagEvent(viewHolder.tagBean));
+                    if (Utils.isNetworkConnected(getActivity())) {
+                        Map<String, String> params = RequestParamsUtils.getMapWithU();
+                        if (spu.getUser() != null) {
+                            params.put("uid", spu.getUser().getUid() + "");
+                        }
+                        params.put("tagId", viewHolder.tagBean.getId() + "");
+                        SPUtil.addParams(params);
+
+                        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.tag_click_url, new OkHttpClientManager.ResultCallback() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                Log.i("onSuccess", "onSuccess");
+                                JSONObject obj = null;
+                                try {
+                                    obj = JSONObject.parseObject(response.toString());
+                                } catch (Exception e) {
+                                    return;
+                                }
+                                if (200 == obj.getIntValue("code")) {
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Request request, Exception e) {
+                                Log.i("onFailure","onFailure");
+                            }
+                        }, params);
+                    }
+                    Log.i("viewHolder.tv_subscribe", "viewHolder.tv_subscribe");
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

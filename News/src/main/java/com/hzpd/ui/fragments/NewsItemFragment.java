@@ -31,11 +31,11 @@ import com.hzpd.ui.activity.NewsAlbumActivity;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.SearchActivity;
 import com.hzpd.ui.activity.VideoPlayerActivity;
-import com.hzpd.ui.activity.XF_NewsHtmlDetailActivity;
 import com.hzpd.ui.activity.ZhuanTiActivity;
 import com.hzpd.ui.interfaces.I_Control;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.AvoidOnClickFastUtils;
@@ -45,19 +45,15 @@ import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.db.NewsListDbTask;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.HttpHandler;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
 import com.news.update.Utils;
+import com.squareup.okhttp.Request;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -139,6 +135,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
     private boolean isRefreshCounts;
     boolean pullRefresh = false;
+    private Object tag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -174,6 +171,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         mSwipeRefreshWidget = (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recylerlist);
 
+        tag = OkHttpClientManager.getTag();
         TypedValue typedValue1 = new TypedValue();
         getActivity().getTheme().resolveAttribute(R.attr.title_bar_color, typedValue1, true);
         int color1 = typedValue1.data;
@@ -324,29 +322,28 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             TUtils.toast(getString(R.string.toast_check_network));
             return;
         }
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-        params.addBodyParameter("tid", channelbean.getTid());
-        params.addBodyParameter("tagId", channelbean.getId());
-        params.addBodyParameter("Page", "" + page);
-        params.addBodyParameter("PageSize", "" + pageSize);
+        Map<String, String> params = RequestParamsUtils.getMaps();
+        params.put("siteid", InterfaceJsonfile.SITEID);
+        params.put("tid", channelbean.getTid());
+        params.put("tagId", channelbean.getId());
+        params.put("Page", "" + page);
+        params.put("PageSize", "" + pageSize);
         if (page == 1) {
             String newTimew = App.getInstance().newTimeMap.get(channelbean.toString());
             newTimew = newTimew == null ? "" : newTimew;
-            params.addBodyParameter("newTime", newTimew);
+            params.put("newTime", newTimew);
         }
         SPUtil.addParams(params);
         isLoading = true;
-        HttpHandler httpHandler = httpUtils.send(HttpMethod.POST
+        OkHttpClientManager.postAsyn("tag"
                 , InterfaceJsonfile.NEWSLIST
-                , params
-                , new RequestCallBack<String>() {
+
+                , new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
+            public void onSuccess(Object response) {
                 isLoading = false;
                 mSwipeRefreshWidget.setRefreshing(false);
-                final JSONObject obj = FjsonUtil
-                        .parseObject(responseInfo.result);
+                final JSONObject obj = FjsonUtil.parseObject(response.toString());
                 if (null != obj) {
                     //缓存更新
                     setData(obj);
@@ -357,14 +354,13 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             }
 
             @Override
-            public void onFailure(HttpException error, String msg) {
+            public void onFailure(Request request, Exception e) {
                 showEmpty();
                 TUtils.toast(getString(R.string.toast_cannot_connect_network));
                 AnalyticUtils.sendGaEvent(getActivity(), AnalyticUtils.ACTION.networkErrorOnList, null, null, 0L);
                 AnalyticUtils.sendUmengEvent(getActivity(), AnalyticUtils.ACTION.networkErrorOnList);
             }
-        });
-        handlerList.add(httpHandler);
+        }, params);
     }
 
     private void showEmpty() {
@@ -454,17 +450,19 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         String path = InterfaceJsonfile.FLASH + channelbean.getTid();
         String country = SPUtil.getCountry();
         path = path.replace("#country#", country.toLowerCase());
-        HttpHandler httpHandler = httpUtils.download(
+        Log.i("", "pageFile.getAbsolutePath()" + pageFile.getAbsolutePath());
+//        HttpHandler httpHandler =
+        OkHttpClientManager.getAsyn(tag,
                 path
-                , pageFile.getAbsolutePath()
-                , new RequestCallBack<File>() {
+//                        , pageFile.getAbsolutePath()
+                , new OkHttpClientManager.ResultCallback() {
                     @Override
-                    public void onSuccess(ResponseInfo<File> responseInfo) {
-                        String data = App.getFileContext(responseInfo.result);
+                    public void onSuccess(Object response) {
+                        String data = response.toString();
                         JSONObject obj = FjsonUtil.parseObject(data);
 
                         if (null == obj) {
-                            responseInfo.result.delete();
+//                                    responseInfo.result.delete();
                             return;
                         }
                         mSwipeRefreshWidget.setRefreshing(false);
@@ -483,11 +481,12 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                     }
 
                     @Override
-                    public void onFailure(HttpException error, String msg) {
+                    public void onFailure(Request request, Exception e) {
                         LogUtils.i("getFlash-failed");
                     }
+
                 });
-        handlerList.add(httpHandler);
+//        handlerList.add(httpHandler);
     }
 
     @Override
@@ -539,8 +538,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             mIntent.setClass(getActivity(), VideoPlayerActivity.class);
         } else if ("7".equals(nb.getRtype())) {
             mIntent.setClass(getActivity(), NewsDetailActivity.class);
-        } else if ("9".equals(nb.getRtype())) {
-            mIntent.setClass(getActivity(), XF_NewsHtmlDetailActivity.class);
         } else {
             return;
         }

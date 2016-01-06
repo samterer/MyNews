@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -40,6 +41,7 @@ import com.hzpd.modle.VideoDetailBean;
 import com.hzpd.modle.VideoItemBean;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.GetFileSizeUtil;
@@ -60,8 +62,11 @@ import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.squareup.okhttp.Request;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.OnPreparedListener, OnClickListener {
@@ -100,26 +105,15 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
     private String from;// newsitem newsdetail videofragment collection
     private boolean isCollected;
 
+    private Object tag;
+
     @Override
     public void onCreate(Bundle bundle) {
         try {
             super.onCreate(bundle);
             setContentView(R.layout.video_view);
-            mVideoView = (VideoView) findViewById(R.id.surface_view);
-            mVolumeBrightnessLayout = findViewById(R.id.operation_volume_brightness);
-            mOperationBg = (ImageView) findViewById(R.id.operation_bg);
-            mOperationPercent = (ImageView) findViewById(R.id.operation_percent);
-            mLoadingView = findViewById(R.id.video_loading);
-            video_loading_tv = (TextView) findViewById(R.id.video_loading_tv);
-            video_loading_tv2 = (TextView) findViewById(R.id.video_loading_tv2);
-            videodetails_title_comment = (LinearLayout) findViewById(R.id.videodetails_title_comment);
-            videodetails_title_comment.setOnClickListener(this);
-            videodetails_title_num = (TextView) findViewById(R.id.videodetails_title_num);
-            videodetails_title_pl = (LinearLayout) findViewById(R.id.videodetails_title_pl);
-            videodetails_title_pl.setOnClickListener(this);
-            videoview_back = findViewById(R.id.videoview_back);
-            videoview_back.setOnClickListener(this);
-
+            initView();
+            tag = OkHttpClientManager.getTag();
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             // -------初始化播放器--------------
             // ~~~ 绑定事件
@@ -183,18 +177,34 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
         }
     }
 
+    private void initView() {
+        mVideoView = (VideoView) findViewById(R.id.surface_view);
+        mVolumeBrightnessLayout = findViewById(R.id.operation_volume_brightness);
+        mOperationBg = (ImageView) findViewById(R.id.operation_bg);
+        mOperationPercent = (ImageView) findViewById(R.id.operation_percent);
+        mLoadingView = findViewById(R.id.video_loading);
+        video_loading_tv = (TextView) findViewById(R.id.video_loading_tv);
+        video_loading_tv2 = (TextView) findViewById(R.id.video_loading_tv2);
+        videodetails_title_comment = (LinearLayout) findViewById(R.id.videodetails_title_comment);
+        videodetails_title_comment.setOnClickListener(this);
+        videodetails_title_num = (TextView) findViewById(R.id.videodetails_title_num);
+        videodetails_title_pl = (LinearLayout) findViewById(R.id.videodetails_title_pl);
+        videodetails_title_pl.setOnClickListener(this);
+        videoview_back = findViewById(R.id.videoview_back);
+        videoview_back.setOnClickListener(this);
+    }
+
     // 来自浏览器
     private void getVideoItemBean(String vid) {
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("vid", vid);
+        Map<String, String> params = RequestParamsUtils.getMaps();
+        params.put("vid", vid);
         SPUtil.addParams(params);
-        httpUtils.send(HttpMethod.POST, InterfaceJsonfile.videoItem, params, new RequestCallBack<String>() {
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.videoItem, new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                String json = responseInfo.result;
+            public void onSuccess(Object response) {
+                String json = response.toString();
                 LogUtils.i("loginSubmit-->" + json);
-
-                JSONObject obj = FjsonUtil.parseObject(responseInfo.result);
+                JSONObject obj = FjsonUtil.parseObject(response.toString());
                 if (null != obj) {
                     if (200 == obj.getIntValue("code")) {
 
@@ -209,10 +219,10 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
             }
 
             @Override
-            public void onFailure(HttpException error, String msg) {
+            public void onFailure(Request request, Exception e) {
                 TUtils.toast(getString(R.string.toast_server_no_response));
             }
-        });
+        }, params);
 
     }
 
@@ -263,22 +273,21 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
             }
             return;
         }
-        RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("type", "3");
-        params.addBodyParameter("typeid", vib.getVid());
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-        params.addBodyParameter("data", vib.getJson_url());
+        Map<String, String> params = RequestParamsUtils.getMapWithU();
+        params.put("type", "3");
+        params.put("typeid", vib.getVid());
+        params.put("siteid", InterfaceJsonfile.SITEID);
+        params.put("data", vib.getJson_url());
         SPUtil.addParams(params);
-        httpUtils.send(HttpMethod.POST, InterfaceJsonfile.ADDCOLLECTION// InterfaceApi.addcollection
-                , params, new RequestCallBack<String>() {
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.ADDCOLLECTION// InterfaceApi.addcollection
+                , new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                LogUtils.i("result-->" + responseInfo.result);
+            public void onSuccess(Object response) {
+                LogUtils.i("result-->" + response.toString());
                 JSONObject obj = null;
 
                 try {
-                    obj = JSONObject.parseObject(responseInfo.result);
-
+                    obj = JSONObject.parseObject(response.toString());
                 } catch (Exception e) {
                     TUtils.toast(getString(R.string.toast_collect_failed));
                     return;
@@ -300,10 +309,10 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
             }
 
             @Override
-            public void onFailure(HttpException error, String msg) {
+            public void onFailure(Request request, Exception e) {
                 TUtils.toast(getString(R.string.toast_cannot_connect_to_server));
             }
-        });
+        }, params);
     }
 
     // 是否收藏
@@ -312,18 +321,18 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
             return;
         }
         if (null != spu.getUser()) {
-            RequestParams params = new RequestParams();
-            params.addBodyParameter("uid", spu.getUser().getUid());
-            params.addBodyParameter("typeid", vib.getVid());
-            params.addBodyParameter("type", "3");
+            Map<String, String> params = new HashMap<>();
+            params.put("uid", spu.getUser().getUid());
+            params.put("typeid", vib.getVid());
+            params.put("type", "3");
             SPUtil.addParams(params);
-            httpUtils.send(HttpMethod.POST, InterfaceJsonfile.ISCELLECTION, params, new RequestCallBack<String>() {
+            OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.ISCELLECTION, new OkHttpClientManager.ResultCallback() {
                 @Override
-                public void onSuccess(ResponseInfo<String> responseInfo) {
-                    LogUtils.i("isCollection result-->" + responseInfo.result);
+                public void onSuccess(Object response) {
+                    LogUtils.i("isCollection result-->" + response.toString());
                     JSONObject obj = null;
                     try {
-                        obj = JSONObject.parseObject(responseInfo.result);
+                        obj = JSONObject.parseObject(response.toString());
                     } catch (Exception e) {
                         return;
                     }
@@ -338,10 +347,10 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
                 }
 
                 @Override
-                public void onFailure(HttpException error, String msg) {
+                public void onFailure(Request request, Exception e) {
                     LogUtils.i("isCollection failed");
                 }
-            });
+            }, params);
         } else {
             try {
                 NewsItemBeanForCollection nbfc = dbHelper.getCollectionDBUitls()
@@ -460,6 +469,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
             in.setClass(this, WelcomeActivity.class);
             startActivity(in);
         }
+        OkHttpClientManager.cancel(tag);
         super.onDestroy();
     }
 
@@ -569,7 +579,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
 
     private void getData() {
         LogUtils.i("getData");
-        File pageFile = App
+        final File pageFile = App
                 .getFile(videoPath + File.separator + "videodetail" + File.separator + "detail" + vib.getVid());
         LogUtils.i("pageFile-->" + pageFile.getAbsolutePath());
 
@@ -590,7 +600,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
             mTitle = vdib.getTitle();
             mPath = vdib.getVideourl();
 
-            LogUtils.i("video path:" + mPath + "  mTitle-->" + mTitle);
+            Log.i("test", "video path:" + mPath + "  mTitle-->" + mTitle);
             if (mPath.startsWith("http:")) {
                 mVideoView.setVideoURI(Uri.parse(mPath));
             } else {
@@ -600,20 +610,19 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
             return;
         }
 
-        httpUtils.download(vib.getJson_url(), pageFile.getAbsolutePath(), new RequestCallBack<File>() {
+        OkHttpClientManager.getAsyn(tag, vib.getJson_url(), new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<File> responseInfo) {
-                String data = App.getFileContext(responseInfo.result);
+            public void onSuccess(Object response) {
+                String data = response.toString();
                 if (null == data || "".equals(data)) {
                     return;
                 }
+                SPUtil.saveFile(pageFile, data);
                 LogUtils.i("http video detail data-->" + data);
-
                 JSONObject obj = null;
                 try {
                     obj = JSONObject.parseObject(data);
                 } catch (Exception e) {
-                    responseInfo.result.delete();
                     e.printStackTrace();
                     TUtils.toast(getString(R.string.toast_cache_failed));
                     return;
@@ -632,7 +641,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
             }
 
             @Override
-            public void onFailure(HttpException error, String msg) {
+            public void onFailure(Request request, Exception e) {
                 LogUtils.i("getvideo detail failed-");
             }
         });
@@ -659,19 +668,22 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
                 mVideoView.setVideoPath(mPath);
             }
         } else {
-            httpUtils.download(jsonurl,
-                    App.getInstance().getJsonFileCacheRootDir() + File.separator + "temp" + File.separator + "album",
-                    new RequestCallBack<File>() {
+            String albumPath = App.getInstance().getJsonFileCacheRootDir() + File.separator + "temp" + File.separator + "album";
+            final File pathFile = App.getFile(App.getInstance().getJsonFileCacheRootDir() + File.separator + "temp" + File.separator + "album");
+            OkHttpClientManager.getAsyn(tag, jsonurl,
+                    new OkHttpClientManager.ResultCallback() {
                         @Override
-                        public void onSuccess(ResponseInfo<File> responseInfo) {
+                        public void onSuccess(Object response) {
                             try {
-                                String data = App.getFileContext(responseInfo.result);
+                                String data =response.toString();
                                 LogUtils.i("result-->" + data);
+                                if (!TextUtils.isEmpty(data)){
+                                    SPUtil.saveFile(pathFile,data);
+                                }
                                 JSONObject obj = null;
                                 try {
                                     obj = JSONObject.parseObject(data);
                                 } catch (Exception e) {
-                                    responseInfo.result.delete();
                                     e.printStackTrace();
                                     TUtils.toast(getString(R.string.toast_cache_failed));
                                     return;
@@ -700,7 +712,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
                         }
 
                         @Override
-                        public void onFailure(HttpException error, String msg) {
+                        public void onFailure(Request request, Exception e) {
 
                         }
                     });
@@ -725,6 +737,8 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
         Log.e("test", "" + mVideoView);
         mLoadingView.setVisibility(View.GONE);
     }
+
+
 
 
 }

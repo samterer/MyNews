@@ -82,8 +82,8 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
 
     private void getKeys() {
         try {
-//            final File target = App.getFile(App.getInstance().getJsonFileCacheRootDir() + File.separator + "saerch_keys");
-//            Log.i("target.getAbsolutePath()", "target.getAbsolutePath()" + target.getAbsolutePath());
+            final File target = App.getFile(App.getInstance().getJsonFileCacheRootDir() + File.separator + "saerch_keys");
+            Log.i("target.getAbsolutePath()", "target.getAbsolutePath()" + target.getAbsolutePath());
             Map<String, String> requestParams = new HashMap<>();
             requestParams.put("Pagesize", "10");
             OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.SEARCH_KEY,
@@ -94,7 +94,7 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
                             try {
 //                             String json = App.getFileContext(responseInfo.result);
                                 String json = response.toString();
-                                saveFile(json);
+                                SPUtil.saveFile(target, json);
                                 Log.e("test", json);
                                 org.json.JSONArray jsonArray = new JSONObject(json).getJSONArray("data");
                                 int lenght = jsonArray.length();
@@ -124,24 +124,6 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
             e.printStackTrace();
         }
 
-    }
-
-    public static void saveFile(String str) {
-        final File target = App.getFile(App.getInstance().getJsonFileCacheRootDir() + File.separator + "saerch_keys");
-        String filePath = target.getAbsolutePath();
-        try {
-            File file = new File(filePath);
-            if (!file.exists()) {
-                File dir = new File(file.getParent());
-                dir.mkdirs();
-                file.createNewFile();
-            }
-            FileOutputStream outStream = new FileOutputStream(file);
-            outStream.write(str.getBytes());
-            outStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 

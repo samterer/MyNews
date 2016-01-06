@@ -3,9 +3,7 @@ package com.hzpd.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,29 +13,17 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hzpd.custorm.CircleImageView;
 import com.hzpd.custorm.PopUpwindowLayout;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.MyCommentListBean;
 import com.hzpd.ui.activity.XF_PInfoActivity;
 import com.hzpd.ui.activity.ZQ_ReplyCommentActivity;
-import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.Log;
-import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
-import com.lidroid.xutils.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,24 +36,24 @@ public class MyCommentListAdapter extends RecyclerView.Adapter {
 
     private List<MyCommentListBean> mDataList;
     private SPUtil spu;
-    private HttpUtils httpUtils;
     private Context context;
     private LayoutInflater mInflater;
     final static int TYPE_NORMAL = 0xCC;
     final static int TYPE_LOADING = 0xDD;
     public boolean showLoading = false;
+    private View.OnClickListener onClickListener;
 
     public void setShowLoading(boolean showLoading) {
         this.showLoading = showLoading;
         notifyDataSetChanged();
     }
 
-    public MyCommentListAdapter(Context context) {
+    public MyCommentListAdapter(Context context, View.OnClickListener onClickListener) {
         spu = SPUtil.getInstance();
-        httpUtils = SPUtil.getHttpUtils();
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
         mDataList = new ArrayList<>();
+        this.onClickListener = onClickListener;
     }
 
 
@@ -122,13 +108,8 @@ public class MyCommentListAdapter extends RecyclerView.Adapter {
             case TYPE_NORMAL: {
                 final MyCommentListBean item = mDataList.get(position);
                 final ItemViewHolder viewHolder = (ItemViewHolder) holder;
-//                if (position == 1) {
-//                    viewHolder.line.setVisibility(View.GONE);
-//                }
-
                 viewHolder.userId = item.getUid();
                 // 显示头像
-
                 SPUtil.displayImage(item.getAvatar_path()
                         , viewHolder.comment_user_icon
                         , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.XF_Avatar));
@@ -156,7 +137,7 @@ public class MyCommentListAdapter extends RecyclerView.Adapter {
 
                 // 评论内容
                 viewHolder.comment_text.setText(item.getContent());
-//            holder.rl_comment_text.setOnClickListener(new View.OnClickListener() {
+
                 viewHolder.comment_text.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -165,7 +146,6 @@ public class MyCommentListAdapter extends RecyclerView.Adapter {
                         }
                         ArrayList<String> titles = new ArrayList<String>();
                         titles.add(context.getResources().getString(R.string.reply_comment));
-//                titles.add("删除");
                         View view = mInflater.inflate(R.layout.layout_popupwindow, null);
                         PopUpwindowLayout popUpwindowLayout = (PopUpwindowLayout) view.findViewById(R.id.llayout_popupwindow);
                         popUpwindowLayout.initViews(context, titles, false);
@@ -215,63 +195,66 @@ public class MyCommentListAdapter extends RecyclerView.Adapter {
 
                 // 点赞数
                 viewHolder.comment_up_num.setText(item.getPraise());
-                viewHolder.up_icon.setTag(item);
-                viewHolder.up_icon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            viewHolder.up_icon.setEnabled(false);
-                            Log.e("holder.digNum", "holder.digNum");
-                            if (null == spu.getUser()) {
-                                return;
-                            }
-                            Log.e("test", "点赞" + item.getCid());
-                            Log.i(getLogTag(), "uid-" + spu.getUser().getUid() + "  mType-News" + " nid-" + item.getCid());
-                            final RequestParams params = RequestParamsUtils.getParamsWithU();
-                            params.addBodyParameter("uid", spu.getUser().getUid());
-                            params.addBodyParameter("type", "News");
-                            params.addBodyParameter("nid", item.getCid());
-                            params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-                            SPUtil.addParams(params);
-                            httpUtils.send(HttpRequest.HttpMethod.POST
-                                    , InterfaceJsonfile.PRISE1//InterfaceApi.mPraise
-                                    , params
-                                    , new RequestCallBack<String>() {
-                                @Override
-                                public void onFailure(HttpException arg0, String arg1) {
-                                    Log.e(getLogTag(), "赞failed!");
-                                    TUtils.toast(context.getString(R.string.toast_server_no_response));
-                                    viewHolder.up_icon.setEnabled(true);
-                                }
 
-                                @Override
-                                public void onSuccess(ResponseInfo<String> arg0) {
-                                    Log.d(getLogTag(), "赞-->" + arg0.result);
-                                    JSONObject obj = JSONObject.parseObject(arg0.result);
-
-                                    if (200 == obj.getInteger("code")) {
-                                        Log.e("", "m---->" + item.getPraise());
-                                        SharePreferecesUtils.setParam(context, "" + item.getCid(), "1");
-                                        if (TextUtils.isDigitsOnly(item.getPraise())) {
-                                            viewHolder.up_icon.setImageResource(R.drawable.details_icon_likeit);
-                                            int i = Integer.parseInt(item.getPraise());
-                                            i++;
-                                            LogUtils.i("i---->" + i);
-                                            viewHolder.comment_up_num.setText(i + "");
-                                            item.setPraise(i + "");
-                                            notifyDataSetChanged();
-                                            viewHolder.up_icon.setEnabled(false);
-                                        }
-                                    } else {
-                                        viewHolder.up_icon.setEnabled(true);
-                                    }
-                                }
-                            });
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+                viewHolder.item=item;
+                viewHolder.up_icon.setTag(viewHolder);
+                viewHolder.up_icon.setOnClickListener(onClickListener);
+//                viewHolder.up_icon.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        try {
+//                            viewHolder.up_icon.setEnabled(false);
+//                            Log.e("holder.digNum", "holder.digNum");
+//                            if (null == spu.getUser()) {
+//                                return;
+//                            }
+//                            Log.e("test", "点赞" + item.getCid());
+//                            Log.i(getLogTag(), "uid-" + spu.getUser().getUid() + "  mType-News" + " nid-" + item.getCid());
+//                            final RequestParams params = RequestParamsUtils.getParamsWithU();
+//                            params.addBodyParameter("uid", spu.getUser().getUid());
+//                            params.addBodyParameter("type", "News");
+//                            params.addBodyParameter("nid", item.getCid());
+//                            params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+//                            SPUtil.addParams(params);
+//                            httpUtils.send(HttpRequest.HttpMethod.POST
+//                                    , InterfaceJsonfile.PRISE1//InterfaceApi.mPraise
+//                                    , params
+//                                    , new RequestCallBack<String>() {
+//                                @Override
+//                                public void onFailure(HttpException arg0, String arg1) {
+//                                    Log.e(getLogTag(), "赞failed!");
+//                                    TUtils.toast(context.getString(R.string.toast_server_no_response));
+//                                    viewHolder.up_icon.setEnabled(true);
+//                                }
+//
+//                                @Override
+//                                public void onSuccess(ResponseInfo<String> arg0) {
+//                                    Log.d(getLogTag(), "赞-->" + arg0.result);
+//                                    JSONObject obj = JSONObject.parseObject(arg0.result);
+//
+//                                    if (200 == obj.getInteger("code")) {
+//                                        Log.e("", "m---->" + item.getPraise());
+//                                        SharePreferecesUtils.setParam(context, "" + item.getCid(), "1");
+//                                        if (TextUtils.isDigitsOnly(item.getPraise())) {
+//                                            viewHolder.up_icon.setImageResource(R.drawable.details_icon_likeit);
+//                                            int i = Integer.parseInt(item.getPraise());
+//                                            i++;
+//                                            LogUtils.i("i---->" + i);
+//                                            viewHolder.comment_up_num.setText(i + "");
+//                                            item.setPraise(i + "");
+//                                            notifyDataSetChanged();
+//                                            viewHolder.up_icon.setEnabled(false);
+//                                        }
+//                                    } else {
+//                                        viewHolder.up_icon.setEnabled(true);
+//                                    }
+//                                }
+//                            });
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
             }
             break;
             case TYPE_LOADING: {
@@ -279,7 +262,6 @@ public class MyCommentListAdapter extends RecyclerView.Adapter {
             }
             break;
         }
-
 
     }
 
@@ -301,52 +283,6 @@ public class MyCommentListAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private void praise(final TextView tv, final MyCommentListBean cb) {
-        final Context context = tv.getContext();
-        if (null == spu.getUser()) {
-            return;
-        }
-        Log.i(getLogTag(), "uid-" + spu.getUser().getUid() + "  mType-News" + " nid-" + cb.getCid());
-        RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("uid", spu.getUser().getUid());
-        params.addBodyParameter("type", "News");
-        params.addBodyParameter("nid", cb.getCid());
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-        SPUtil.addParams(params);
-        httpUtils.send(HttpRequest.HttpMethod.POST
-                , InterfaceJsonfile.PRISE1//InterfaceApi.mPraise
-                , params
-                , new RequestCallBack<String>() {
-            @Override
-            public void onFailure(HttpException arg0, String arg1) {
-                Log.e(getLogTag(), "赞failed!");
-                TUtils.toast(context.getString(R.string.toast_server_no_response));
-            }
-
-            @Override
-            public void onSuccess(ResponseInfo<String> arg0) {
-                Log.d(getLogTag(), "赞-->" + arg0.result);
-                JSONObject obj = JSONObject.parseObject(arg0.result);
-//                TUtils.toast(obj.getString("msg"));
-
-                if (200 == obj.getInteger("code")) {
-                    LogUtils.i("m---->" + cb.getPraise());
-                    SharePreferecesUtils.setParam(context, "" + cb.getCid(), "1");
-                    if (TextUtils.isDigitsOnly(cb.getPraise())) {
-                        Drawable img = context.getResources().getDrawable(R.drawable.digupicon_comment_select);
-                        img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
-                        tv.setCompoundDrawables(null, null, img, null);
-                        int i = Integer.parseInt(cb.getPraise());
-                        i++;
-                        LogUtils.i("i---->" + i);
-                        tv.setText(i + "");
-                        cb.setPraise(i + "");
-                        notifyDataSetChanged();
-                    }
-                }
-            }
-        });
-    }
 
     public String getLogTag() {
         return getClass().getSimpleName();
@@ -361,18 +297,20 @@ public class MyCommentListAdapter extends RecyclerView.Adapter {
     }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
+        public MyCommentListBean item;
         public String userId = "";
         public CircleImageView comment_user_icon;
         public TextView comment_user_name;
         public TextView comment_text;
         public TextView comment_time;
         public ImageView up_icon;
-        private TextView comment_up_num;
-        private View rl_comment_text;
-        private View line;
+        public TextView comment_up_num;
+        public View rl_comment_text;
+        public View line;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
+            itemView.setTag(this);
         }
     }
 }

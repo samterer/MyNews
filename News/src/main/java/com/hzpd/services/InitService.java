@@ -9,21 +9,20 @@ import com.hzpd.modle.UserBean;
 import com.hzpd.modle.db.UserLog;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseStream;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
 import com.news.update.Utils;
+import com.squareup.okhttp.Request;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 public class InitService extends IntentService {
 
@@ -31,12 +30,11 @@ public class InitService extends IntentService {
     public static final String UserLogAction = "user.log.action";
     public static final String SHARE_KEY_AD = "key_ad";
 
-    private HttpUtils httpUtils;
     private String rootPath;
     String siteid = null;
     String CACHE_url = null;
     String mAdPic_url = null;
-    String CHANNELLIST_url = null;
+    private Object tag;
 
     public InitService() {
         super("InitService");
@@ -45,11 +43,11 @@ public class InitService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        httpUtils = SPUtil.getHttpUtils();
         rootPath = App.getInstance().getJsonFileCacheRootDir();
         siteid = InterfaceJsonfile.SITEID;
         CACHE_url = InterfaceJsonfile.CACHE;
         mAdPic_url = InterfaceJsonfile.mAdPic;
+        tag= OkHttpClientManager.getTag();
     }
 
     @Override
@@ -75,6 +73,7 @@ public class InitService extends IntentService {
         if (BuildConfig.DEBUG || !Utils.isNetworkConnected(this)) {
             return;
         }
+
         UserBean user = SPUtil.getInstance().getUser();
         String uid = "";
         if (user != null && !TextUtils.isEmpty(user.getUid())) {
@@ -82,21 +81,38 @@ public class InitService extends IntentService {
         }
         final DbUtils dbUtils = DBHelper.getInstance(getApplicationContext()).getLogDbUtils();
         try {
-            List<UserLog> logs = dbUtils.findAll(UserLog.class);
+            final List<UserLog> logs = dbUtils.findAll(UserLog.class);
             if (logs == null || logs.isEmpty() || logs.size() < 20) {
                 return;
             }
             String json = FjsonUtil.toJsonString(logs);
-            RequestParams params = RequestParamsUtils.getParams();
-            params.addBodyParameter("uid", uid);
-            params.addBodyParameter("json", json);
+            Map<String,String> params = RequestParamsUtils.getMaps();
+            params.put("uid", uid);
+            params.put("json", json);
             SPUtil.addParams(params);
-            ResponseStream rs = httpUtils.sendSync(HttpMethod.POST, InterfaceJsonfile.USER_LOG, params);
-            String str = rs.readString();
-            if (!TextUtils.isEmpty(str)) {
-                Log.e("test", str);
-                dbUtils.deleteAll(logs);
-            }
+            OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.USER_LOG, new OkHttpClientManager.ResultCallback() {
+                @Override
+                public void onSuccess(Object response) {
+                    if (response.toString()!=null){
+                        try {
+                            dbUtils.deleteAll(logs);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Request request, Exception e) {
+
+                }
+            }, params);
+//            ResponseStream rs = httpUtils.sendSync(HttpMethod.POST, InterfaceJsonfile.USER_LOG, params);
+//            String str = rs.readString();
+//            if (!TextUtils.isEmpty(str)) {
+//                Log.e("test", str);
+//                dbUtils.deleteAll(logs);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

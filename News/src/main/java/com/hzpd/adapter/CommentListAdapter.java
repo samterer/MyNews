@@ -50,16 +50,14 @@ public class CommentListAdapter extends BaseAdapter {
     private SPUtil spu;
     private HttpUtils httpUtils;
     private String nid;
+    private View.OnClickListener onClickListener;
 
-    public CommentListAdapter() {
-        spu = SPUtil.getInstance();
-        httpUtils = SPUtil.getHttpUtils();
-    }
 
     public CommentListAdapter(String nid) {
         this.nid = nid;
         spu = SPUtil.getInstance();
         httpUtils = SPUtil.getHttpUtils();
+//        this.onClickListener=onClickListener;
     }
 
     @Override
@@ -276,49 +274,6 @@ public class CommentListAdapter extends BaseAdapter {
             mDataList.addAll(positon, data);
             notifyDataSetChanged();
         }
-    }
-
-    private void praise(final ImageView image, final TextView text, final CommentzqzxBean cb) {
-        final Context context = image.getContext();
-        if (null == spu.getUser()) {
-            return;
-        }
-        Log.i(getLogTag(), "uid-" + spu.getUser().getUid() + "  mType-News" + " nid-" + cb.getCid());
-        RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("uid", spu.getUser().getUid());
-        params.addBodyParameter("type", "News");
-        params.addBodyParameter("nid", cb.getCid());
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-        SPUtil.addParams(params);
-        httpUtils.send(HttpRequest.HttpMethod.POST
-                , InterfaceJsonfile.PRISE1//InterfaceApi.mPraise
-                , params
-                , new RequestCallBack<String>() {
-            @Override
-            public void onFailure(HttpException arg0, String arg1) {
-                Log.e(getLogTag(), "赞failed!");
-                TUtils.toast(context.getString(R.string.toast_server_no_response));
-            }
-
-            @Override
-            public void onSuccess(ResponseInfo<String> arg0) {
-                Log.d(getLogTag(), "赞-->" + arg0.result);
-                JSONObject obj = JSONObject.parseObject(arg0.result);
-                if (200 == obj.getInteger("code")) {
-                    LogUtils.i("m---->" + cb.getPraise());
-                    SharePreferecesUtils.setParam(context, "" + cb.getCid(), "1");
-                    if (TextUtils.isDigitsOnly(cb.getPraise())) {
-                        image.setImageResource(R.drawable.details_icon_likeit);
-                        int i = Integer.parseInt(cb.getPraise());
-                        i++;
-                        LogUtils.i("i---->" + i);
-                        text.setText(i + "");
-                        cb.setPraise(i + "");
-                        notifyDataSetChanged();
-                    }
-                }
-            }
-        });
     }
 
     public String getLogTag() {

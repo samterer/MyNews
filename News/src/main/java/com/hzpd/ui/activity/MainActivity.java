@@ -30,8 +30,6 @@ import com.hzpd.utils.ExitApplication;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.util.LogUtils;
 import com.news.update.DownloadService;
 import com.news.update.LocalUpdateDialogFragment;
@@ -40,8 +38,6 @@ import com.news.update.UpdateUtils;
 import com.news.update.Utils;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
@@ -54,8 +50,6 @@ public class MainActivity extends BaseActivity {
     public MainActivity() {
         super();
     }
-
-    List<HttpHandler> handlerList = new ArrayList<>();
 
 
     private MyViewPager viewPager;
@@ -109,11 +103,7 @@ public class MainActivity extends BaseActivity {
         viewPager.setOffscreenPageLimit(adapter.getCount());
         viewPager.setAdapter(adapter);
         onClickIndex(0);
-
-        checkVersion();
-
         Thread.setDefaultUncaughtExceptionHandler(App.uncaughtExceptionHandler);
-
         App.isStartApp = true;
         EventUtils.sendStart(this);
         Intent intent = new Intent(this, InitService.class);
@@ -157,23 +147,9 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    protected HttpUtils httpUtils;
-
-    private void checkVersion() {
-
-    }
-
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
-        for (HttpHandler httpHandler : handlerList) {
-            if (httpHandler.getState() == HttpHandler.State.LOADING || httpHandler.getState() == HttpHandler.State.STARTED) {
-                httpHandler.setRequestCallBack(null);
-                httpHandler.cancel();
-            }
-        }
-        handlerList.clear();
-        httpUtils = null;
         super.onDestroy();
     }
 
@@ -182,15 +158,7 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    private void restartApplication() {
-        final Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
-    }
-
     public void onEventMainThread(RestartEvent event) {
-//        restartApplication();
         finish();
     }
 
@@ -312,6 +280,5 @@ public class MainActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
-
 
 }

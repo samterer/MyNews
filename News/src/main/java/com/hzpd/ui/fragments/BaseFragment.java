@@ -11,16 +11,12 @@ import com.hzpd.utils.ACache;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.http.HttpHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.common.lib.analytics.AnalyticCallback;
 import org.common.lib.analytics.FragmentLifecycleAction;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 public class BaseFragment extends Fragment implements AnalyticCallback {
 
@@ -48,7 +44,6 @@ public class BaseFragment extends Fragment implements AnalyticCallback {
     private FragmentLifecycleAction action = new FragmentLifecycleAction(this);
 
     protected ImageLoader mImageLoader;
-    protected HttpUtils httpUtils;
     protected SPUtil spu;//
     protected ACache aCache;
     protected FragmentManager fm;
@@ -61,12 +56,10 @@ public class BaseFragment extends Fragment implements AnalyticCallback {
         super.onCreate(savedInstanceState);
         action.onCreate(this);
         fm = getChildFragmentManager();
-        httpUtils = SPUtil.getHttpUtils();
         spu = SPUtil.getInstance();
         mImageLoader = ImageLoader.getInstance();
     }
 
-    List<HttpHandler> handlerList = new ArrayList<>();
 
     @Override
     public void onAttach(Activity activity) {
@@ -124,15 +117,6 @@ public class BaseFragment extends Fragment implements AnalyticCallback {
 
     @Override
     public void onStop() {
-        for (HttpHandler httpHandler : handlerList) {
-            if (httpHandler != null) {
-                if (httpHandler.getState() == HttpHandler.State.LOADING || httpHandler.getState() == HttpHandler.State.STARTED) {
-                    httpHandler.setRequestCallBack(null);
-                    httpHandler.cancel();
-                }
-            }
-        }
-        handlerList.clear();
         super.onStop();
         action.onStop(this);
     }

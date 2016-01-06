@@ -375,6 +375,9 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                     public void onSuccess(Object response) {
                         isRefresh = false;
                         mSwipeRefreshWidget.setRefreshing(false);
+                        if (response == null) {
+                            return;
+                        }
                         final JSONObject obj = FjsonUtil.parseObject(response.toString());
                         if (null != obj) {
                             setData(obj);
@@ -471,7 +474,6 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                 }, params
         );
     }
-
 
 
     //服务端返回数据处理

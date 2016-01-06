@@ -1,5 +1,6 @@
 package com.hzpd.ui.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,18 +23,17 @@ import com.hzpd.hflt.R;
 import com.hzpd.ui.App;
 import com.hzpd.ui.widget.ChoiceRateView;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
+import com.squareup.okhttp.Request;
 
 import org.common.lib.analytics.AnalyticBaseDialogFragment;
+
+import java.util.Map;
 
 /**
  * 用户反馈，带标签
@@ -50,6 +50,7 @@ public class FeedbackTagFragment extends AnalyticBaseDialogFragment implements V
     }
 
     public static boolean shown = false;
+    private Object httpTag;
 
     @Override
     public void show(FragmentManager manager, String tag) {
@@ -84,7 +85,13 @@ public class FeedbackTagFragment extends AnalyticBaseDialogFragment implements V
         dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(false);
         createContentView(dialog);
+
         return dialog;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
     }
 
     @Override
@@ -131,6 +138,7 @@ public class FeedbackTagFragment extends AnalyticBaseDialogFragment implements V
 
     @Override
     public void onDestroy() {
+//        OkHttpClientManager.cancel(httpTag);
         super.onDestroy();
     }
 
@@ -175,48 +183,60 @@ public class FeedbackTagFragment extends AnalyticBaseDialogFragment implements V
     }
 
     private void submit(String content, int rate) {
+        httpTag= OkHttpClientManager.getTag();
         sending = true;
         String feedback_url = InterfaceJsonfile.feedback;
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("siteid", "1");
-        params.addBodyParameter("rate", "" + rate);
-        params.addBodyParameter("content", content);
+        Map<String ,String> params = RequestParamsUtils.getMaps();
+        params.put("siteid", "1");
+        params.put("rate", "" + rate);
+        params.put("content", content);
         SPUtil.addParams(params);
-        HttpUtils httpUtils = SPUtil.getHttpUtils();
-        httpUtils.send(HttpRequest.HttpMethod.POST
+//        HttpUtils httpUtils = SPUtil.getHttpUtils();
+        OkHttpClientManager.postAsyn(httpTag
                 , feedback_url
-                , params
-                , new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                try {
-                    String json = responseInfo.result;
-                    JSONObject obj = FjsonUtil
-                            .parseObject(json);
-                    if (null != obj) {
-                        if (200 == obj.getIntValue("code")) {
-                            TUtils.toast(App.getInstance().getString(R.string.feed_ok));
-                        } else {
-                            TUtils.toast(App.getInstance().getString(R.string.feed_fail));
+                , new OkHttpClientManager.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.i("submit","submit  onSuccess");
+                        try {
+                            String json = response.toString();
+                            JSONObject obj = FjsonUtil
+                                    .parseObject(json);
+                            if (null != obj) {
+                                if (200 == obj.getIntValue("code")) {
+                                    TUtils.toast(App.getInstance().getString(R.string.feed_ok));
+                                } else {
+                                    TUtils.toast(App.getInstance().getString(R.string.feed_fail));
+                                }
+                            } else {
+                                TUtils.toast(App.getInstance().getString(R.string.toast_server_error));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } else {
-                        TUtils.toast(App.getInstance().getString(R.string.toast_server_error));
+                        sending = false;
+                        success = true;
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                sending = false;
-                success = true;
-            }
 
-            @Override
-            public void onFailure(HttpException error, String msg) {
-                sending = false;
-                TUtils.toast(getString(R.string.toast_server_error));
-            }
-        });
+                    @Override
+                    public void onFailure(Request request, Exception e) {
+                        Log.i("submit","submit  onFailure");
+                        sending = false;
+                        if (isAdded()){
+                            TUtils.toast(getString(R.string.toast_server_error));
+                        }
+                    }
+                }, params
+        );
 
     }
+
+    @Override
+    public void onDestroyView() {
+//        OkHttpClientManager.cancel("httpTag");
+        super.onDestroyView();
+    }
+
 
     @Override
     public String getAnalyticPageName() {

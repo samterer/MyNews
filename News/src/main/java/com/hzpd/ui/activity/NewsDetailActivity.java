@@ -73,6 +73,7 @@ import com.hzpd.ui.widget.CustomRecyclerView;
 import com.hzpd.ui.widget.FontTextView;
 import com.hzpd.ui.widget.SwipeCloseLayout;
 import com.hzpd.url.InterfaceJsonfile;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.AvoidOnClickFastUtils;
@@ -92,14 +93,8 @@ import com.hzpd.utils.showwebview.MyJavascriptInterface;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.HttpHandler;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.lidroid.xutils.util.LogUtils;
 import com.news.update.Utils;
+import com.squareup.okhttp.Request;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -108,6 +103,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -180,6 +176,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             }
         }
     };
+    private Object tag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,6 +188,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         setContentView(R.layout.news_details_layout);
         super.changeStatusBar();
         getThisIntent();
+        tag = OkHttpClientManager.getTag();
         initViews();
         if (nb != null && BuildConfig.DEBUG) {
             TUtils.toast("nid=" + nb.getNid());
@@ -400,6 +398,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         } catch (Exception e) {
             e.printStackTrace();
         }
+        OkHttpClientManager.cancel(tag);
         super.onDestroy();
     }
 
@@ -617,23 +616,24 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     }
 
     private void DalNewsPraise(String type, String num) {//type：1：赞   2：踩 , 默认:1 nid: 新闻id ;num: 1 赞或踩；  0 :取消赞  或 取消踩
-        RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("type", "" + type);
-        params.addBodyParameter("nid", nb.getNid());
-        params.addBodyParameter("num", "" + num);
+        Map<String, String> params = RequestParamsUtils.getMapWithU();
+        params.put("type", "" + type);
+        params.put("nid", nb.getNid());
+        params.put("num", "" + num);
         //like unlike
         SPUtil.addParams(params);
-        HttpHandler httpHandler = httpUtils.send(HttpMethod.POST, InterfaceJsonfile.News_Price// InterfaceApi.addcollection
-                , params, new RequestCallBack<String>() {
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.News_Price// InterfaceApi.addcollection
+                , new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
+            public void onSuccess(Object response) {
+
             }
 
             @Override
-            public void onFailure(HttpException error, String msg) {
+            public void onFailure(Request request, Exception e) {
+
             }
-        });
-        handlerList.add(httpHandler);
+        }, params);
     }
 
 
@@ -674,7 +674,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         if (mBean == null) {
                             return;
                         }
-                        LogUtils.i("click share");
+                        Log.i("test","click share");
                         String imgurl = null;
                         if (null != nb.getImgs() && nb.getImgs().length > 0) {
                             imgurl = nb.getImgs()[0];
@@ -731,20 +731,19 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     }
 
     public void thirdlogin(ThirdLoginBean tlb) {
-        RequestParams params = RequestParamsUtils.getParams();
-        params.addBodyParameter("userid", tlb.getUserid());
-        params.addBodyParameter("gender", tlb.getGender());
-        params.addBodyParameter("nickname", tlb.getNickname());
-        params.addBodyParameter("photo", tlb.getPhoto());
-        params.addBodyParameter("third", tlb.getThird());
-        params.addBodyParameter("is_ucenter", "0");
+        Map<String, String> params = RequestParamsUtils.getMaps();
+        params.put("userid", tlb.getUserid());
+        params.put("gender", tlb.getGender());
+        params.put("nickname", tlb.getNickname());
+        params.put("photo", tlb.getPhoto());
+        params.put("third", tlb.getThird());
+        params.put("is_ucenter", "0");
         SPUtil.addParams(params);
-        HttpHandler httpHandler = httpUtils.send(HttpMethod.POST, InterfaceJsonfile.thirdLogin, params,
-                new RequestCallBack<String>() {
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.thirdLogin,
+                new OkHttpClientManager.ResultCallback() {
                     @Override
-                    public void onSuccess(ResponseInfo<String> responseInfo) {
-                        JSONObject obj = FjsonUtil
-                                .parseObject(responseInfo.result);
+                    public void onSuccess(Object response) {
+                        JSONObject obj = FjsonUtil.parseObject(response.toString());
                         if (null == obj) {
                             return;
                         }
@@ -769,12 +768,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     }
 
                     @Override
-                    public void onFailure(HttpException error, String msg) {
-                        LogUtils.e("test login failed");
+                    public void onFailure(Request request, Exception e) {
+                        Log.e("test","test login failed");
                     }
-                });
-        httpHandler.setRequestCallBack(null);
-        handlerList.add(httpHandler);
+                }, params);
     }
 
     private ArrayList<CommentzqzxBean> latestList;
@@ -1027,34 +1024,32 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         if (mBean == null) {
             return;
         }
-        RequestParams params = RequestParamsUtils.getParamsWithU();
-        params.addBodyParameter("Page", "" + mCurPage);
-        params.addBodyParameter("PageSize", "" + mPageSize);
-        params.addBodyParameter("nid", mBean.getNid());
-        params.addBodyParameter("type", "News");
-        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+        Map<String, String> params = RequestParamsUtils.getMapWithU();
+        params.put("Page", "" + mCurPage);
+        params.put("PageSize", "" + mPageSize);
+        params.put("nid", mBean.getNid());
+        params.put("type", "News");
+        params.put("siteid", InterfaceJsonfile.SITEID);
         SPUtil.addParams(params);
-        HttpHandler httpHandler = httpUtils.send(HttpMethod.POST
+        OkHttpClientManager.postAsyn(tag
                 , InterfaceJsonfile.CHECKCOMMENT
-                , params
-                , new RequestCallBack<String>() {
+                , new OkHttpClientManager.ResultCallback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
+            public void onSuccess(Object response) {
 
-                if (responseInfo.result == null) {
+                if (response.toString() == null) {
                     ll_rob.setVisibility(View.VISIBLE);
                     comment_layout.setVisibility(View.GONE);
                 } else {
-                    parseCommentJson(responseInfo.result);
+                    parseCommentJson(response.toString());
                 }
             }
 
-
             @Override
-            public void onFailure(HttpException error, String msg) {
+            public void onFailure(Request request, Exception e) {
+
             }
-        });
-        handlerList.add(httpHandler);
+        }, params);
     }
 
     private void parseCommentJson(String json) {
@@ -1097,7 +1092,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             final ImageView up_icon = (ImageView) convertView.findViewById(R.id.up_icon);
             final TextView comment_up_num = (TextView) convertView.findViewById(R.id.comment_up_num);
             View line = convertView.findViewById(R.id.line);
-            final CommentzqzxBean item=latestList.get(i);
+            final CommentzqzxBean item = latestList.get(i);
             if (i == 0) {
                 line.setVisibility(View.GONE);
             }
@@ -1193,45 +1188,45 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         }
                         Log.e("test", "点赞" + item.getCid());
                         Log.i(getLogTag(), "uid-" + spu.getUser().getUid() + "  mType-News" + " nid-" + item.getCid());
-                        final RequestParams params = RequestParamsUtils.getParamsWithU();
-                        params.addBodyParameter("uid", spu.getUser().getUid());
-                        params.addBodyParameter("type", "News");
-                        params.addBodyParameter("nid", item.getCid());
-                        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+                        final Map<String, String> params = RequestParamsUtils.getMapWithU();
+                        params.put("uid", spu.getUser().getUid());
+                        params.put("type", "News");
+                        params.put("nid", item.getCid());
+                        params.put("siteid", InterfaceJsonfile.SITEID);
                         SPUtil.addParams(params);
-                        httpUtils.send(HttpMethod.POST
+                        OkHttpClientManager.postAsyn(tag
                                 , InterfaceJsonfile.PRISE1//InterfaceApi.mPraise
-                                , params
-                                , new RequestCallBack<String>() {
-                            @Override
-                            public void onFailure(HttpException arg0, String arg1) {
-                                Log.e(getLogTag(), "赞failed!");
-                                TUtils.toast(getString(R.string.toast_server_no_response));
-                                up_icon.setEnabled(true);
-                            }
+                                , new OkHttpClientManager.ResultCallback() {
+                                    @Override
+                                    public void onSuccess(Object response) {
+                                        Log.d(getLogTag(), "赞-->" + response.toString());
+                                        JSONObject obj = JSONObject.parseObject(response.toString());
 
-                            @Override
-                            public void onSuccess(ResponseInfo<String> arg0) {
-                                Log.d(getLogTag(), "赞-->" + arg0.result);
-                                JSONObject obj = JSONObject.parseObject(arg0.result);
-
-                                if (200 == obj.getInteger("code")) {
-                                    Log.e("", "m---->" + item.getPraise());
-                                    SharePreferecesUtils.setParam(NewsDetailActivity.this, "" + item.getCid(), "1");
-                                    if (TextUtils.isDigitsOnly(item.getPraise())) {
-                                        up_icon.setImageResource(R.drawable.details_icon_likeit);
-                                        int i = Integer.parseInt(item.getPraise());
-                                        i++;
-                                        LogUtils.i("i---->" + i);
-                                        comment_up_num.setText(i + "");
-                                        item.setPraise(i + "");
-                                        up_icon.setEnabled(false);
+                                        if (200 == obj.getInteger("code")) {
+                                            Log.e("", "m---->" + item.getPraise());
+                                            SharePreferecesUtils.setParam(NewsDetailActivity.this, "" + item.getCid(), "1");
+                                            if (TextUtils.isDigitsOnly(item.getPraise())) {
+                                                up_icon.setImageResource(R.drawable.details_icon_likeit);
+                                                int i = Integer.parseInt(item.getPraise());
+                                                i++;
+                                                Log.i("test","i---->" + i);
+                                                comment_up_num.setText(i + "");
+                                                item.setPraise(i + "");
+                                                up_icon.setEnabled(false);
+                                            }
+                                        } else {
+                                            up_icon.setEnabled(true);
+                                        }
                                     }
-                                } else {
-                                    up_icon.setEnabled(true);
-                                }
-                            }
-                        });
+
+                                    @Override
+                                    public void onFailure(Request request, Exception e) {
+                                        Log.e(getLogTag(), "赞failed!");
+                                        TUtils.toast(getString(R.string.toast_server_no_response));
+                                        up_icon.setEnabled(true);
+                                    }
+                                }, params
+                        );
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1247,8 +1242,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         //TODO  获取详细信息
         try {
             File pageFile = App.getFile(detailPathRoot + "detail_" + nb.getNid());
+            Log.i("test", "获取详细信息--->" + pageFile.getAbsolutePath());
             //从缓存中获取
             if (GetFileSizeUtil.getInstance().getFileSizes(pageFile) > 30) {
+                Log.i("test", "获取详细信息--->");
                 try {
                     String data = App.getFileContext(pageFile);
                     JSONObject obj = JSONObject.parseObject(data);
@@ -1273,20 +1270,19 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 }
             }
             final long start = System.currentTimeMillis();
-            HttpHandler httpHandler = httpUtils.download(nb.getJson_url(), detailPathRoot + "detail_" + nb.getNid(), new RequestCallBack<File>() {
-                @Override
-                public void onStart() {
-                    super.onStart();
-                    loadingView.setVisibility(View.VISIBLE);
-                }
 
+            final String target = detailPathRoot + "detail_" + nb.getNid();
+            final File file = App.getFile(target);
+//            detailPathRoot + "detail_" + nb.getNid(),
+            OkHttpClientManager.getAsyn(tag, nb.getJson_url(), new OkHttpClientManager.ResultCallback() {
                 @Override
-                public void onSuccess(ResponseInfo<File> responseInfo) {
+                public void onSuccess(Object response) {
+                    Log.i("test", "获取详细信息--->onSuccess");
                     try {
-                        String data = App.getFileContext(responseInfo.result);
+                        String data = response.toString();
                         if (TextUtils.isEmpty(data)) {
                             //TODO 考虑 没有获取内容 或者 内容为空的情况 服务器满
-                            responseInfo.result.delete();
+                            SPUtil.deleteFiles(target);
                             showEmpty();
                             if (isResume) {
                                 TUtil.toast(NewsDetailActivity.this, getString(R.string.error_delete));
@@ -1295,12 +1291,13 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         }
                         JSONObject obj = FjsonUtil.parseObject(data);
                         if (null == obj) {
-                            responseInfo.result.delete();
+                            SPUtil.deleteFiles(target);
                             if (isResume) {
                                 TUtil.toast(NewsDetailActivity.this, getString(R.string.error_delete));
                             }
                             return;
                         }
+                        SPUtil.saveFile(file, data);
                         try {
                             mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
                             if (mBean == null) {
@@ -1318,20 +1315,31 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 }
 
                 @Override
-                public void onFailure(HttpException error, String msg) {
+                public void onFailure(Request request, Exception e) {
+                    Log.i("test", "获取详细信息--->onFailure");
                     showEmpty();
                     if (isResume) {
-                        if (error.getExceptionCode() == 404) {
-                            TUtil.toast(NewsDetailActivity.this, getString(R.string.error_delete));
-                        } else {
-                            TUtils.toast(getString(R.string.toast_cannot_connect_network));
-                        }
+//                     if (error.getExceptionCode() == 404) {
+//                         TUtil.toast(NewsDetailActivity.this, getString(R.string.error_delete));
+//                     } else {
+//                         TUtils.toast(getString(R.string.toast_cannot_connect_network));
+//                     }
                         AnalyticUtils.sendGaEvent(getApplicationContext(), AnalyticUtils.ACTION.networkErrorOnDetail, null, null, 0L);
                         AnalyticUtils.sendUmengEvent(getApplicationContext(), AnalyticUtils.ACTION.networkErrorOnDetail);
                     }
                 }
+//             @Override
+//             public void onStart() {
+//                 super.onStart();
+//                 loadingView.setVisibility(View.VISIBLE);
+//             }
+//
+//             @Override
+//             public void onSuccess(ResponseInfo<File> responseInfo)
+//
+//             @Override
+//             public void onFailure(HttpException error, String msg)
             });
-            handlerList.add(httpHandler);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1436,18 +1444,18 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         details_tv_subscribe.setText(getString(R.string.look_over));
                         Toast.makeText(NewsDetailActivity.this, getString(R.string.tag_followed), Toast.LENGTH_SHORT).show();
                         if (Utils.isNetworkConnected(NewsDetailActivity.this)) {
-                            RequestParams params = RequestParamsUtils.getParamsWithU();
+                            Map<String, String> params = RequestParamsUtils.getMapWithU();
                             if (spu.getUser() != null) {
-                                params.addBodyParameter("uid", spu.getUser().getUid());
+                                params.put("uid", spu.getUser().getUid());
                             }
-                            params.addBodyParameter("tagId", mBean.getTag().get(0).getId());
+                            params.put("tagId", mBean.getTag().get(0).getId());
                             SPUtil.addParams(params);
-                            HttpHandler httpHandler = httpUtils.send(HttpMethod.POST, InterfaceJsonfile.tag_click_url, params, new RequestCallBack<String>() {
+                            OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.tag_click_url, new OkHttpClientManager.ResultCallback() {
                                 @Override
-                                public void onSuccess(ResponseInfo<String> responseInfo) {
+                                public void onSuccess(Object response) {
                                     JSONObject obj = null;
                                     try {
-                                        obj = JSONObject.parseObject(responseInfo.result);
+                                        obj = JSONObject.parseObject(response.toString());
                                     } catch (Exception e) {
                                         return;
                                     }
@@ -1457,11 +1465,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                                 }
 
                                 @Override
-                                public void onFailure(HttpException error, String msg) {
-                                    LogUtils.i("isCollection failed");
+                                public void onFailure(Request request, Exception e) {
+                                    Log.i("test","isCollection failed");
                                 }
-                            });
-                            handlerList.add(httpHandler);
+                            }, params);
                         }
                         isTagSelect = true;
                     }
@@ -1957,8 +1964,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 dbUtils.save(nibfc);
                 TUtils.toast(getString(R.string.toast_collect_success));
                 long co = dbUtils.count(NewsItemBeanForCollection.class);
-                LogUtils.i("num:" + co);
-                LogUtils.i("type-->" + nibfc.getType());
+                Log.i("test","num:" + co);
+                Log.i("test","type-->" + nibfc.getType());
                 newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
 
             } else {
@@ -1972,24 +1979,25 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         }
 
         if (spu.getUser() != null) {
-            LogUtils.i("Type-->" + nb.getType() + "  Fid-->" + nb.getNid());
-            RequestParams params = RequestParamsUtils.getParamsWithU();
-            params.addBodyParameter("type", "1");
-            params.addBodyParameter("typeid", nb.getNid());
-            params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-            params.addBodyParameter("data", nb.getJson_url());
+            Log.i("test","Type-->" + nb.getType() + "  Fid-->" + nb.getNid());
+            Map<String, String> params = RequestParamsUtils.getMapWithU();
+            params.put("type", "1");
+            params.put("typeid", nb.getNid());
+            params.put("siteid", InterfaceJsonfile.SITEID);
+            params.put("data", nb.getJson_url());
             SPUtil.addParams(params);
-            HttpHandler httpHandler = httpUtils.send(HttpMethod.POST, InterfaceJsonfile.ADDCOLLECTION// InterfaceApi.addcollection
-                    , params, new RequestCallBack<String>() {
+            OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.ADDCOLLECTION// InterfaceApi.addcollection
+                    , new OkHttpClientManager.ResultCallback() {
                 @Override
-                public void onSuccess(ResponseInfo<String> responseInfo) {
+                public void onSuccess(Object response) {
+
                 }
 
                 @Override
-                public void onFailure(HttpException error, String msg) {
+                public void onFailure(Request request, Exception e) {
+
                 }
-            });
-            handlerList.add(httpHandler);
+            }, params);
         }
 
     }
@@ -1998,28 +2006,28 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private void isCollection() {
         if (spu.getUser() == null) {
             try {
-                LogUtils.i("isCollection");
+                Log.i("test","isCollection");
                 NewsItemBeanForCollection nbfc = dbUtils
                         .findFirst(Selector.from(NewsItemBeanForCollection.class).where("nid", "=", nb.getNid()));
-                LogUtils.i("isCollection");
+                Log.i("test","isCollection");
                 if (null != nbfc) {
-                    LogUtils.i("isCollection   getTitle:" + nbfc.getTitle());
+                    Log.i("test","isCollection   getTitle:" + nbfc.getTitle());
                     newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
-            RequestParams params = RequestParamsUtils.getParamsWithU();
-            params.addBodyParameter("typeid", nb.getNid());
-            params.addBodyParameter("type", "1");
+            Map<String, String> params = RequestParamsUtils.getMapWithU();
+            params.put("typeid", nb.getNid());
+            params.put("type", "1");
             SPUtil.addParams(params);
-            HttpHandler httpHandler = httpUtils.send(HttpMethod.POST, InterfaceJsonfile.ISCELLECTION, params, new RequestCallBack<String>() {
+            OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.ISCELLECTION, new OkHttpClientManager.ResultCallback() {
                 @Override
-                public void onSuccess(ResponseInfo<String> responseInfo) {
+                public void onSuccess(Object response) {
                     JSONObject obj = null;
                     try {
-                        obj = JSONObject.parseObject(responseInfo.result);
+                        obj = JSONObject.parseObject(response.toString());
                     } catch (Exception e) {
                         return;
                     }
@@ -2033,11 +2041,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 }
 
                 @Override
-                public void onFailure(HttpException error, String msg) {
-                    LogUtils.i("isCollection failed");
+                public void onFailure(Request request, Exception e) {
+                    Log.i("test","isCollection failed");
                 }
-            });
-            handlerList.add(httpHandler);
+            }, params);
         }
     }
 

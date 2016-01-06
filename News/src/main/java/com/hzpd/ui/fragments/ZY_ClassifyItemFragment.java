@@ -1,6 +1,7 @@
 package com.hzpd.ui.fragments;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,11 +19,13 @@ import com.hzpd.adapter.ClassifyItemListAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.TagBean;
 import com.hzpd.modle.event.ClassifItemEvent;
+import com.hzpd.modle.event.TagEvent;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
@@ -32,8 +35,10 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
+import com.news.update.Utils;
 import com.squareup.okhttp.Request;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +74,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
         View view = null;
         try {
             view = inflater.inflate(R.layout.zy_classify_item_fragment, container, false);
-            tag= OkHttpClientManager.getTag();
+            tag = OkHttpClientManager.getTag();
             progress_container = (FrameLayout) view.findViewById(R.id.progress_container);
             hRecyclerView = (RecyclerView) view.findViewById(R.id.id_recyclerview_horizontal);
             //设置布局管理器
@@ -168,7 +173,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
      */
     private void getClassifyHorServer() {
 
-        final Map<String,String> params = RequestParamsUtils.getMaps();
+        final Map<String, String> params = RequestParamsUtils.getMaps();
         params.put("Page", String.valueOf(Page));
         params.put("PageSize", String.valueOf(pageSize));
         SPUtil.addParams(params);
@@ -246,34 +251,32 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
             parseJsonTag(json);
             releaseHandler();
         }
-        Map<String,String> params = RequestParamsUtils.getMaps();
+        Map<String, String> params = RequestParamsUtils.getMaps();
         params.put("categoryId", id);
         params.put("Page", String.valueOf(vPage));
         params.put("PageSize", String.valueOf(tpageSize));
         SPUtil.addParams(params);
-       OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.classify_url, new OkHttpClientManager.ResultCallback() {
-           @Override
-           public void onSuccess(Object response) {
-               progress_container.setVisibility(View.GONE);
-               sampleAdapter.setShowLoading(false);
-               parseJsonTag(response.toString());
-               if (vPage == 1) {
-                   if (isAdded()) {
-                       SharePreferecesUtils.setParam(getActivity(), KEY_CATEGERY + id, response.toString());
-                   }
-               }
-           }
+        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.classify_url, new OkHttpClientManager.ResultCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                progress_container.setVisibility(View.GONE);
+                sampleAdapter.setShowLoading(false);
+                parseJsonTag(response.toString());
+                if (vPage == 1) {
+                    if (isAdded()) {
+                        SharePreferecesUtils.setParam(getActivity(), KEY_CATEGERY + id, response.toString());
+                    }
+                }
+            }
 
-           @Override
-           public void onFailure(Request request, Exception e) {
-               sampleAdapter.setShowLoading(false);
-           }
+            @Override
+            public void onFailure(Request request, Exception e) {
+                sampleAdapter.setShowLoading(false);
+            }
 
-       }, params);
-        handlerList.add(handler);
+        }, params);
     }
 
-    HttpHandler handler;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -298,14 +301,6 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
     }
 
     public void releaseHandler() {
-        if (handler != null) {
-            if (handler.getState() == HttpHandler.State.LOADING || handler.getState() == HttpHandler.State.STARTED) {
-                handler.setRequestCallBack(null);
-                handler.cancel();
-            }
-            handlerList.remove(handler);
-            handler = null;
-        }
     }
 
     @Override
@@ -337,6 +332,45 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
                 holder.mImg.setLayoutParams(SPUtil.LARGE);
                 moveHead(holder);
                 EventBus.getDefault().post(new ClassifItemEvent("" + holder.tagBean.getId()));
+            } else if (v.getTag() != null & v.getTag() instanceof ClassifyItemListAdapter.ItemViewHolder) {
+                ClassifyItemListAdapter.ItemViewHolder viewHolder = (ClassifyItemListAdapter.ItemViewHolder) v.getTag();
+                Log.i("public", "public");
+                viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
+                viewHolder.tv_subscribe.setTextColor(getActivity().getResources().getColor(R.color.details_tv_check_color));
+                Drawable nav_up = getActivity().getResources().getDrawable(R.drawable.discovery_image_select);
+                nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+                viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+                viewHolder.tv_subscribe.setText(getActivity().getString(R.string.discovery_followed));
+                EventBus.getDefault().post(new TagEvent(viewHolder.tagBean));
+                if (Utils.isNetworkConnected(getActivity())) {
+                    Map<String,String> params = new HashMap<>();
+                    if (spu.getUser() != null) {
+                        params.put("uid", spu.getUser().getUid() + "");
+                    }
+                    params.put("tagId", viewHolder.tagBean.getId() + "");
+                    SPUtil.addParams(params);
+
+                    OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.tag_click_url, new OkHttpClientManager.ResultCallback() {
+                        @Override
+                        public void onSuccess(Object response) {
+                            Log.i("onSuccess", "onSuccess");
+                            JSONObject obj = null;
+                            try {
+                                obj = JSONObject.parseObject(response.toString());
+                            } catch (Exception e) {
+                                return;
+                            }
+                            if (200 == obj.getIntValue("code")) {
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Request request, Exception e) {
+                            Log.i("onSuccess", "onFailure");
+                        }
+                    }, params);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

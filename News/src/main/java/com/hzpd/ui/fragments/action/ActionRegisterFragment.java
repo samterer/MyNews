@@ -518,31 +518,31 @@ tag= OkHttpClientManager.getTag();
         @Override
         protected String doInBackground(String... params) {
             StringBuilder pics = new StringBuilder();
-            for (int i = 0; i < mSelectPath.size(); i++) {
-                File f = new File(mSelectPath.get(i));
-
-                RequestParams para = RequestParamsUtils.getParams();
-                para.addBodyParameter("fpic", f);
-                para.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-                ResponseStream rs;
-                try {
-                    rs = httpUtils.sendSync(HttpMethod.POST, InterfaceJsonfile.TSBLADDIMG, para);
-                    JSONObject obj = FjsonUtil.parseObject(rs.readString());
-                    LogUtils.i(obj.toJSONString());
-                    if (200 == obj.getIntValue("code")) {
-                        String id = obj.getString("data");
-                        LogUtils.i("id-->" + id);
-                        pics.append(id);
-                        pics.append(",");
-                    } else {
-                        return getString(R.string.toast_failed_to_upload_image);
-                    }
-                } catch (HttpException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+//            for (int i = 0; i < mSelectPath.size(); i++) {
+//                File f = new File(mSelectPath.get(i));
+//
+//                RequestParams para = RequestParamsUtils.getParams();
+//                para.addBodyParameter("fpic", f);
+//                para.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
+//                ResponseStream rs;
+//                try {
+//                    rs = httpUtils.sendSync(HttpMethod.POST, InterfaceJsonfile.TSBLADDIMG, para);
+//                    JSONObject obj = FjsonUtil.parseObject(rs.readString());
+//                    LogUtils.i(obj.toJSONString());
+//                    if (200 == obj.getIntValue("code")) {
+//                        String id = obj.getString("data");
+//                        LogUtils.i("id-->" + id);
+//                        pics.append(id);
+//                        pics.append(",");
+//                    } else {
+//                        return getString(R.string.toast_failed_to_upload_image);
+//                    }
+//                } catch (HttpException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
             String pic = "";
             if (pics.length() > 0) {
                 pic = pics.substring(0, pics.length() - 1);
@@ -581,14 +581,14 @@ tag= OkHttpClientManager.getTag();
             LogUtils.i("content-->" + mParams[8]);
 
             String result = null;
-            try {
-                ResponseStream rs = httpUtils.sendSync(HttpMethod.POST, InterfaceJsonfile.actionRegSubm, para1);
-                result = rs.readString();
-            } catch (HttpException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                ResponseStream rs = httpUtils.sendSync(HttpMethod.POST, InterfaceJsonfile.actionRegSubm, para1);
+//                result = rs.readString();
+//            } catch (HttpException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
             return result;
         }

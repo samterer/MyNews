@@ -15,25 +15,19 @@ import com.hzpd.hflt.R;
 import com.hzpd.ui.App;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.DBHelper;
-import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SystemBarTintManager;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.http.HttpHandler;
 
 import org.common.lib.analytics.ActivityLifecycleAction;
 import org.common.lib.analytics.AnalyticCallback;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MBaseActivity extends FragmentActivity implements AnalyticCallback {
 
     private ActivityLifecycleAction action = new ActivityLifecycleAction(this);
 
-    protected HttpUtils httpUtils;
     protected SPUtil spu;//
 
     protected long startMills;
@@ -45,7 +39,6 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
     protected Fragment currentFm;
 
     boolean isResume = false;
-    List<HttpHandler> handlerList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +55,6 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
 
         activity = this;
         fm = getSupportFragmentManager();
-        httpUtils = SPUtil.getHttpUtils();
         spu = SPUtil.getInstance();
         startMills = System.currentTimeMillis();
         analyMap = new HashMap<String, String>();
@@ -102,15 +94,6 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        for (HttpHandler httpHandler : handlerList) {
-            Log.e("test", "httpHandler.getState " + httpHandler.getState());
-            if (httpHandler.getState() == HttpHandler.State.LOADING || httpHandler.getState() == HttpHandler.State.STARTED) {
-                httpHandler.setRequestCallBack(null);
-                httpHandler.cancel();
-            }
-        }
-        handlerList.clear();
-        httpUtils = null;
         App.getInstance().getRefWatcher().watch(this);
     }
 

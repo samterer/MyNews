@@ -7,23 +7,19 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.IBinder;
 
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.joy.lmt.LMTInvoker;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.HttpHandler;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
+import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -32,6 +28,7 @@ import de.greenrobot.event.EventBus;
  */
 public class UpdateService extends Service {
     final String TAG = "UpdateService";
+    private Object httpTag;
 
     public UpdateService() {
     }
@@ -48,12 +45,10 @@ public class UpdateService extends Service {
         return START_STICKY_COMPATIBILITY;
     }
 
-    HttpUtils httpUtils;
-    HttpHandler handler;
-
     private void startUpdate() {
         Log.e(TAG, null);
         try {
+            httpTag = OkHttpClientManager.getTag();
             SharedPreferences pres = getSharedPreferences(
                     UpdateUtils.SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE);
             int lastDay = pres.getInt(UpdateUtils.KEY.LAST_UPDATE_TIME, 56);
@@ -67,13 +62,29 @@ public class UpdateService extends Service {
                 return;
             }
             release();
-            if (httpUtils == null) {
-                httpUtils = SPUtil.getHttpUtils();
-            }
-            RequestParams params = RequestParamsUtils.getParamsWithU();
+            Map<String, String> params = RequestParamsUtils.getMaps();
             SPUtil.addParams(params);
-            ChaConfig.getInstance(this).addRequestParams(params);
-            httpUtils.send(HttpRequest.HttpMethod.POST, UpdateUtils.UPDATE_URL, params, requestCallBack);
+            params.putAll(ChaConfig.getInstance(this).getRequestParams());
+//            ChaConfig.getInstance(this).addRequestParams(params);
+            OkHttpClientManager.postAsyn(httpTag, UpdateUtils.UPDATE_URL, new OkHttpClientManager.ResultCallback() {
+                @Override
+                public void onSuccess(Object response) {
+                    try {
+                        Log.e("update", response.toString());
+                        parseJson(new JSONObject(response.toString()));
+                        release();
+                        stopSelf();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Request request, Exception e) {
+                    release();
+                    stopSelf();
+                }
+            }, params);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,10 +92,6 @@ public class UpdateService extends Service {
 
 
     private void release() {
-        if (handler != null) {
-            handler.cancel();
-            httpUtils = null;
-        }
     }
 
     @Override
@@ -93,31 +100,13 @@ public class UpdateService extends Service {
         try {
             super.onDestroy();
             release();
+            OkHttpClientManager.cancel(httpTag);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    RequestCallBack requestCallBack = new RequestCallBack<String>() {
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            try {
-                Log.e("update", responseInfo.result);
-                parseJson(new JSONObject(responseInfo.result));
-                release();
-                stopSelf();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onFailure(HttpException error, String msg) {
-            release();
-            stopSelf();
-        }
-    };
-
+    //    RequestCallBack requestCallBack =
     private void parseJson(JSONObject json) {
         SharedPreferences.Editor editor = null;
         try {

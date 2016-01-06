@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.HttpUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.HashMap;

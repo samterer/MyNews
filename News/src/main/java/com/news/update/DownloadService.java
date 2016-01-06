@@ -14,15 +14,11 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.text.TextUtils;
 
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.Log;
-import com.hzpd.utils.SPUtil;
 import com.joy.lmt.LMTInvoker;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.HttpHandler;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Request;
 
 import java.io.File;
 
@@ -37,8 +33,7 @@ public class DownloadService extends Service {
     public DownloadService() {
     }
 
-    HttpUtils httpUtils;
-    HttpHandler httpHandler;
+    Call httpHandler;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -91,7 +86,7 @@ public class DownloadService extends Service {
             if (httpHandler != null) {
                 retry = 100;
                 Log.e("test", " --- stop --- ");
-                httpHandler.cancel(true);
+                httpHandler.cancel();
                 httpHandler = null;
             }
             unregisterReceiver(networkReceiver);
@@ -110,7 +105,7 @@ public class DownloadService extends Service {
                 stopSelf();
                 return;
             }
-            if (httpHandler == null || httpHandler.isCancelled()) {
+            if (httpHandler == null || httpHandler.isCanceled()) {
 
                 url = getSharedPreferences(UpdateUtils.SHARE_PREFERENCE_NAME, MODE_PRIVATE)
                         .getString(UpdateUtils.KEY.KEY_DOWNLOAD_URL, "");
@@ -164,10 +159,7 @@ public class DownloadService extends Service {
                 }
                 String path = target.getAbsolutePath();
                 Log.e("test", path);
-                if (httpUtils == null) {
-                    httpUtils = SPUtil.getHttpUtils();
-                }
-                httpHandler = httpUtils.download(HttpRequest.HttpMethod.GET, pref.getString(UpdateUtils.KEY.KEY_DOWNLOAD_URL, ""), target.getAbsolutePath(), null, true, false, requestCallBack);
+                httpHandler = OkHttpClientManager.download(pref.getString(UpdateUtils.KEY.KEY_DOWNLOAD_URL, ""), target, isResume, requestCallBack);
 
                 isResume = true;
 
@@ -198,7 +190,7 @@ public class DownloadService extends Service {
             }
             if (httpHandler != null) {
                 Log.e("test", " --- end --- ");
-                httpHandler.cancel(true);
+                httpHandler.cancel();
                 httpHandler = null;
             }
             SharedPreferences pref = getSharedPreferences(UpdateUtils.SHARE_PREFERENCE_NAME, MODE_PRIVATE);
@@ -259,19 +251,17 @@ public class DownloadService extends Service {
                 .commit();
     }
 
-    boolean checkFile = true;
     long fileLength = 0L;
     boolean isResume = true;
     boolean autoDownload = false;
     boolean silence = false;
     public static int progress = 0;
 
-    RequestCallBack<File> requestCallBack = new RequestCallBack<File>() {
-
+    OkHttpClientManager.ResultCallback requestCallBack = new OkHttpClientManager.ResultCallback<File>() {
         @Override
-        public void onSuccess(ResponseInfo<File> responseInfo) {
+        public void onSuccess(File responseInfo) {
             try {
-                File file = responseInfo.result;
+                File file = responseInfo;
                 retry = 0;
                 Log.e(TAG, file);
                 File target = new File(file.getParent(), UpdateUtils.getFileName(getApplicationContext()));
@@ -283,14 +273,12 @@ public class DownloadService extends Service {
             }
         }
 
-
         @Override
-        public void onFailure(HttpException error, String msg) {
-            Log.e("test", error + ":" + msg);
+        public void onFailure(Request request, Exception e) {
             ++retry;
             if (httpHandler != null) {
                 Log.e("test", " --- stop --- ");
-                httpHandler.cancel(true);
+                httpHandler.cancel();
                 httpHandler = null;
                 //TODO 继续下载
                 if (retry < 5) {
@@ -304,7 +292,7 @@ public class DownloadService extends Service {
         }
 
         @Override
-        public void onLoading(long total, long current, boolean isUploading) {
+        public void onLoading(int total, int current) {
             progress = (int) (1.0f * current / total * 100);
             Log.e("progress", "progress -- " + progress);
             try {
@@ -320,44 +308,8 @@ public class DownloadService extends Service {
             }
         }
 
-
-        @Override
-        public void onStart() {
-            Log.e("test", null);
-            checkFile = true;
-        }
     };
 
-    // 检查文件大小是否一致
-    private void checkLength(long count) {
-        if (!checkFile) {
-            return;
-        }
-        if (fileLength == 0L && count > 1) {
-            getSharedPreferences(UpdateUtils.SHARE_PREFERENCE_NAME, MODE_PRIVATE).edit()
-                    .putLong(UpdateUtils.KEY.KEY_FILE_SIZE, count)
-                    .commit();
-            fileLength = count;
-        } else {
-            if (fileLength != count) {
-                getSharedPreferences(UpdateUtils.SHARE_PREFERENCE_NAME, MODE_PRIVATE).edit()
-                        .putLong(UpdateUtils.KEY.KEY_FILE_SIZE, count)
-                        .apply();
-                isResume = false;
-                if (httpHandler != null) {
-                    Log.e("test", " --- stop --- ");
-                    httpHandler.cancel(true);
-                    httpHandler = null;
-                    //TODO 继续下载
-                    retry = 0;
-                    startDownload();
-
-                }
-            } else {
-                checkFile = false;
-            }
-        }
-    }
 
     NetworkReceiver networkReceiver = new NetworkReceiver();
 
@@ -370,7 +322,7 @@ public class DownloadService extends Service {
                 if (getSharedPreferences(UpdateUtils.SHARE_PREFERENCE_NAME, MODE_PRIVATE).getBoolean(UpdateUtils.KEY.IS_DOWNLOADING, false)
                         || getSharedPreferences(UpdateUtils.SHARE_PREFERENCE_NAME, MODE_PRIVATE).getBoolean(UpdateUtils.KEY.IS_WIFI_DOWNLOADING,
                         false)) {
-                    if (httpHandler == null || httpHandler.isCancelled()) {
+                    if (httpHandler == null || httpHandler.isCanceled()) {
                         Log.e("test", "handler start");
                         httpHandler = null;
                         startDownload();

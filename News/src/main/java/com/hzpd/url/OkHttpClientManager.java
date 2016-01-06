@@ -11,11 +11,16 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.util.Map;
 import java.util.Set;
+
+import okio.BufferedSink;
+import okio.Okio;
 
 public class OkHttpClientManager {
     private static OkHttpClientManager mInstance;
@@ -190,6 +195,7 @@ public class OkHttpClientManager {
         }
         FormEncodingBuilder builder = new FormEncodingBuilder();
         for (Param param : params) {
+            if (param.value == null) continue;
             builder.add(param.key, param.value);
         }
         RequestBody requestBody = builder.build();
@@ -208,6 +214,9 @@ public class OkHttpClientManager {
         public abstract void onSuccess(T response);
 
         public abstract void onFailure(Request request, Exception e);
+
+        public void onLoading(int total, int current) {
+        }
     }
 
     public static class Param {
@@ -219,6 +228,62 @@ public class OkHttpClientManager {
 
         String key;
         String value;
+    }
+
+    public static Call download(final String url, final File file, final boolean isResume, final ResultCallback callback) {
+        int positon = 0;
+        if (isResume && file.exists()) {
+            positon = (int) file.length();
+        }
+        Request request = new Request.Builder().url(url).addHeader("Range", "bytes=" + positon + "-").build();
+        final Call call = new OkHttpClient().newCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(final Request request, final IOException e) {
+                OkHttpClientManager.getInstance().mDelivery.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onFailure(request, e);
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(com.squareup.okhttp.Response response) throws IOException {
+
+                BufferedSink sink = Okio.buffer(isResume ? Okio.appendingSink(file) : Okio.sink(file));
+                InputStream input = response.body().byteStream();
+                byte data[] = new byte[2048];
+                int count = 0;
+                final int contentLength = (int) response.body().contentLength();
+                int total = 0;
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    sink.write(data, 0, count);
+                    // update the progress bar
+                    final int nowtotal = total;
+                    OkHttpClientManager.getInstance().mDelivery.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onLoading(contentLength, nowtotal);
+                        }
+                    });
+                }
+                sink.flush();
+                sink.close();
+
+                input.close();
+
+                OkHttpClientManager.getInstance().mDelivery.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onSuccess(file);
+                    }
+                });
+            }
+        });
+        return call;
     }
 
 }

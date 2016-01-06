@@ -14,36 +14,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.DiscoveryItemBean;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.TagBean;
-import com.hzpd.modle.event.TagEvent;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.TagActivity;
-import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
-import com.hzpd.utils.Log;
-import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
-import com.lidroid.xutils.util.LogUtils;
-import com.news.update.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import de.greenrobot.event.EventBus;
 
 public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
 
@@ -53,20 +38,20 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
     final static int TYPE_NORMAL = 0xCC;
     final static int TYPE_LOADING = 0xDD;
     public boolean showLoading = false;
-    protected HttpUtils httpUtils;
     private SPUtil spu;
+    private View.OnClickListener onClickListener;
 
     public void setShowLoading(boolean showLoading) {
         this.showLoading = showLoading;
         notifyDataSetChanged();
     }
 
-    public DiscoveryItemNewAdapter(Context context) {
+    public DiscoveryItemNewAdapter(Context context,View.OnClickListener onClickListener) {
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
         list = new ArrayList<>();
-        httpUtils = SPUtil.getHttpUtils();
         spu = SPUtil.getInstance();
+        this.onClickListener=onClickListener;
     }
 
     public void appendData(List<DiscoveryItemBean> data, boolean isClearOld) {
@@ -101,14 +86,15 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
     public class ItemViewHolder extends RecyclerView.ViewHolder {
         public ItemViewHolder(View v) {
             super(v);
+            v.setTag(this);
         }
 
         public TagBean tagBean;
-        ImageView discovery_iv_tag;
-        TextView discovery_tag_name;
-        TextView tv_subscribe;
-        LinearLayout news_ll;
-        LinearLayout tag_layout;
+        public ImageView discovery_iv_tag;
+        public TextView discovery_tag_name;
+        public TextView tv_subscribe;
+        public LinearLayout news_ll;
+        public LinearLayout tag_layout;
 
     }
 
@@ -129,7 +115,6 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
             viewHolder.discovery_iv_tag = (ImageView) view.findViewById(R.id.discovery_iv_tag);
             viewHolder.discovery_tag_name = (TextView) view.findViewById(R.id.discovery_tag_name);
             viewHolder.tv_subscribe = (TextView) view.findViewById(R.id.tv_subscribe);
-            viewHolder.tv_subscribe.setOnClickListener(onClickListener);
             viewHolder.tag_layout = (LinearLayout) view.findViewById(R.id.tag_layout);
             viewHolder.news_ll = (LinearLayout) view.findViewById(R.id.news_ll);
             return viewHolder;
@@ -178,6 +163,8 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
 
                     }
                 });
+                viewHolder.tv_subscribe.setTag(viewHolder);
+                viewHolder.tv_subscribe.setOnClickListener(onClickListener);
                 if (SPUtil.checkTag(bean.getTag())) {
                     viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
                     viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.details_tv_check_color));
@@ -362,53 +349,53 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
         return vi;
     }
 
-    View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Log.i("DiscoveryItemNewAdapter", "DiscoveryItemNewAdapter  viewHolder.tv_subscribe  onClick");
-            try {
-                if (view.getTag() instanceof ItemViewHolder) {
-                    ItemViewHolder viewHolder = (ItemViewHolder) view.getTag();
-                    viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
-                    viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.details_tv_check_color));
-                    Drawable nav_up = context.getResources().getDrawable(R.drawable.discovery_image_select);
-                    nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
-                    viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
-                    viewHolder.tv_subscribe.setText(context.getString(R.string.discovery_followed));
-                    EventBus.getDefault().post(new TagEvent(viewHolder.tagBean));
-                    if (Utils.isNetworkConnected(context)) {
-                        RequestParams params = RequestParamsUtils.getParamsWithU();
-                        if (spu.getUser() != null) {
-                            params.addBodyParameter("uid", spu.getUser().getUid() + "");
-                        }
-                        params.addBodyParameter("tagId", viewHolder.tagBean.getId() + "");
-                        SPUtil.addParams(params);
-
-                        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.tag_click_url, params, new RequestCallBack<String>() {
-                            @Override
-                            public void onSuccess(ResponseInfo<String> responseInfo) {
-                                JSONObject obj = null;
-                                try {
-                                    obj = JSONObject.parseObject(responseInfo.result);
-                                } catch (Exception e) {
-                                    return;
-                                }
-                                if (200 == obj.getIntValue("code")) {
-
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(HttpException error, String msg) {
-                                LogUtils.i("isCollection failed");
-                            }
-                        });
-                    }
-                    Log.i("viewHolder.tv_subscribe", "viewHolder.tv_subscribe");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    };
+//    View.OnClickListener onClickListener = new View.OnClickListener() {
+//        @Override
+//        public void onClick(View view) {
+//            Log.i("DiscoveryItemNewAdapter", "DiscoveryItemNewAdapter  viewHolder.tv_subscribe  onClick");
+//            try {
+//                if (view.getTag() instanceof ItemViewHolder) {
+//                    ItemViewHolder viewHolder = (ItemViewHolder) view.getTag();
+//                    viewHolder.tv_subscribe.setBackgroundResource(R.drawable.corners_bg);
+//                    viewHolder.tv_subscribe.setTextColor(context.getResources().getColor(R.color.details_tv_check_color));
+//                    Drawable nav_up = context.getResources().getDrawable(R.drawable.discovery_image_select);
+//                    nav_up.setBounds(0, 0, nav_up.getMinimumWidth(), nav_up.getMinimumHeight());
+//                    viewHolder.tv_subscribe.setCompoundDrawables(nav_up, null, null, null);
+//                    viewHolder.tv_subscribe.setText(context.getString(R.string.discovery_followed));
+//                    EventBus.getDefault().post(new TagEvent(viewHolder.tagBean));
+//                    if (Utils.isNetworkConnected(context)) {
+//                        RequestParams params = RequestParamsUtils.getParamsWithU();
+//                        if (spu.getUser() != null) {
+//                            params.addBodyParameter("uid", spu.getUser().getUid() + "");
+//                        }
+//                        params.addBodyParameter("tagId", viewHolder.tagBean.getId() + "");
+//                        SPUtil.addParams(params);
+//
+//                        httpUtils.send(HttpRequest.HttpMethod.POST, InterfaceJsonfile.tag_click_url, params, new RequestCallBack<String>() {
+//                            @Override
+//                            public void onSuccess(ResponseInfo<String> responseInfo) {
+//                                JSONObject obj = null;
+//                                try {
+//                                    obj = JSONObject.parseObject(responseInfo.result);
+//                                } catch (Exception e) {
+//                                    return;
+//                                }
+//                                if (200 == obj.getIntValue("code")) {
+//
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(HttpException error, String msg) {
+//                                LogUtils.i("isCollection failed");
+//                            }
+//                        });
+//                    }
+//                    Log.i("viewHolder.tv_subscribe", "viewHolder.tv_subscribe");
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    };
 }

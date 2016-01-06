@@ -9,14 +9,9 @@ import com.hzpd.utils.AAnim;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.http.HttpHandler;
 
 import org.common.lib.analytics.ActivityLifecycleAction;
 import org.common.lib.analytics.AnalyticCallback;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MWBaseActivity extends FragmentActivity implements AnalyticCallback {
     public MWBaseActivity() {
@@ -24,19 +19,16 @@ public class MWBaseActivity extends FragmentActivity implements AnalyticCallback
     }
 
     private ActivityLifecycleAction action = new ActivityLifecycleAction(this);
-    protected HttpUtils httpUtils;
     protected SPUtil spu;//
     protected DBHelper dbHelper;
     protected Activity activity;
     boolean isResume = false;
-    List<HttpHandler> handlerList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
         action.onCreate(this);
         activity = this;
-        httpUtils = SPUtil.getHttpUtils();
         spu = SPUtil.getInstance();
         dbHelper = DBHelper.getInstance(getApplicationContext());
     }
@@ -81,14 +73,6 @@ public class MWBaseActivity extends FragmentActivity implements AnalyticCallback
     protected void onDestroy() {
         activity = null;
         spu = null;
-        for (HttpHandler httpHandler : handlerList) {
-            if (httpHandler.getState() == HttpHandler.State.LOADING || httpHandler.getState() == HttpHandler.State.STARTED) {
-                httpHandler.setRequestCallBack(null);
-                httpHandler.cancel();
-            }
-        }
-        handlerList.clear();
-        httpUtils = null;
         super.onDestroy();
         App.getInstance().getRefWatcher().watch(this);
     }

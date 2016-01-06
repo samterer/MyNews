@@ -58,11 +58,6 @@ import com.hzpd.utils.TUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.util.LogUtils;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -110,11 +105,11 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
     private ImgListBean imgListBean;
     private Object tag;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_detail_img_main_layout);
-
         initViews();
         tag = OkHttpClientManager.getTag();
         pop_xiazai_iv1.setOnClickListener(new OnClickListener() {
@@ -136,35 +131,34 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                     TUtils.toast(getString(R.string.toast_image_format_is_wrong));
                     return;
                 }
-                File img = App.getFile(sdPath + File.separator + "adownload_joymeng" + File.separator + System.currentTimeMillis() + ".jpeg");
+                final File img = App.getFile(sdPath + File.separator + "adownload_joymeng" + File.separator + System.currentTimeMillis() + ".jpeg");
                 final String imagePath = sdPath + File.separator + "adownload_joymeng" + File.separator;
-                httpUtils.download(
+                OkHttpClientManager.getAsyn(tag,
                         imgUrl
-                        , img.getAbsolutePath()
-                        , true, true
-                        , new RequestCallBack<File>() {
+                        , new OkHttpClientManager.ResultCallback() {
                             @Override
-                            public void onStart() {
-                                super.onStart();
-                            }
-
-                            @Override
-                            public void onLoading(long total, long current,
-                                                  boolean isUploading) {
-                                super.onLoading(total, current, isUploading);
-                                LogUtils.i("current:" + current + " total:" + total + "   " + (current * 100 / total));
-                            }
-
-                            @Override
-                            public void onSuccess(ResponseInfo<File> responseInfo) {
-                                TUtils.toast(getString(R.string.toast_downloaded_at, responseInfo.result.getAbsolutePath()));
+                            public void onSuccess(Object response) {
+                                SPUtil.saveFile(img, response.toString());
+                                TUtils.toast(getString(R.string.toast_downloaded_at, img.getAbsolutePath()));
                                 MediaScannerConnection.scanFile(NewsAlbumActivity.this, new String[]{imagePath}, null, null);
                             }
 
                             @Override
-                            public void onFailure(HttpException error, String msg) {
+                            public void onFailure(Request request, Exception e) {
                                 TUtils.toast(getString(R.string.toast_download_failed));
                             }
+
+//                            @Override
+//                            public void onStart() {
+//                                super.onStart();
+//                            }
+//
+//                            @Override
+//                            public void onLoading(long total, long current,
+//                                                  boolean isUploading) {
+//                                super.onLoading(total, current, isUploading);
+//                                LogUtils.i("current:" + current + " total:" + total + "   " + (current * 100 / total));
+//                            }
                         });
             }
         });
@@ -591,34 +585,32 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                     TUtils.toast(getString(R.string.toast_image_format_is_wrong));
                     return;
                 }
-                File img = App.getFile(sdPath + File.separator + "download_joymeng" + File.separator + System.currentTimeMillis() + ".jpg");
+                final File img = App.getFile(sdPath + File.separator + "download_joymeng" + File.separator + System.currentTimeMillis() + ".jpg");
 
-                httpUtils.download(
+                OkHttpClientManager.getAsyn(tag,
                         imgUrl
-                        , img.getAbsolutePath()
-                        , true, true
-                        , new RequestCallBack<File>() {
+                        , new OkHttpClientManager.ResultCallback() {
                             @Override
-                            public void onStart() {
-                                super.onStart();
+                            public void onSuccess(Object response) {
+                                SPUtil.saveFile(img, response.toString());
+                                TUtils.toast(getString(R.string.toast_downloaded_at, img.getAbsolutePath()));
                             }
 
                             @Override
-                            public void onLoading(long total, long current,
-                                                  boolean isUploading) {
-                                super.onLoading(total, current, isUploading);
-                                LogUtils.i("current:" + current + " total:" + total + "   " + (current * 100 / total));
-                            }
-
-                            @Override
-                            public void onSuccess(ResponseInfo<File> responseInfo) {
-                                TUtils.toast(getString(R.string.toast_downloaded_at, responseInfo.result.getAbsolutePath()));
-                            }
-
-                            @Override
-                            public void onFailure(HttpException error, String msg) {
+                            public void onFailure(Request request, Exception e) {
                                 TUtils.toast(getString(R.string.toast_download_failed));
                             }
+//                            @Override
+//                            public void onStart() {
+//                                super.onStart();
+//                            }
+//
+//                            @Override
+//                            public void onLoading(long total, long current,
+//                                                  boolean isUploading) {
+//                                super.onLoading(total, current, isUploading);
+//                                LogUtils.i("current:" + current + " total:" + total + "   " + (current * 100 / total));
+//                            }
                         });
             }
         });
@@ -704,9 +696,8 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
             imgdetails_title_pl.setVisibility(View.GONE);
             imgdetails_title_comment.setVisibility(View.GONE);
         }
-
-        File file = App.getFile(App.getInstance().getJsonFileCacheRootDir()
-                + File.separator + "temp" + File.separator + "collection" + File.separator + albumitemid);
+        final String filePath = App.getInstance().getJsonFileCacheRootDir() + File.separator + "temp" + File.separator + "collection" + File.separator + albumitemid;
+        final File file = App.getFile(filePath);
 //		
         Jsonbean tcl = null;
         try {
@@ -733,24 +724,26 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
             return;
         }
 
-        httpUtils.download(
+        OkHttpClientManager.getAsyn(tag,
                 json_url
-                , file.getAbsolutePath()
-                , new RequestCallBack<File>() {
+                , new OkHttpClientManager.ResultCallback() {
                     @Override
-                    public void onSuccess(ResponseInfo<File> responseInfo) {
-                        String data = App.getFileContext(responseInfo.result);
+                    public void onSuccess(Object response) {
+                        String data = response.toString();
+                        if (!TextUtils.isEmpty(data)) {
+                            SPUtil.saveFile(file, data);
+                        }
 
                         LogUtils.i("read data-->" + data);
                         JSONObject obj = FjsonUtil.parseObject(data);
 
                         if (null == obj) {
-                            responseInfo.result.delete();
+                            SPUtil.deleteFiles(filePath);
                             return;
                         }
                         imgListBean = FjsonUtil.parseObject(obj.getString("data"), ImgListBean.class);
                         if (null == imgListBean) {
-                            responseInfo.result.delete();
+                            SPUtil.deleteFiles(filePath);
                             return;
                         }
                         currentPosition = 0;
@@ -761,7 +754,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                     }
 
                     @Override
-                    public void onFailure(HttpException error, String msg) {
+                    public void onFailure(Request request, Exception e) {
                         TUtils.toast(getString(R.string.toast_server_no_response));
                     }
                 });
@@ -792,14 +785,17 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
             simpleAdapter.setList(imgListBean.getSubphoto());
             setVisible();
         } else {
-            httpUtils.download(
+            final File file = App.getFile(App.getInstance().getJsonFileCacheRootDir() + File.separator + "temp" + File.separator + "album");
+
+            OkHttpClientManager.getAsyn(tag,
                     json_url
-                    , App.getInstance().getJsonFileCacheRootDir()
-                            + File.separator + "temp" + File.separator + "album"
-                    , new RequestCallBack<File>() {
+                    , new OkHttpClientManager.ResultCallback() {
                         @Override
-                        public void onSuccess(ResponseInfo<File> responseInfo) {
-                            String content = App.getFileContext(responseInfo.result);
+                        public void onSuccess(Object response) {
+                            String content = response.toString();
+                            if (!TextUtils.isEmpty(content)) {
+                                SPUtil.saveFile(file, content);
+                            }
                             LogUtils.i("result-->" + content);
                             JSONObject obj = JSONObject.parseObject(content);
 
@@ -822,7 +818,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                         }
 
                         @Override
-                        public void onFailure(HttpException error, String msg) {
+                        public void onFailure(Request request, Exception e) {
 
                         }
                     });
@@ -853,44 +849,44 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
         params.put("id", pid);
         SPUtil.addParams(params);
         OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.bAlbum, new OkHttpClientManager.ResultCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        LogUtils.i("result-->" + response.toString());
-                        JSONObject obj = null;
-                        try {
-                            obj = JSONObject.parseObject(response.toString());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            return;
-                        }
+            @Override
+            public void onSuccess(Object response) {
+                LogUtils.i("result-->" + response.toString());
+                JSONObject obj = null;
+                try {
+                    obj = JSONObject.parseObject(response.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
 
-                        if (200 == obj.getIntValue("code")) {
+                if (200 == obj.getIntValue("code")) {
 
-                            imgListBean = JSONObject.parseObject(
-                                    obj.getString("data")
-                                    , ImgListBean.class);
+                    imgListBean = JSONObject.parseObject(
+                            obj.getString("data")
+                            , ImgListBean.class);
 
-                            Jsonbean tcb = new Jsonbean(pid, obj.getString("data"));
-                            try {
-                                dbHelper.getAlbumDBUitls().save(tcb);
-                            } catch (DbException e) {
-                                e.printStackTrace();
-                            }
-
-                            simpleAdapter.setList(imgListBean.getSubphoto());
-                            setVisible();
-                        } else {
-                            TUtils.toast(obj.getString("msg"));
-                        }
-
+                    Jsonbean tcb = new Jsonbean(pid, obj.getString("data"));
+                    try {
+                        dbHelper.getAlbumDBUitls().save(tcb);
+                    } catch (DbException e) {
+                        e.printStackTrace();
                     }
 
-                    @Override
-                    public void onFailure(Request request, Exception e) {
-                        TUtils.toast(getString(R.string.toast_server_no_response));
-                    }
+                    simpleAdapter.setList(imgListBean.getSubphoto());
+                    setVisible();
+                } else {
+                    TUtils.toast(obj.getString("msg"));
+                }
 
-                }, params);
+            }
+
+            @Override
+            public void onFailure(Request request, Exception e) {
+                TUtils.toast(getString(R.string.toast_server_no_response));
+            }
+
+        }, params);
 
     }
 
@@ -949,7 +945,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
         }
 
         EventUtils.sendReadAtical(activity);
-        Map<String,String> params = RequestParamsUtils.getMaps();
+        Map<String, String> params = RequestParamsUtils.getMaps();
         params.put("type", Constant.TYPE.AlbumA.toString());
         params.put("nids", imgListBean.getPid());
         SPUtil.addParams(params);
@@ -958,7 +954,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                 , new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-                LogUtils.i("loginSubmit-->" +response.toString());
+                LogUtils.i("loginSubmit-->" + response.toString());
 
                 JSONObject obj = FjsonUtil
                         .parseObject(response.toString());
