@@ -19,15 +19,17 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.adapter.CollectionAdapter;
 import com.hzpd.adapter.PushmsgAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.CollectionDataBean;
 import com.hzpd.modle.CollectionJsonBean;
-import com.hzpd.modle.Jsonbean;
 import com.hzpd.modle.NewsBean;
-import com.hzpd.modle.NewsItemBeanForCollection;
 import com.hzpd.modle.VideoItemBean;
+import com.hzpd.modle.db.JsonbeanDao;
+import com.hzpd.modle.db.NewsItemBeanForCollection;
+import com.hzpd.modle.db.NewsItemBeanForCollectionDao;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
@@ -38,15 +40,6 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.db.sqlite.WhereBuilder;
-import com.lidroid.xutils.exception.DbException;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.lidroid.xutils.util.LogUtils;
 import com.squareup.okhttp.Request;
 
 import java.util.ArrayList;
@@ -186,13 +179,10 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
         Intent intent = new Intent();
         intent.putExtra("from", "collection");
         boolean flag = false;//是否是预定类型
-        try {
-            NewsItemBeanForCollection bean = dbHelper.getCollectionDBUitls().findFirst(Selector.from(NewsItemBeanForCollection.class).where("nid", "=", cb.getData().getId()));
-            if (bean != null) {
-                cdb.setNid(bean.getNid());
-            }
-        } catch (DbException e) {
-            e.printStackTrace();
+        NewsItemBeanForCollection bean = dbHelper.getCollectionDBUitls().queryBuilder()
+                .where(NewsItemBeanForCollectionDao.Properties.Nid.eq(cb.getData().getId())).build().unique();
+        if (bean != null) {
+            cdb.setNid(bean.getNid());
         }
         //跳转脚标）1新闻  2图集  3视频 4html5
         LogUtils.i("type-->" + cb.getType());
@@ -272,12 +262,10 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
             @Override
             public void run() {
                 try {
-                    List<NewsItemBeanForCollection> list = dbHelper.getCollectionDBUitls().findAll(Selector
-                            .from(NewsItemBeanForCollection.class)
-                            .where("id", "!=", null)
-                            .orderBy("id", true)
-                            .limit(PageSize)
-                            .offset((Page - 1) * PageSize));
+                    List<NewsItemBeanForCollection> list = dbHelper.getCollectionDBUitls().queryBuilder()
+                            .orderDesc(NewsItemBeanForCollectionDao.Properties.Id)
+                            .limit(PageSize).offset((Page - 1) * PageSize)
+                            .build().list();
                     if (!isResume) {
                         return;
                     }
@@ -390,22 +378,25 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
 
                     //本地数据库获取
                     try {
-                        List<NewsItemBeanForCollection> nibfc = dbHelper.getCollectionDBUitls().findAll(NewsItemBeanForCollection.class);
+                        List<NewsItemBeanForCollection> nibfc = dbHelper.getCollectionDBUitls().loadAll();
                         if (nibfc != null && nibfc.size() > 0) {
 
                             Log.e("", "");
 
                             if ("2".equals(cb.getType())) {
-                                dbHelper.getCollectionDBUitls().delete(Jsonbean.class, WhereBuilder.b("fid", "=", cb.getId()));
+                                dbHelper.getJsonbeanDao().queryBuilder()
+                                        .where(JsonbeanDao.Properties.Fid.eq(cb.getId()))
+                                        .buildDelete().executeDeleteWithoutDetachingEntities();
                             }
-                            dbHelper.getCollectionDBUitls().delete(NewsItemBeanForCollection.class, WhereBuilder.b("nid", "=", cb.getData().getId
-                                    ()));
+                            dbHelper.getCollectionDBUitls().queryBuilder()
+                                    .where(NewsItemBeanForCollectionDao.Properties.Nid.eq(cb.getData().getId()))
+                                    .buildDelete().executeDeleteWithoutDetachingEntities();
                             TUtils.toast(getString(R.string.toast_delete_success));
                             colladAdapter.deleteItem(position);
                             colladAdapter.notifyDataSetChanged();
                         }
 
-                    } catch (DbException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         TUtils.toast(getString(R.string.toast_delete_failed));
                     }

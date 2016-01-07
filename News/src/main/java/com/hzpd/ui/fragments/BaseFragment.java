@@ -30,7 +30,7 @@ public class BaseFragment extends Fragment implements AnalyticCallback {
             }
             try {
                 if (isVisibleToUser) {
-                    AnalyticUtils.sendGaScreenViewHit(getActivity(), getAnalyticPageName());
+                    AnalyticUtils.sendGaScreenViewHit(App.getInstance(), getAnalyticPageName());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

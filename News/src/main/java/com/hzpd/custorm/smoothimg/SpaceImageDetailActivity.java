@@ -10,11 +10,11 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView.ScaleType;
 
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.ui.activity.MBaseActivity;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.util.LogUtils;
 
 import java.io.File;
 

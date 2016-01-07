@@ -8,12 +8,11 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.modle.NewsBean;
+import com.hzpd.modle.db.PushBeanDB;
 import com.hzpd.ui.activity.NewsDetailActivity;
-import com.hzpd.ui.interfaces.I_Result;
+import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
-import com.hzpd.utils.db.PushListDbTask;
-import com.lidroid.xutils.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +50,7 @@ public class MyReceiver extends BroadcastReceiver {
         }
         JSONObject object = null;
         String type = null;
-        Log.e(TAG,"JpushReceiver：extra-->" + extra);
+        Log.e(TAG, "JpushReceiver：extra-->" + extra);
         object = FjsonUtil.parseObject(extra);
         if (null == object) {
             return;
@@ -66,12 +65,7 @@ public class MyReceiver extends BroadcastReceiver {
         list.add(0, newsBean);
         if (list != null && list.size() != 0) {
             Log.i(TAG, "MyReceiver" + newsBean.getNid());
-            new PushListDbTask(context).saveList(list, new I_Result() {
-                @Override
-                public void setResult(Boolean flag) {
-                    Log.i(TAG, "PushDB" + flag);
-                }
-            });
+            DBHelper.getInstance(context).getPushList().insert(new PushBeanDB(newsBean));
         }
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);

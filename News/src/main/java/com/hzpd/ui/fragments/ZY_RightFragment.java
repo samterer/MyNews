@@ -99,6 +99,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
     private View zy_rfrag_ll_download;
     private View zy_rfrag_ll_night;
     private View zy_rfrag_ll_read;
+    private View zy_rfrag_ll_rate_us;
 
     private Object tag;
 
@@ -164,6 +165,8 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
         zy_rfrag_ll_night.setOnClickListener(this);
         zy_rfrag_ll_read = view.findViewById(R.id.zy_rfrag_ll_read);
         zy_rfrag_ll_read.setOnClickListener(this);
+        zy_rfrag_ll_rate_us=view.findViewById(R.id.zy_rfrag_ll_rate_us);
+        zy_rfrag_ll_rate_us.setOnClickListener(this);
     }
 
     @Override
@@ -363,6 +366,14 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
             }
             break;
             case R.id.zy_rfrag_ll_login: {
+                if (null == spu.getUser()) {
+                    loginManager.setDefaultAudience(DefaultAudience.FRIENDS);
+                    loginManager.setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);
+                    loginManager.logInWithReadPermissions(this, permissions);
+                }
+            }
+            break;
+            case R.id.zy_rfrag_ll_rate_us: {
                 if (null == spu.getUser()) {
                     loginManager.setDefaultAudience(DefaultAudience.FRIENDS);
                     loginManager.setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);

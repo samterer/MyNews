@@ -3,70 +3,47 @@ package com.hzpd.utils;
 import android.app.Activity;
 import android.content.Context;
 
-import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.db.AlbumBeanDBDao;
+import com.hzpd.modle.db.DaoMaster;
+import com.hzpd.modle.db.DaoSession;
+import com.hzpd.modle.db.JsonbeanDao;
+import com.hzpd.modle.db.NewsBeanDBDao;
+import com.hzpd.modle.db.NewsChannelBeanDBDao;
+import com.hzpd.modle.db.NewsItemBeanForCollectionDao;
+import com.hzpd.modle.db.NewsJumpBeanDao;
+import com.hzpd.modle.db.PushBeanDBDao;
+import com.hzpd.modle.db.UserLogDao;
+import com.hzpd.modle.db.VideoItemBeanDbDao;
+import com.hzpd.modle.db.ZhuantiBeanDBDao;
 import com.hzpd.ui.App;
-import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.exception.DbException;
 
 public class DBHelper {
-    private DbUtils collectionDBUitls;//本地收藏数据库
-    private DbUtils albumDBUitls;//图集
-    private DbUtils videoDBUitls;//视频
-
-    private DbUtils newsListDbUtils;//新闻列表数据库
-    private DbUtils bianminListDbUtils;//便民列表数据库
-    private DbUtils zhuantiListDbUtils;//专题列表数据库
-    private DbUtils pushListDbUtils;//新闻列表数据库
-    private DbUtils channelDbUtils;//频道,TAG数据库
-
-    private DbUtils logDbUtils;
-
     private static DBHelper instance;
-
-    private String dbPath;
-    private Context context;
-
-
-    public DbUtils testDb;
+    private final NewsJumpBeanDao newsJumpBeanDao;
+    private final JsonbeanDao jsonbeanDao;
+    private final AlbumBeanDBDao albumDBUitls;
+    private final VideoItemBeanDbDao videoDBUitls;
+    private final NewsBeanDBDao newsList;
+    private final ZhuantiBeanDBDao zhuantiList;
+    private final UserLogDao log;
+    private final PushBeanDBDao pushList;
+    private final NewsChannelBeanDBDao channel;
+    private final NewsItemBeanForCollectionDao collectionDBUitls;
 
     private DBHelper(Context mContext) {
-        this.context = mContext;
         Log.e("DBHelper", "DBHelper collectionDBUitls ");
-        dbPath = this.context.getDatabasePath("cms").getAbsolutePath();
-        collectionDBUitls = DbUtils.create(context
-                , dbPath, SPUtil.getCountry() + "" + App.collectiondbname);
-        albumDBUitls = DbUtils.create(context
-                , dbPath, SPUtil.getCountry() + "" + App.albumListDb);
-        albumDBUitls.configAllowTransaction(true);
-        videoDBUitls = DbUtils.create(context
-                , dbPath, SPUtil.getCountry() + "" + App.videoListDb);
-        videoDBUitls.configAllowTransaction(true);
-
-        newsListDbUtils = DbUtils.create(context
-                , dbPath, SPUtil.getCountry() + "" + App.newsListDb, 10, new DbUtils.DbUpgradeListener() {
-            @Override
-            public void onUpgrade(DbUtils db, int oldVersion, int newVersion) {
-                try {
-                    Log.e("DBHelper", "DbUtils " + oldVersion + ":" + newVersion);
-                    if (newVersion > oldVersion) {
-                        db.dropTable(NewsBeanDB.class);
-                        Log.e("DBHelper", "DbUtils Update DropTable ");
-                    }
-                } catch (DbException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        bianminListDbUtils = DbUtils.create(context
-                , dbPath, SPUtil.getCountry() + "" + App.bianminListDb);
-        zhuantiListDbUtils = DbUtils.create(context
-                , dbPath, SPUtil.getCountry() + "" + App.zhuantiListDb);
-        logDbUtils = DbUtils.create(context
-                , dbPath, SPUtil.getCountry() + "" + App.userLogDb);
-        pushListDbUtils = DbUtils.create(context
-                , dbPath, SPUtil.getCountry() + "" + App.pushListDb);
-        channelDbUtils = DbUtils.create(context
-                , dbPath, SPUtil.getCountry() + "" + App.channelDb);
+        DaoMaster daoMaster = App.getInstance().daoMaster;
+        DaoSession session = daoMaster.newSession();
+        newsJumpBeanDao = session.getNewsJumpBeanDao();
+        jsonbeanDao = session.getJsonbeanDao();
+        collectionDBUitls = session.getNewsItemBeanForCollectionDao();
+        albumDBUitls = session.getAlbumBeanDBDao();
+        videoDBUitls = session.getVideoItemBeanDbDao();
+        newsList = session.getNewsBeanDBDao();
+        zhuantiList = session.getZhuantiBeanDBDao();
+        log = session.getUserLogDao();
+        pushList = session.getPushBeanDBDao();
+        channel = session.getNewsChannelBeanDBDao();
     }
 
     public static synchronized DBHelper getInstance(Context context) {
@@ -83,39 +60,50 @@ public class DBHelper {
         instance = new DBHelper(context);
     }
 
-    public DbUtils getCollectionDBUitls() {
-        return collectionDBUitls;
+    public void clear() {
+        newsList.deleteAll();
+        albumDBUitls.deleteAll();
+        videoDBUitls.deleteAll();
+        zhuantiList.deleteAll();
     }
 
-    public DbUtils getAlbumDBUitls() {
+    public NewsJumpBeanDao getNewsJumpBeanDao() {
+        return newsJumpBeanDao;
+    }
+
+    public JsonbeanDao getJsonbeanDao() {
+        return jsonbeanDao;
+    }
+
+    public AlbumBeanDBDao getAlbumDBUitls() {
         return albumDBUitls;
     }
 
-    public DbUtils getNewsListDbUtils() {
-        return newsListDbUtils;
-    }
-
-    public DbUtils getVideoDBUitls() {
+    public VideoItemBeanDbDao getVideoDBUitls() {
         return videoDBUitls;
     }
 
-    public DbUtils getZhuantiListDbUtils() {
-        return zhuantiListDbUtils;
+    public NewsBeanDBDao getNewsList() {
+        return newsList;
     }
 
-    public DbUtils getBianminListDbUtils() {
-        return bianminListDbUtils;
+    public ZhuantiBeanDBDao getZhuantiList() {
+        return zhuantiList;
     }
 
-    public DbUtils getLogDbUtils() {
-        return logDbUtils;
+    public UserLogDao getLog() {
+        return log;
     }
 
-    public DbUtils getPushListDbUtils() {
-        return pushListDbUtils;
+    public PushBeanDBDao getPushList() {
+        return pushList;
     }
 
-    public DbUtils getChannelDbUtils() {
-        return channelDbUtils;
+    public NewsChannelBeanDBDao getChannel() {
+        return channel;
+    }
+
+    public NewsItemBeanForCollectionDao getCollectionDBUitls() {
+        return collectionDBUitls;
     }
 }

@@ -7,9 +7,7 @@ import android.os.Environment;
 import com.hzpd.modle.CacheBean;
 import com.hzpd.ui.App;
 import com.hzpd.ui.interfaces.I_Result;
-import com.hzpd.utils.db.AlbumListDbTask;
 import com.hzpd.utils.db.NewsListDbTask;
-import com.hzpd.utils.db.VideoListDbTask;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -161,13 +159,11 @@ public class DataCleanManager {
                 }
                 //删除图集
                 if (null != albumIds && albumIds.size() > 0) {
-                    AlbumListDbTask albumListDbTask = new AlbumListDbTask(context);
-                    albumListDbTask.asyncDeleteList(albumIds);
+                    DBHelper.getInstance(context).getAlbumDBUitls().deleteAll();
                 }
                 //删除视频
                 if (null != videoIds && videoIds.size() > 0) {
-                    VideoListDbTask videoListDbTask = new VideoListDbTask(context);
-                    videoListDbTask.asyncDeleteList(videoIds);
+                    DBHelper.getInstance(context).getVideoDBUitls().deleteAll();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

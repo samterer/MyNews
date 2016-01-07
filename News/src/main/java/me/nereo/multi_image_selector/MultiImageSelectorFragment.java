@@ -31,8 +31,6 @@ import android.widget.Toast;
 
 import com.hzpd.hflt.R;
 import com.hzpd.utils.Log;
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
 
 import java.io.File;
 import java.util.ArrayList;

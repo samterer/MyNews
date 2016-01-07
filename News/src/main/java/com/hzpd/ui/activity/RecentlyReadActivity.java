@@ -11,13 +11,12 @@ import com.hzpd.adapter.NewsItemListViewAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.db.NewsBeanDBDao;
 import com.hzpd.ui.App;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.Log;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.exception.DbException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +28,14 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
     private RecyclerView recylerlist;
     private NewsItemListViewAdapter adapter;
     private View coverTop;
+    private View pushmsg_tv_empty;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recently_read_layout);
         super.changeStatusBar();
+        pushmsg_tv_empty=findViewById(R.id.pushmsg_tv_empty);
         stitle_tv_content = (TextView) findViewById(R.id.stitle_tv_content);
         stitle_tv_content.setText(getResources().getString(R.string.recently_read));
         findViewById(R.id.stitle_ll_back).setOnClickListener(new View.OnClickListener() {
@@ -57,12 +58,14 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
         recylerlist.setAdapter(adapter);
 
         try {
-            List<NewsBeanDB> list = DBHelper.getInstance(this).getNewsListDbUtils().findAll(Selector
-                    .from(NewsBeanDB.class)
-                    .where("isreaded", "=", "1")
-                    .orderBy("id", true));
+            List<NewsBeanDB> list = DBHelper.getInstance(this).getNewsList()
+                    .queryBuilder().where(NewsBeanDBDao.Properties.Isreaded.eq("1"))
+                    .orderDesc(NewsBeanDBDao.Properties.Id)
+                    .build()
+                    .list();
 
             if (null != list) {
+                pushmsg_tv_empty.setVisibility(View.GONE);
                 Log.i("isreaded", "isreaded" + list + ":::" + list.size());
                 List<NewsBean> nblist = new ArrayList<>();
                 for (int i = 0; i < list.size(); i++) {
@@ -72,15 +75,12 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
                 }
                 adapter.appendData(nblist, false, false);
             } else {
-
+                pushmsg_tv_empty.setVisibility(View.VISIBLE);
             }
-        } catch (DbException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
-
 
     @Override
     public void onClick(View view) {

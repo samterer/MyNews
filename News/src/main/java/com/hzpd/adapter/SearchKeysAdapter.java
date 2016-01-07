@@ -8,13 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.event.HistoryClearEvent;
 import com.hzpd.modle.event.SearchKeyEvent;
 import com.hzpd.ui.fragments.SearchKeyFragment;
-import com.lidroid.xutils.util.LogUtils;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;

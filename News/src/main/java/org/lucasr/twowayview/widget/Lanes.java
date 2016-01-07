@@ -208,6 +208,7 @@ class Lanes {
 
     public void getChildFrame(Rect outRect, int childWidth, int childHeight, LaneInfo laneInfo,
                               Direction direction) {
+        laneInfo.startLane = laneInfo.startLane<0?0:laneInfo.startLane; //TODO ArrayIndexOutOfBoundsException: length=2; index=-1
         final Rect startRect = mLanes[laneInfo.startLane];
 
         // The anchor lane only applies when we're get child frame in the direction

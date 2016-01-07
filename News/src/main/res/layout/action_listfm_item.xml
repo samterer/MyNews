@@ -28,6 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
+            android:text="12312312"
             android:textSize="18sp"/>
 
         <com.hzpd.ui.widget.FontTextView
@@ -36,6 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:textColor="@color/grey_font"
+            android:text="312312"
             android:textSize="13sp"/>
     </LinearLayout>
 

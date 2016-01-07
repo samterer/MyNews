@@ -2,6 +2,7 @@ package com.hzpd.url;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -235,7 +236,7 @@ public class OkHttpClientManager {
         if (isResume && file.exists()) {
             positon = (int) file.length();
         }
-        Request request = new Request.Builder().url(url).addHeader("Range", "bytes=" + positon + "-").build();
+        final Request request = new Request.Builder().url(url).addHeader("Range", "bytes=" + positon + "-").build();
         final Call call = new OkHttpClient().newCall(request);
 
         call.enqueue(new Callback() {
@@ -251,24 +252,37 @@ public class OkHttpClientManager {
 
             @Override
             public void onResponse(com.squareup.okhttp.Response response) throws IOException {
-
+                long start = System.currentTimeMillis();
                 BufferedSink sink = Okio.buffer(isResume ? Okio.appendingSink(file) : Okio.sink(file));
                 InputStream input = response.body().byteStream();
                 byte data[] = new byte[2048];
-                int count = 0;
-                final int contentLength = (int) response.body().contentLength();
+                int count;
+                String header = response.header("Content-Range");
+                int length;
+                if (!TextUtils.isEmpty(header) && header.contains("/")) {
+                    length = Integer.valueOf(header.substring(header.indexOf("/") + 1));
+                } else {
+                    length = (int) response.body().contentLength();
+                }
+                final int contentLength = length;
                 int total = 0;
+                if (file.exists()) {
+                    total = (int) file.length();
+                }
                 while ((count = input.read(data)) != -1) {
                     total += count;
                     sink.write(data, 0, count);
                     // update the progress bar
                     final int nowtotal = total;
-                    OkHttpClientManager.getInstance().mDelivery.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callback.onLoading(contentLength, nowtotal);
-                        }
-                    });
+                    if (System.currentTimeMillis() - start > 300) {
+                        OkHttpClientManager.getInstance().mDelivery.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                callback.onLoading(contentLength, nowtotal);
+                            }
+                        });
+                        start = System.currentTimeMillis();
+                    }
                 }
                 sink.flush();
                 sink.close();
@@ -278,6 +292,7 @@ public class OkHttpClientManager {
                 OkHttpClientManager.getInstance().mDelivery.post(new Runnable() {
                     @Override
                     public void run() {
+                        callback.onLoading(contentLength, contentLength);
                         callback.onSuccess(file);
                     }
                 });

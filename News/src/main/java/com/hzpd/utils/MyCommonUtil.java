@@ -14,9 +14,8 @@ import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.hflt.R;
-import com.lidroid.xutils.util.LogUtils;
-
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;

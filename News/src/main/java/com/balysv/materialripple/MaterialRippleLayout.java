@@ -42,6 +42,7 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
 import com.hzpd.hflt.R;
+import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
@@ -268,6 +269,9 @@ public class MaterialRippleLayout extends FrameLayout {
                     cancelPressedEvent();
                     break;
                 case MotionEvent.ACTION_DOWN:
+                    if(AvoidOnClickFastUtils.isFastDoubleClick(this)){
+                        return false;
+                    }
                     if (hoverAnimator != null && hoverAnimator.isRunning()) {
                         return false;
                     }

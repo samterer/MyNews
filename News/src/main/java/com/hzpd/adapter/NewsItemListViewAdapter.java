@@ -25,6 +25,7 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsPageListBean;
 import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.db.NewsBeanDBDao;
 import com.hzpd.ui.App;
 import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.widget.CircleIndicator;
@@ -34,8 +35,6 @@ import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.db.NewsListDbTask;
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.db.sqlite.WhereBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -228,13 +227,10 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         readedNewsSet.add(nid);
 
         try {
-            NewsBeanDB nbdb = new NewsBeanDB();
-            nbdb.setNid(Integer.parseInt(nid));
-            nbdb.setIsreaded(1);
-            dbHelper.getNewsListDbUtils().update(nbdb
-                    , WhereBuilder.b("nid", "=", nid)
-                    , "isreaded");
-
+            NewsBeanDB nbdb = dbHelper.getNewsList().queryBuilder().where(NewsBeanDBDao.Properties.Nid.eq(nid)).build().unique();
+            nbdb.setNid(nid);
+            nbdb.setIsreaded("1");
+            dbHelper.getNewsList().update(nbdb);
         } catch (Exception e) {
             e.printStackTrace();
         }

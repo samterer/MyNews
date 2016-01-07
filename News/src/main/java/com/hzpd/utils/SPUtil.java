@@ -38,8 +38,6 @@ import com.hzpd.modle.TagBean;
 import com.hzpd.modle.UserBean;
 import com.hzpd.modle.db.NewsChannelBeanDB;
 import com.hzpd.ui.App;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.http.RequestParams;
 import com.news.update.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -95,7 +93,7 @@ public class SPUtil {
     public static void updateChannel() {
         try {
             if (dbs != null) dbs.clear();
-            dbs = DBHelper.getInstance(App.getInstance()).getChannelDbUtils().findAll(NewsChannelBeanDB.class);
+            dbs = DBHelper.getInstance(App.getInstance()).getChannel().loadAll();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -215,23 +213,6 @@ public class SPUtil {
             }
         }
         return false;
-    }
-
-    public static HttpUtils getHttpUtils() {
-        HttpUtils httpUtils = new HttpUtils();
-        return httpUtils;
-    }
-
-    public static void addParams(RequestParams params) {
-        Context context = App.getInstance();
-        params.addBodyParameter(COUNTRY, getCountry());
-        params.addBodyParameter(UUID, Utils.getDeviceUUID(context));
-        params.addBodyParameter(ANDROID_ID, Utils.getAndroidId(context));
-        params.addBodyParameter(IMEI, Utils.getIMEI(context));
-        params.addBodyParameter(LAUGUAGE, Utils.getLanguage(context));
-        params.addBodyParameter(VERSION_CODE, "" + Utils.getVersionCode(context));
-        params.addBodyParameter(PACKAGE_NAME_SELF, context.getPackageName());
-        params.addBodyParameter(IS_ROM, "" + Utils.isRomVersion(context));
     }
 
     public static void addParams(Map<String, String> params) {

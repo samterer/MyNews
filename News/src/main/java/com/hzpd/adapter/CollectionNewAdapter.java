@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.CollectionDataBean;
 import com.hzpd.modle.CollectionJsonBean;
@@ -15,7 +16,6 @@ import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.util.LogUtils;
 
 public class CollectionNewAdapter extends ListBaseAdapter<CollectionJsonBean> {
     private SPUtil spu;
@@ -65,7 +65,7 @@ public class CollectionNewAdapter extends ListBaseAdapter<CollectionJsonBean> {
             SPUtil.displayImage(s[0], holder.lehuo_img_id, DisplayOptionFactory.getOption(OptionTp.Small));
         }
 
-        if(cdb.getTitle()!=null){
+        if (cdb.getTitle() != null) {
             holder.lehuo_content_txt.setText(cdb.getTitle());
         }
 

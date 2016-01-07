@@ -19,8 +19,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.hflt.R;
-import com.lidroid.xutils.util.LogUtils;
 
 public class LotteryView extends View {
 

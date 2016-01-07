@@ -33,7 +33,8 @@ public class AdFlashFragment extends BaseFragment implements View.OnClickListene
                 false);
         adflash_img_ad = (ImageView) view.findViewById(R.id.adflash_img_ad);
         adflash_img_ad.setOnClickListener(this);
-
+        BitmapDrawable bitmapDrawable = SPUtil.getBitmapDrawable(getResources(), R.drawable.welcome);
+        adflash_img_ad.setImageDrawable(bitmapDrawable);
         return view;
     }
 

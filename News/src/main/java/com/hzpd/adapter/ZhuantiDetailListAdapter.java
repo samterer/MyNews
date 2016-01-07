@@ -16,22 +16,17 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.SubjectItemColumnsBean;
 import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.db.NewsBeanDBDao;
 import com.hzpd.ui.App;
 import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.db.NewsListDbTask;
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.db.sqlite.WhereBuilder;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
@@ -72,13 +67,10 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
         readedNewsSet.add(nid);
 
         try {
-            NewsBeanDB nbdb = new NewsBeanDB();
-            nbdb.setNid(Integer.parseInt(nid));
-            nbdb.setIsreaded(1);
-            dbHelper.getNewsListDbUtils().update(nbdb
-                    , WhereBuilder.b("nid", "=", nid)
-                    , "isreaded");
-
+            NewsBeanDB nbdb = dbHelper.getNewsList().queryBuilder().where(NewsBeanDBDao.Properties.Nid.eq(nid)).build().unique();
+            nbdb.setNid(nid);
+            nbdb.setIsreaded("1");
+            dbHelper.getNewsList().update(nbdb);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -175,16 +167,16 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
 
         public VHThree(View v) {
             super(v);
-            newsitem_title= (TextView) v.findViewById(R.id.newsitem_title);
-            tv3= (TextView) v.findViewById(R.id.news_3_tv_time);
-            newsitem_comments= (TextView) v.findViewById(R.id.newsitem_comments);
-            newsitem_source= (TextView) v.findViewById(R.id.newsitem_source);
-            newsitem_collectcount= (TextView) v.findViewById(R.id.newsitem_collectcount);
-            newsitem_foot= (ImageView) v.findViewById(R.id.newsitem_foot);
-            img0= (ImageView) v.findViewById(R.id.news_3_item1);
-            img1= (ImageView) v.findViewById(R.id.news_3_item2);
-            img2= (ImageView) v.findViewById(R.id.news_3_item3);
-            item_type_iv= (ImageView) v.findViewById(R.id.item_type_iv);
+            newsitem_title = (TextView) v.findViewById(R.id.newsitem_title);
+            tv3 = (TextView) v.findViewById(R.id.news_3_tv_time);
+            newsitem_comments = (TextView) v.findViewById(R.id.newsitem_comments);
+            newsitem_source = (TextView) v.findViewById(R.id.newsitem_source);
+            newsitem_collectcount = (TextView) v.findViewById(R.id.newsitem_collectcount);
+            newsitem_foot = (ImageView) v.findViewById(R.id.newsitem_foot);
+            img0 = (ImageView) v.findViewById(R.id.news_3_item1);
+            img1 = (ImageView) v.findViewById(R.id.news_3_item2);
+            img2 = (ImageView) v.findViewById(R.id.news_3_item3);
+            item_type_iv = (ImageView) v.findViewById(R.id.item_type_iv);
             v.setOnClickListener(onClickListener);
         }
     }
@@ -204,16 +196,16 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
 
         public VHLeftPic(View v) {
             super(v);
-            newsitem_title= (TextView) v.findViewById(R.id.newsitem_title);
-            nli_foot= (ImageView) v.findViewById(R.id.nli_foot);
-            newsitem_source= (TextView) v.findViewById(R.id.newsitem_source);
-            newsitem_collectcount= (TextView) v.findViewById(R.id.newsitem_collectcount);
-            newsitem_commentcount= (TextView) v.findViewById(R.id.newsitem_commentcount);
-            newsitem_time= (TextView) v.findViewById(R.id.newsitem_time);
-            newsitem_img= (ImageView) v.findViewById(R.id.newsitem_img);
-            newsitem_unlike= (ImageView) v.findViewById(R.id.newsitem_unlike);
-            item_type_iv= (ImageView) v.findViewById(R.id.item_type_iv);
-            ll_tag= (LinearLayout) v.findViewById(R.id.ll_tag);
+            newsitem_title = (TextView) v.findViewById(R.id.newsitem_title);
+            nli_foot = (ImageView) v.findViewById(R.id.nli_foot);
+            newsitem_source = (TextView) v.findViewById(R.id.newsitem_source);
+            newsitem_collectcount = (TextView) v.findViewById(R.id.newsitem_collectcount);
+            newsitem_commentcount = (TextView) v.findViewById(R.id.newsitem_commentcount);
+            newsitem_time = (TextView) v.findViewById(R.id.newsitem_time);
+            newsitem_img = (ImageView) v.findViewById(R.id.newsitem_img);
+            newsitem_unlike = (ImageView) v.findViewById(R.id.newsitem_unlike);
+            item_type_iv = (ImageView) v.findViewById(R.id.item_type_iv);
+            ll_tag = (LinearLayout) v.findViewById(R.id.ll_tag);
             v.setOnClickListener(onClickListener);
         }
     }
@@ -232,15 +224,15 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
 
         public VHLargePic(View v) {
             super(v);
-            newsitem_title= (TextView) v.findViewById(R.id.newsitem_title);
-            nli_foot= (ImageView) v.findViewById(R.id.nli_foot);
-            newsitem_source= (TextView) v.findViewById(R.id.newsitem_source);
-            newsitem_collectcount= (TextView) v.findViewById(R.id.newsitem_collectcount);
-            newsitem_commentcount= (TextView) v.findViewById(R.id.newsitem_commentcount);
-            newsitem_time= (TextView) v.findViewById(R.id.newsitem_time);
-            newsitem_img= (ImageView) v.findViewById(R.id.newsitem_img);
-            newsitem_unlike= (ImageView) v.findViewById(R.id.newsitem_unlike);
-            item_type_iv= (ImageView) v.findViewById(R.id.item_type_iv);
+            newsitem_title = (TextView) v.findViewById(R.id.newsitem_title);
+            nli_foot = (ImageView) v.findViewById(R.id.nli_foot);
+            newsitem_source = (TextView) v.findViewById(R.id.newsitem_source);
+            newsitem_collectcount = (TextView) v.findViewById(R.id.newsitem_collectcount);
+            newsitem_commentcount = (TextView) v.findViewById(R.id.newsitem_commentcount);
+            newsitem_time = (TextView) v.findViewById(R.id.newsitem_time);
+            newsitem_img = (ImageView) v.findViewById(R.id.newsitem_img);
+            newsitem_unlike = (ImageView) v.findViewById(R.id.newsitem_unlike);
+            item_type_iv = (ImageView) v.findViewById(R.id.item_type_iv);
             v.setOnClickListener(onClickListener);
         }
     }
@@ -252,7 +244,7 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
 
         public VHBigPic(View v) {
             super(v);
-            news_big_item1= (ImageView) v.findViewById(R.id.news_big_item1);
+            news_big_item1 = (ImageView) v.findViewById(R.id.news_big_item1);
             v.setOnClickListener(onClickListener);
         }
     }

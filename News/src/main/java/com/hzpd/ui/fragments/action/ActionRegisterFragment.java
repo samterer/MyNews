@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.adapter.ZY_Tsbl_blAdapter;
 import com.hzpd.custorm.GridViewInScrollView;
 import com.hzpd.hflt.R;
@@ -25,17 +26,8 @@ import com.hzpd.utils.CODE;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.ResponseStream;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.lidroid.xutils.util.LogUtils;
 import com.squareup.okhttp.Request;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -547,38 +539,7 @@ tag= OkHttpClientManager.getTag();
             if (pics.length() > 0) {
                 pic = pics.substring(0, pics.length() - 1);
             }
-            RequestParams para1 = RequestParamsUtils.getParams();
-            para1.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-            para1.addBodyParameter("activityid", activityid);
-            para1.addBodyParameter("pic", pic);
-            LogUtils.i("pics-->" + pic);
 
-            para1.addBodyParameter("username", mParams[0]);
-            LogUtils.i("username-->" + mParams[0]);
-
-            para1.addBodyParameter("tel", mParams[1]);
-            LogUtils.i("tel-->" + mParams[1]);
-
-            para1.addBodyParameter("title", mParams[2]);
-            LogUtils.i("title-->" + mParams[2]);
-
-            para1.addBodyParameter("extra1", mParams[3]);
-            LogUtils.i("extra1-->" + mParams[3]);
-
-            para1.addBodyParameter("extra2", mParams[4]);
-            LogUtils.i("extra2-->" + mParams[4]);
-
-            para1.addBodyParameter("extra3", mParams[5]);
-            LogUtils.i("extra3-->" + mParams[5]);
-
-            para1.addBodyParameter("extra4", mParams[6]);
-            LogUtils.i("extra4-->" + mParams[6]);
-
-            para1.addBodyParameter("extra5", mParams[7]);
-            LogUtils.i("extra5-->" + mParams[7]);
-
-            para1.addBodyParameter("content", mParams[8]);
-            LogUtils.i("content-->" + mParams[8]);
 
             String result = null;
 //            try {

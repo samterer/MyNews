@@ -32,8 +32,6 @@
 
         <item name="right_item_layout_bg">#f0f0f0</item>
 
-        <item name="xf_login_bg_drawable">@drawable/xf_login_bg</item>
-
         <!--侧滑菜单-->
         <item name="left_menu_fb_avatar">@drawable/zy_pic_touxiang_new</item>
         <item name="left_menu_fb_name">@color/white</item>
@@ -136,7 +134,6 @@
         <item name="news_item_line_color">@color/divider_line_color</item>
         <item name="choose_fragment_bg">@color/divider_line_color</item>
         <item name="right_item_layout_bg">@color/divider_line_color</item>
-        <item name="xf_login_bg_drawable">@drawable/xf_login_bg</item>
         <!--侧滑菜单-->
         <item name="left_menu_fb_avatar">@drawable/zy_pic_main_info_profile_bg</item>
         <item name="left_menu_fb_name">@color/white</item>

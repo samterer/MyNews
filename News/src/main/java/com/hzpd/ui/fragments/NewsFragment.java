@@ -11,11 +11,13 @@ import android.widget.LinearLayout;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.adapter.NewsFragmentPagerAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.modle.TagBean;
 import com.hzpd.modle.db.NewsChannelBeanDB;
+import com.hzpd.modle.db.NewsChannelBeanDBDao;
 import com.hzpd.modle.event.ChangeChannelEvent;
 import com.hzpd.modle.event.TagEvent;
 import com.hzpd.ui.App;
@@ -29,11 +31,6 @@ import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.util.LogUtils;
 import com.squareup.okhttp.Request;
 
 import java.io.File;
@@ -131,7 +128,8 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
     private void readTitleData() {
         // 频道信息即tab，在开屏的时候获取过了，现在取出来
         try {
-            List<NewsChannelBeanDB> dbs = dbHelper.getChannelDbUtils().findAll(Selector.from(NewsChannelBeanDB.class).where("default_show", "=", "1"));
+            List<NewsChannelBeanDB> dbs = dbHelper.getChannel()
+                    .queryBuilder().where(NewsChannelBeanDBDao.Properties.Default_show.eq("1")).build().list();
             mList = new ArrayList<>();
             for (NewsChannelBeanDB beanDB : dbs) {
                 mList.add(new NewsChannelBean(beanDB));
@@ -225,7 +223,7 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
                             }
                             try {
                                 List<NewsChannelBeanDB> dbs = null;
-                                dbs = dbHelper.getChannelDbUtils().findAll(NewsChannelBeanDB.class);
+                                dbs = dbHelper.getChannel().loadAll();
                                 // 如果没有缓存
                                 if (null == dbs || dbs.size() < 1) {
                                     addLocalChannels(newestChannels);
@@ -233,7 +231,7 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
                                     for (NewsChannelBean bean : newestChannels) {
                                         dbs.add(new NewsChannelBeanDB(bean));
                                     }
-                                    dbHelper.getChannelDbUtils().saveAll(dbs);
+                                    dbHelper.getChannel().insertInTx(dbs);
                                 } else { // 如果有缓存
                                     //TODO
                                 }
@@ -297,12 +295,12 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
                 } else {
                     SPUtil.dbs.add(1, beanDB);
                 }
-                dbHelper.getChannelDbUtils().deleteAll(NewsChannelBeanDB.class);
-                dbHelper.getChannelDbUtils().saveAll(SPUtil.dbs);
+                dbHelper.getChannel().loadAll();
+                dbHelper.getChannel().insertInTx(SPUtil.dbs);
                 SPUtil.updateChannel();
             } else {
                 beanDB.setDefault_show("1");
-                dbHelper.getChannelDbUtils().update(beanDB);
+                dbHelper.getChannel().update(beanDB);
             }
 
             if (mList.size() > 2) {

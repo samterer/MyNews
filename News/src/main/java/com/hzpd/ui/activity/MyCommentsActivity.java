@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.color.tools.mytools.LogUtils;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.hzpd.adapter.MycommentsAdapter;
 import com.hzpd.custorm.CircleImageView;
@@ -25,27 +26,16 @@ import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.squareup.okhttp.Request;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class MyCommentsActivity extends MBaseActivity implements View.OnClickListener {
 
     private CircleImageView xf_pinfo_iv_avatar;//头像
     private TextView xf_pinfo_tv_nickname;//昵称
-    private ImageView xf_pinfo_iv_gender;//性别
     private TextView xf_pinfo_tv_level_alias;//级别
     private TextView xf_pinfo_tv_level;//级别
     private TextView xf_pinfo_tv_score;//分数
@@ -127,7 +117,6 @@ public class MyCommentsActivity extends MBaseActivity implements View.OnClickLis
         });
         xf_pinfo_iv_avatar = (CircleImageView) headView.findViewById(R.id.xf_pinfo_iv_avatar);
         xf_pinfo_tv_nickname = (TextView) headView.findViewById(R.id.xf_pinfo_tv_nickname);
-        xf_pinfo_iv_gender = (ImageView) headView.findViewById(R.id.xf_pinfo_iv_gender);
         xf_pinfo_tv_level_alias = (TextView) headView.findViewById(R.id.xf_pinfo_tv_level_alias);
         xf_pinfo_tv_level = (TextView) headView.findViewById(R.id.xf_pinfo_tv_level);
         xf_pinfo_tv_score = (TextView) headView.findViewById(R.id.xf_pinfo_tv_score);

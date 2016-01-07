@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.adapter.RecommendDragAdapter;
 import com.hzpd.adapter.editcolumn.DragAdapter;
 import com.hzpd.adapter.editcolumn.LastEditColumnAdapter;
@@ -15,6 +16,7 @@ import com.hzpd.custorm.OtherGridView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.modle.db.NewsChannelBeanDB;
+import com.hzpd.modle.db.NewsChannelBeanDBDao;
 import com.hzpd.modle.event.ChangeChannelEvent;
 import com.hzpd.modle.event.ChannelSortedList;
 import com.hzpd.ui.App;
@@ -22,11 +24,6 @@ import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -119,13 +116,13 @@ public class MyEditColumnActivity extends MBaseActivity implements View.OnClickL
     }
 
     private void initViews() {
-        editcolumn_dragGridView= (DragGrid) findViewById(R.id.editcolumn_dragGridView);
-        editcolumn_gridview= (OtherGridView) findViewById(R.id.editcolumn_gridview);
-        stitle_tv_content= (TextView) findViewById(R.id.stitle_tv_content);
-        editcolumn_item_tv= (TextView) findViewById(R.id.editcolumn_item_tv);
-        text_editcolumn= (TextView) findViewById(R.id.text_editcolumn);
-        editcolum_explain= (TextView) findViewById(R.id.editcolum_explain);
-        stitle_ll_back=findViewById(R.id.stitle_ll_back);
+        editcolumn_dragGridView = (DragGrid) findViewById(R.id.editcolumn_dragGridView);
+        editcolumn_gridview = (OtherGridView) findViewById(R.id.editcolumn_gridview);
+        stitle_tv_content = (TextView) findViewById(R.id.stitle_tv_content);
+        editcolumn_item_tv = (TextView) findViewById(R.id.editcolumn_item_tv);
+        text_editcolumn = (TextView) findViewById(R.id.text_editcolumn);
+        editcolum_explain = (TextView) findViewById(R.id.editcolum_explain);
+        stitle_ll_back = findViewById(R.id.stitle_ll_back);
         stitle_ll_back.setOnClickListener(this);
         coverTop = findViewById(R.id.cover_top);
         if (App.getInstance().getThemeName().equals("0")) {
@@ -138,7 +135,8 @@ public class MyEditColumnActivity extends MBaseActivity implements View.OnClickL
 
     private void init() {
         try {
-            List<NewsChannelBeanDB> dbs = dbHelper.getChannelDbUtils().findAll(Selector.from(NewsChannelBeanDB.class).where("default_show", "=", "1"));
+            List<NewsChannelBeanDB> dbs = dbHelper.getChannel().queryBuilder()
+                    .where(NewsChannelBeanDBDao.Properties.Default_show.eq("1")).build().list();
             channelData = new ArrayList<>();
             for (NewsChannelBeanDB beanDB : dbs) {
                 channelData.add(new NewsChannelBean(beanDB));
@@ -272,7 +270,8 @@ public class MyEditColumnActivity extends MBaseActivity implements View.OnClickL
 
         try {
             // 读取json解析出所有的频道
-            List<NewsChannelBeanDB> dbs = dbHelper.getChannelDbUtils().findAll(Selector.from(NewsChannelBeanDB.class).where("default_show", "=", "0"));
+            List<NewsChannelBeanDB> dbs = dbHelper.getChannel().queryBuilder()
+                    .where(NewsChannelBeanDBDao.Properties.Default_show.eq("0")).build().list();
             myAllList = new ArrayList<>();
             for (NewsChannelBeanDB beanDB : dbs) {
                 myAllList.add(new NewsChannelBean(beanDB));
@@ -313,8 +312,8 @@ public class MyEditColumnActivity extends MBaseActivity implements View.OnClickL
             for (NewsChannelBean bean : all) {
                 dbs.add(new NewsChannelBeanDB(bean));
             }
-            dbHelper.getChannelDbUtils().deleteAll(NewsChannelBeanDB.class);
-            dbHelper.getChannelDbUtils().saveAll(dbs);
+            dbHelper.getChannel().deleteAll();
+            dbHelper.getChannel().insertInTx(dbs);
             csl.setSaveTitleList(channelData);
             SPUtil.updateChannel();
         } catch (Exception e) {
@@ -341,7 +340,7 @@ public class MyEditColumnActivity extends MBaseActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.stitle_ll_back:
                 finish();
                 break;

@@ -11,13 +11,14 @@ import com.hzpd.adapter.NewsItemListViewAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.db.PushBeanDB;
+import com.hzpd.modle.db.PushBeanDBDao;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.Log;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.exception.DbException;
 
+import java.nio.channels.Selector;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,13 +51,10 @@ public class MyPushActivity extends MBaseActivity implements View.OnClickListene
         recylerlist.setAdapter(adapter);
 
         try {
-            List<NewsBeanDB> list = DBHelper.getInstance(this).getPushListDbUtils().findAll(Selector
-                    .from(NewsBeanDB.class).orderBy("id",true));
-
+            List<PushBeanDB> list = DBHelper.getInstance(this).getPushList().queryBuilder().orderDesc(PushBeanDBDao.Properties.Id).list();
             if (null != list) {
-
                 List<NewsBean> nblist = new ArrayList<>();
-                for (int i=0;i<list.size();i++) {
+                for (int i = 0; i < list.size(); i++) {
                     NewsBean bean = new NewsBean(list.get(i));
                     nblist.add(bean);
                     Log.i("MyPushActivity", "MyPushActivity" + nblist.toString());
@@ -65,7 +63,7 @@ public class MyPushActivity extends MBaseActivity implements View.OnClickListene
             } else {
 
             }
-        } catch (DbException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

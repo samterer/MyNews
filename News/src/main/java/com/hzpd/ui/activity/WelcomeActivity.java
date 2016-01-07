@@ -27,13 +27,7 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.db.NewsListDbTask;
-import com.lidroid.xutils.exception.DbException;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.HttpHandler;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
+
 import com.news.update.UpdateService;
 import com.news.update.Utils;
 import com.squareup.okhttp.Request;
@@ -110,13 +104,9 @@ public class WelcomeActivity extends MWBaseActivity {
     public void getChannelJson() {
         final File target = App.getFile(App.getInstance().getAllDiskCacheDir() + File.separator + SPUtil.getCountry() + File.separator + "News");
         List<NewsChannelBeanDB> channelBeanDBs = null;
-        try {
-            channelBeanDBs = dbHelper.getChannelDbUtils().findAll(NewsChannelBeanDB.class);
-            if (channelBeanDBs != null && channelBeanDBs.size() > 0) {
-                loadMainUI();
-            }
-        } catch (DbException e) {
-            e.printStackTrace();
+        channelBeanDBs = dbHelper.getChannel().loadAll();
+        if (channelBeanDBs != null && channelBeanDBs.size() > 0) {
+            loadMainUI();
         }
 
         if (!Utils.isNetworkConnected(this)) {
@@ -136,7 +126,7 @@ public class WelcomeActivity extends MWBaseActivity {
                             String json = response.toString();
                             if (json != null) {
                                 JSONObject obj = null;
-                                Log.i("channelCache","channelCache"+json);
+                                Log.i("channelCache", "channelCache" + json);
                                 try {
                                     obj = FjsonUtil.parseObject(json);
                                 } catch (Exception e) {
@@ -168,7 +158,7 @@ public class WelcomeActivity extends MWBaseActivity {
                                 if (newestChannels == null) {
                                     newestChannels = new ArrayList<>();
                                 }
-                                dbs = dbHelper.getChannelDbUtils().findAll(NewsChannelBeanDB.class);
+                                dbs = dbHelper.getChannel().loadAll();
                                 // 如果没有缓存
                                 if (null == dbs || dbs.size() < 1) {
                                     addLocalChannels(newestChannels);
@@ -176,7 +166,7 @@ public class WelcomeActivity extends MWBaseActivity {
                                     for (NewsChannelBean bean : newestChannels) {
                                         dbs.add(new NewsChannelBeanDB(bean));
                                     }
-                                    dbHelper.getChannelDbUtils().saveAll(dbs);
+                                    dbHelper.getChannel().insertInTx(dbs);
                                     SPUtil.updateChannel();
                                 } else if (newestChannels.size() > 0) { // 如果有缓存
                                     boolean change = false;
@@ -202,13 +192,13 @@ public class WelcomeActivity extends MWBaseActivity {
                                         for (NewsChannelBean bean : newestChannels) {
                                             dbs.add(new NewsChannelBeanDB(bean));
                                         }
-                                        dbHelper.getChannelDbUtils().deleteAll(NewsChannelBeanDB.class);
-                                        dbHelper.getChannelDbUtils().saveAll(dbs);
+                                        dbHelper.getChannel().deleteAll();
+                                        dbHelper.getChannel().insertInTx(dbs);
                                         SPUtil.updateChannel();
                                     }
                                 }
-                            }else {
-                                Log.i("channelCache","channelCache  null");
+                            } else {
+                                Log.i("channelCache", "channelCache  null");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -220,7 +210,7 @@ public class WelcomeActivity extends MWBaseActivity {
 
                     @Override
                     public void onFailure(Request request, Exception e) {
-                        Log.i("channelCache","channelCache  onFailure");
+                        Log.i("channelCache", "channelCache  onFailure");
                         if (!exists) {
                             loadMainUI();
                         }
@@ -291,6 +281,7 @@ public class WelcomeActivity extends MWBaseActivity {
         channelRecommend.setType(NewsChannelBean.TYPE_RECOMMEND);
         channelRecommend.setCnname(getString(R.string.recommend));
         channelRecommend.setDefault_show("1");
+        channelRecommend.setSort_order("0");
         // 添加推荐频道
         if (!list.contains(channelRecommend)) {
             list.add(0, channelRecommend);

@@ -60,15 +60,15 @@ import com.hzpd.modle.CommentsCountBean;
 import com.hzpd.modle.CommentzqzxBean;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsDetailBean;
-import com.hzpd.modle.NewsItemBeanForCollection;
 import com.hzpd.modle.ReplayBean;
 import com.hzpd.modle.TagBean;
 import com.hzpd.modle.ThirdLoginBean;
 import com.hzpd.modle.UserBean;
+import com.hzpd.modle.db.NewsItemBeanForCollection;
+import com.hzpd.modle.db.NewsItemBeanForCollectionDao;
 import com.hzpd.modle.db.UserLog;
 import com.hzpd.modle.event.TagEvent;
 import com.hzpd.ui.App;
-import com.hzpd.ui.dialog.FontsizePop;
 import com.hzpd.ui.widget.CustomRecyclerView;
 import com.hzpd.ui.widget.FontTextView;
 import com.hzpd.ui.widget.SwipeCloseLayout;
@@ -90,9 +90,6 @@ import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.StationConfig;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.showwebview.MyJavascriptInterface;
-import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.news.update.Utils;
 import com.squareup.okhttp.Request;
 
@@ -157,7 +154,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private String from;
     private String detailPathRoot;
     private NewsBean nb;
-    private DbUtils dbUtils;
+    private NewsItemBeanForCollectionDao dbUtils;
     private boolean isDetail = false;
     private MyJavascriptInterface jsInterface;// 跳转到图集接口
 
@@ -239,7 +236,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         this.mWebView = webView;
         recyclerView.setWebView(mWebView);
         webViewChangeProgress(webView);
-        getNewsDetails();
     }
 
     ViewGroup ad_layout;
@@ -290,6 +286,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         ll_rob = (LinearLayout) commentView.findViewById(R.id.ll_rob);
         comment_layout = (LinearLayout) commentView.findViewById(R.id.comment_layout);
         comment_list = (LinearLayout) commentView.findViewById(R.id.comment_list);
+        getNewsDetails();
     }
 
     public void setListView(ListView listView) {
@@ -342,7 +339,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
-
 
 
     private void getThisIntent() {
@@ -1264,6 +1260,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 if (isResume) {
                     TUtils.toast(getString(R.string.toast_check_network));
                 }
+                return;
             }
             final long start = System.currentTimeMillis();
 
@@ -1328,7 +1325,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private boolean isTagSelect;
 
     private void setContents() {
-        Log.i("setContents","setContents--->"+mBean.toString());
+        Log.i("setContents", "setContents--->" + mBean.toString());
         int textSize = spu.getTextSize();
         setupWebView(textSize);
         mRoot.setVisibility(View.VISIBLE);
@@ -1425,12 +1422,14 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             details_tv_subscribe.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (AvoidOnClickFastUtils.isFastDoubleClick(v)){
+                        return;
+                    }
                     if (isTagSelect) {
                         details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
                         Intent intent = new Intent(NewsDetailActivity.this, TagActivity.class);
                         intent.putExtra("tagbean", tagBean);
                         startActivity(intent);
-                        isTagSelect = false;
                     } else {
                         details_tv_subscribe.setTextColor(getResources().getColor(R.color.white));
                         details_tv_subscribe.setCompoundDrawables(null, null, null, null);
@@ -1453,9 +1452,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                                     } catch (Exception e) {
                                         return;
                                     }
-                                    if (200 == obj.getIntValue("code")) {
-
-                                    }
                                 }
 
                                 @Override
@@ -1469,8 +1465,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 }
             });
         }
-
-
     }
 
     private void showEmpty() {
@@ -1940,19 +1934,22 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private void addCollection() {
         NewsItemBeanForCollection nibfc = new NewsItemBeanForCollection(nb);
         try {
-            NewsItemBeanForCollection mnbean = dbUtils.findFirst(
-                    Selector.from(NewsItemBeanForCollection.class).where("nid", "=", nb.getNid()));
 
+            NewsItemBeanForCollection mnbean = dbUtils.queryBuilder()
+                    .where(NewsItemBeanForCollectionDao.Properties.Nid.eq(nb.getNid()))
+                    .build().unique();
             if (mnbean == null) {
-                dbUtils.save(nibfc);
+                dbUtils.insert(nibfc);
                 TUtils.toast(getString(R.string.toast_collect_success));
-                long co = dbUtils.count(NewsItemBeanForCollection.class);
+                long co = dbUtils.count();
                 Log.i("test", "num:" + co);
                 Log.i("test", "type-->" + nibfc.getType());
                 newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
 
             } else {
-                dbUtils.delete(NewsItemBeanForCollection.class, WhereBuilder.b("nid", "=", nb.getNid()));
+                dbUtils.queryBuilder()
+                        .where(NewsItemBeanForCollectionDao.Properties.Nid.eq(nb.getNid()))
+                        .buildDelete().executeDeleteWithoutDetachingEntities();
                 TUtils.toast(getString(R.string.toast_collect_cancelled));
                 newdetail_collection.setImageResource(R.drawable.details_collect_select);
             }
@@ -1990,11 +1987,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         if (spu.getUser() == null) {
             try {
                 Log.i("test", "isCollection");
-                NewsItemBeanForCollection nbfc = dbUtils
-                        .findFirst(Selector.from(NewsItemBeanForCollection.class).where("nid", "=", nb.getNid()));
-                Log.i("test", "isCollection");
+                NewsItemBeanForCollection nbfc = dbUtils.queryBuilder().where(NewsItemBeanForCollectionDao.Properties.Nid.eq(nb.getNid())).build().unique();
                 if (null != nbfc) {
-                    Log.i("test", "isCollection   getTitle:" + nbfc.getTitle());
                     newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
                 }
             } catch (Exception e) {
@@ -2070,10 +2064,12 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             if (null != nb && !TextUtils.isEmpty(nb.getNid())) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(enterTime);
-                DBHelper.getInstance(getApplicationContext()).getLogDbUtils()
-                        .save(new UserLog(nb.getNid(), SPUtil.format(calendar), (int) ((System.currentTimeMillis() - enterTime) / 1000)));
+                DBHelper.getInstance(getApplicationContext()).getLog()
+                        .insert(new UserLog(nb.getNid(), SPUtil.format(calendar), String.valueOf((System.currentTimeMillis() - enterTime) / 1000)))
+                ;
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

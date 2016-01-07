@@ -9,25 +9,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.ReplayBean;
 import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.db.NewsBeanDBDao;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.EventUtils;
-import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.db.sqlite.WhereBuilder;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.lidroid.xutils.util.LogUtils;
 import com.squareup.okhttp.Request;
 
 import java.util.Map;
@@ -59,7 +53,7 @@ public class ZQ_ReplyActivity extends MBaseActivity implements View.OnClickListe
             bean = (ReplayBean) intent.getSerializableExtra("replay");
         }
         super.changeStatusBar();
-        tag= OkHttpClientManager.getTag();
+        tag = OkHttpClientManager.getTag();
         initViews();
 
         rl_share1.setOnClickListener(new View.OnClickListener() {
@@ -116,7 +110,7 @@ public class ZQ_ReplyActivity extends MBaseActivity implements View.OnClickListe
     // 发表评论
     private void sendComment(final String content, final String comcount) {
         spu.getUser();
-        Map<String ,String> params = RequestParamsUtils.getMapWithU();
+        Map<String, String> params = RequestParamsUtils.getMapWithU();
         params.put("uid", spu.getUser().getUid());
         params.put("title", bean.getTitle());
         params.put("type", bean.getType());//"News"
@@ -164,13 +158,14 @@ public class ZQ_ReplyActivity extends MBaseActivity implements View.OnClickListe
 
     public void setComcountsId(String nid, String comcount) {
         try {
-            NewsBeanDB nbdb = new NewsBeanDB();
-            nbdb.setNid(Integer.parseInt(nid));
-            int counts = Integer.parseInt(comcount) + 1;
-            nbdb.setComcount("" + counts);
-            dbHelper.getNewsListDbUtils().update(nbdb
-                    , WhereBuilder.b("nid", "=", nid)
-                    , "comcount");
+            NewsBeanDB nbdb = dbHelper.getNewsList().queryBuilder()
+                    .where(NewsBeanDBDao.Properties.Nid.eq(nid))
+                    .build().unique();
+            if (nbdb != null) {
+                int counts = Integer.parseInt(comcount) + 1;
+                nbdb.setComcount("" + counts);
+            }
+            dbHelper.getNewsList().update(nbdb);
         } catch (Exception e) {
             e.printStackTrace();
         }

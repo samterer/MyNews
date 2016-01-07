@@ -13,15 +13,12 @@ import android.widget.TextView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.db.NewsBeanDB;
-import com.hzpd.ui.App;
-import com.hzpd.utils.AvoidOnClickFastUtils;
+import com.hzpd.modle.db.NewsBeanDBDao;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.db.sqlite.WhereBuilder;
 
 import org.lucasr.twowayview.widget.StaggeredGridLayoutManager;
 
@@ -65,15 +62,10 @@ public class ChooseAdapter extends RecyclerView.Adapter {
 
     public void setReadedId(String nid) {
         readedNewsSet.add(nid);
-
         try {
-            NewsBeanDB nbdb = new NewsBeanDB();
-            nbdb.setNid(Integer.parseInt(nid));
-            nbdb.setIsreaded(1);
-            dbHelper.getNewsListDbUtils().update(nbdb
-                    , WhereBuilder.b("nid", "=", nid)
-                    , "isreaded");
-
+            NewsBeanDB nbdb = dbHelper.getNewsList().queryBuilder().where(NewsBeanDBDao.Properties.Nid.eq(nid)).build().unique();
+            nbdb.setIsreaded("1");
+            dbHelper.getNewsList().update(nbdb);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -100,6 +92,7 @@ public class ChooseAdapter extends RecyclerView.Adapter {
         public TextView textView;
         public ImageView imageView;
         public View clickView;
+
         public FirstViewHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.newsitem_title);

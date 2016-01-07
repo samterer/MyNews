@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.hflt.R;
 import com.hzpd.ui.fragments.ZQ_FindbackpwdFragment;
 import com.hzpd.ui.fragments.ZQ_ModifyPersonalInfoFragment;
@@ -14,7 +15,6 @@ import com.hzpd.ui.fragments.ZQ_PersonalInfoFragment;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.CODE;
-import com.lidroid.xutils.util.LogUtils;
 
 public class PersonalInfoActivity extends MBaseActivity {
 

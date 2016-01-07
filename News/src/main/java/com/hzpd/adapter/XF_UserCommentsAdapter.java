@@ -106,7 +106,6 @@ public class XF_UserCommentsAdapter extends RecyclerView.Adapter {
             HeadViewHolder headingHolder = new HeadViewHolder(headView);
             headingHolder.xf_pinfo_iv_avatar = (CircleImageView) headView.findViewById(R.id.xf_pinfo_iv_avatar);
             headingHolder.xf_pinfo_tv_nickname = (TextView) headView.findViewById(R.id.xf_pinfo_tv_nickname);
-            headingHolder.xf_pinfo_iv_gender = (ImageView) headView.findViewById(R.id.xf_pinfo_iv_gender);
             headingHolder.xf_pinfo_tv_level_alias = (TextView) headView.findViewById(R.id.xf_pinfo_tv_level_alias);
             headingHolder.xf_pinfo_tv_level = (TextView) headView.findViewById(R.id.xf_pinfo_tv_level);
             headingHolder.xf_pinfo_tv_score = (TextView) headView.findViewById(R.id.xf_pinfo_tv_score);
@@ -200,7 +199,6 @@ public class XF_UserCommentsAdapter extends RecyclerView.Adapter {
     private static class HeadViewHolder extends RecyclerView.ViewHolder {
         CircleImageView xf_pinfo_iv_avatar;//头像
         TextView xf_pinfo_tv_nickname;//昵称
-        ImageView xf_pinfo_iv_gender;//性别
         TextView xf_pinfo_tv_level_alias;//级别
         TextView xf_pinfo_tv_level;//级别
         TextView xf_pinfo_tv_score;//分数

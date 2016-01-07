@@ -6,14 +6,10 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.os.StatFs;
 
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.ui.App;
+import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DataCleanManager;
-import com.hzpd.utils.db.AlbumListDbTask;
-import com.hzpd.utils.db.NewsListDbTask;
-import com.hzpd.utils.db.VideoListDbTask;
-import com.hzpd.utils.db.ZhuantiDetailListDbTask;
-import com.hzpd.utils.db.ZhuantiListDbTask;
-import com.lidroid.xutils.util.LogUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
@@ -49,24 +45,8 @@ public class ClearCacheService extends IntentService {
 			DataCleanManager.deleteDir(new File(App.getInstance().getJsonFileCacheRootDir()));
 
 			ImageLoader.getInstance().getDiskCache().clear();
-
 			//新闻列表
-			NewsListDbTask newsListDbTask = new NewsListDbTask(this);
-			newsListDbTask.asyncDropTable();
-
-			AlbumListDbTask albumListDbTask = new AlbumListDbTask(this);
-			albumListDbTask.asyncDropTable();
-
-			VideoListDbTask videoListDbTask = new VideoListDbTask(this);
-			videoListDbTask.asyncDropTable();
-
-			ZhuantiDetailListDbTask zhuantiDetailListDbTask = new ZhuantiDetailListDbTask(this);
-			zhuantiDetailListDbTask.asyncDropTable();
-
-			ZhuantiListDbTask zhuantiListDbTask = new ZhuantiListDbTask(this);
-			zhuantiListDbTask.asyncDropTable();
-
-
+			DBHelper.getInstance(this).clear();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.color.tools.mytools.LogUtils;
 import com.facebook.ads.NativeAd;
 import com.hzpd.adapter.NewsItemListViewAdapter;
 import com.hzpd.hflt.R;
@@ -45,7 +46,6 @@ import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
 import com.hzpd.utils.db.NewsListDbTask;
-import com.lidroid.xutils.util.LogUtils;
 import com.news.update.Utils;
 import com.squareup.okhttp.Request;
 
@@ -253,6 +253,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     @Override
     public void onDestroyView() {
         Log.e("onDestroyView", "onDestroyView " + getAnalyticPageName());
+        OkHttpClientManager.cancel(tag);
         EventBus.getDefault().unregister(this);
         SPUtil.clearAds(ads);
         adapter.appendData(null, true, false);
@@ -335,7 +336,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         }
         SPUtil.addParams(params);
         isLoading = true;
-        OkHttpClientManager.postAsyn("tag"
+        OkHttpClientManager.postAsyn(tag
                 , InterfaceJsonfile.NEWSLIST
 
                 , new OkHttpClientManager.ResultCallback() {
@@ -458,6 +459,9 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 , new OkHttpClientManager.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
+                        if(!isAdded()){
+                            return;
+                        }
                         String data = response.toString();
                         JSONObject obj = FjsonUtil.parseObject(data);
 

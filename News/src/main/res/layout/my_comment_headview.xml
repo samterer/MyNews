@@ -36,18 +36,6 @@
             android:textColor="?my_comment_top_nickname"
             android:textSize="20sp" />
 
-        <ImageView
-            android:id="@+id/xf_pinfo_iv_gender"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_alignTop="@id/xf_pinfo_tv_nickname"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="2dp"
-            android:layout_toRightOf="@id/xf_pinfo_tv_nickname"
-            android:scaleType="centerCrop"
-            android:src="@drawable/xf_icon_male"
-            android:visibility="gone" />
-
         <LinearLayout
             android:id="@+id/xf_pinfo_ll_name"
             android:layout_width="match_parent"

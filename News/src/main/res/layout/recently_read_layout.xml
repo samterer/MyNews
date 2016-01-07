@@ -21,6 +21,14 @@
             android:cacheColorHint="@null"
             android:scrollbars="none" />
 
+
+        <ImageView
+            android:id="@+id/pushmsg_tv_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/zqzx_nonetwork" />
+
         <View
             android:id="@+id/cover_top"
             android:layout_width="match_parent"

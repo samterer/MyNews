@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.os.Parcel;
-import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Recycler;
 import android.support.v7.widget.RecyclerView.State;
@@ -31,8 +30,6 @@ import android.view.ViewGroup;
 import com.hzpd.hflt.R;
 
 import org.lucasr.twowayview.widget.Lanes.LaneInfo;
-
-import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
 public class StaggeredGridLayoutManager extends GridLayoutManager {
     private static final String LOGTAG = "StaggeredGridLayoutManager";
@@ -106,7 +103,8 @@ public class StaggeredGridLayoutManager extends GridLayoutManager {
         final StaggeredItemEntry entry = (StaggeredItemEntry) getItemEntryForPosition(position);
         try {
             if (entry == null) {
-                throw new IllegalStateException("Could not find span for position " + position);
+                return 0;
+                //throw new IllegalStateException("Could not find span for position " + position);
             }
             return entry.span;
         } catch (IllegalStateException e) {

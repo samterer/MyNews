@@ -1,6 +1,6 @@
 package com.hzpd.utils;
 
-import com.lidroid.xutils.util.LogUtils;
+import com.color.tools.mytools.LogUtils;
 
 import java.io.File;
 import java.io.FileInputStream;

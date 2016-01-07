@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.hzpd.utils.Log;
-import com.lidroid.xutils.http.RequestParams;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -304,8 +303,4 @@ public class ChaConfig {
         return paramsMap;
     }
 
-    public void addRequestParams(RequestParams requestParams) {
-        List<NameValuePair> params = getNameValues();
-        requestParams.addBodyParameter(params);
-    }
 }

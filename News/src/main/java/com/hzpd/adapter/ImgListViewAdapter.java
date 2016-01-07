@@ -7,14 +7,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.ImageListSubBean;
 import com.hzpd.modle.ImgListBean;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.SPUtil;
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.util.LogUtils;
 
 import java.util.List;
 

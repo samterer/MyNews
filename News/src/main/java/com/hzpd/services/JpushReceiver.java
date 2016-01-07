@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.utils.FjsonUtil;
-import com.lidroid.xutils.util.LogUtils;
 
 import cn.jpush.android.api.JPushInterface;
 

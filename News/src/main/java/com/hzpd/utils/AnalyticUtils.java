@@ -7,6 +7,7 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.hzpd.hflt.BuildConfig;
+import com.hzpd.ui.App;
 import com.umeng.analytics.MobclickAgent;
 
 import org.common.lib.analytics.GoogleAnalyticsUtils;
@@ -32,6 +33,7 @@ public class AnalyticUtils {
         if (BuildConfig.DEBUG) {
             return;
         }
+        context = App.getInstance();
         HitBuilders.EventBuilder eventBuilder = new HitBuilders.EventBuilder();
         if (!TextUtils.isEmpty(category)) {
             eventBuilder.setCategory(category);
@@ -61,6 +63,7 @@ public class AnalyticUtils {
         if (TextUtils.isEmpty(screenName)) {
             return;
         }
+        context = App.getInstance();
         // 谷歌分析
         Tracker tracker = GoogleAnalyticsUtils.getInstance().getAppTracker(context);
         if (tracker != null) {
@@ -82,6 +85,7 @@ public class AnalyticUtils {
         if (TextUtils.isEmpty(screenName)) {
             return;
         }
+        context = App.getInstance();
         // 谷歌分析
         Tracker tracker = GoogleAnalyticsUtils.getInstance().getAppTracker(context);
         if (tracker != null) {
@@ -110,6 +114,7 @@ public class AnalyticUtils {
         if (BuildConfig.DEBUG) {
             return;
         }
+        context = App.getInstance();
         MobclickAgent.onEvent(context, eventId);
     }
 
@@ -125,6 +130,7 @@ public class AnalyticUtils {
         if (BuildConfig.DEBUG) {
             return;
         }
+        context = App.getInstance();
         MobclickAgent.onEvent(context, eventId, param);
     }
 
@@ -139,6 +145,7 @@ public class AnalyticUtils {
         if (BuildConfig.DEBUG) {
             return;
         }
+        context = App.getInstance();
         MobclickAgent.onEvent(context, eventId, paramMap);
     }
 

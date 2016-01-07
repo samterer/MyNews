@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsChannelBean;
-import com.lidroid.xutils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

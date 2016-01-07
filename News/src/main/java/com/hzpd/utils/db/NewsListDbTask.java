@@ -7,23 +7,21 @@ import android.text.TextUtils;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsChannelBean;
 import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.db.NewsBeanDBDao;
 import com.hzpd.ui.App;
 import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.Log;
-import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.db.sqlite.WhereBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NewsListDbTask {
-    private DbUtils newsListDb;
+    private NewsBeanDBDao newsListDb;
 
     public NewsListDbTask(Context context) {
-        newsListDb = DBHelper.getInstance(context).getNewsListDbUtils();
+        newsListDb = DBHelper.getInstance(context).getNewsList();
     }
 
     public void findList(NewsChannelBean channelbean
@@ -55,8 +53,7 @@ public class NewsListDbTask {
     public void asyncDeleteList(List<String> nbList) {
         for (String nid : nbList) {
             try {
-                newsListDb.delete(NewsBeanDB.class
-                        , WhereBuilder.b("nid", "=", nid));
+                newsListDb.queryBuilder().where(NewsBeanDBDao.Properties.Nid.eq(nid)).buildDelete().executeDeleteWithoutDetachingEntities();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -75,7 +72,7 @@ public class NewsListDbTask {
 
     public void asyncDropTable() {
         try {
-            newsListDb.deleteAll(NewsBeanDB.class);
+            newsListDb.deleteAll();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -111,19 +108,13 @@ public class NewsListDbTask {
             List<NewsBeanDB> list = null;
             try {
                 if (!TextUtils.isEmpty(channelbean.getId())) {
-                    Selector TagidSelector = Selector.from(NewsBeanDB.class)
-                            .where("tagId", "=", channelbean.getId());
-                    TagidSelector.orderBy("sort_order", true)
-                            .limit(pageSize)
-                            .offset(page * pageSize);
-                    list = newsListDb.findAll(TagidSelector);
+                    list = newsListDb.queryBuilder().where(NewsBeanDBDao.Properties.TagId.eq(channelbean.getId()))
+                            .orderDesc(NewsBeanDBDao.Properties.Sort_order)
+                            .limit(pageSize).offset(page * pageSize).build().list();
                 } else {
-                    Selector selector = Selector.from(NewsBeanDB.class)
-                            .where("tid", "=", channelbean.getTid());
-                    selector.orderBy("sort_order", true)
-                            .limit(pageSize)
-                            .offset(page * pageSize);
-                    list = newsListDb.findAll(selector);
+                    list = newsListDb.queryBuilder().where(NewsBeanDBDao.Properties.Tid.eq(channelbean.getTid()))
+                            .orderDesc(NewsBeanDBDao.Properties.Sort_order)
+                            .limit(pageSize).offset(page * pageSize).build().list();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -168,12 +159,9 @@ public class NewsListDbTask {
         protected List<NewsBeanDB> doInBackground(String... params) {
             List<NewsBeanDB> list = null;
             try {
-                Selector selector = Selector.from(NewsBeanDB.class)
-                        .where("tid", "=", tid);
-                selector.orderBy("sort_order", true)
-                        .limit(pageSize)
-                        .offset(page * pageSize);
-                list = newsListDb.findAll(selector);
+                list = newsListDb.queryBuilder().where(NewsBeanDBDao.Properties.Tid.eq(tid))
+                        .orderDesc(NewsBeanDBDao.Properties.Sort_order)
+                        .limit(pageSize).offset(page * pageSize).build().list();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -218,13 +206,24 @@ public class NewsListDbTask {
 
                 for (NewsBeanDB nbdb : list) {
                     try {
-                        List<NewsBeanDB> temp = newsListDb.findAll(Selector.from(NewsBeanDB.class).where("nid", "=", nbdb.getNid()));
-                        if (temp != null && temp.size() > 0) {
-                            NewsBeanDB newsBeanDB = temp.get(0);
+                        NewsBeanDB newsBeanDB;
+                        if (!TextUtils.isEmpty(nbdb.getTid())) {
+                            newsBeanDB = newsListDb.queryBuilder()
+                                    .where(NewsBeanDBDao.Properties.Nid.eq(nbdb.getNid()))
+                                    .where(NewsBeanDBDao.Properties.Tid.eq(nbdb.getTid()))
+                                    .build().unique();
+                        } else {
+                            newsBeanDB = newsListDb.queryBuilder()
+                                    .where(NewsBeanDBDao.Properties.Nid.eq(nbdb.getNid()))
+                                    .where(NewsBeanDBDao.Properties.TagId.eq(nbdb.getTagId()))
+                                    .build().unique();
+
+                        }
+                        if (newsBeanDB != null) {
                             nbdb.setIsreaded(newsBeanDB.getIsreaded());
                         }
-                        newsListDb.delete(NewsBeanDB.class, WhereBuilder.b("nid", "=", nbdb.getNid()));
-                        newsListDb.save(nbdb);
+                        newsListDb.queryBuilder().where(NewsBeanDBDao.Properties.Nid.eq(nbdb.getNid())).buildDelete().executeDeleteWithoutDetachingEntities();
+                        newsListDb.insert(nbdb);
                         flag = true;
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -265,8 +264,7 @@ public class NewsListDbTask {
 
             for (String nid : nbList) {
                 try {
-                    newsListDb.delete(NewsBeanDB.class
-                            , WhereBuilder.b("nid", "=", nid));
+                    newsListDb.queryBuilder().where(NewsBeanDBDao.Properties.Nid.eq(nid)).buildDelete().executeDeleteWithoutDetachingEntities();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -297,11 +295,8 @@ public class NewsListDbTask {
         protected Boolean doInBackground(String... params) {
             boolean isReaded = false;
             try {
-                NewsBeanDB newsdb = newsListDb.findFirst(Selector
-                        .from(NewsBeanDB.class)
-                        .where("nid", "=", nid)
-                        .and("isreaded", "=", 1));
-                if (null != newsdb) {
+                NewsBeanDB newsBeanDB = newsListDb.queryBuilder().where(NewsBeanDBDao.Properties.Nid.eq(nid)).build().unique();
+                if (null != newsBeanDB && "1".equals(newsBeanDB.getIsreaded())) {
                     isReaded = true;
                 }
             } catch (Exception e) {
@@ -331,8 +326,8 @@ public class NewsListDbTask {
         @Override
         protected Boolean doInBackground(String... params) {
             try {
-                newsListDb.dropTable(NewsBeanDB.class);
-                return newsListDb.tableIsExist(NewsBeanDB.class);
+                newsListDb.deleteAll();
+                return true;
             } catch (Exception e) {
                 e.printStackTrace();
             }

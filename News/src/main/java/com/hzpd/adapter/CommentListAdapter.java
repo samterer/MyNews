@@ -2,7 +2,6 @@ package com.hzpd.adapter;
 
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,29 +12,18 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hzpd.custorm.CircleImageView;
 import com.hzpd.custorm.PopUpwindowLayout;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.CommentzqzxBean;
 import com.hzpd.ui.activity.XF_PInfoActivity;
 import com.hzpd.ui.activity.ZQ_ReplyCommentActivity;
-import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.Log;
-import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
-import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
-import com.lidroid.xutils.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,14 +35,12 @@ public class CommentListAdapter extends BaseAdapter {
 
     private List<CommentzqzxBean> mDataList = new ArrayList<>();
     private SPUtil spu;
-    private HttpUtils httpUtils;
     private String nid;
 
 
     public CommentListAdapter(String nid) {
         this.nid = nid;
         spu = SPUtil.getInstance();
-        httpUtils = SPUtil.getHttpUtils();
     }
 
     @Override
@@ -196,48 +182,6 @@ public class CommentListAdapter extends BaseAdapter {
                         if (null == spu.getUser()) {
                             return;
                         }
-                        Log.e("test", "点赞" + item.getCid());
-                        Log.i(getLogTag(), "uid-" + spu.getUser().getUid() + "  mType-News" + " nid-" + item.getCid());
-                        final RequestParams params = RequestParamsUtils.getParamsWithU();
-                        params.addBodyParameter("uid", spu.getUser().getUid());
-                        params.addBodyParameter("type", "News");
-                        params.addBodyParameter("nid", item.getCid());
-                        params.addBodyParameter("siteid", InterfaceJsonfile.SITEID);
-                        SPUtil.addParams(params);
-                        httpUtils.send(HttpRequest.HttpMethod.POST
-                                , InterfaceJsonfile.PRISE1//InterfaceApi.mPraise
-                                , params
-                                , new RequestCallBack<String>() {
-                            @Override
-                            public void onFailure(HttpException arg0, String arg1) {
-                                Log.e(getLogTag(), "赞failed!");
-                                TUtils.toast(parent.getContext().getString(R.string.toast_server_no_response));
-                                holder.up_icon.setEnabled(true);
-                            }
-
-                            @Override
-                            public void onSuccess(ResponseInfo<String> arg0) {
-                                Log.d(getLogTag(), "赞-->" + arg0.result);
-                                JSONObject obj = JSONObject.parseObject(arg0.result);
-
-                                if (200 == obj.getInteger("code")) {
-                                    Log.e("", "m---->" + item.getPraise());
-                                    SharePreferecesUtils.setParam(parent.getContext(), "" + item.getCid(), "1");
-                                    if (TextUtils.isDigitsOnly(item.getPraise())) {
-                                        holder.up_icon.setImageResource(R.drawable.details_icon_likeit);
-                                        int i = Integer.parseInt(item.getPraise());
-                                        i++;
-                                        LogUtils.i("i---->" + i);
-                                        holder.comment_up_num.setText(i + "");
-                                        item.setPraise(i + "");
-                                        notifyDataSetChanged();
-                                        holder.up_icon.setEnabled(false);
-                                    }
-                                } else {
-                                    holder.up_icon.setEnabled(true);
-                                }
-                            }
-                        });
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

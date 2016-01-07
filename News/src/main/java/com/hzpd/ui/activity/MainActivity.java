@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.adapter.MainPagerAdapter;
 import com.hzpd.custorm.MyViewPager;
 import com.hzpd.hflt.R;
@@ -30,7 +31,6 @@ import com.hzpd.utils.ExitApplication;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.util.LogUtils;
 import com.news.update.DownloadService;
 import com.news.update.LocalUpdateDialogFragment;
 import com.news.update.LocalUpdateEvent;

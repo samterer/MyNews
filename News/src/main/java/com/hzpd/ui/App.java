@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -17,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.color.tools.mytools.LogUtils;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
@@ -24,10 +28,10 @@ import com.hzpd.hflt.BuildConfig;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.Adbean;
 import com.hzpd.modle.Menu_Item_Bean;
+import com.hzpd.modle.db.DaoMaster;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
-import com.lidroid.xutils.util.LogUtils;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -36,6 +40,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.L;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -49,6 +54,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -59,6 +65,7 @@ import cn.jpush.android.api.JPushInterface;
 
 public class App extends Application {
 
+    public DaoMaster daoMaster;
     public static int px_5dp;
     public static int px_10dp;
     public static int px_15dp;
@@ -98,13 +105,38 @@ public class App extends Application {
 
     @Override
     public void onCreate() {
+        if (BuildConfig.DEBUG) {
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                    .detectCustomSlowCalls()// API等级11，使用StrictMode.noteSlowCode
+                    .detectDiskReads()
+                    .detectDiskWrites()
+                    .detectNetwork()
+                    .penaltyLog()
+                    .penaltyFlashScreen()// API等级11
+                    .build());
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectLeakedSqlLiteObjects()
+                    .detectLeakedClosableObjects()
+                    .penaltyLog()
+                    .penaltyDeath()
+                    .build());
+        }
         super.onCreate();
+        mInstance = this;
+        File file = getDatabasePath("cms");
+        file = new File(file, SPUtil.getCountry());
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        String dbPath = new File(file, DB_NAME).getAbsolutePath();
+        SQLiteOpenHelper helper = new DaoMaster.DevOpenHelper(this, dbPath, null);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        daoMaster = new DaoMaster(db);
         themeName = PreferenceManager.getDefaultSharedPreferences(this).getString("THEME", "0");
 //        newTimeMap.clear();
         refWatcher = LeakCanary.install(this);
         newTimeMap.clear();
         long start = System.currentTimeMillis();
-        mInstance = this;
         spu = SPUtil.getInstance();
         DisplayMetrics dm = getResources().getDisplayMetrics();
         px_5dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
@@ -127,7 +159,7 @@ public class App extends Application {
         return refWatcher;
     }
 
-    final static int IMAGE_LOAD_SIZE = 1024 * 500;
+    final static int IMAGE_LOAD_SIZE = 1024 * 1024 * 5;
 
     private void init() {
         initAds();
@@ -162,14 +194,11 @@ public class App extends Application {
             e.printStackTrace();
         }
 
-        // xUtils日志控制
-        LogUtils.allowD = debug;
-        LogUtils.allowI = debug;
-        LogUtils.allowE = debug;
-        LogUtils.allowV = debug;
-        LogUtils.allowW = debug;
-        LogUtils.allowWtf = debug;
         try {
+            MobclickAgent.setDebugMode(BuildConfig.DEBUG);
+            Map<String, String> map = new HashMap<>();
+            SPUtil.addParams(map);
+            MobclickAgent.onEventValue(this, "2016", map, 1);
             // 极光推送
             JPushInterface.setDebugMode(false);    // 设置开启日志,发布时请关闭日志
             com.hzpd.utils.Log.e("App", "App JPushInterface 4here ");
@@ -245,17 +274,7 @@ public class App extends Application {
     }
 
 
-    public static final String collectiondbname = "hzpd_collectoin.db";//收藏数据库
-    public static final int collectiondbversion = 2;//收藏数据库版本号
-    public static final String dbnewsjump = "newsjump.db"; //
-    public static final String newsListDb = "newslist.db"; //新闻列表
-    public static final String bianminListDb = "bianminlist.db"; //新闻列表
-    public static final String zhuantiListDb = "zhuantilist.db"; //专题列表
-    public static final String albumListDb = "albumlist.db"; //图集列表
-    public static final String videoListDb = "videolist.db"; //视频列表
-    public static final String userLogDb = "userlog.db"; // 用户日志
-    public static final String pushListDb = "pushlist.db"; //新闻列表
-    public static final String channelDb = "channel.db"; //新闻列表
+    public static final String DB_NAME = "news.db";//收藏数据库版本号
 
     /**
      * 频道信息

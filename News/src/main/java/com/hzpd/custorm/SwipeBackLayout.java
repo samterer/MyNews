@@ -16,8 +16,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Scroller;
 
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.hflt.R;
-import com.lidroid.xutils.util.LogUtils;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -9,9 +9,6 @@ import android.widget.TextView;
 
 import com.hzpd.hflt.R;
 import com.hzpd.utils.CODE;
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 
 public class FontsizePop extends PopupWindow implements View.OnClickListener {
 

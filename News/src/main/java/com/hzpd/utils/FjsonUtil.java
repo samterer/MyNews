@@ -2,7 +2,7 @@ package com.hzpd.utils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.lidroid.xutils.util.LogUtils;
+import com.color.tools.mytools.LogUtils;
 
 import java.util.List;
 

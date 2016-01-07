@@ -196,7 +196,6 @@
     <attr name="news_item_line_color" format="reference|color"/>
     <attr name="choose_fragment_bg" format="reference|color"/>
 
-    <attr name="xf_login_bg_drawable" format="reference|color" />
 
     <!--侧滑菜单-->
     <attr name="left_menu_fb_avatar" format="reference|color" />

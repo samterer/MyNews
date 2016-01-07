@@ -30,15 +30,18 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.hflt.R;
 import com.hzpd.hflt.wxapi.FacebookSharedUtil;
 import com.hzpd.modle.CommentsCountBean;
 import com.hzpd.modle.NewsBean;
-import com.hzpd.modle.NewsItemBeanForCollection;
-import com.hzpd.modle.NewsJumpBean;
 import com.hzpd.modle.ReplayBean;
 import com.hzpd.modle.VideoDetailBean;
 import com.hzpd.modle.VideoItemBean;
+import com.hzpd.modle.db.NewsItemBeanForCollection;
+import com.hzpd.modle.db.NewsItemBeanForCollectionDao;
+import com.hzpd.modle.db.NewsJumpBean;
+import com.hzpd.modle.db.NewsJumpBeanDao;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
@@ -50,18 +53,6 @@ import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.db.sqlite.WhereBuilder;
-import com.lidroid.xutils.exception.DbException;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.lidroid.xutils.util.LogUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.squareup.okhttp.Request;
 
 import java.io.File;
@@ -254,16 +245,18 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
         if (null == spu.getUser()) {
             NewsItemBeanForCollection nibfc = new NewsItemBeanForCollection(vib);
             try {
-                NewsItemBeanForCollection mnbean = dbHelper.getCollectionDBUitls().findFirst(
-                        Selector.from(NewsItemBeanForCollection.class).where("nid", "=", vib.getVid()));
+                NewsItemBeanForCollection mnbean = dbHelper.getCollectionDBUitls()
+                        .queryBuilder().where(NewsItemBeanForCollectionDao.Properties.Nid.eq(vib.getVid()))
+                        .build().unique();
                 if (mnbean == null) {
-                    dbHelper.getCollectionDBUitls().save(nibfc);
+                    dbHelper.getCollectionDBUitls().insert(nibfc);
                     TUtils.toast(getString(R.string.toast_collect_success));
                     isCollected = true;
 
                 } else {
-                    dbHelper.getCollectionDBUitls().delete(NewsItemBeanForCollection.class,
-                            WhereBuilder.b("nid", "=", vib.getVid()));
+                    dbHelper.getCollectionDBUitls()
+                            .queryBuilder().where(NewsItemBeanForCollectionDao.Properties.Nid.eq(vib.getVid()))
+                            .buildDelete().executeDeleteWithoutDetachingEntities();
                     TUtils.toast(getString(R.string.toast_collect_cancelled));
                     isCollected = false;
                 }
@@ -354,8 +347,9 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
         } else {
             try {
                 NewsItemBeanForCollection nbfc = dbHelper.getCollectionDBUitls()
-                        .findFirst(Selector.from(NewsItemBeanForCollection.class).where("nid", "=", vib.getVid())
-                                .and("type", "=", "3"));
+                        .queryBuilder().where(NewsItemBeanForCollectionDao.Properties.Nid.eq(vib.getVid()))
+                        .where(NewsItemBeanForCollectionDao.Properties.Type.eq("3"))
+                        .build().unique();
                 if (null != nbfc) {
                     isCollected = true;
                 }
@@ -651,12 +645,9 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
     private void getVideo_ni(final String jsonurl) {
 
         NewsJumpBean videobbean = null;
-        try {
-            videobbean = dbHelper.getAlbumDBUitls()
-                    .findFirst(Selector.from(NewsJumpBean.class).where("url", "=", jsonurl));
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
+        videobbean = dbHelper.getNewsJumpBeanDao()
+                .queryBuilder().where(NewsJumpBeanDao.Properties.Url.eq(jsonurl))
+                .build().unique();
         if (null != videobbean) {
             vdib = JSONObject.parseObject(videobbean.getContent(), VideoDetailBean.class);
             mTitle = vdib.getTitle();
@@ -675,10 +666,10 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
                         @Override
                         public void onSuccess(Object response) {
                             try {
-                                String data =response.toString();
+                                String data = response.toString();
                                 LogUtils.i("result-->" + data);
-                                if (!TextUtils.isEmpty(data)){
-                                    SPUtil.saveFile(pathFile,data);
+                                if (!TextUtils.isEmpty(data)) {
+                                    SPUtil.saveFile(pathFile, data);
                                 }
                                 JSONObject obj = null;
                                 try {
@@ -691,12 +682,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
                                 vdib = JSONObject.parseObject(obj.getString("data"), VideoDetailBean.class);
 
                                 NewsJumpBean videobbean = new NewsJumpBean(jsonurl, obj.getString("data"));
-                                try {
-                                    dbHelper.getAlbumDBUitls().save(videobbean);
-                                } catch (DbException e) {
-                                    e.printStackTrace();
-                                }
-
+                                dbHelper.getNewsJumpBeanDao().insert(videobbean);
                                 mTitle = vdib.getTitle();
                                 mPath = vdib.getVideourl();
 
@@ -737,8 +723,6 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
         Log.e("test", "" + mVideoView);
         mLoadingView.setVisibility(View.GONE);
     }
-
-
 
 
 }

@@ -59,18 +59,9 @@
                     android:layout_marginRight="10dp"
                     android:drawablePadding="5dp"
                     android:text="0"
-                    android:drawableRight="@drawable/digupicon_comment_unselect"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="#aeaeae" />
 
-
-
-                <ImageView
-                    android:id="@+id/iv_replay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/details_comment_reply_selector" />
 
             </LinearLayout>
 

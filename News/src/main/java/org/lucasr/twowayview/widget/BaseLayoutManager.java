@@ -156,7 +156,7 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
     protected void pushChildFrame(ItemEntry entry, Rect childFrame, int lane, int laneSpan,
                                   Direction direction) {
         final boolean shouldSetMargins = (direction == Direction.END &&
-                                          entry != null && !entry.hasSpanMargins());
+                entry != null && !entry.hasSpanMargins());
 
         for (int i = lane; i < lane + laneSpan; i++) {
             final int spanMargin;
@@ -214,6 +214,7 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
 
     ItemEntry getItemEntryForPosition(int position) {
         try {
+            position = position < 0 ? 0 : position; //TODO ArrayIndexOutOfBoundsException: length=61; index=-1
             return (mItemEntries != null ? mItemEntries.getItemEntry(position) : null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -266,8 +267,8 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
         final int laneSize = calculateLaneSize(this, laneCount);
 
         return (lanes.getOrientation() == getOrientation() &&
-                 lanes.getCount() == laneCount &&
-                 lanes.getLaneSize() == laneSize);
+                lanes.getCount() == laneCount &&
+                lanes.getLaneSize() == laneSize);
     }
 
     private boolean ensureLayoutState() {
@@ -575,7 +576,9 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
     }
 
     abstract int getLaneCount();
+
     abstract void getLaneForPosition(LaneInfo outInfo, int position, Direction direction);
+
     abstract void moveLayoutToPosition(int position, int offset, Recycler recycler, State state);
 
     protected static class LanedSavedState extends SavedState {

@@ -27,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.color.tools.mytools.LogUtils;
 import com.hzpd.custorm.DonutProgress;
 import com.hzpd.custorm.ImageViewPager;
 import com.hzpd.custorm.RecyclingPagerAdapter;
@@ -35,13 +36,16 @@ import com.hzpd.hflt.wxapi.FacebookSharedUtil;
 import com.hzpd.modle.CommentsCountBean;
 import com.hzpd.modle.ImageListSubBean;
 import com.hzpd.modle.ImgListBean;
-import com.hzpd.modle.Jsonbean;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsDetailBean;
 import com.hzpd.modle.NewsDetailImgList;
-import com.hzpd.modle.NewsItemBeanForCollection;
-import com.hzpd.modle.NewsJumpBean;
 import com.hzpd.modle.ReplayBean;
+import com.hzpd.modle.db.Jsonbean;
+import com.hzpd.modle.db.JsonbeanDao;
+import com.hzpd.modle.db.NewsItemBeanForCollection;
+import com.hzpd.modle.db.NewsItemBeanForCollectionDao;
+import com.hzpd.modle.db.NewsJumpBean;
+import com.hzpd.modle.db.NewsJumpBeanDao;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
@@ -55,10 +59,6 @@ import com.hzpd.utils.MyCommonUtil;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.db.sqlite.WhereBuilder;
-import com.lidroid.xutils.exception.DbException;
-import com.lidroid.xutils.util.LogUtils;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -228,12 +228,10 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                     , intent.getStringExtra("pid"));
         } else if ("newsitem".equals(from)) {
             //获取图集
-            LogUtils.i("newbean");
             NewsBean nb = (NewsBean) intent.getSerializableExtra("newbean");
             getAlbum_ni(nb.getJson_url());
 
         } else if ("browser".equals(from)) {
-            LogUtils.i("browser");
             getAlbum_browser(pid);
         } else {
             return;
@@ -628,24 +626,27 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
             NewsItemBeanForCollection nibfc = new NewsItemBeanForCollection(imgListBean);
 
             try {
-                NewsItemBeanForCollection nitb = dbHelper.getCollectionDBUitls().findFirst(Selector
-                        .from(NewsItemBeanForCollection.class)
-                        .where("nid", "=", imgListBean.getPid()));
+                NewsItemBeanForCollection nitb = dbHelper.getCollectionDBUitls().queryBuilder()
+                        .where(NewsItemBeanForCollectionDao.Properties.Nid.eq(imgListBean.getPid()))
+                        .build().unique();
                 if (null == nitb) {
-                    dbHelper.getCollectionDBUitls().save(nibfc);
-                    dbHelper.getCollectionDBUitls().save(tcb);
+                    dbHelper.getCollectionDBUitls().insert(nibfc);
+                    dbHelper.getJsonbeanDao().insert(tcb);
 
                     TUtils.toast(getString(R.string.toast_collect_success));
                 } else {
-                    dbHelper.getCollectionDBUitls().delete(NewsItemBeanForCollection.class
-                            , WhereBuilder.b("nid", "=", imgListBean.getPid()));
-                    dbHelper.getCollectionDBUitls().delete(Jsonbean.class, WhereBuilder.b("fid", "=", imgListBean.getPid()));
+                    dbHelper.getCollectionDBUitls().queryBuilder()
+                            .where(NewsItemBeanForCollectionDao.Properties.Nid.eq(imgListBean.getPid()))
+                            .buildDelete().executeDeleteWithoutDetachingEntities();
+
+                    dbHelper.getJsonbeanDao().queryBuilder()
+                            .where(JsonbeanDao.Properties.Fid.eq(imgListBean.getPid()))
+                            .buildDelete().executeDeleteWithoutDetachingEntities();
 
                     TUtils.toast(getString(R.string.toast_collect_cancelled));
                 }
 
-            } catch (DbException e1) {
-                e1.printStackTrace();
+            } catch (Exception e1) {
                 TUtils.toast(getString(R.string.toast_collect_failed));
             }
             return;
@@ -701,10 +702,8 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
 //		
         Jsonbean tcl = null;
         try {
-            tcl = dbHelper.getCollectionDBUitls().findFirst(
-                    Selector
-                            .from(Jsonbean.class)
-                            .where("fid", "=", albumitemid));
+            tcl = dbHelper.getJsonbeanDao().queryBuilder()
+                    .where(JsonbeanDao.Properties.Fid.eq(albumitemid)).unique();
         } catch (Exception e1) {
             e1.printStackTrace();
         }
@@ -766,8 +765,8 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
         LogUtils.i("json_url-->" + json_url);
         NewsJumpBean albumdbbean = null;
         try {
-            albumdbbean = dbHelper.getAlbumDBUitls().findFirst(Selector.from(NewsJumpBean.class)
-                    .where("url", "=", json_url));
+            albumdbbean = dbHelper.getNewsJumpBeanDao().queryBuilder()
+                    .where(NewsJumpBeanDao.Properties.Url.eq(json_url)).unique();
         } catch (Exception e) {
             e.printStackTrace();
             albumdbbean = null;
@@ -807,7 +806,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                                     json_url
                                     , obj.getJSONObject("data").toJSONString());
                             try {
-                                dbHelper.getAlbumDBUitls().save(albumdbbean);
+                                dbHelper.getNewsJumpBeanDao().insert(albumdbbean);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -829,13 +828,8 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
     //获取单个图集来自浏览器跳转
     private void getAlbum_browser(final String pid) {
         Jsonbean tcb = null;
-        try {
-            tcb = dbHelper.getAlbumDBUitls().findFirst(Selector
-                    .from(Jsonbean.class)
-                    .where("fid", "=", pid));
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
+        dbHelper.getJsonbeanDao().queryBuilder()
+                .where(JsonbeanDao.Properties.Fid.eq(pid)).unique();
 
         if (null != tcb) {
             imgListBean = JSONObject.parseObject(tcb.getData(), ImgListBean.class);
@@ -867,11 +861,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                             , ImgListBean.class);
 
                     Jsonbean tcb = new Jsonbean(pid, obj.getString("data"));
-                    try {
-                        dbHelper.getAlbumDBUitls().save(tcb);
-                    } catch (DbException e) {
-                        e.printStackTrace();
-                    }
+                    dbHelper.getJsonbeanDao().insert(tcb);
 
                     simpleAdapter.setList(imgListBean.getSubphoto());
                     setVisible();
