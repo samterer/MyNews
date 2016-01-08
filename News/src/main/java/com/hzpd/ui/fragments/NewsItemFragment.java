@@ -28,6 +28,7 @@ import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.event.FontSizeEvent;
 import com.hzpd.modle.event.RefreshEvent;
 import com.hzpd.ui.App;
+import com.hzpd.ui.ConfigBean;
 import com.hzpd.ui.activity.NewsAlbumActivity;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.SearchActivity;
@@ -144,7 +145,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         isRefresh = true;
         View view = inflater.inflate(R.layout.news_channel_fragment, container, false);
         view.findViewById(R.id.main_top_layout).setVisibility(View.GONE);
-        if (!SPUtil.getCountry().equals("id")) {
+        if (!ConfigBean.getInstance().open_channel.contains(SPUtil.getCountry())) {
             view.findViewById(R.id.main_top_layout).setVisibility(View.VISIBLE);
             View main_top_search = view.findViewById(R.id.main_top_search);
             main_top_search.setOnClickListener(new View.OnClickListener() {
@@ -235,7 +236,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         page = 1;
         mFlagRefresh = true;
         firstLoading = false;
-        if (!SPUtil.getCountry().equals("id")) {
+        if (!ConfigBean.getInstance().open_channel.contains(SPUtil.getCountry())) {
             loadData();
         }
     }
@@ -459,7 +460,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 , new OkHttpClientManager.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
-                        if(!isAdded()){
+                        if (!isAdded()) {
                             return;
                         }
                         String data = response.toString();
@@ -503,7 +504,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     }
 
     public void onEventMainThread(RefreshEvent event) {
-        if (isVisible) {
+        if (event.force || isVisible) {
             mSwipeRefreshWidget.setRefreshing(true);
             refresh();
         }

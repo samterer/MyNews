@@ -356,11 +356,11 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         params.put("oldTime", App.getInstance().oldTime);
         params.put("Page", "1");
         params.put("PageSize", "" + pageSize);
+        params.put("tagIndex", "" + tagIndex);
+        params.put("pageIndex", "" + pageIndex);
         UserBean user = SPUtil.getInstance().getUser();
         if (user != null && !TextUtils.isEmpty(user.getUid())) {
             params.put("uid", "" + user.getUid());
-            params.put("tagIndex", "" + tagIndex);
-            params.put("pageIndex", "" + pageIndex);
         }
         SPUtil.addParams(params);
         OkHttpClientManager.postAsyn(tag

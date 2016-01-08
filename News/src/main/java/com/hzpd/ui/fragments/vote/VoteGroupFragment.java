@@ -14,26 +14,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.vote.VoteItem;
 import com.hzpd.modle.vote.VoteTitleBean;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.ui.fragments.action.ActionDetailActivity;
-import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.Log;
-import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.TUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.squareup.okhttp.Request;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class VoteGroupFragment extends BaseFragment {
 
@@ -137,47 +131,7 @@ public class VoteGroupFragment extends BaseFragment {
 
 	}
 
-	private void getPic() {
-
-		Map<String,String> params = RequestParamsUtils.getMaps();
-		params.put("device", androidId);
-		params.put("subjectid", vtb.getSubjectid());
-		params.put("tyid", vtb.getId());
-		params.put("page", "1");
-		params.put("pagesize", "300");
-		OkHttpClientManager.postAsyn(tag
-				, InterfaceJsonfile.mVoteopts
-
-				, new OkHttpClientManager.ResultCallback() {
-			@Override
-			public void onSuccess(Object response) {
-				Log.i("test","获取投票选项列表信息-->" + response.toString());
-				JSONObject obj = JSONObject.parseObject(response.toString());
-
-				if (200 == obj.getIntValue("code")) {
-					List<VoteItem> vlist = JSONObject.parseArray(obj.getJSONArray("data").toJSONString(), VoteItem.class);
-					if (vlist != null) {
-						voteList.addAll(vlist);
-					}
-
-					if (0 == num) {
-						Message msg = handler.obtainMessage();
-						msg.what = 111;
-						msg.obj = (int) (Math.ceil(voteList.size() / 2.0));
-						handler.sendMessage(msg);
-						Log.i("test","sendMessage");
-					}
-				} else {
-					TUtils.toast(obj.getString("msg"));
-				}
-			}
-
-			@Override
-			public void onFailure(Request request, Exception e) {
-				Log.i("test","获取投票选项列表信息 failed");
-			}
-		}, params);
-	}
+	private void getPic() {}
 
 	public List<ItemHolder> getItemHolder() {
 		return list;

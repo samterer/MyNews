@@ -1,17 +1,11 @@
 package com.hzpd.utils;
 
-import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -23,7 +17,6 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -100,17 +93,25 @@ public class SPUtil {
     }
 
     public static String getCountry() {
-        return PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString("CountryCode", "id");
+        if (getInstance().current != null) {
+            return getInstance().current;
+        }
+        String current = SPUtil.getGlobal("CountryCode", "id");
+        getInstance().current = current;
+        return getInstance().current;
     }
+
+    private String current = null;
 
     public static void setCountry(String country) {
         if (!TextUtils.isEmpty(country)) {
             App.getInstance().newTime = null;
             App.getInstance().oldTime = null;
             App.getInstance().newTimeMap.clear();
+            App.getInstance().updateDao();
             country = country.toLowerCase();
-            PreferenceManager.getDefaultSharedPreferences(App.getInstance()).edit().putString("CountryCode", country).commit();
-
+            SPUtil.setGlobal("CountryCode", country);
+            getInstance().current = null;
             SharePreferecesUtils.init();
             getInstance().msp = ACache.get(App.getInstance().getApplicationContext(), getCountry());
             DBHelper.setInstance(App.getInstance());
@@ -118,13 +119,13 @@ public class SPUtil {
     }
 
     public static String getCountryName() {
-        return PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString("CountryName", App.getInstance().getString(R.string.default_county));
+        return SPUtil.getGlobal("CountryName", App.getInstance().getString(R.string.default_county));
     }
 
     public static void setCountryName(String country) {
         if (!TextUtils.isEmpty(country)) {
             country = country.toLowerCase();
-            PreferenceManager.getDefaultSharedPreferences(App.getInstance()).edit().putString("CountryName", country).commit();
+            SPUtil.setGlobal("CountryName", country);
 
             SharePreferecesUtils.init();
             getInstance().msp = ACache.get(App.getInstance().getApplicationContext(), getCountry());
@@ -227,51 +228,6 @@ public class SPUtil {
         params.put(IS_ROM, "" + Utils.isRomVersion(context));
     }
 
-    /**
-     * 在状态栏显示通知
-     */
-    public static void showNotification(String description, Context context) {
-        NotificationManager notificationManager = (NotificationManager)
-                context.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification(R.drawable.logo,
-                context.getString(R.string.app_name), System.currentTimeMillis());
-//        notification.flags |= Notification.FLAG_ONGOING_EVENT;
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-        notification.defaults = Notification.DEFAULT_LIGHTS;
-        notification.ledARGB = Color.BLUE;
-        notification.ledOnMS = 5000; //闪光时间，毫秒
-        CharSequence contentTitle = context.getString(R.string.app_name); // 通知栏标题
-        CharSequence contentText = description; // 通知栏内容
-        Intent notificationIntent = getIntent(context);
-        PendingIntent contentItent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
-        notification.setLatestEventInfo(context, contentTitle, contentText, contentItent);
-        notificationManager.notify(0, notification);
-    }
-
-    public static void updateDialog(String description, final Context context) {
-        AlertDialog mUpdateDialog = new AlertDialog.Builder(context)
-                .setTitle(R.string.update_version)
-                .setMessage(description)
-                .setNegativeButton(android.R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                Intent notificationIntent = SPUtil.getIntent(context);
-                                context.startActivity(notificationIntent);
-                            }
-                        })
-                .setPositiveButton(android.R.string.cancel,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).create();
-        mUpdateDialog.show();
-    }
-
     public static Intent getIntent(Context context) {
         final String appPackageName = context.getPackageName();
         Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)); // 点击该通知后要跳转的Activity
@@ -279,19 +235,6 @@ public class SPUtil {
             notificationIntent.setPackage(Utils.GOOGLE_PLAY_PACKAGE_NAME);
         }
         return notificationIntent;
-    }
-
-    // 注入js函数监听
-    public static void addImageClickListner(WebView mWebView) {
-        // 这段js函数的功能就是，遍历所有的img几点，并添加onclick函数，在还是执行的时候调用本地接口传递url过去
-        mWebView.loadUrl("javascript:(function(){"
-                + "var objs = document.getElementsByTagName(\"img\"); "
-                + "for(var i=0;i<objs.length;i++)  " + "{"
-                + "    objs[i].onclick=function()  " + "{"
-                + "        window.imagelistner.openImage(this.src);  "
-                + "}"
-                + "}"
-                + "})()");
     }
 
     public static void displayImage(String uri, ImageView imageView) {
@@ -348,10 +291,6 @@ public class SPUtil {
         return "" + DateFormat.format(FORMAT, calendar);
     }
 
-    /**
-     * 配置名称 *
-     */
-    private static final String SETTINGS = "HZPD";
     /**
      * 缓存
      */
@@ -647,6 +586,17 @@ public class SPUtil {
 
     }
 
+
+    //保存全局配置
+    public static void setGlobal(String key, String value) {
+        PreferenceManager.getDefaultSharedPreferences(App.getInstance())
+                .edit().putString(key, value).commit();
+    }
+
+    //获取全局配置
+    public static String getGlobal(String key, String value) {
+        return PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString(key, value);
+    }
 
     /**
      */

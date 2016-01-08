@@ -827,56 +827,6 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
 
     //获取单个图集来自浏览器跳转
     private void getAlbum_browser(final String pid) {
-        Jsonbean tcb = null;
-        dbHelper.getJsonbeanDao().queryBuilder()
-                .where(JsonbeanDao.Properties.Fid.eq(pid)).unique();
-
-        if (null != tcb) {
-            imgListBean = JSONObject.parseObject(tcb.getData(), ImgListBean.class);
-
-            simpleAdapter.setList(imgListBean.getSubphoto());
-            setVisible();
-            return;
-        }
-        Map<String, String> params = RequestParamsUtils.getMaps();
-        params.put("siteid", InterfaceJsonfile.SITEID);
-        params.put("id", pid);
-        SPUtil.addParams(params);
-        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.bAlbum, new OkHttpClientManager.ResultCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                LogUtils.i("result-->" + response.toString());
-                JSONObject obj = null;
-                try {
-                    obj = JSONObject.parseObject(response.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return;
-                }
-
-                if (200 == obj.getIntValue("code")) {
-
-                    imgListBean = JSONObject.parseObject(
-                            obj.getString("data")
-                            , ImgListBean.class);
-
-                    Jsonbean tcb = new Jsonbean(pid, obj.getString("data"));
-                    dbHelper.getJsonbeanDao().insert(tcb);
-
-                    simpleAdapter.setList(imgListBean.getSubphoto());
-                    setVisible();
-                } else {
-                    TUtils.toast(obj.getString("msg"));
-                }
-
-            }
-
-            @Override
-            public void onFailure(Request request, Exception e) {
-                TUtils.toast(getString(R.string.toast_server_no_response));
-            }
-
-        }, params);
 
     }
 

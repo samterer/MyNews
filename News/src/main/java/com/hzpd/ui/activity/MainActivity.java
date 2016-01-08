@@ -21,6 +21,7 @@ import com.hzpd.modle.event.RestartEvent;
 import com.hzpd.modle.event.SetThemeEvent;
 import com.hzpd.services.InitService;
 import com.hzpd.ui.App;
+import com.hzpd.ui.ConfigBean;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.ui.fragments.NewsFragment;
 import com.hzpd.ui.fragments.NewsItemFragment;
@@ -85,18 +86,21 @@ public class MainActivity extends BaseActivity {
             });
         }
         int index = 0;
-        if (SPUtil.getCountry().equals("id")) {
+        if (ConfigBean.getInstance().open_channel.contains(SPUtil.getCountry())) {
             fragments[index] = new NewsFragment();
             adapter.add(fragments[index++]);
-            fragments[index] = new ZY_DiscoveryFragment();
-            adapter.add(fragments[index++]);
         } else {
-            tv_menu[1].setVisibility(View.GONE);
             NewsChannelBean channelBean = new NewsChannelBean();
             channelBean.setTid("1");
             channelBean.setCnname("NEWS");
             fragments[index] = new NewsItemFragment(channelBean);
             adapter.add(fragments[index++]);
+        }
+        if (ConfigBean.getInstance().open_tag.contains(SPUtil.getCountry())) {
+            fragments[index] = new ZY_DiscoveryFragment();
+            adapter.add(fragments[index++]);
+        } else {
+            tv_menu[1].setVisibility(View.GONE);
         }
         fragments[index] = new ZY_RightFragment();
         adapter.add(fragments[index++]);
@@ -145,6 +149,14 @@ public class MainActivity extends BaseActivity {
                 TUtils.toast(getString(R.string.toast_scan_content, result));
             }
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Intent intent = new Intent(this, InitService.class);
+        intent.setAction(InitService.UserLogAction);
+        startService(intent);
     }
 
     @Override

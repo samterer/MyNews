@@ -29,6 +29,8 @@ public class MyPushActivity extends MBaseActivity implements View.OnClickListene
     private RecyclerView recylerlist;
     private NewsItemListViewAdapter adapter;
 
+    private View pushmsg_tv_empty;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class MyPushActivity extends MBaseActivity implements View.OnClickListene
         super.changeStatusBar();
         stitle_tv_content = (TextView) findViewById(R.id.stitle_tv_content);
         stitle_tv_content.setText(R.string.prompt_my_msg);
+        pushmsg_tv_empty = findViewById(R.id.pushmsg_tv_empty);
         findViewById(R.id.stitle_ll_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,6 +56,7 @@ public class MyPushActivity extends MBaseActivity implements View.OnClickListene
         try {
             List<PushBeanDB> list = DBHelper.getInstance(this).getPushList().queryBuilder().orderDesc(PushBeanDBDao.Properties.Id).list();
             if (null != list) {
+                pushmsg_tv_empty.setVisibility(View.GONE);
                 List<NewsBean> nblist = new ArrayList<>();
                 for (int i = 0; i < list.size(); i++) {
                     NewsBean bean = new NewsBean(list.get(i));
@@ -61,7 +65,7 @@ public class MyPushActivity extends MBaseActivity implements View.OnClickListene
                 }
                 adapter.appendData(nblist, false, false);
             } else {
-
+                pushmsg_tv_empty.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
             e.printStackTrace();

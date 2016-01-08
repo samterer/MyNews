@@ -184,7 +184,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
-                            android:src="@drawable/personal_icon_history" />
+                            android:src="@drawable/personal_icon_rate_us" />
 
                         <com.hzpd.ui.widget.FontTextView
                             android:layout_width="wrap_content"

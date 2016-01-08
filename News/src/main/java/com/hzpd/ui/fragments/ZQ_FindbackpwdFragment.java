@@ -1,6 +1,5 @@
 package com.hzpd.ui.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,21 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
-import com.hzpd.utils.CipherUtils;
-import com.hzpd.utils.FjsonUtil;
-import com.hzpd.utils.Log;
-import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.TUtils;
-import com.squareup.okhttp.Request;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -232,116 +222,9 @@ public class ZQ_FindbackpwdFragment extends BaseFragment implements View.OnClick
                  */
             }
             break;
-            case R.id.fpb_bt_verify: {
-
-                verify = fpb_et_sms_id.getText().toString();
-
-                Log.i("test", "sms-->" + verify);
-                if (verify == null || "".equals(verify)) {
-                    TUtils.toast(getString(R.string.toast_captcha_cannot_be_empty));
-                    return;
-                }
-
-                Map<String, String> params = new HashMap<>();
-                params.put("mobile", phoneNumber);
-                params.put("verify", verify);
-
-                OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.SMS_VERIFY, new OkHttpClientManager.ResultCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        String json = response.toString();
-                        Log.i("", "loginSubmit-->" + json);
-                        JSONObject obj = FjsonUtil.parseObject(json);
-                        if (null != obj) {
-                            if (200 == obj.getIntValue("code")) {
-                                handler.sendEmptyMessage(444);
-                            } else {
-                                handler.sendEmptyMessage(555);
-                            }
-                        } else {
-                            TUtils.toast(getString(R.string.toast_server_error));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Request request, Exception e) {
-
-                    }
-
-
-                }, params);
-
-            }
+            case R.id.fpb_bt_verify:
             break;
-            case R.id.fpb_bt_submmit: {
-                String s = fpb_et_pwd_id.getText().toString();
-                String s2 = fpb_et_pwd_id2.getText().toString();
-
-                if (s == null || "".equals(s)) {
-                    TUtils.toast(getString(R.string.toast_input_password));
-                    return;
-                }
-                if (s.length() < 6) {
-                    TUtils.toast(getString(R.string.toast_password_too_short));
-                    return;
-                }
-                if (s.length() > 12) {
-                    TUtils.toast(getString(R.string.toast_password_too_long));
-                    return;
-                }
-
-                if (s2 == null || "".equals(s2)) {
-                    TUtils.toast(getString(R.string.toast_input_confirm_password));
-                    return;
-                }
-                if (!s.equals(s2)) {
-                    TUtils.toast(getString(R.string.toast_two_password_is_diff));
-                    fpb_et_pwd_id.setText("");
-                    fpb_et_pwd_id2.setText("");
-                    return;
-                }
-                Map<String, String> params = RequestParamsUtils.getMapWithU();
-                if (null != spu.getUser()) {
-                    params.put("token", spu.getUser().getToken());
-                }
-
-                String code = CipherUtils.base64Encode(CipherUtils.base64Encode(phoneNumber)
-                        + "_" + CipherUtils.md5(phoneNumber + verify + "99cms")
-                        + "_" + System.currentTimeMillis() / 1000);
-
-                params.put("code", code);
-                params.put("new_pwd", s);
-                params.put("is_ucenter", "1");
-
-                OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.CHANGEPWD// InterfaceApi.mSmsReset
-                        , new OkHttpClientManager.ResultCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        JSONObject obj = FjsonUtil.parseObject(response.toString());
-                        if (null == obj) {
-                            TUtils.toast(getString(R.string.toast_server_error));
-                            return;
-                        }
-                        if (200 == obj.getIntValue("code")) {
-                            spu.setUser(null);
-
-                            TUtils.toast(getString(R.string.toast_password_change_success), Toast.LENGTH_LONG);
-                            Intent intent = new Intent();
-                            intent.setAction(ZY_RightFragment.ACTION_QUIT);
-                            activity.sendBroadcast(intent);
-                            activity.finish();
-                        } else {
-                            TUtils.toast(getString(R.string.toast_password_change_failed));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Request request, Exception e) {
-                        TUtils.toast(getString(R.string.toast_cannot_connect_network));
-                    }
-
-                }, params);
-            }
+            case R.id.fpb_bt_submmit:
 
             break;
             case R.id.stitle_ll_back: {

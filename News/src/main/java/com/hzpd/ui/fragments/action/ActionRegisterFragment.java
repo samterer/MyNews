@@ -19,19 +19,15 @@ import com.hzpd.adapter.ZY_Tsbl_blAdapter;
 import com.hzpd.custorm.GridViewInScrollView;
 import com.hzpd.hflt.R;
 import com.hzpd.ui.fragments.BaseFragment;
-import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.CODE;
 import com.hzpd.utils.FjsonUtil;
-import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.TUtils;
-import com.squareup.okhttp.Request;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -163,34 +159,7 @@ tag= OkHttpClientManager.getTag();
         getInfoFromSever();
     }
 
-    private void getInfoFromSever() {
-        Map<String,String> params = RequestParamsUtils.getMaps();
-        params.put("activityid", activityid);
-        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.actionConf, new OkHttpClientManager.ResultCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                LogUtils.i("action regconf result-->" + response.toString());
-                JSONObject obj = null;
-                try {
-                    obj = JSONObject.parseObject(response.toString());
-                } catch (Exception e) {
-                    return;
-                }
-                if (200 == obj.getIntValue("code")) {
-                    conf = obj.getJSONObject("data");
-                    conf();
-
-                } else {
-                    TUtils.toast(obj.getString("msg"));
-                }
-            }
-
-            @Override
-            public void onFailure(Request request, Exception e) {
-                LogUtils.i("action regconf failed");
-            }
-        }, params);
-    }
+    private void getInfoFromSever() {}
 
     private void conf() {
         String s = conf.getString("username");

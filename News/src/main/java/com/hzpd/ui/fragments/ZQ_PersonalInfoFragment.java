@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,30 +21,21 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.custorm.CircleImageView;
 import com.hzpd.hflt.R;
-import com.hzpd.modle.UserBean;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.PersonalInfoActivity;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
-import com.hzpd.utils.CipherUtils;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
-import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
-import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.TUtils;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.PropertyValuesHolder;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.squareup.okhttp.Request;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.util.Map;
 
 
 public class ZQ_PersonalInfoFragment extends BaseFragment implements View.OnClickListener {
@@ -266,57 +256,8 @@ public class ZQ_PersonalInfoFragment extends BaseFragment implements View.OnClic
 
     //上传头像
     public void uploadPhoto(Bitmap photo) {
-
-        try {
-            photo.compress(CompressFormat.PNG, 100, new FileOutputStream(imgFile));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        lg_pi_iv_touxiang.setImageBitmap(photo);
-
-        Map<String, String> params = RequestParamsUtils.getMaps();
-        params.put("token", spu.getUser().getToken());
-        params.put("avatar", CipherUtils.base64Encode(photo));
-        SPUtil.addParams(params);
-
-        OkHttpClientManager.postAsyn(tag
-                , InterfaceJsonfile.CHANGEPINFO//InterfaceApi.modify_gender
-                , new OkHttpClientManager.ResultCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        if (!isAdded()) {
-                            return;
-                        }
-                        JSONObject obj = FjsonUtil.parseObject(response.toString());
-                        if (null == obj) {
-                            return;
-                        }
-
-                        if (200 == obj.getIntValue("code")) {
-                            TUtils.toast(getString(R.string.toast_modify_success));
-                            UserBean user = FjsonUtil.parseObject(obj.getString("data"), UserBean.class);
-                            spu.setUser(user);
-
-                            Intent intent = new Intent();
-                            intent.setAction(ZY_RightFragment.ACTION_USER);
-                            activity.sendBroadcast(intent);
-                        } else {
-                            TUtils.toast(obj.getString("msg"));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Request request, Exception e) {
-                        if (!isAdded()) {
-                            return;
-                        }
-                        TUtils.toast(getString(R.string.toast_server_no_response));
-                    }
-
-                }, params
-        );
-
     }
+
 
     public File getImgPath() {
         File cacheFileDir;

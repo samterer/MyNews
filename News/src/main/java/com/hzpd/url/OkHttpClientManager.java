@@ -102,13 +102,18 @@ public class OkHttpClientManager {
      */
     private String _post(String url, Map<String, String> params) {
         Response response = null;
+        Call call = null;
         try {
             Param[] paramsArr = map2Params(params);
             Request request = buildPostRequest(url, paramsArr);
-            response = mOkHttpClient.newCall(request).execute();
+            call = mOkHttpClient.newCall(request);
+            response = call.execute();
             return response.body().toString();
         } catch (IOException e) {
             e.printStackTrace();
+            if (call != null) {
+                call.cancel();
+            }
             return null;
         }
     }
@@ -232,6 +237,7 @@ public class OkHttpClientManager {
     }
 
     public static Call download(final String url, final File file, final boolean isResume, final ResultCallback callback) {
+
         int positon = 0;
         if (isResume && file.exists()) {
             positon = (int) file.length();

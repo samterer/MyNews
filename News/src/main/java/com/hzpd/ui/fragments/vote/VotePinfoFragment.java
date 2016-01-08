@@ -8,20 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hzpd.adapter.VoteDetailMultiPicAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.vote.Vote_detailMultiPicBean;
 import com.hzpd.ui.fragments.BaseFragment;
-import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
-import com.hzpd.utils.FjsonUtil;
-import com.hzpd.utils.Log;
 import com.hzpd.utils.MyCommonUtil;
-import com.hzpd.utils.RequestParamsUtils;
-import com.squareup.okhttp.Request;
-
-import java.util.Map;
 
 public class VotePinfoFragment extends BaseFragment {
 
@@ -71,41 +63,7 @@ public class VotePinfoFragment extends BaseFragment {
 	}
 
 
-	private void getInfoFromServer() {
-
-		Map<String,String> params = RequestParamsUtils.getMaps();
-		params.put("optid", optid);
-		params.put("device", androidId);
-
-		OkHttpClientManager.postAsyn(tag
-				, InterfaceJsonfile.mOptbyoptid
-				, new OkHttpClientManager.ResultCallback() {
-			@Override
-			public void onSuccess(Object response) {
-				Log.e("rest","getInfoFromServer:" + response.toString());
-
-				JSONObject obj = FjsonUtil.parseObject(response.toString());
-				if (null == obj) {
-					return;
-				}
-				if (200 == obj.getIntValue("code")) {
-					bean = JSONObject.parseObject(obj.getString("data"), Vote_detailMultiPicBean.class);
-					vote_detail_tv_right.setText(getString(R.string.prompt_name, bean.getOption().getName()));
-					vote_detail_tv_bottom.setText(getString(R.string.prompt_brief_intro, bean.getOption().getDescription()));
-					adapter.appendData(bean.getOption().getImgurls(), true);
-					adapter.notifyDataSetChanged();
-				} else {
-
-				}
-
-			}
-
-			@Override
-			public void onFailure(Request request, Exception e) {
-			}
-		}, params);
-
-	}
+	private void getInfoFromServer() {}
 
 	@Override
 	public void onDestroyView() {

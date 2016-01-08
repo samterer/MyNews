@@ -17,6 +17,7 @@ import com.hzpd.modle.UserBean;
 import com.hzpd.modle.db.NewsChannelBeanDB;
 import com.hzpd.services.InitService;
 import com.hzpd.ui.App;
+import com.hzpd.ui.ConfigBean;
 import com.hzpd.ui.fragments.welcome.AdFlashFragment;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
@@ -71,7 +72,7 @@ public class WelcomeActivity extends MWBaseActivity {
         // 更新服务
         service = new Intent(this, UpdateService.class);
         this.startService(service);
-        if (SPUtil.getCountry().equals("id")) {
+        if (ConfigBean.getInstance().open_channel.equals(SPUtil.getCountry())) {
             getChooseNewsJson();
             getChannelJson();
         } else {

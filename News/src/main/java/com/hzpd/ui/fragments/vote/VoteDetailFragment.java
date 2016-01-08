@@ -19,30 +19,20 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.vote.VoteBaseInfo;
-import com.hzpd.modle.vote.VoteTitleBean;
 import com.hzpd.ui.fragments.BaseFragment;
-import com.hzpd.ui.fragments.action.ActionDetailActivity;
-import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
-import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.MyCommonUtil;
-import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.TUtils;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.squareup.okhttp.Request;
 import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -194,120 +184,13 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
     }
 
     // 获取投票基本信息
-    private void getVoteBaseInfo() {
-        Map<String, String> params = RequestParamsUtils.getMaps();
-        params.put("subjectid", subjectid);
-        params.put("device", androidId);
-
-        OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.mVoteinfo, new OkHttpClientManager.ResultCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                Log.i("test","获取投票基本信息 -->" + response.toString());
-                JSONObject obj = FjsonUtil.parseObject(response.toString());
-
-                if (null == obj) {
-                    return;
-                }
-                if (200 == obj.getIntValue("code")) {
-                    voteBaseinfo = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), VoteBaseInfo.class);
-                    setBaseInfo(voteBaseinfo);
-                    String subjectId = voteBaseinfo.getSubjectid();
-                    Log.i("test","subjectId-->" + subjectId);
-                    adapter.setSubjectId(subjectId);
-                } else {
-                    TUtils.toast(obj.getString("msg"));
-                }
-            }
-
-            @Override
-            public void onFailure(Request request, Exception e) {
-                Log.i("test","获取投票基本信息 failed!");
-            }
-        }, params);
-    }
+    private void getVoteBaseInfo() {}
 
     // 提交投票
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.vote_btn_vote: {
-                if (null == voteBaseinfo) {
-                    return;
-                }
-
-
-                if ("1".equals(voteBaseinfo.getSubstat())) {
-                    TUtils.toast(getString(R.string.toast_has_voted));
-                    return;
-                }
-                if ("0".equals(voteBaseinfo.getType())) {
-                    if (adapter.getOpt() == null || "".equals(adapter.getOpt())) {
-                        TUtils.toast(getString(R.string.toast_please_select));
-                        return;
-                    }
-                } else {
-                    if (adapter.getAllMultiVoted().size() == 0) {
-                        TUtils.toast(getString(R.string.toast_please_select));
-                        return;
-                    }
-                }
-                Map<String,String> params = RequestParamsUtils.getMaps();
-                params.put("device", androidId);
-                params.put("subjectid", voteBaseinfo.getSubjectid());
-                params.put("type", voteBaseinfo.getType());
-
-                if ("0".equals(voteBaseinfo.getType())) {
-                    String opt = adapter.getOpt();
-                    params.put("optionid", opt);
-                    Log.i("test","opt-->" + opt);
-                } else {
-                    if (adapter.getOptionList().size() > 31) {
-                        TUtils.toast(getString(R.string.toast_max_selected_person));
-                        return;
-                    }
-                    StringBuilder sb = new StringBuilder();
-                    for (String s : adapter.getOptionList()) {
-                        sb.append(s + ",");
-                    }
-                    Log.i("test","voteString---" + sb.toString());
-                    params.put("optionid", sb.substring(0, sb.length() - 1));
-                }
-
-                vote_btn_vote.setClickable(false);
-                OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.mSetvote, new OkHttpClientManager.ResultCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        vote_btn_vote.setClickable(true);
-                        Log.i("test","submit-->" + response.toString());
-                        JSONObject obj = JSONObject.parseObject(response.toString());
-                        if (200 == obj.getIntValue("code")) {
-                            TUtils.toast(obj.getString("msg"));
-                            adapter.clearAll();
-                            if ("1".equals(voteBaseinfo.getLottery())) {
-                                if (null != spu.getUser()) {
-                                    alertDialog(getString(R.string.prompt_join_lottery), getString(R.string.prompt_start_lottery), new IVoteresultClick() {
-                                        @Override
-                                        public void onclick() {
-                                            Bundle args = new Bundle();
-                                            args.putString("subjectid", subjectid);
-                                            args.putString("from", "vote");
-                                            ((ActionDetailActivity) activity).toLotteryPinfo(args);
-                                        }
-                                    });
-                                } else {
-                                }
-                            }
-                        } else {
-                            TUtils.toast(obj.getString("msg"));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Request request, Exception e) {
-                        vote_btn_vote.setClickable(true);
-                    }
-                }, params);
-            }
+            case R.id.vote_btn_vote:
             break;
         }
     }
@@ -412,45 +295,7 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
         }
 
         // 获取投票选项的所有可用类型
-        private void getVoteMassage(String subjectid) {
-
-            Map<String,String> params = new HashMap<>();
-            params.put("subjectid", subjectid);
-            OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.mVotetys, new OkHttpClientManager.ResultCallback() {
-                @Override
-                public void onSuccess(Object response) {
-                    Log.i("test","获取投票选项的所有可用类型  -->" + response.toString());
-                    JSONObject obj = FjsonUtil.parseObject(response.toString());
-                    if (null == obj) {
-                        return;
-                    }
-                    if (200 == obj.getIntValue("code")) {
-                        List<VoteTitleBean> vtbList = FjsonUtil.parseArray(obj.getJSONArray("data").toJSONString(),
-                                VoteTitleBean.class);
-                        if (vtbList != null) {
-                            Log.i("test","vl.size--> " + vtbList.size());
-
-                            for (int i = 0; i < vtbList.size(); i++) {
-                                VoteGroupFragment f = new VoteGroupFragment(vtbList.get(i), androidId,
-                                        voteBaseinfo.getSubjectid(), voteBaseinfo.getSubstat(), voteBaseinfo.getType(),
-                                        activity, handler, i, voteBaseinfo.getSubjectid());
-                                list.add(f);
-                            }
-                            notifyDataSetChanged();
-                            pager.setOffscreenPageLimit(list.size());
-                        }
-                    } else {
-                        TUtils.toast(obj.getString("msg"));
-                    }
-                }
-
-                @Override
-                public void onFailure(Request request, Exception e) {
-                    Log.i("test","获取投票选项的所有可用类型  failed!");
-                }
-            }, params);
-
-        }
+        private void getVoteMassage(String subjectid) {}
 
     }
 

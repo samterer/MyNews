@@ -68,6 +68,7 @@ import com.hzpd.modle.db.NewsItemBeanForCollection;
 import com.hzpd.modle.db.NewsItemBeanForCollectionDao;
 import com.hzpd.modle.db.UserLog;
 import com.hzpd.modle.event.TagEvent;
+import com.hzpd.services.InitService;
 import com.hzpd.ui.App;
 import com.hzpd.ui.widget.CustomRecyclerView;
 import com.hzpd.ui.widget.FontTextView;
@@ -1422,7 +1423,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             details_tv_subscribe.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (AvoidOnClickFastUtils.isFastDoubleClick(v)){
+                    if (AvoidOnClickFastUtils.isFastDoubleClick(v)) {
                         return;
                     }
                     if (isTagSelect) {
@@ -2065,8 +2066,11 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(enterTime);
                 DBHelper.getInstance(getApplicationContext()).getLog()
-                        .insert(new UserLog(nb.getNid(), SPUtil.format(calendar), String.valueOf((System.currentTimeMillis() - enterTime) / 1000)))
-                ;
+                        .insert(new UserLog(nb.getNid(), SPUtil.format(calendar), String.valueOf((System.currentTimeMillis() - enterTime) / 1000)));
+                final List<UserLog> logs = DBHelper.getInstance(getApplicationContext()).getLog().loadAll();
+                Intent intent = new Intent(this, InitService.class);
+                intent.setAction(InitService.UserLogAction);
+                startService(intent);
             }
         } catch (Exception e) {
             e.printStackTrace();

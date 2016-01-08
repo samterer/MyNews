@@ -2,6 +2,7 @@ package com.hzpd.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -27,8 +28,10 @@ import com.hzpd.modle.NewsPageListBean;
 import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.db.NewsBeanDBDao;
 import com.hzpd.ui.App;
+import com.hzpd.ui.activity.XF_NewsCommentsActivity;
 import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.widget.CircleIndicator;
+import com.hzpd.utils.AAnim;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
@@ -45,8 +48,8 @@ import java.util.Random;
 public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
     public static final String AD_KEY = "1902056863352757_1942167249341718";
-    public static final int STEP = 10;
-    public static final int MAX_POSITION = 80;
+    public static final int STEP = 12;
+    public static final int MAX_POSITION = 100;
 
     public interface CallBack {
         void loadMore();
@@ -287,7 +290,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                         R.layout.news_list_text_layout, parent, false);
                 viewHolder = new TextViewHolder(convertView);
                 break;
-            case TYPE_JOKE://纯文本
+            case TYPE_JOKE://段子
                 convertView = inflater.inflate(
                         R.layout.news_list_joke_layout, parent, false);
                 viewHolder = new JokeHolder(convertView);
@@ -429,76 +432,44 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                 case TYPE_JOKE: {
                     bean = list.get(position);
                     holder.itemView.setTag(bean);
-                    TextViewHolder textViewHolder = (TextViewHolder) holder;
-                    textViewHolder.newsitem_title.setTextSize(fontSize);
-                    textViewHolder.newsitem_title.setText(bean.getTitle());
-                    textViewHolder.newsitem_title.setTextColor(App.getInstance()
+                    JokeHolder jokeHolder = (JokeHolder) holder;
+                    jokeHolder.newsitem_title.setTextSize(fontSize);
+                    jokeHolder.newsitem_title.setText(bean.getTitle());
+                    jokeHolder.newsitem_title.setTextColor(App.getInstance()
                             .getResources().getColor(R.color.item_title));
                     if (readedNewsSet.contains(bean.getNid())) {
-                        textViewHolder.newsitem_title.setTextColor(App.getInstance()
+                        jokeHolder.newsitem_title.setTextColor(App.getInstance()
                                 .getResources().getColor(R.color.grey_font));
                     } else {
-                        textViewHolder.newsitem_title.setTextColor(App.getInstance()
+                        jokeHolder.newsitem_title.setTextColor(App.getInstance()
                                 .getResources().getColor(R.color.item_title));
                     }
-                    SPUtil.setAtt(textViewHolder.item_type_iv, bean.getAttname());
 
-                    String fav = bean.getFav();
-                    if (!TextUtils.isEmpty(fav)) {
-
-                        int fav_counts = Integer.parseInt(fav);
-                        if (fav_counts > 0) {
-                            textViewHolder.newsitem_collectcount.setVisibility(View.VISIBLE);
-                            textViewHolder.newsitem_collectcount.setText(fav_counts + "");
-                        } else {
-                            textViewHolder.newsitem_collectcount.setVisibility(View.GONE);
-                        }
-                    } else {
-                        textViewHolder.newsitem_collectcount.setVisibility(View.GONE);
+                    String jokeLike=bean.getLike();
+                    if (!TextUtils.isEmpty(jokeLike)){
+                        jokeHolder.joke_good_tv.setText(""+jokeLike);
                     }
 
-                    String from = bean.getCopyfrom();
-                    if (!TextUtils.isEmpty(from)) {
-                        textViewHolder.newsitem_source.setVisibility(View.VISIBLE);
-                        textViewHolder.newsitem_source.setText(from);
-                    } else {
-                        textViewHolder.newsitem_source.setVisibility(View.GONE);
+                    String jokeUnlike=bean.getUnlike();
+                    if (!TextUtils.isEmpty(jokeUnlike)){
+                        jokeHolder.joke_bad_tv.setText(""+jokeUnlike);
                     }
 
-                    String comcount = bean.getComcount();
-                    if (!TextUtils.isEmpty(comcount)) {
-                        int counts = Integer.parseInt(comcount);
-                        if (counts > 0) {
-                            textViewHolder.newsitem_commentcount.setVisibility(View.VISIBLE);
-                            bean.setComcount(counts + "");
-                            textViewHolder.newsitem_commentcount.setText(counts + "");
-                        } else {
-                            textViewHolder.newsitem_commentcount.setVisibility(View.GONE);
-                        }
-                    } else {
-                        textViewHolder.newsitem_commentcount.setVisibility(View.GONE);
+                    String jokeComCounts=bean.getComcount();
+                    if (!TextUtils.isEmpty(jokeComCounts)){
+                        jokeHolder.joke_comment_counts_tv.setText(jokeComCounts);
                     }
-
-
-                    if (CalendarUtil.friendlyTime(bean.getUpdate_time(), context) == null) {
-                        textViewHolder.newsitem_time.setText("");
-                    } else {
-                        textViewHolder.newsitem_time.setText(CalendarUtil.friendlyTime(bean.getUpdate_time(), context));
-                    }
-                    textViewHolder.nli_foot.setVisibility(View.GONE);
-
-                    textViewHolder.newsitem_unlike.setOnClickListener(new View.OnClickListener() {
+                    final String nid=bean.getNid();
+                    jokeHolder.joke_comment_counts_tv.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View view) {
-                            Toast.makeText(context, "不喜欢", Toast.LENGTH_SHORT).show();
+                        public void onClick(View v) {
+                            Intent commentsIntent = new Intent(context, XF_NewsCommentsActivity.class);
+                            commentsIntent.putExtra("News_nid", nid);
+                            context.startActivity(commentsIntent);
                         }
                     });
 
-                    if (bean.getSid() != null && !"0".equals(bean.getSid())) {
-                        textViewHolder.nli_foot.setImageResource(R.drawable.zq_subscript_issue);
-                        textViewHolder.nli_foot.setVisibility(View.VISIBLE);
-                    }
-                    SPUtil.setRtype(bean.getRtype(), textViewHolder.nli_foot);
+
 
                 }
                 break;
@@ -887,26 +858,18 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
     //JOKE 段子，评论，时间，脚标
     private class JokeHolder extends RecyclerView.ViewHolder {
         private TextView newsitem_title;
-        private ImageView nli_foot;
-        private TextView newsitem_source;//来源
-        private TextView newsitem_collectcount;//收藏数
-        private TextView newsitem_commentcount;//评论数
-        private TextView newsitem_time;
-        private ImageView newsitem_unlike;
-        private ImageView item_type_iv;
-        private LinearLayout ll_tag;
+        private TextView joke_good_tv;
+        private TextView joke_bad_tv;
+        private TextView joke_share_tv;
+        private TextView joke_comment_counts_tv;
 
         public JokeHolder(View v) {
             super(v);
             newsitem_title = (TextView) v.findViewById(R.id.newsitem_title);
-            nli_foot = (ImageView) v.findViewById(R.id.nli_foot);
-            newsitem_source = (TextView) v.findViewById(R.id.newsitem_source);
-            newsitem_collectcount = (TextView) v.findViewById(R.id.newsitem_collectcount);
-            newsitem_commentcount = (TextView) v.findViewById(R.id.newsitem_commentcount);
-            newsitem_time = (TextView) v.findViewById(R.id.newsitem_time);
-            newsitem_unlike = (ImageView) v.findViewById(R.id.newsitem_unlike);
-            item_type_iv = (ImageView) v.findViewById(R.id.item_type_iv);
-            ll_tag = (LinearLayout) v.findViewById(R.id.ll_tag);
+            joke_good_tv= (TextView) v.findViewById(R.id.joke_good_tv);
+            joke_bad_tv= (TextView) v.findViewById(R.id.joke_bad_tv);
+            joke_share_tv= (TextView) v.findViewById(R.id.joke_share_tv);
+            joke_comment_counts_tv= (TextView) v.findViewById(R.id.joke_comment_counts_tv);
             v.setOnClickListener(onClickListener);
         }
     }

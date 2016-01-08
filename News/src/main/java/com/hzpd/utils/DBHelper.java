@@ -65,6 +65,10 @@ public class DBHelper {
         albumDBUitls.deleteAll();
         videoDBUitls.deleteAll();
         zhuantiList.deleteAll();
+        collectionDBUitls.deleteAll();
+        jsonbeanDao.deleteAll();
+        newsJumpBeanDao.deleteAll();
+
     }
 
     public NewsJumpBeanDao getNewsJumpBeanDao() {

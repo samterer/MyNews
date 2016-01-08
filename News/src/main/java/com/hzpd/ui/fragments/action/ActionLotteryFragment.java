@@ -8,21 +8,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONObject;
-import com.color.tools.mytools.LogUtils;
 import com.hzpd.custorm.LotteryView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.LotteryDrawBean;
 import com.hzpd.ui.fragments.BaseFragment;
-import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
-import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
-import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.TUtils;
-import com.squareup.okhttp.Request;
-
-import java.util.Map;
 
 public class ActionLotteryFragment extends BaseFragment implements View.OnClickListener {
 
@@ -92,60 +84,7 @@ public class ActionLotteryFragment extends BaseFragment implements View.OnClickL
         getInfo();
     }
 
-    private void getInfo() {
-        Map<String, String> params = RequestParamsUtils.getMaps();
-        params.put("device", androidId);
-        params.put("subjectid", subjectid);
-
-        OkHttpClientManager.postAsyn(tag
-                , InterfaceJsonfile.drawPrice
-                , new OkHttpClientManager.ResultCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                LogUtils.i("result-->" + response.toString());
-                JSONObject obj = FjsonUtil.parseObject(response.toString());
-
-                if (null == obj) {
-                    return;
-                }
-
-                if (200 == obj.getIntValue("code")) {
-                    lotterydraw = FjsonUtil.parseObject(obj.getString("data")
-                            , LotteryDrawBean.class);
-                    lotteryv_tv.setText(lotterydraw.getInfo() + "");
-
-                    lotteryv_tv_number.setText(getString(R.string.toast_left_vote_award_today,
-                            lotterydraw.getTod_lastvotes(), lotterydraw.getLastdraw()));
-                    lotteryv_tv_price.setText(getString(R.string.toast_award, lotterydraw.getPrize()));
-
-
-                    if ("2".equals(lotterydraw.getStatus())) {
-                        lottery_bt.setVisibility(View.VISIBLE);
-                        lotteryv_tv_price.setVisibility(View.VISIBLE);
-                    } else {
-                        try {
-                            int last = Integer.parseInt(lotterydraw.getLastdraw());
-                            if (last > 0) {
-                                lotteryv.setVisibility(View.VISIBLE);
-                                lotteryv.setText(lotterydraw.getLevel());
-                            } else {
-                                TUtils.toast(getString(R.string.toast_lottery_running_out));
-                            }
-                        } catch (Exception e) {
-
-                        }
-                    }
-                } else {
-                    TUtils.toast(obj.getString("msg"));
-                }
-            }
-
-            @Override
-            public void onFailure(Request request, Exception e) {
-                TUtils.toast(getString(R.string.toast_server_no_response));
-            }
-        }, params);
-    }
+    private void getInfo() {}
 
     @Override
     public void onDestroyView() {

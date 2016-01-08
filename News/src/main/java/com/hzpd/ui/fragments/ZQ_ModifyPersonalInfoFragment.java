@@ -2,7 +2,6 @@ package com.hzpd.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +13,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONObject;
-import com.color.tools.mytools.LogUtils;
 import com.hzpd.hflt.R;
-import com.hzpd.modle.UserBean;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
-import com.hzpd.utils.FjsonUtil;
-import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.TUtils;
-import com.squareup.okhttp.Request;
-
-import java.util.Map;
 
 public class ZQ_ModifyPersonalInfoFragment extends BaseFragment implements View.OnClickListener {
     private LinearLayout mi_ll_nick;//昵称布局
@@ -112,65 +102,8 @@ public class ZQ_ModifyPersonalInfoFragment extends BaseFragment implements View.
                 activity.onBackPressed();
             }
             break;
-            case R.id.mi_bt_comfirm: {
-                Map<String, String> params = RequestParamsUtils.getMapWithU();
-                params.put("token", spu.getUser().getToken());
-                if (1 == type) {
-                    nickname = mi_et_context.getText().toString();
-                    if (TextUtils.isEmpty(nickname)) {
-                        TUtils.toast(getString(R.string.toast_nickname_cannot_be_empty));
-                    } else {
-                        params.put("nickname", nickname);
-                    }
-                } else {
-                    int id = mi_rg.getCheckedRadioButtonId();
-
-                    LogUtils.i("id-->" + id);
-                    switch (mi_rg.getCheckedRadioButtonId()) {
-                        case R.id.mi_rb1:
-                            gender = "1";
-                            break;
-                        case R.id.mi_rb2:
-                            gender = "2";
-                            break;
-                        default:
-                            gender = "3";
-                            break;
-                    }
-                    params.put("sex", gender);//1男 2女 3保密
-                }
-
-                OkHttpClientManager.postAsyn(tag
-                        , InterfaceJsonfile.CHANGEPINFO//InterfaceApi.modify_gender
-                        , new OkHttpClientManager.ResultCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        JSONObject obj = FjsonUtil.parseObject(response.toString());
-                        if (null == obj) {
-                            return;
-                        }
-
-                        if (200 == obj.getIntValue("code")) {
-                            TUtils.toast(getString(R.string.toast_modify_success));
-                            UserBean user = FjsonUtil.parseObject(obj.getString("data"), UserBean.class);
-                            spu.setUser(user);
-
-                            Intent intent = new Intent();
-                            intent.setAction(ZY_RightFragment.ACTION_USER);
-                            activity.sendBroadcast(intent);
-                        } else {
-                            TUtils.toast(obj.getString("msg"));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Request request, Exception e) {
-                        TUtils.toast(getString(R.string.toast_server_no_response));
-                    }
-
-                }, params);
-            }
-            break;
+            case R.id.mi_bt_comfirm:
+                break;
             case R.id.mi_im_clean: {
                 mi_et_context.setText("");
             }

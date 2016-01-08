@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -18,8 +17,6 @@ import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.inputmethod.InputMethodManager;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.color.tools.mytools.LogUtils;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
@@ -29,9 +26,10 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.Adbean;
 import com.hzpd.modle.Menu_Item_Bean;
 import com.hzpd.modle.db.DaoMaster;
+import com.hzpd.utils.AnalyticUtils;
+import com.hzpd.utils.DataCleanManager;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.SPUtil;
-import com.hzpd.utils.SharePreferecesUtils;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -99,30 +97,56 @@ public class App extends Application {
     }
 
     public void setThemeName(String themeName) {
-        PreferenceManager.getDefaultSharedPreferences(this).edit().putString("THEME", themeName).commit();
+        SPUtil.setGlobal("THEME", themeName);
         this.themeName = themeName;
     }
 
     @Override
     public void onCreate() {
         if (BuildConfig.DEBUG) {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                    .detectCustomSlowCalls()// API等级11，使用StrictMode.noteSlowCode
-                    .detectDiskReads()
-                    .detectDiskWrites()
-                    .detectNetwork()
-                    .penaltyLog()
-                    .penaltyFlashScreen()// API等级11
-                    .build());
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                    .detectLeakedSqlLiteObjects()
-                    .detectLeakedClosableObjects()
-                    .penaltyLog()
-                    .penaltyDeath()
-                    .build());
+//            openStrictMode();
         }
-        super.onCreate();
-        mInstance = this;
+        try {
+            long start = System.currentTimeMillis();
+            com.hzpd.utils.Log.e("test", "News: App start " + start);
+            super.onCreate();
+            newTimeMap.clear();
+            mInstance = this;
+            spu = SPUtil.getInstance();
+            themeName = SPUtil.getGlobal("THEME", "0");
+            ConfigBean.getInstance();
+            updateDao();
+            initPix();
+            if (Build.VERSION.SDK_INT >= 11) {
+                FacebookSdk.sdkInitialize(getApplicationContext());
+            }
+            initImageLoader();
+            initAnalytics();
+            com.hzpd.utils.Log.e("App", "App Success here " + (System.currentTimeMillis() - start));
+            refWatcher = LeakCanary.install(this);
+            deleteOld();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteOld() {
+        File file = getDatabasePath("hzpd");
+        if (file.exists()) {
+            DataCleanManager.deleteDir(file);
+        }
+    }
+
+    private void initPix() {
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        px_5dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, dm);
+        px_10dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, dm);
+        px_15dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, dm);
+        px_150dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, dm);
+    }
+
+    // 更新数据库
+    public void updateDao() {
         File file = getDatabasePath("cms");
         file = new File(file, SPUtil.getCountry());
         if (!file.exists()) {
@@ -132,25 +156,23 @@ public class App extends Application {
         SQLiteOpenHelper helper = new DaoMaster.DevOpenHelper(this, dbPath, null);
         SQLiteDatabase db = helper.getWritableDatabase();
         daoMaster = new DaoMaster(db);
-        themeName = PreferenceManager.getDefaultSharedPreferences(this).getString("THEME", "0");
-//        newTimeMap.clear();
-        refWatcher = LeakCanary.install(this);
-        newTimeMap.clear();
-        long start = System.currentTimeMillis();
-        spu = SPUtil.getInstance();
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        px_5dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
-        px_10dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
-        px_15dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics());
-        px_150dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
-        String str = SharePreferecesUtils.getParam(this, "STATION", "def").toString();
+    }
 
-        if (Build.VERSION.SDK_INT >= 11) {
-            FacebookSdk.sdkInitialize(getApplicationContext());
-        }
-        com.hzpd.utils.Log.e("App", "App 1here " + (System.currentTimeMillis() - start));
-        init();
-        com.hzpd.utils.Log.e("App", "App Success here " + (System.currentTimeMillis() - start));
+    private void openStrictMode() {
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectCustomSlowCalls()// API等级11，使用StrictMode.noteSlowCode
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectNetwork()
+                .penaltyLog()
+                .penaltyFlashScreen()// API等级11
+                .build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                .detectLeakedClosableObjects()
+                .penaltyLog()
+                .penaltyDeath()
+                .build());
     }
 
     private RefWatcher refWatcher;
@@ -162,7 +184,6 @@ public class App extends Application {
     final static int IMAGE_LOAD_SIZE = 1024 * 1024 * 5;
 
     private void init() {
-        initAds();
         // 获取应用当前版本号
         PackageManager localPackageManager = this.getPackageManager();
         try {
@@ -175,6 +196,22 @@ public class App extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void initAnalytics() {
+        try {
+            // 极光推送
+            JPushInterface.setDebugMode(false);    // 设置开启日志,发布时请关闭日志
+            com.hzpd.utils.Log.e("App", "App JPushInterface 4here ");
+            JPushInterface.init(this);
+            com.hzpd.utils.Log.e("App", "App JPushInterface  5here ");
+            sendAnalytic();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initImageLoader() {
         try {
             // 初始化UniversalImageLoader
             ImageLoaderConfiguration config = new ImageLoaderConfiguration
@@ -193,23 +230,6 @@ public class App extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        try {
-            MobclickAgent.setDebugMode(BuildConfig.DEBUG);
-            Map<String, String> map = new HashMap<>();
-            SPUtil.addParams(map);
-            MobclickAgent.onEventValue(this, "2016", map, 1);
-            // 极光推送
-            JPushInterface.setDebugMode(false);    // 设置开启日志,发布时请关闭日志
-            com.hzpd.utils.Log.e("App", "App JPushInterface 4here ");
-            JPushInterface.init(this);
-            com.hzpd.utils.Log.e("App", "App JPushInterface  5here ");
-            setStyleCustom();
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        com.hzpd.utils.Log.e("App", "App 9here ");
-        //AdSettings.addTestDevice();
     }
 
     public static Thread.UncaughtExceptionHandler uncaughtExceptionHandler = new Thread.UncaughtExceptionHandler() {
@@ -226,41 +246,12 @@ public class App extends Application {
     };
 
 
-    private void setStyleCustom() {
-    }
-
-    public void initAds() {
-        // 初始化广告容器
-        try {
-            channelADMap = new HashMap<String, Adbean>();
-            newsDetailADMap = new HashMap<String, Adbean>();
-            JSONObject jsonObject = SPUtil.getInstance().getWelcome();
-            List<Adbean> adbeans = JSONArray.parseArray(jsonObject.getJSONArray("data").toJSONString(), Adbean.class);
-            if (adbeans != null && !adbeans.isEmpty()) {
-                for (Adbean adbean : adbeans) {
-                    switch (adbean.getType()) {
-                        case 1:
-                            welcomeAdbean = adbean;
-                            break;
-                        case 2:
-                            if (!adbean.getTid().isEmpty()) {
-                                for (String tid : adbean.getTid()) {
-                                    channelADMap.put(tid, adbean);
-                                }
-                            }
-                            break;
-                        case 3:
-                            break;
-                        case 4:
-                            break;
-                        case 5:
-                            break;
-                    }
-
-                }
-            }
-        } catch (Exception e) {
-        }
+    private void sendAnalytic() {
+        MobclickAgent.setDebugMode(BuildConfig.DEBUG);
+        Map<String, String> map = new HashMap<>();
+        SPUtil.addParams(map);
+        MobclickAgent.onEventValue(this, "2016", map, 1);
+        AnalyticUtils.sendGaEvent(this, "Startup", "Startup", "Startup", 1L);
     }
 
     @Override

@@ -73,7 +73,7 @@ public class AdFlashFragment extends BaseFragment implements View.OnClickListene
                 return;
             }
             if (null != App.getInstance().welcomeAdbean) {
-                final String url = App.getInstance().welcomeAdbean.getImgurl();
+                final String url = App.getInstance().welcomeAdbean.getImage();
                 if (!TextUtils.isEmpty(url)) {
 
                     try {

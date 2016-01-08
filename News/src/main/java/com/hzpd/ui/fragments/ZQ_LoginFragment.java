@@ -1,6 +1,5 @@
 package com.hzpd.ui.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,19 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hzpd.hflt.R;
-import com.hzpd.modle.UserBean;
-import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
-import com.hzpd.utils.FjsonUtil;
-import com.hzpd.utils.Log;
-import com.hzpd.utils.MyCommonUtil;
-import com.hzpd.utils.RequestParamsUtils;
-import com.hzpd.utils.TUtils;
-import com.squareup.okhttp.Request;
-
-import java.util.Map;
 
 public class ZQ_LoginFragment extends BaseFragment implements View.OnClickListener {
 
@@ -70,61 +58,8 @@ public class ZQ_LoginFragment extends BaseFragment implements View.OnClickListen
                 activity.onBackPressed();
             }
             break;
-            case R.id.login_login_comfirm_id: {
-                if (!MyCommonUtil.isNetworkConnected(activity)) {
-                    TUtils.toast(getString(R.string.toast_network_error));
-                    return;
-                }
+            case R.id.login_login_comfirm_id:
 
-                final String uname = login_uname_id.getText().toString();
-                final String pwd = login_passwd_id.getText().toString();
-                if (uname == null || "".equals(uname)) {
-                    TUtils.toast(getString(R.string.toast_input_username));
-                    return;
-                }
-                if (pwd == null || "".equals(pwd)) {
-                    TUtils.toast(getString(R.string.toast_input_password));
-                    return;
-                }
-
-                showDialog();
-
-                Map<String, String> params = RequestParamsUtils.getMaps();
-                params.put("username", uname);
-                params.put("password", pwd);
-
-                OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.LOGIN, new OkHttpClientManager.ResultCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        JSONObject object = FjsonUtil.parseObject(response.toString());
-                        if (null == object) {
-                            return;
-                        }
-                        Log.i("test","login-success-->" + response.toString());
-                        if (200 == object.getIntValue("code")) {
-
-                            UserBean user = FjsonUtil.parseObject(object.getString("data"), UserBean.class);
-                            spu.setUser(user);
-
-                            Intent intent = new Intent();
-                            intent.setAction(ZY_RightFragment.ACTION_USER);
-                            activity.sendBroadcast(intent);
-                            activity.finish();
-                            TUtils.toast(getString(R.string.toast_login_success));
-                        } else {
-                            TUtils.toast(object.getString("msg"));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Request request, Exception e) {
-                        Log.i("test", "login-failed");
-                        TUtils.toast(getString(R.string.toast_server_no_response));
-                    }
-
-                }, params);
-
-            }
             break;
         }
     }

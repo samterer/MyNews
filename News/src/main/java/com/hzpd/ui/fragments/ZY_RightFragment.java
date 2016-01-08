@@ -374,11 +374,8 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
             }
             break;
             case R.id.zy_rfrag_ll_rate_us: {
-                if (null == spu.getUser()) {
-                    loginManager.setDefaultAudience(DefaultAudience.FRIENDS);
-                    loginManager.setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);
-                    loginManager.logInWithReadPermissions(this, permissions);
-                }
+                mIntent=SPUtil.getIntent(getActivity());
+                flag=true;
             }
             break;
             default:
