@@ -282,6 +282,7 @@
     <attr name="app_progress_bar_bg" format="reference|color" />
     <attr name="comment_list_layout_bg" format="reference|color" />
     <attr name="comment_text_color" format="reference|color" />
+    <attr name="choose_fragment_line" format="reference|color" />
 
 
 

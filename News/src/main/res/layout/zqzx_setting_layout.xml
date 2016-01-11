@@ -58,7 +58,7 @@
         </LinearLayout>
 
         <View
-            style="@style/line_layout"
+            style="@style/setting_line_layout"
             android:visibility="gone" />
 
         <!--字体大小-->
@@ -82,7 +82,7 @@
             <ImageView style="@style/setting_img" />
         </LinearLayout>
 
-        <View style="@style/line_layout" />
+        <View style="@style/setting_line_layout" />
 
         <!--推送设置-->
         <LinearLayout style="@style/setting_item_layout">
@@ -99,7 +99,7 @@
 
         </LinearLayout>
 
-        <View style="@style/line_layout" />
+        <View style="@style/setting_line_layout" />
 
         <!--缓存清理-->
         <LinearLayout
@@ -130,7 +130,7 @@
         </LinearLayout>
 
         <!--站点设置-->
-        <View style="@style/line_layout" />
+        <View style="@style/setting_line_layout" />
 
         <!--选择国家-->
         <RelativeLayout
@@ -174,7 +174,7 @@
         </RelativeLayout>
 
         <View
-            style="@style/line_layout"
+            style="@style/setting_line_layout"
             android:visibility="gone" />
 
         <!--反馈消息-->
@@ -189,7 +189,7 @@
             <ImageView style="@style/setting_img" />
         </LinearLayout>
 
-        <View style="@style/line_layout" />
+        <View style="@style/setting_line_layout" />
 
         <!--关于我们-->
         <RelativeLayout
@@ -220,7 +220,7 @@
         </RelativeLayout>
 
         <View
-            style="@style/line_layout"
+            style="@style/setting_line_layout"
             android:visibility="gone" />
 
         <!--检查更新-->
@@ -243,7 +243,7 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <View style="@style/line_layout" />
+        <View style="@style/setting_line_layout" />
 
         <!--退出登录-->
         <LinearLayout

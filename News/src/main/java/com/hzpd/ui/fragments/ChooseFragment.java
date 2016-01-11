@@ -154,7 +154,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         FrameLayout view = (FrameLayout) inflater.inflate(R.layout.choose_fragment, container, false);
         tag = OkHttpClientManager.getTag();
         TypedValue typedValue = new TypedValue();
-        getActivity().getTheme().resolveAttribute(R.attr.title_bar_color, typedValue, true);
+        getActivity().getTheme().resolveAttribute(R.attr.choose_fragment_line, typedValue, true);
         color = typedValue.data;
         background_empty = (ImageView) view.findViewById(R.id.background_empty);
 
@@ -177,11 +177,6 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         } catch (Exception e) {
             e.printStackTrace();
         }
-        TypedValue typedValue1 = new TypedValue();
-        getActivity().getTheme().resolveAttribute(R.attr.title_bar_color, typedValue1, true);
-        int color1 = typedValue1.data;
-//        mSwipeRefreshWidget.setColorSchemeColors(color1);
-//        mSwipeRefreshWidget.setColorScheme(R.color.google_blue);
         mSwipeRefreshWidget.setColorSchemeResources(R.color.google_blue);
         mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
