@@ -12,7 +12,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="55dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center">
@@ -20,7 +20,7 @@
             <ImageView
                 android:id="@+id/main_title_left_img"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="22dp"
                 android:layout_gravity="center"
                 android:contentDescription="@null"
                 android:src="@drawable/icon" />
@@ -32,13 +32,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginLeft="5dp"
             android:layout_marginRight="15dp"
             android:background="?main_search_bg"
             android:gravity="center_vertical"
+            android:paddingBottom="5dp"
             android:paddingLeft="@dimen/margin_15"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
+            android:paddingTop="5dp">
 
             <ImageView
                 android:layout_width="wrap_content"

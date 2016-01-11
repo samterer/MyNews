@@ -93,25 +93,28 @@ public class SPUtil {
     }
 
     public static String getCountry() {
-        if (getInstance().current != null) {
-            return getInstance().current;
+        if (current != null) {
+            return current;
         }
-        String current = SPUtil.getGlobal("CountryCode", "id");
-        getInstance().current = current;
-        return getInstance().current;
+        String temp = SPUtil.getGlobal("CountryCode", "id");
+        current = temp;
+        return current;
     }
 
-    private String current = null;
+    private static String current = null;
 
     public static void setCountry(String country) {
         if (!TextUtils.isEmpty(country)) {
+            if (SPUtil.getCountry().equals(country)) {
+                return;
+            }
+            country = country.toLowerCase();
+            SPUtil.setGlobal("CountryCode", country);
+            getInstance().current = null;
             App.getInstance().newTime = null;
             App.getInstance().oldTime = null;
             App.getInstance().newTimeMap.clear();
             App.getInstance().updateDao();
-            country = country.toLowerCase();
-            SPUtil.setGlobal("CountryCode", country);
-            getInstance().current = null;
             SharePreferecesUtils.init();
             getInstance().msp = ACache.get(App.getInstance().getApplicationContext(), getCountry());
             DBHelper.setInstance(App.getInstance());
@@ -300,6 +303,7 @@ public class SPUtil {
     private UserBean user;
 
     private SPUtil() {
+        current = null;
         updateChannel();
         msp = ACache.get(App.getInstance().getApplicationContext(), getCountry());
         AssetManager assetManager = App.getInstance()
@@ -593,9 +597,18 @@ public class SPUtil {
                 .edit().putString(key, value).commit();
     }
 
+    public static void setGlobal(String key, long value) {
+        PreferenceManager.getDefaultSharedPreferences(App.getInstance())
+                .edit().putLong(key, value).commit();
+    }
+
     //获取全局配置
     public static String getGlobal(String key, String value) {
         return PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString(key, value);
+    }
+
+    public static long getGlobal(String key, long value) {
+        return PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getLong(key, value);
     }
 
     /**

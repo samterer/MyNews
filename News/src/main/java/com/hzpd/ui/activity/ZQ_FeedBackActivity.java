@@ -82,7 +82,6 @@ public class ZQ_FeedBackActivity extends MBaseActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.zq_feedback_btn_submit:
-                app_progress_bar.setVisibility(View.VISIBLE);
                 if (start > 0) {
                     if (System.currentTimeMillis() - start < 2000) {
                         return;
@@ -114,6 +113,8 @@ public class ZQ_FeedBackActivity extends MBaseActivity implements View.OnClickLi
                 return;
             }
         }
+
+        app_progress_bar.setVisibility(View.VISIBLE);
         Map<String, String> params = RequestParamsUtils.getMaps();
         params.put("siteid", InterfaceJsonfile.SITEID);
         params.put("Email", email);

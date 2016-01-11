@@ -143,6 +143,10 @@ public class SettingActivity extends MBaseActivity implements View.OnClickListen
 
                     @Override
                     public void onSelectCountry(String name, String code, String dialCode) {
+                        Log.e("test", "News: " + code);
+                        if (code.toLowerCase().equals(SPUtil.getCountry())) {
+                            return;
+                        }
                         setting_choose_country.setText("" + name);
                         SharePreferecesUtils.setParam(SettingActivity.this, "CountryName", name);
                         SPUtil.setCountry(code);

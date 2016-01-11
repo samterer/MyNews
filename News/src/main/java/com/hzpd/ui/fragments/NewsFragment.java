@@ -231,6 +231,9 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
                                     for (NewsChannelBean bean : newestChannels) {
                                         dbs.add(new NewsChannelBeanDB(bean));
                                     }
+                                    for (int i = 0; i < dbs.size(); i++) {
+                                        dbs.get(i).setId((long) i);
+                                    }
                                     dbHelper.getChannel().insertInTx(dbs);
                                 } else { // 如果有缓存
                                     //TODO
@@ -295,7 +298,11 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
                 } else {
                     SPUtil.dbs.add(1, beanDB);
                 }
-                dbHelper.getChannel().loadAll();
+                dbHelper.getChannel().deleteAll();
+                //TODO PRIMARY KEY must be unique (code 19)
+                for (int i = 0; i < SPUtil.dbs.size(); i++) {
+                    SPUtil.dbs.get(i).setId((long) i);
+                }
                 dbHelper.getChannel().insertInTx(SPUtil.dbs);
                 SPUtil.updateChannel();
             } else {

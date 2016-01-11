@@ -298,7 +298,6 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         public void onClick(View v) {
             if (AvoidOnClickFastUtils.isFastDoubleClick(v))
                 return;
-            Log.i("", "mFloatBtn.getWidth()--->" + mFloatBtn.getWidth() + ":::mFloatBtn.getHeight()--->" + mFloatBtn.getHeight());
             // 显示反馈对话框
             showFeedback();
         }

@@ -167,6 +167,9 @@ public class WelcomeActivity extends MWBaseActivity {
                                     for (NewsChannelBean bean : newestChannels) {
                                         dbs.add(new NewsChannelBeanDB(bean));
                                     }
+                                    for (int i = 0; i < dbs.size(); i++) {
+                                        dbs.get(i).setId((long) i);
+                                    }
                                     dbHelper.getChannel().insertInTx(dbs);
                                     SPUtil.updateChannel();
                                 } else if (newestChannels.size() > 0) { // 如果有缓存
@@ -194,6 +197,9 @@ public class WelcomeActivity extends MWBaseActivity {
                                             dbs.add(new NewsChannelBeanDB(bean));
                                         }
                                         dbHelper.getChannel().deleteAll();
+                                        for (int i = 0; i < dbs.size(); i++) {
+                                            dbs.get(i).setId((long) i);
+                                        }
                                         dbHelper.getChannel().insertInTx(dbs);
                                         SPUtil.updateChannel();
                                     }

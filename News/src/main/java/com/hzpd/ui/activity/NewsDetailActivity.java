@@ -70,6 +70,7 @@ import com.hzpd.modle.db.UserLog;
 import com.hzpd.modle.event.TagEvent;
 import com.hzpd.services.InitService;
 import com.hzpd.ui.App;
+import com.hzpd.ui.ConfigBean;
 import com.hzpd.ui.widget.CustomRecyclerView;
 import com.hzpd.ui.widget.FontTextView;
 import com.hzpd.ui.widget.SwipeCloseLayout;
@@ -114,7 +115,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     public final static String PREFIX = "P:";
 
     private NativeAd nativeAd;
-    public static final String AD_KEY = "1902056863352757_1922349784656798";
+    public static String AD_KEY = "1902056863352757_1922349784656798";
 
 
     @Override
@@ -185,6 +186,11 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
         Log.e("test", "1 " + System.currentTimeMillis());
+        if (!TextUtils.isEmpty(ConfigBean.getInstance().news_details)) {
+            AD_KEY = ConfigBean.getInstance().news_list;
+        } else if (!TextUtils.isEmpty(ConfigBean.getInstance().default_key)) {
+            AD_KEY = ConfigBean.getInstance().default_key;
+        }
         nativeAd = new NativeAd(this, AD_KEY);
         nativeAd.setAdListener(this);
         App.getInstance().setProfileTracker(callback);
@@ -619,12 +625,12 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 , new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-
+                Log.i("onSuccess","DalNewsPraise   onSuccess");
             }
 
             @Override
             public void onFailure(Request request, Exception e) {
-
+                Log.i("onSuccess","DalNewsPraise   onFailure");
             }
         }, params);
     }

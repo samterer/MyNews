@@ -74,7 +74,7 @@ public class OkHttpClientManager {
     //TODO 同步发送GET请求
     public static String get(String url) {
         try {
-            return getInstance()._get(url).body().toString();
+            return getInstance()._get(url).body().string();
         } catch (Exception e) {
             return null;
         }
@@ -108,7 +108,7 @@ public class OkHttpClientManager {
             Request request = buildPostRequest(url, paramsArr);
             call = mOkHttpClient.newCall(request);
             response = call.execute();
-            return response.body().toString();
+            return response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
             if (call != null) {

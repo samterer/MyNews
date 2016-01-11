@@ -89,7 +89,7 @@ public class CountryPicker extends DialogFragment implements
 
                 Collections.sort(allCountriesList, this);
 
-                selectedCountriesList = new ArrayList<Country>();
+                selectedCountriesList = new ArrayList<>();
                 selectedCountriesList.addAll(allCountriesList);
 
                 // Return
@@ -200,6 +200,12 @@ public class CountryPicker extends DialogFragment implements
 
     @Override
     public int compare(Country lhs, Country rhs) {
+        if (lhs.getCode().toLowerCase().equals("id")) {
+            return -1;
+        }
+        if (rhs.getCode().toLowerCase().equals("id")) {
+            return 1;
+        }
         return lhs.getName().compareTo(rhs.getName());
     }
 

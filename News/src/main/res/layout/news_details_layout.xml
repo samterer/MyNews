@@ -124,8 +124,8 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:background="?detail_recy_backgroup"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="?detail_recy_backgroup">
 
                     <com.hzpd.ui.widget.CustomRecyclerView
                         android:id="@+id/recycler_view"
@@ -143,6 +143,8 @@
                         android:layout_height="match_parent"
                         android:layout_marginTop="0dp"
                         android:background="?app_progress_bar_bg"
+                        android:clickable="true"
+                        android:focusable="false"
                         android:visibility="visible">
 
                         <ProgressBar

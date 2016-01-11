@@ -182,15 +182,6 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
                             @Override
                             public void onSuccess(Object response) {
                                 Log.i("onSuccess", "onSuccess");
-                                JSONObject obj = null;
-                                try {
-                                    obj = JSONObject.parseObject(response.toString());
-                                } catch (Exception e) {
-                                    return;
-                                }
-                                if (200 == obj.getIntValue("code")) {
-
-                                }
                             }
 
                             @Override
@@ -199,7 +190,6 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
                             }
                         }, params);
                     }
-                    Log.i("viewHolder.tv_subscribe", "viewHolder.tv_subscribe");
                 }
 
             }

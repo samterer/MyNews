@@ -6,8 +6,8 @@ buildscript {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
 
     lintOptions { abortOnError false }
 
@@ -18,20 +18,19 @@ android {
 
     sourceSets {
         main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-            jniLibs.srcDirs = ['native-libs']
-            jni.srcDirs = [] //disable automatic ndk-build
         }
-
 
     }
 
+    productFlavors {
+        google {
+        }
+        rom {
+        }
+    }
+
+    defaultPublishConfig "googleRelease"
+    publishNonDefault true
 }
 
 dependencies {

@@ -2,6 +2,9 @@ package com.hzpd.utils;
 
 import android.view.View;
 
+/**
+ * Created by taoshuang on 2015/9/15.
+ */
 public class AvoidOnClickFastUtils {
 
     private static long lastClickTime;
@@ -12,16 +15,18 @@ public class AvoidOnClickFastUtils {
      */
     public static boolean isFastDoubleClick(final View view) {
         long time = System.currentTimeMillis();
-        if (view.hashCode() != hash) {
+        if (view.hashCode() != hash) {//不是同一个
+            lastClickTime = time;
             hash = view.hashCode();
+            return false;
+        }else {
+            long timeD = time - lastClickTime;
+            if (0 < timeD && timeD < 1500) {
+                return true;
+            }
             lastClickTime = time;
             return false;
         }
-        long timeD = time - lastClickTime;
-        if (0 < timeD && timeD < 1200) {
-            return true;
-        }
-        return false;
     }
 
 

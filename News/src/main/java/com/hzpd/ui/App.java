@@ -112,10 +112,10 @@ public class App extends Application {
             super.onCreate();
             newTimeMap.clear();
             mInstance = this;
+            updateDao();
             spu = SPUtil.getInstance();
             themeName = SPUtil.getGlobal("THEME", "0");
             ConfigBean.getInstance();
-            updateDao();
             initPix();
             if (Build.VERSION.SDK_INT >= 11) {
                 FacebookSdk.sdkInitialize(getApplicationContext());
@@ -147,6 +147,7 @@ public class App extends Application {
 
     // 更新数据库
     public void updateDao() {
+        closeDao();
         File file = getDatabasePath("cms");
         file = new File(file, SPUtil.getCountry());
         if (!file.exists()) {
@@ -156,6 +157,17 @@ public class App extends Application {
         SQLiteOpenHelper helper = new DaoMaster.DevOpenHelper(this, dbPath, null);
         SQLiteDatabase db = helper.getWritableDatabase();
         daoMaster = new DaoMaster(db);
+    }
+
+    public void closeDao() {
+        if (daoMaster != null) {
+            try {
+                daoMaster.getDatabase().close();
+                daoMaster = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void openStrictMode() {

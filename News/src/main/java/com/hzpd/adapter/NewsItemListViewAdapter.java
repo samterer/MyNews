@@ -27,16 +27,20 @@ import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsPageListBean;
 import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.db.NewsBeanDBDao;
+import com.hzpd.modle.event.JoKeBadEvent;
+import com.hzpd.modle.event.JokeGoodEvent;
 import com.hzpd.ui.App;
+import com.hzpd.ui.ConfigBean;
 import com.hzpd.ui.activity.XF_NewsCommentsActivity;
 import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.widget.CircleIndicator;
-import com.hzpd.utils.AAnim;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.DisplayOptionFactory.OptionTp;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
+import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.db.NewsListDbTask;
 
 import java.util.ArrayList;
@@ -45,11 +49,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
+import de.greenrobot.event.EventBus;
+
 public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
-    public static final String AD_KEY = "1902056863352757_1942167249341718";
+    public static String AD_KEY = "1902056863352757_1942167249341718";
     public static final int STEP = 12;
     public static final int MAX_POSITION = 100;
+
+    boolean isJokeGood = false;
+    boolean isJokeBad = false;
 
     public interface CallBack {
         void loadMore();
@@ -93,7 +102,11 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         if (ads == null) {
             return;
         }
-//        Log.e("test", "nextAdPosition " + nextAdPosition);
+        if (!TextUtils.isEmpty(ConfigBean.getInstance().news_list)) {
+            AD_KEY = ConfigBean.getInstance().news_list;
+        } else if (!TextUtils.isEmpty(ConfigBean.getInstance().default_key)) {
+            AD_KEY = ConfigBean.getInstance().default_key;
+        }
         final NativeAd nativeAd = new NativeAd(context.getApplicationContext(), AD_KEY);
         ads.put("" + nextAdPosition, nativeAd);
         final int adPos = nextAdPosition;
@@ -337,6 +350,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             if (viewPagelist.size() > 0 && position != 0) {
                 --position;
             }
+
             TypedValue typedValue = new TypedValue();
             context.getTheme().resolveAttribute(R.attr.item_title, typedValue, true);
             int color = typedValue.data;
@@ -432,7 +446,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                 case TYPE_JOKE: {
                     bean = list.get(position);
                     holder.itemView.setTag(bean);
-                    JokeHolder jokeHolder = (JokeHolder) holder;
+                    final JokeHolder jokeHolder = (JokeHolder) holder;
                     jokeHolder.newsitem_title.setTextSize(fontSize);
                     jokeHolder.newsitem_title.setText(bean.getTitle());
                     jokeHolder.newsitem_title.setTextColor(App.getInstance()
@@ -444,23 +458,94 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                         jokeHolder.newsitem_title.setTextColor(App.getInstance()
                                 .getResources().getColor(R.color.item_title));
                     }
+                    final String nid = bean.getNid();
 
-                    String jokeLike=bean.getLike();
-                    if (!TextUtils.isEmpty(jokeLike)){
-                        jokeHolder.joke_good_tv.setText(""+jokeLike);
+                    final String jokeLike = bean.getLike();
+                    if (!TextUtils.isEmpty(jokeLike)) {
+                        jokeHolder.joke_good_tv.setText("" + jokeLike);
                     }
 
-                    String jokeUnlike=bean.getUnlike();
-                    if (!TextUtils.isEmpty(jokeUnlike)){
-                        jokeHolder.joke_bad_tv.setText(""+jokeUnlike);
+                    final String jokeUnlike = bean.getUnlike();
+                    if (!TextUtils.isEmpty(jokeUnlike)) {
+                        jokeHolder.joke_bad_tv.setText("" + jokeUnlike);
                     }
+                    isJokeGood = false;
+                    isJokeBad = false;
+                    jokeHolder.joke_good_img.setImageResource(R.drawable.joke_good);
+                    jokeHolder.joke_bad_img.setImageResource(R.drawable.joke_bad);
+                    String praise = SharePreferecesUtils.getParam(context, nid, "0").toString();
+                    if (praise.equals("1")) {
+                        isJokeGood = true;
+                        Log.i("joke_good_img","joke_good_img praise 1"+isJokeGood);
+                        jokeHolder.joke_good_img.setImageResource(R.drawable.joke_good_select);
+                        jokeHolder.joke_bad_layout.setEnabled(false);
+                    } else if (praise.equals("2")) {
+                        isJokeBad = true;
+                        Log.i("joke_bad_img","joke_bad_img praise 1"+isJokeBad);
+                        jokeHolder.joke_bad_img.setImageResource(R.drawable.joke_bad_select);
+                        jokeHolder.joke_good_layout.setEnabled(false);
+                    } else {
+                        isJokeGood = false;
+                        isJokeBad = false;
+                        Log.i("joke","joke 1"+isJokeBad);
+                    }
+                    Log.i("joke_good_img","joke_good_img praise 2"+isJokeGood);
+                    jokeHolder.joke_good_layout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Log.i("joke_good_img","joke_good_img praise 3"+isJokeGood);
+                            if (!isJokeGood) {//点赞操作
+                                SharePreferecesUtils.setParam(context, nid, "1");
+                                jokeHolder.joke_good_tv.setText("" + (Integer.parseInt(jokeLike) + 1));
+                                jokeHolder.joke_good_img.setImageResource(R.drawable.joke_good_select);
+                                jokeHolder.joke_bad_layout.setEnabled(false);
+                                EventBus.getDefault().post(new JokeGoodEvent(true, nid));
+                                NewsBeanDB nbdb = dbHelper.getNewsList().queryBuilder().where(NewsBeanDBDao.Properties.Nid.eq(nid)).build().unique();
+                                nbdb.setNid(nid);
+                                nbdb.setLike("" + (Integer.parseInt(jokeLike) + 1));
+                                dbHelper.getNewsList().update(nbdb);
+                                isJokeGood = true;
+                            } else {
+                                SharePreferecesUtils.setParam(context, nid, "0");
+                                jokeHolder.joke_good_tv.setText("" + jokeLike);
+                                jokeHolder.joke_good_img.setImageResource(R.drawable.joke_good);
+                                jokeHolder.joke_bad_layout.setEnabled(true);
+                                EventBus.getDefault().post(new JokeGoodEvent(false, nid));
+                                NewsBeanDB nbdb = dbHelper.getNewsList().queryBuilder().where(NewsBeanDBDao.Properties.Nid.eq(nid)).build().unique();
+                                nbdb.setNid(nid);
+                                nbdb.setLike("" + jokeLike);
+                                isJokeGood = false;
+                            }
 
-                    String jokeComCounts=bean.getComcount();
-                    if (!TextUtils.isEmpty(jokeComCounts)){
+                        }
+                    });
+                    jokeHolder.joke_bad_layout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!isJokeBad) {//点赞操作
+                                SharePreferecesUtils.setParam(context, nid, "2");
+                                jokeHolder.joke_bad_tv.setText("" + (Integer.parseInt(jokeUnlike) + 1));
+                                jokeHolder.joke_bad_img.setImageResource(R.drawable.joke_bad_select);
+                                jokeHolder.joke_good_layout.setEnabled(false);
+                                EventBus.getDefault().post(new JoKeBadEvent(true, nid));
+                                isJokeBad = true;
+                            } else {
+                                SharePreferecesUtils.setParam(context, nid, "0");
+                                jokeHolder.joke_bad_tv.setText("" + jokeLike);
+                                jokeHolder.joke_bad_img.setImageResource(R.drawable.joke_bad);
+                                jokeHolder.joke_good_layout.setEnabled(true);
+                                EventBus.getDefault().post(new JoKeBadEvent(true, nid));
+                                isJokeBad = false;
+                            }
+
+                        }
+                    });
+
+                    String jokeComCounts = bean.getComcount();
+                    if (!TextUtils.isEmpty(jokeComCounts)) {
                         jokeHolder.joke_comment_counts_tv.setText(jokeComCounts);
                     }
-                    final String nid=bean.getNid();
-                    jokeHolder.joke_comment_counts_tv.setOnClickListener(new View.OnClickListener() {
+                    jokeHolder.joke_comment_counts_layout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent commentsIntent = new Intent(context, XF_NewsCommentsActivity.class);
@@ -468,7 +553,6 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                             context.startActivity(commentsIntent);
                         }
                     });
-
 
 
                 }
@@ -862,14 +946,25 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         private TextView joke_bad_tv;
         private TextView joke_share_tv;
         private TextView joke_comment_counts_tv;
+        private ImageView joke_good_img;
+        private ImageView joke_bad_img;
+        private View joke_good_layout;
+        private View joke_bad_layout;
+        private View joke_comment_counts_layout;
+
 
         public JokeHolder(View v) {
             super(v);
             newsitem_title = (TextView) v.findViewById(R.id.newsitem_title);
-            joke_good_tv= (TextView) v.findViewById(R.id.joke_good_tv);
-            joke_bad_tv= (TextView) v.findViewById(R.id.joke_bad_tv);
-            joke_share_tv= (TextView) v.findViewById(R.id.joke_share_tv);
-            joke_comment_counts_tv= (TextView) v.findViewById(R.id.joke_comment_counts_tv);
+            joke_good_tv = (TextView) v.findViewById(R.id.joke_good_tv);
+            joke_bad_tv = (TextView) v.findViewById(R.id.joke_bad_tv);
+            joke_share_tv = (TextView) v.findViewById(R.id.joke_share_tv);
+            joke_comment_counts_tv = (TextView) v.findViewById(R.id.joke_comment_counts_tv);
+            joke_good_img = (ImageView) v.findViewById(R.id.joke_good_img);
+            joke_bad_img = (ImageView) v.findViewById(R.id.joke_bad_img);
+            joke_good_layout = v.findViewById(R.id.joke_good_layout);
+            joke_bad_layout = v.findViewById(R.id.joke_bad_layout);
+            joke_comment_counts_layout = v.findViewById(R.id.joke_comment_counts_layout);
             v.setOnClickListener(onClickListener);
         }
     }

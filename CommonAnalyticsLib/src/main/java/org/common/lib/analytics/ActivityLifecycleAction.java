@@ -42,7 +42,6 @@ public class ActivityLifecycleAction {
     public void onResume(Activity activity) {
         MobclickAgent.onResume(activity);
         if (analyticCallback != null && !TextUtils.isEmpty(analyticCallback.getAnalyticPageName())) {
-            AnalyticEventUtils.sendGaScreenViewHit(activity, analyticCallback.getAnalyticPageName());
             MobclickAgent.onPageStart(analyticCallback.getAnalyticPageName());
         }
     }

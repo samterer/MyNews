@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="icon_name">BeritaKini</string>
-    <string name="error_delete">Berita telah dihapus</string>
+    <string name="icon_name">Berita Kini</string>
+    <string name="error_delete">Berita dihapus</string>
     <string name="feedback_hint_suggestion">Bantu kami untuk lebih baik !</string>
     <string name="feedback_rating">Nilai</string>
     <!-- 翻译 -->

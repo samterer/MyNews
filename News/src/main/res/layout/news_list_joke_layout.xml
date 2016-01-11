@@ -34,22 +34,26 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/margin_15"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="horizontal">
 
 
                     <LinearLayout
+                        android:id="@+id/joke_good_layout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
+                        android:background="?zqzx_onclik_setting_item"
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:paddingBottom="@dimen/margin_10"
                         android:paddingTop="@dimen/margin_10">
 
                         <ImageView
+                            android:id="@+id/joke_good_img"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/joke_good" />
@@ -75,16 +79,19 @@
                         android:background="?discover_item_line_color" />
 
                     <LinearLayout
+                        android:id="@+id/joke_bad_layout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
+                        android:background="?zqzx_onclik_setting_item"
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:paddingBottom="@dimen/margin_10"
                         android:paddingTop="@dimen/margin_10">
 
                         <ImageView
+                            android:id="@+id/joke_bad_img"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/joke_bad" />
@@ -110,44 +117,11 @@
                         android:background="?discover_item_line_color" />
 
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:paddingBottom="@dimen/margin_10"
-                        android:paddingTop="@dimen/margin_10">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/joke_share" />
-                        <!--评论数-->
-                        <com.hzpd.ui.widget.FontRobotoTextView
-                            android:id="@+id/joke_share_tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:paddingLeft="5dp"
-                            android:text="5658"
-                            android:textColor="?item_tag"
-                            android:textSize="12sp" />
-
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="0.1dip"
-                        android:layout_height="fill_parent"
-                        android:layout_marginBottom="10dip"
-                        android:layout_marginTop="10dip"
-                        android:background="?discover_item_line_color" />
-
-                    <LinearLayout
+                        android:id="@+id/joke_comment_counts_layout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:background="?zqzx_onclik_setting_item"
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:paddingBottom="@dimen/margin_10"
@@ -166,6 +140,42 @@
                             android:layout_height="wrap_content"
                             android:paddingLeft="5dp"
                             android:text="3657"
+                            android:textColor="?item_tag"
+                            android:textSize="12sp" />
+
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="0.1dip"
+                        android:layout_height="fill_parent"
+                        android:layout_marginBottom="10dip"
+                        android:layout_marginTop="10dip"
+                        android:background="?discover_item_line_color" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="?zqzx_onclik_setting_item"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingBottom="@dimen/margin_10"
+                        android:paddingTop="@dimen/margin_10">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/joke_share" />
+                        <!--评论数-->
+                        <com.hzpd.ui.widget.FontRobotoTextView
+                            android:id="@+id/joke_share_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingLeft="5dp"
+                            android:text="5658"
                             android:textColor="?item_tag"
                             android:textSize="12sp" />
 

@@ -109,7 +109,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
         try {
             view = inflater.inflate(R.layout.zy_rightfragment, container, false);
             initViews(view);
-            tag=OkHttpClientManager.getTag();
+            tag = OkHttpClientManager.getTag();
             String name = SPUtil.getCountryName();
             String countryname = name.toUpperCase().charAt(0) + name.substring(1, name.length());
             personal_item_text.setText("" + countryname);
@@ -165,7 +165,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
         zy_rfrag_ll_night.setOnClickListener(this);
         zy_rfrag_ll_read = view.findViewById(R.id.zy_rfrag_ll_read);
         zy_rfrag_ll_read.setOnClickListener(this);
-        zy_rfrag_ll_rate_us=view.findViewById(R.id.zy_rfrag_ll_rate_us);
+        zy_rfrag_ll_rate_us = view.findViewById(R.id.zy_rfrag_ll_rate_us);
         zy_rfrag_ll_rate_us.setOnClickListener(this);
     }
 
@@ -192,7 +192,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
         }
 
         if (null != spu.getUser()) {
-            Log.i("test","userimg-->" + spu.getUser().getAvatar_path());
+            Log.i("test", "userimg-->" + spu.getUser().getAvatar_path());
             SPUtil.displayImage(spu.getUser().getAvatar_path(), zy_rfrag_iv_login,
                     DisplayOptionFactory.getOption(OptionTp.Avatar));
             zy_rfrag_tv_login.setText("" + spu.getUser().getNickname());
@@ -202,7 +202,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
     }
 
     public void thirdlogin(ThirdLoginBean tlb) {
-        Map<String ,String > params = RequestParamsUtils.getMaps();
+        Map<String, String> params = RequestParamsUtils.getMaps();
         params.put("userid", tlb.getUserid());
         params.put("gender", tlb.getGender());
         params.put("nickname", tlb.getNickname());
@@ -214,7 +214,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
                 new OkHttpClientManager.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
-                        Log.i("test","result-->" + response.toString());
+                        Log.i("test", "result-->" + response.toString());
                         JSONObject obj = FjsonUtil
                                 .parseObject(response.toString());
                         if (null == obj) {
@@ -231,7 +231,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
 
                     @Override
                     public void onFailure(Request request, Exception e) {
-                       Log.i("test","test login failed");
+                        Log.i("test", "test login failed");
                     }
 
                 }, params);
@@ -328,9 +328,10 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
 
                     @Override
                     public void onSelectCountry(String name, String code, String dialCode) {
-                        Log.i("Setting", "CountryName:" + name + "\nCode: " + code + "\nCurrency: " + CountryPicker.getCurrencyCode(code) + "\nDial Code: " + dialCode);
+                        if (code.toLowerCase().equals(SPUtil.getCountry())) {
+                            return;
+                        }
                         SharePreferecesUtils.setParam(getActivity(), "CountryName", name);
-//                        activity.startService(new Intent(activity, ClearCacheService.class));
                         personal_item_text.setText("" + name);
                         SPUtil.setCountry(code);
                         SPUtil.setCountryName(name);
@@ -374,8 +375,8 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
             }
             break;
             case R.id.zy_rfrag_ll_rate_us: {
-                mIntent=SPUtil.getIntent(getActivity());
-                flag=true;
+                mIntent = SPUtil.getIntent(getActivity());
+                flag = true;
             }
             break;
             default:
@@ -395,16 +396,16 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
                 setLogin();
             } else if (action.equals(ZY_RightFragment.ACTION_QUIT)) {
                 setQuit();
-                Log.i("test","setquit");
+                Log.i("test", "setquit");
             } else if (action.equals(ZY_RightFragment.ACTION_QUIT_LOGIN)) {
                 setQuit();
-                Log.i("test","setquitlogin");
+                Log.i("test", "setquitlogin");
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         zy_rfrag_ll_login.performClick();
-                        Log.i("test","r_login_layout.callOnClick()");
+                        Log.i("test", "r_login_layout.callOnClick()");
                     }
                 }, 500);
             }
@@ -412,7 +413,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void setLogin() {
-        Log.i("test","imgUrl-->" + spu.getUser().getAvatar_path() + "  name-->" + spu.getUser().getNickname());
+        Log.i("test", "imgUrl-->" + spu.getUser().getAvatar_path() + "  name-->" + spu.getUser().getNickname());
         SPUtil.displayImage(spu.getUser().getAvatar_path(), zy_rfrag_iv_login,
                 DisplayOptionFactory.getOption(OptionTp.Avatar));
         zy_rfrag_tv_login.setText(spu.getUser().getNickname());
@@ -420,10 +421,10 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
         JPushInterface.setAlias(activity, spu.getUser().getUid(), new TagAliasCallback() {
             @Override
             public void gotResult(int arg0, String arg1, Set<String> arg2) {
-                Log.i("test","arg0-->" + arg0 + " arg1-->" + arg1);
+                Log.i("test", "arg0-->" + arg0 + " arg1-->" + arg1);
                 if (arg2 != null) {
                     for (String s : arg2) {
-                        Log.i("test","arg2->" + s);
+                        Log.i("test", "arg2->" + s);
                     }
                 }
             }
@@ -437,10 +438,10 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
         JPushInterface.setAlias(activity, "", new TagAliasCallback() {
             @Override
             public void gotResult(int arg0, String arg1, Set<String> arg2) {
-                Log.i("test","arg0-->" + arg0 + " arg1-->" + arg1);
+                Log.i("test", "arg0-->" + arg0 + " arg1-->" + arg1);
                 if (arg2 != null) {
                     for (String s : arg2) {
-                        Log.i("test","arg2->" + s);
+                        Log.i("test", "arg2->" + s);
                     }
                 }
             }

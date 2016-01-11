@@ -37,10 +37,10 @@ public class InitService extends IntentService {
     public static final String InitAction = "initService";
     public static final String UserLogAction = "user.log.action";
     public static final String SHARE_KEY_AD_CONFIG = "key_config";
-    public static final String SHARE_CONFIG_MODIFIED_TIME = "key_config_modified_time";
+    public static final String SHARE_CONFIG_ETAG = "key_config_etag";
+    public static final String SHARE_SEND_LOG = "key_send_log";
 
     public static long SEND_TIME = 1000 * 60 * 2;
-    public static long send_user_log_time = System.currentTimeMillis();
 
     private Object tag;
 
@@ -51,7 +51,9 @@ public class InitService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        SEND_TIME = ConfigBean.getInstance().send_log_time;
+        if (ConfigBean.getInstance().send_log_time > 1000) {
+            SEND_TIME = ConfigBean.getInstance().send_log_time;
+        }
         tag = OkHttpClientManager.getTag();
     }
 
@@ -87,13 +89,20 @@ public class InitService extends IntentService {
             Request request = new Request.Builder().url(InterfaceJsonfile.AD_CONFIG).head().build();
             Response response = new OkHttpClient().newCall(request).execute();
             Log.e("test", "News: " + response.headers());
-            String data = OkHttpClientManager.post(InterfaceJsonfile.AD_CONFIG, params);
+            String etag = response.header("ETag");
+            String cEtag = SPUtil.getGlobal(SHARE_CONFIG_ETAG, "");
+            if (!TextUtils.isEmpty(cEtag) && cEtag.equals(etag)) {
+                Log.e("test", "News: CONFIG NOT UPDATE.");
+                return;
+            }
+            String data = OkHttpClientManager.get(InterfaceJsonfile.AD_CONFIG);
             if (!TextUtils.isEmpty(data)) {
+                Log.e("test", "News: " + data);
                 com.alibaba.fastjson.JSONObject json = FjsonUtil.parseObject(data);
                 if (json.getString("code").equals("200")) {
-                    Log.e("test", "News: " + json);
                     SharePreferecesUtils.setParam(this, SHARE_KEY_AD_CONFIG, data);
-                    ConfigBean.update();
+                    ConfigBean.getInstance().update();
+                    SPUtil.setGlobal(SHARE_CONFIG_ETAG, etag);
                 }
             }
         } catch (Exception e) {
@@ -105,6 +114,7 @@ public class InitService extends IntentService {
         if (BuildConfig.DEBUG || !Utils.isNetworkConnected(this)) {
             return;
         }
+        long send_user_log_time = SPUtil.getGlobal(SHARE_SEND_LOG, System.currentTimeMillis());
         if (System.currentTimeMillis() - send_user_log_time < SEND_TIME) {
             return;
         }
@@ -127,8 +137,9 @@ public class InitService extends IntentService {
             SPUtil.addParams(params);
             String str = OkHttpClientManager.post(InterfaceJsonfile.USER_LOG, params);
             if (!str.isEmpty() && str.contains("200")) {
-                send_user_log_time = System.currentTimeMillis();
                 dbUtils.deleteAll();
+                send_user_log_time = System.currentTimeMillis();
+                SPUtil.setGlobal(SHARE_SEND_LOG, send_user_log_time);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -3,7 +3,6 @@ package com.hzpd.ui.fragments.welcome;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -33,8 +32,6 @@ public class AdFlashFragment extends BaseFragment implements View.OnClickListene
                 false);
         adflash_img_ad = (ImageView) view.findViewById(R.id.adflash_img_ad);
         adflash_img_ad.setOnClickListener(this);
-        BitmapDrawable bitmapDrawable = SPUtil.getBitmapDrawable(getResources(), R.drawable.welcome);
-        adflash_img_ad.setImageDrawable(bitmapDrawable);
         return view;
     }
 
@@ -113,9 +110,6 @@ public class AdFlashFragment extends BaseFragment implements View.OnClickListene
                 } else {
                     try {
                         if (isAdd) {
-                            BitmapDrawable bitmapDrawable = SPUtil.getBitmapDrawable(getResources(), R.drawable.welcome);
-                            adflash_img_ad.setImageDrawable(bitmapDrawable);
-                            Log.e("test", "  loadMainUI ");
                             ((WelcomeActivity) getActivity()).loadMainUI();
                         }
                     } catch (Exception e) {
@@ -133,10 +127,6 @@ public class AdFlashFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onDestroy() {
         try {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) adflash_img_ad.getDrawable();
-            adflash_img_ad.setBackgroundDrawable(null);
-            bitmapDrawable.setCallback(null);
-            bitmapDrawable.getBitmap().recycle();
             ((ViewGroup) view).removeAllViews();
         } catch (Exception e) {
             e.printStackTrace();

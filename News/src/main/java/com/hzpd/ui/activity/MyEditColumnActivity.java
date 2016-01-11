@@ -22,6 +22,7 @@ import com.hzpd.modle.event.ChannelSortedList;
 import com.hzpd.ui.App;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
+import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.nineoldandroids.animation.Animator;
@@ -72,7 +73,11 @@ public class MyEditColumnActivity extends MBaseActivity implements View.OnClickL
             findViewById(R.id.ll_choose_channel).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (AvoidOnClickFastUtils.isFastDoubleClick(v)) {
+                        return;
+                    }
 
+                    Log.i("onClick","onClick");
                     Intent intent = new Intent(MyEditColumnActivity.this, SearchActivity.class);
                     startActivity(intent);
                     AAnim.ActivityStartAnimation(MyEditColumnActivity.this);
@@ -313,6 +318,9 @@ public class MyEditColumnActivity extends MBaseActivity implements View.OnClickL
                 dbs.add(new NewsChannelBeanDB(bean));
             }
             dbHelper.getChannel().deleteAll();
+            for (int i = 0; i < dbs.size(); i++) {
+                dbs.get(i).setId((long) i);
+            }
             dbHelper.getChannel().insertInTx(dbs);
             csl.setSaveTitleList(channelData);
             SPUtil.updateChannel();

@@ -13,6 +13,7 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.event.HistoryClearEvent;
 import com.hzpd.modle.event.SearchKeyEvent;
 import com.hzpd.ui.fragments.SearchKeyFragment;
+import com.hzpd.utils.AvoidOnClickFastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,9 @@ public class SearchKeysAdapter extends RecyclerView.Adapter implements View.OnCl
             search_key_llayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (AvoidOnClickFastUtils.isFastDoubleClick(view)) {
+                        return;
+                    }
                     EventBus.getDefault().post(new SearchKeyEvent("" + textView.getText()));
                 }
             });

@@ -23,6 +23,7 @@ import com.hzpd.services.InitService;
 import com.hzpd.ui.App;
 import com.hzpd.ui.ConfigBean;
 import com.hzpd.ui.fragments.BaseFragment;
+import com.hzpd.ui.fragments.FeedbackTagFragment;
 import com.hzpd.ui.fragments.NewsFragment;
 import com.hzpd.ui.fragments.NewsItemFragment;
 import com.hzpd.ui.fragments.ZY_DiscoveryFragment;
@@ -114,6 +115,7 @@ public class MainActivity extends BaseActivity {
         intent.setAction(InitService.UserLogAction);
         startService(intent);
         showLocalUpdateDialog(this);
+        showFeedback();
     }
 
     public void onClickIndex(int index) {
@@ -137,6 +139,30 @@ public class MainActivity extends BaseActivity {
         ExitApplication.exit(this);
     }
 
+    private static final String FEEDBACK_TIME = "feedback_time";
+    private static final String FEEDBACK_COUNT = "feedback_count";
+
+    public void showFeedback() {
+        if (FeedbackTagFragment.shown) {
+            return;
+        }
+        int count = (int) SPUtil.getGlobal(FEEDBACK_COUNT, 0L);
+        if (count >= 3) {
+            return;
+        }
+        long last = SPUtil.getGlobal(FEEDBACK_TIME, 0L);
+        if (last == 0) {
+            SPUtil.setGlobal(FEEDBACK_TIME, System.currentTimeMillis());
+            return;
+        }
+        ++count;
+        if (System.currentTimeMillis() - last > count * ConfigBean.getInstance().rate_time) {
+            SPUtil.setGlobal(FEEDBACK_COUNT, count);
+            SPUtil.setGlobal(FEEDBACK_TIME, System.currentTimeMillis());
+            FeedbackTagFragment fragment = new FeedbackTagFragment();
+            fragment.show(getSupportFragmentManager(), FeedbackTagFragment.TAG);
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
