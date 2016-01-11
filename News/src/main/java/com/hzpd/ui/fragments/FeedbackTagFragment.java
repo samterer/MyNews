@@ -197,7 +197,6 @@ public class FeedbackTagFragment extends AnalyticBaseDialogFragment implements V
                 , new OkHttpClientManager.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
-                        Log.i("submit","submit  onSuccess");
                         try {
                             String json = response.toString();
                             JSONObject obj = FjsonUtil

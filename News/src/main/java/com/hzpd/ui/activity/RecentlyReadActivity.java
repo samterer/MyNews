@@ -96,7 +96,7 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
         Intent mIntent = new Intent();
         mIntent.putExtra("newbean", nb);
         mIntent.putExtra("from", "newsitem");
-        adapter.setReadedId(nb.getNid());
+        adapter.setReadedId(nb);
         ////////////////////////////
         //1新闻  2图集  3直播 4专题  5关联新闻 6视频
         if ("1".equals(nb.getRtype())) {

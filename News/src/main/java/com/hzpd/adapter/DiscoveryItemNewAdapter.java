@@ -18,13 +18,16 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.DiscoveryItemBean;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.TagBean;
+import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.db.NewsBeanDBDao;
 import com.hzpd.ui.App;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.ui.activity.TagActivity;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CalendarUtil;
+import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 
 import java.util.ArrayList;
@@ -46,12 +49,12 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    public DiscoveryItemNewAdapter(Context context,View.OnClickListener onClickListener) {
+    public DiscoveryItemNewAdapter(Context context, View.OnClickListener onClickListener) {
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
         list = new ArrayList<>();
         spu = SPUtil.getInstance();
-        this.onClickListener=onClickListener;
+        this.onClickListener = onClickListener;
     }
 
     public void appendData(List<DiscoveryItemBean> data, boolean isClearOld) {
@@ -145,7 +148,7 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                 if (tagIcon != null) {
                     SPUtil.displayImage(tagIcon
                             , viewHolder.discovery_iv_tag
-                            , DisplayOptionFactory.getOption(OptionTp.Personal_center_News));
+                            , DisplayOptionFactory.Personal_center_News.options);
                 }
                 viewHolder.tv_subscribe.setTag(viewHolder);
                 viewHolder.tagBean = bean.getTag();
@@ -203,6 +206,17 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                             if (AvoidOnClickFastUtils.isFastDoubleClick(v)) {
                                 return;
                             }
+                            
+                            NewsBeanDB nbfc = DBHelper.getInstance(context).getNewsList().queryBuilder().where(NewsBeanDBDao.Properties.Nid.eq(itembean.getNid())).build().unique();
+                            if (nbfc != null) {
+                                nbfc.setIsreaded("1");
+                                DBHelper.getInstance(context).getNewsList().update(nbfc);
+                            } else {
+                                nbfc = new NewsBeanDB(itembean);
+                                nbfc.setIsreaded("1");
+                                DBHelper.getInstance(context).getNewsList().insert(nbfc);
+                            }
+
                             Intent mIntent = new Intent(context, NewsDetailActivity.class);
                             mIntent.putExtra("newbean", itembean);
                             mIntent.putExtra("from", "newsitem");
@@ -246,7 +260,7 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
             newsitem_title.setPadding(App.px_15dp, 0, 0, 0);
             ll_tag.setPadding(App.px_15dp, 0, 0, 0);
             SPUtil.displayImage(itembean.getImgs()[0], newsitem_img,
-                    DisplayOptionFactory.getOption(OptionTp.Small));
+                    DisplayOptionFactory.Small.options);
         } else {
             newsitem_img.setVisibility(View.GONE);
             newsitem_title.setPadding(0, 0, 0, App.px_15dp);

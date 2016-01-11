@@ -88,7 +88,6 @@ public class InitService extends IntentService {
             SPUtil.addParams(params);
             Request request = new Request.Builder().url(InterfaceJsonfile.AD_CONFIG).head().build();
             Response response = new OkHttpClient().newCall(request).execute();
-            Log.e("test", "News: " + response.headers());
             String etag = response.header("ETag");
             String cEtag = SPUtil.getGlobal(SHARE_CONFIG_ETAG, "");
             if (!TextUtils.isEmpty(cEtag) && cEtag.equals(etag)) {

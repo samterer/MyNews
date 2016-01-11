@@ -112,7 +112,7 @@ public class MyCommentListAdapter extends RecyclerView.Adapter {
                 // 显示头像
                 SPUtil.displayImage(item.getAvatar_path()
                         , viewHolder.comment_user_icon
-                        , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.XF_Avatar));
+                        , DisplayOptionFactory.XF_Avatar.options);
                 viewHolder.comment_user_icon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -13,7 +13,6 @@ import com.hzpd.modle.CollectionDataBean;
 import com.hzpd.modle.CollectionJsonBean;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 
@@ -62,7 +61,7 @@ public class CollectionNewAdapter extends ListBaseAdapter<CollectionJsonBean> {
         if (cdb.getImgs() != null && cdb.getImgs().length > 0) {
             Log.e("getImgs", "getImgs" + cdb.getImgs());
             String s[] = cdb.getImgs();
-            SPUtil.displayImage(s[0], holder.lehuo_img_id, DisplayOptionFactory.getOption(OptionTp.Small));
+            SPUtil.displayImage(s[0], holder.lehuo_img_id, DisplayOptionFactory.Small.options);
         }
 
         if (cdb.getTitle() != null) {

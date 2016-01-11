@@ -27,7 +27,6 @@ import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.TUtils;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -211,7 +210,7 @@ public class ZQ_PersonalInfoFragment extends BaseFragment implements View.OnClic
         }
 
 
-        mImageLoader.displayImage(spu.getUser().getAvatar_path(), lg_pi_iv_touxiang, DisplayOptionFactory.getOption(OptionTp.Logo));
+        mImageLoader.displayImage(spu.getUser().getAvatar_path(), lg_pi_iv_touxiang, DisplayOptionFactory.Logo.options);
 
         activity.finish();
     }

@@ -23,7 +23,6 @@ import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 
@@ -77,7 +76,7 @@ public class MycommentsAdapter extends ListBaseAdapter<MycommentsBean> {
         if (imgs.length > 0) {
             SPUtil.displayImage(myCommentBean.getImgs()[0]
                     , holder.mycoms_img_id
-                    , DisplayOptionFactory.getOption(OptionTp.Personal_center_News));
+                    , DisplayOptionFactory.Personal_center_News.options);
         } else {
             holder.mycoms_img_id.setImageResource(R.drawable.urlicon_loadingpicture_dynamic);
 //            holder.mycoms_img_id.setVisibility(View.GONE);
@@ -175,7 +174,7 @@ public class MycommentsAdapter extends ListBaseAdapter<MycommentsBean> {
 
             SPUtil.displayImage(itembean.getAvatar_path()
                     , my_avatar
-                    , DisplayOptionFactory.getOption(OptionTp.XF_Avatar));
+                    , DisplayOptionFactory.XF_Avatar.options);
             mycomment_news.setText("" + itembean.getNickname());
             mycomments_itemc_tv_content.setText(itembean.getContent());
             mycomments_itemc_tv_sj_txt.setText(CalendarUtil.friendlyTime1(itembean.getDateline(), context));

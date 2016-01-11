@@ -5,10 +5,8 @@ import android.text.TextUtils;
 
 import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.db.PushBeanDB;
-import com.hzpd.utils.Log;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 
 public class NewsBean implements Serializable {
@@ -43,9 +41,8 @@ public class NewsBean implements Serializable {
 
     }
 
-    public NewsBean (PushBeanDB nb) {
+    public NewsBean(PushBeanDB nb) {
         if (null != nb) {
-            Log.i("MyPush", "MyPush list--->" + nb);
             tagId = nb.getTagId();
             nid = nb.getNid() + "";
             title = nb.getTitle();
@@ -72,16 +69,11 @@ public class NewsBean implements Serializable {
             attname = nb.getAttname();
             like = nb.getLike();
             unlike = nb.getUnlike();
-
-            //newsBean.setCnname(nb.getCnname);
-            //private String cnname;//频道
-            Log.i("MyPush", "MyPush  getpush--->" + nb.getNid());
         }
     }
 
     public NewsBean(NewsBeanDB nb) {
         if (null != nb) {
-            Log.i("MyPush", "MyPush list--->" + nb);
             tagId = nb.getTagId();
             nid = nb.getNid() + "";
             title = nb.getTitle();
@@ -109,10 +101,15 @@ public class NewsBean implements Serializable {
             like = nb.getLike();
             unlike = nb.getUnlike();
 
-            //newsBean.setCnname(nb.getCnname);
-            //private String cnname;//频道
-            Log.i("MyPush", "MyPush  getpush--->" + nb.getNid());
         }
+    }
+
+    @Override
+    public String toString() {
+        return "NewsBean{" +
+                " nid='" + nid + '\'' +
+                ", json_url='" + json_url + '\'' +
+                '}';
     }
 
     public String getTagId() {
@@ -308,32 +305,4 @@ public class NewsBean implements Serializable {
     }
 
 
-    @Override
-    public String toString() {
-        return "NewsBean{" +
-                "nid='" + nid + '\'' +
-                ", title='" + title + '\'' +
-                ", sid='" + sid + '\'' +
-                ", tid='" + tid + '\'' +
-                ", cnname='" + cnname + '\'' +
-                ", authorname='" + authorname + '\'' +
-                ", outline='" + outline + '\'' +
-                ", type='" + type + '\'' +
-                ", update_time='" + update_time + '\'' +
-                ", json_url='" + json_url + '\'' +
-                ", imgs=" + Arrays.toString(imgs) +
-                ", rtype='" + rtype + '\'' +
-                ", comcount='" + comcount + '\'' +
-                ", sort_order='" + sort_order + '\'' +
-                ", status='" + status + '\'' +
-                ", comflag='" + comflag + '\'' +
-                ", subjectsort='" + subjectsort + '\'' +
-                ", columnid='" + columnid + '\'' +
-                ", copyfrom='" + copyfrom + '\'' +
-                ", fav='" + fav + '\'' +
-                ", attname='" + attname + '\'' +
-                ", like='" + like + '\'' +
-                ", unlike='" + unlike + '\'' +
-                '}';
-    }
 }

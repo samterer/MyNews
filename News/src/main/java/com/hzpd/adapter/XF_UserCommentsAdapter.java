@@ -137,7 +137,7 @@ public class XF_UserCommentsAdapter extends RecyclerView.Adapter {
                 HeadViewHolder headingHolder = (HeadViewHolder) holder;
                 SPUtil.displayImage(userInfoBean.getAvatar_path()
                         , headingHolder.xf_pinfo_iv_avatar
-                        , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Avatar));
+                        , DisplayOptionFactory.Avatar.options);
 
                 headingHolder.xf_pinfo_tv_nickname.setText(userInfoBean.getNickname());
                 headingHolder.xf_pinfo_tv_level_alias.setText("" + userInfoBean.getAlias());
@@ -157,7 +157,7 @@ public class XF_UserCommentsAdapter extends RecyclerView.Adapter {
                 if (myCommentBean.getImgs() != null && myCommentBean.getImgs().length > 0) {
                     SPUtil.displayImage(myCommentBean.getImgs()[0]
                             , norViewHolder.mycoms_img_id
-                            , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Personal_center_News));
+                            , DisplayOptionFactory.Personal_center_News.options);
                 } else {
                     norViewHolder.mycoms_img_id.setImageResource(R.drawable.urlicon_loadingpicture_dynamic);
                 }
@@ -176,7 +176,7 @@ public class XF_UserCommentsAdapter extends RecyclerView.Adapter {
                     mycomment_news.setText(itembean.getNickname());
                     SPUtil.displayImage(itembean.getAvatar_path()
                             , my_avatar
-                            , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.XF_Avatar));
+                            , DisplayOptionFactory.XF_Avatar.options);
                     mycomments_itemc_tv_content.setText(itembean.getContent());
                     mycomments_itemc_tv_sj_txt.setText(CalendarUtil.friendlyTime1(itembean.getDateline(), context));
                 }

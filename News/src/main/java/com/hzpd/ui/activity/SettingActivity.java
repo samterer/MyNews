@@ -22,6 +22,8 @@ import android.widget.TextView;
 import com.facebook.Profile;
 import com.hzpd.custorm.switchbutton.SwitchButton;
 import com.hzpd.hflt.R;
+import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.db.NewsBeanDBDao;
 import com.hzpd.modle.event.FontSizeEvent;
 import com.hzpd.modle.event.LoginOutEvent;
 import com.hzpd.modle.event.RestartEvent;
@@ -32,6 +34,7 @@ import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CODE;
+import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.GetFileSizeUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
@@ -75,12 +78,12 @@ public class SettingActivity extends MBaseActivity implements View.OnClickListen
     private View stitle_ll_back;
     private View zqzx_setting_update;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zqzx_setting_layout);
         super.changeStatusBar();
+
 
         initViews();
 

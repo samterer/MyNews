@@ -16,9 +16,7 @@ import com.hzpd.modle.XF_UserInfoBean;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.FjsonUtil;
-import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
-
 import com.squareup.okhttp.Request;
 
 import java.util.HashMap;
@@ -93,22 +91,24 @@ public class XF_PersonalInfoFragment extends BaseFragment {
                 , new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-                if (!isAdded()) {
-                    return;
-                }
-                String json = response.toString();
-                Log.i("getUserInfoFromServer", json.toString());
-                JSONObject obj = FjsonUtil.parseObject(json);
-                if (null == obj) {
-                    return;
-                }
-                if (200 == obj.getIntValue("code")) {
-                    userInfoBean = FjsonUtil.parseObject(obj.getString("data")
-                            , XF_UserInfoBean.class);
-                    Log.i("userInfoBean", "onSuccess  userInfoBean:" + userInfoBean);
-                    adapter = new XF_UserCommentsAdapter(activity, userInfoBean);
-                    recylerlist.setAdapter(adapter);
-                    getCommentsFromServer();
+                try {
+                    if (!isAdded()) {
+                        return;
+                    }
+                    String json = response.toString();
+                    JSONObject obj = FjsonUtil.parseObject(json);
+                    if (null == obj) {
+                        return;
+                    }
+                    if (200 == obj.getIntValue("code")) {
+                        userInfoBean = FjsonUtil.parseObject(obj.getString("data")
+                                , XF_UserInfoBean.class);
+                        adapter = new XF_UserCommentsAdapter(activity, userInfoBean);
+                        recylerlist.setAdapter(adapter);
+                        getCommentsFromServer();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -132,21 +132,21 @@ public class XF_PersonalInfoFragment extends BaseFragment {
                 , new OkHttpClientManager.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
-                        String json = response.toString();
-                        JSONObject obj = FjsonUtil.parseObject(json);
-                        if (null != obj) {
-                            page++;
-                            if (200 == obj.getIntValue("code")) {
-                                List<XF_UserCommentsBean> list = FjsonUtil.parseArray(obj.getString("data")
-                                        , XF_UserCommentsBean.class);
-                                if (userInfoBean != null) {
-                                    Log.i("userInfoBean", "initData  userInfoBean:" + userInfoBean.toString());
+                        try {
+                            String json = response.toString();
+                            JSONObject obj = FjsonUtil.parseObject(json);
+                            if (null != obj) {
+                                page++;
+                                if (200 == obj.getIntValue("code")) {
+                                    List<XF_UserCommentsBean> list = FjsonUtil.parseArray(obj.getString("data")
+                                            , XF_UserCommentsBean.class);
+                                    adapter.appendData(list, false);
                                 }
-                                Log.i("XF_UserCommentsBean", "onSuccess   XF_UserCommentsBean" + list.toString());
-                                adapter.appendData(list, false);
+                            } else {
+                                page--;
                             }
-                        } else {
-                            page--;
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 

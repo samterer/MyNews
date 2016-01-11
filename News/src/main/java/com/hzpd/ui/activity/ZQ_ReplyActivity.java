@@ -9,7 +9,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.color.tools.mytools.LogUtils;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.ReplayBean;
 import com.hzpd.modle.db.NewsBeanDB;
@@ -129,28 +128,30 @@ public class ZQ_ReplyActivity extends MBaseActivity implements View.OnClickListe
 
             @Override
             public void onSuccess(Object response) {
-                LogUtils.i("news-comment-->" + response.toString());
-                loadingView.setVisibility(View.GONE);
-                JSONObject obj = null;
                 try {
-                    obj = JSONObject.parseObject(response.toString());
+                    loadingView.setVisibility(View.GONE);
+                    JSONObject obj = null;
+                    try {
+                        obj = JSONObject.parseObject(response.toString());
+                    } catch (Exception e) {
+                        return;
+                    }
+                    if (200 == obj.getIntValue("code")) {
+                        setComcountsId(bean.getId(), comcount);
+                        TUtils.toast(getString(R.string.comment_ok));
+                        Intent resultIntent = new Intent();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("result", content);
+                        bundle.putBoolean("isShare", isShare);
+                        resultIntent.putExtras(bundle);
+                        setResult(RESULT_OK, resultIntent);
+                        EventUtils.sendComment(activity);
+                        finish();
+                    } else {
+                        TUtils.toast(getString(R.string.toast_fail_to_comment));
+                    }
                 } catch (Exception e) {
-                    return;
-                }
-
-                if (200 == obj.getIntValue("code")) {
-                    setComcountsId(bean.getId(), comcount);
-                    TUtils.toast(getString(R.string.comment_ok));
-                    Intent resultIntent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("result", content);
-                    bundle.putBoolean("isShare", isShare);
-                    resultIntent.putExtras(bundle);
-                    setResult(RESULT_OK, resultIntent);
-                    EventUtils.sendComment(activity);
-                    finish();
-                } else {
-                    TUtils.toast(getString(R.string.toast_fail_to_comment));
+                    e.printStackTrace();
                 }
             }
         }, params);

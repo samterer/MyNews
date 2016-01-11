@@ -24,7 +24,6 @@ import com.hzpd.modle.vote.VoteBaseInfo;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.MyCommonUtil;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -151,7 +150,7 @@ public class VoteDetailFragment extends BaseFragment implements View.OnClickList
         if (vbi == null)
             return;
         mImageLoader.displayImage(vbi.getImgurl(), vote_titlepic
-                , DisplayOptionFactory.getOption(OptionTp.Small), new ImageLoadingListener() {
+                , DisplayOptionFactory.Small.options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
             }

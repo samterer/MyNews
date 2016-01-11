@@ -12,7 +12,6 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.ImageListSubBean;
 import com.hzpd.modle.ImgListBean;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.SPUtil;
 
 import java.util.List;
@@ -233,9 +232,9 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
                 if (allImg != null && allImg.size() > 1) {
                     holder2.pl.setText(context.getString(R.string.prompt_images, allImg.size()));
                     SPUtil.displayImage(allImg.get(0).getSubphoto(), holder2.img1,
-                            DisplayOptionFactory.getOption(OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                     SPUtil.displayImage(allImg.get(1).getSubphoto(), holder2.img2,
-                            DisplayOptionFactory.getOption(OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                 } else {
                     holder2.pl.setText(context.getString(R.string.prompt_images, 0));
                 }
@@ -249,11 +248,11 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
                 if (allImg != null && allImg.size() > 2) {
                     holder3.pl.setText(context.getString(R.string.prompt_images, allImg.size()));
                     SPUtil.displayImage(allImg.get(0).getSubphoto(), holder3.img1,
-                            DisplayOptionFactory.getOption(OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                     SPUtil.displayImage(allImg.get(1).getSubphoto(), holder3.img2,
-                            DisplayOptionFactory.getOption(OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                     SPUtil.displayImage(allImg.get(2).getSubphoto(), holder3.img3,
-                            DisplayOptionFactory.getOption(OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                 } else {
                     holder3.pl.setText(context.getString(R.string.prompt_images, 0));
                 }
@@ -267,13 +266,13 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
                 if (allImg != null && allImg.size() > 3) {
                     holder4.pl.setText(context.getString(R.string.prompt_images, allImg.size()));
                     SPUtil.displayImage(allImg.get(0).getSubphoto(), holder4.img1,
-                            DisplayOptionFactory.getOption(OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                     SPUtil.displayImage(allImg.get(1).getSubphoto(), holder4.img2,
-                            DisplayOptionFactory.getOption(OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                     SPUtil.displayImage(allImg.get(2).getSubphoto(), holder4.img3,
-                            DisplayOptionFactory.getOption(OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                     SPUtil.displayImage(allImg.get(3).getSubphoto(), holder4.img4,
-                            DisplayOptionFactory.getOption(OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                 } else {
                     holder4.pl.setText(context.getString(R.string.prompt_images, 0));
                 }
@@ -287,15 +286,15 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
                 if (allImg != null && allImg.size() > 4) {
                     holder5.pl.setText(context.getString(R.string.prompt_images, allImg.size()));
                     SPUtil.displayImage(allImg.get(0).getSubphoto(), holder5.img1,
-                            DisplayOptionFactory.getOption(OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                     SPUtil.displayImage(allImg.get(1).getSubphoto(), holder5.img2,
-                            DisplayOptionFactory.getOption(OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                     SPUtil.displayImage(allImg.get(2).getSubphoto(), holder5.img3,
-                            DisplayOptionFactory.getOption(OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                     SPUtil.displayImage(allImg.get(3).getSubphoto(), holder5.img4,
-                            DisplayOptionFactory.getOption(OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                     SPUtil.displayImage(allImg.get(4).getSubphoto(), holder5.img5,
-                            DisplayOptionFactory.getOption(OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                 } else {
                     holder5.pl.setText(context.getString(R.string.prompt_images, 0));
                 }
@@ -309,7 +308,7 @@ public class ImgListViewAdapter extends ListBaseAdapter<ImgListBean> {
                 if (allImg != null && allImg.size() > 0) {
                     holder1.pl.setText(context.getString(R.string.prompt_images, allImg.size()));
                     SPUtil.displayImage(allImg.get(0).getSubphoto(), holder1.img,
-                            DisplayOptionFactory.getOption(OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                 } else {
                     holder1.pl.setText(context.getString(R.string.prompt_images, 0));
                 }

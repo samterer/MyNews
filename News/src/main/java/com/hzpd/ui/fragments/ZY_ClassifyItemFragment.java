@@ -139,7 +139,6 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
                     if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == sampleAdapter.getItemCount()) {
                         sampleAdapter.setShowLoading(true);
                         vPage++;
-                        isClearOld = false;
                         getClassifyVerServer(id);
                     }
                 }
@@ -175,9 +174,13 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
         OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.classify_top_url, new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-                parseJson(response.toString());
-                if (isAdded()) {
-                    SharePreferecesUtils.setParam(getActivity(), KEY_CATEGERY, response.toString());
+                try {
+                    parseJson(response.toString());
+                    if (isAdded()) {
+                        SharePreferecesUtils.setParam(getActivity(), KEY_CATEGERY, response.toString());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -210,27 +213,29 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
         }
     }
 
-    public void parseJsonTag(String json) {
+    public boolean parseJsonTag(String json) {
+        boolean flag = false;
         try {
             if (!TextUtils.isEmpty(json)) {
                 JSONObject obj = FjsonUtil.parseObject(json);
                 if (null == obj) {
-                    return;
+                    return false;
                 }
                 if (200 == obj.getIntValue("code")) {
                     List<TagBean> mlist = FjsonUtil.parseArray(obj.getString("data")
                             , TagBean.class);
-                    if (null == mlist) {
-                        return;
+                    if (null != mlist && mlist.size() > 1) {
+                        progress_container.setVisibility(View.GONE);
+                        sampleAdapter.appendData(mlist, isClearOld);
+                        isClearOld = false;
+                        return true;
                     }
-                    progress_container.setVisibility(View.GONE);
-                    sampleAdapter.setShowLoading(false);
-                    sampleAdapter.appendData(mlist, isClearOld);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return flag;
     }
 
     //    categoryId , int , 必选 ，  tag大类ID
@@ -244,6 +249,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
         if (vPage == 1) {
             String json = (String) SharePreferecesUtils.getParam(getActivity(), KEY_CATEGERY + id, "");
             parseJsonTag(json);
+            isClearOld = true;
             releaseHandler();
         }
         Map<String, String> params = RequestParamsUtils.getMaps();
@@ -254,13 +260,19 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
         OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.classify_url, new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-                progress_container.setVisibility(View.GONE);
-                sampleAdapter.setShowLoading(false);
-                parseJsonTag(response.toString());
-                if (vPage == 1) {
-                    if (isAdded()) {
-                        SharePreferecesUtils.setParam(getActivity(), KEY_CATEGERY + id, response.toString());
+                try {
+                    progress_container.setVisibility(View.GONE);
+                    boolean flag = parseJsonTag(response.toString());
+                    if (!flag) {
+                        sampleAdapter.setShowLoading(false);
                     }
+                    if (vPage == 1) {
+                        if (isAdded()) {
+                            SharePreferecesUtils.setParam(getActivity(), KEY_CATEGERY + id, response.toString());
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -338,7 +350,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
                 viewHolder.tv_subscribe.setText(getActivity().getString(R.string.discovery_followed));
                 EventBus.getDefault().post(new TagEvent(viewHolder.tagBean));
                 if (Utils.isNetworkConnected(getActivity())) {
-                    Map<String,String> params = new HashMap<>();
+                    Map<String, String> params = new HashMap<>();
                     if (spu.getUser() != null) {
                         params.put("uid", spu.getUser().getUid() + "");
                     }
@@ -348,16 +360,6 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
                     OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.tag_click_url, new OkHttpClientManager.ResultCallback() {
                         @Override
                         public void onSuccess(Object response) {
-                            Log.i("onSuccess", "onSuccess");
-                            JSONObject obj = null;
-                            try {
-                                obj = JSONObject.parseObject(response.toString());
-                            } catch (Exception e) {
-                                return;
-                            }
-                            if (200 == obj.getIntValue("code")) {
-
-                            }
                         }
 
                         @Override

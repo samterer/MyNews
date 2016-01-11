@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.hzpd.adapter.ListBaseAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -83,7 +82,7 @@ public class FolderAdapter extends ListBaseAdapter<Folder> {
 			cover.setImageResource(R.drawable.img_default_error);
 
 			ImageLoader.getInstance().displayImage("drawable://" + R.drawable.img_default_error, cover,
-					DisplayOptionFactory.getOption(OptionTp.Small));
+					DisplayOptionFactory.Small.options);
 		} else {
 
 			Folder data = getItem(position);
@@ -91,7 +90,7 @@ public class FolderAdapter extends ListBaseAdapter<Folder> {
 			size.setText(context.getString(R.string.prompt_image_plural, data.images.size()));
 
 			ImageLoader.getInstance().displayImage("file://" + data.cover.path, cover,
-					DisplayOptionFactory.getOption(OptionTp.Small));
+					DisplayOptionFactory.Small.options);
 		}
 
 		return convertView;

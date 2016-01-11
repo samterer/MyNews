@@ -95,7 +95,7 @@ public class CommentListAdapter extends BaseAdapter {
             // 显示头像
             SPUtil.displayImage(item.getAvatar_path()
                     , holder.comment_user_icon
-                    , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.XF_Avatar));
+                    , DisplayOptionFactory.XF_Avatar.options);
             holder.comment_user_icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

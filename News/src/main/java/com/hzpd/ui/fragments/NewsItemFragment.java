@@ -219,9 +219,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     }
 
     private void refresh() {
-        if (isVisible) {
-            mRecyclerView.scrollToPosition(0);
-        }
+        mRecyclerView.scrollToPosition(0);
         pullRefresh = true;
         page = 1;
         mFlagRefresh = true;
@@ -345,15 +343,19 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 , new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-                isLoading = false;
-                mSwipeRefreshWidget.setRefreshing(false);
-                final JSONObject obj = FjsonUtil.parseObject(response.toString());
-                if (null != obj) {
-                    //缓存更新
-                    setData(obj);
-                    page++;
-                } else if (isAdded()) {
-                    TUtils.toast(getString(R.string.toast_cannot_connect_network));
+                try {
+                    isLoading = false;
+                    mSwipeRefreshWidget.setRefreshing(false);
+                    final JSONObject obj = FjsonUtil.parseObject(response.toString());
+                    if (null != obj) {
+                        //缓存更新
+                        setData(obj);
+                        page++;
+                    } else if (isAdded()) {
+                        TUtils.toast(getString(R.string.toast_cannot_connect_network));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -565,8 +567,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         Intent mIntent = new Intent();
         mIntent.putExtra("newbean", nb);
         mIntent.putExtra("from", "newsitem");
-        adapter.setReadedId(nb.getNid());
-        ////////////////////////////
+        adapter.setReadedId(nb);
         //1新闻  2图集  3直播 4专题  5关联新闻 6视频
 //TODO 视频新闻
         if ("1".equals(nb.getRtype())) {

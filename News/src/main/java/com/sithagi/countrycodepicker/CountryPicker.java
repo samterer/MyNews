@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import com.hzpd.hflt.R;
 import com.hzpd.ui.ConfigBean;
+import com.hzpd.utils.SPUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -78,6 +79,9 @@ public class CountryPicker extends DialogFragment implements
                     String countryDialCode = jsonObject.getString("dial_code");
                     String countryCode = jsonObject.getString("code");
                     //TODO 比较服务器配置支持的国家
+                    if (countryCode.toLowerCase().equals(SPUtil.getCountry())) {
+                        continue;
+                    }
                     if (countries.contains(countryCode.toLowerCase())) {
                         Country country = new Country();
                         country.setCode(countryCode);

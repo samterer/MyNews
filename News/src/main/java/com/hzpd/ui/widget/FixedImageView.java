@@ -6,8 +6,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import com.hzpd.utils.SPUtil;
-
 /**
  * 释放图片内存
  */
@@ -35,9 +33,10 @@ public class FixedImageView extends ImageView {
     @Override
     public void setImageResource(int resId) {
         release();
-        bitmapDrawable = SPUtil.getBitmapDrawable(getResources(), resId);
-        super.setImageDrawable(bitmapDrawable);
-        bitmapDrawable = (BitmapDrawable) getDrawable();
+        super.setImageResource(resId);
+//        bitmapDrawable = SPUtil.getBitmapDrawable(getResources(), resId);
+//        super.setImageDrawable(bitmapDrawable);
+//        bitmapDrawable = (BitmapDrawable) getDrawable();
     }
 
     @Override

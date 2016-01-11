@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -150,17 +149,19 @@ public class MyCommentsActivity extends MBaseActivity implements View.OnClickLis
 
             @Override
             public void onSuccess(String response) {
-                android.util.Log.i("getUserInfoFromServer", response.toString());
-                JSONObject obj = FjsonUtil
-                        .parseObject(response);
-                if (null != obj) {
-                    if (200 == obj.getIntValue("code")) {
-                        userInfoBean = FjsonUtil.parseObject(obj.getString("data")
-                                , XF_UserInfoBean.class);
-                        setUserInfo();
-                    } else {
+                try {
+                    JSONObject obj = FjsonUtil
+                            .parseObject(response);
+                    if (null != obj) {
+                        if (200 == obj.getIntValue("code")) {
+                            userInfoBean = FjsonUtil.parseObject(obj.getString("data")
+                                    , XF_UserInfoBean.class);
+                            setUserInfo();
+                        } else {
+                        }
                     }
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }, params);
@@ -195,7 +196,7 @@ public class MyCommentsActivity extends MBaseActivity implements View.OnClickLis
         if (!TextUtils.isEmpty(userInfoBean.getAvatar_path())) {
             SPUtil.displayImage(userInfoBean.getAvatar_path()
                     , xf_pinfo_iv_avatar
-                    , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Avatar));
+                    , DisplayOptionFactory.Avatar.options);
         }
         xf_pinfo_tv_nickname.setText(userInfoBean.getNickname());
         xf_pinfo_tv_level_alias.setText("" + userInfoBean.getAlias());
@@ -227,10 +228,15 @@ public class MyCommentsActivity extends MBaseActivity implements View.OnClickLis
 
             @Override
             public void onSuccess(Object response) {
-                app_progress_bar.setVisibility(View.GONE);
-                JSONObject obj = FjsonUtil.parseObject(response.toString());
-                if (null == obj) {
-                    return;
+                JSONObject obj = null;
+                try {
+                    app_progress_bar.setVisibility(View.GONE);
+                    obj = FjsonUtil.parseObject(response.toString());
+                    if (null == obj) {
+                        return;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 Log.e("test", "test" + obj.toString());

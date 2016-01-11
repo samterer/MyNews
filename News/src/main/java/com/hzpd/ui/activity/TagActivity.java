@@ -15,12 +15,17 @@ import com.hzpd.adapter.NewsItemListViewAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.TagBean;
+import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.db.NewsBeanDBDao;
+import com.hzpd.modle.db.NewsItemBeanForCollection;
+import com.hzpd.modle.db.NewsItemBeanForCollectionDao;
 import com.hzpd.modle.event.TagEvent;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
+import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
@@ -130,29 +135,32 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
         OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.tag_news_url, new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-                JSONObject obj = FjsonUtil.parseObject(response.toString());
-                if (null == obj) {
-                    news_nonetwork.setVisibility(View.VISIBLE);
-                    return;
-                }
-                if (200 == obj.getIntValue("code")) {
-                    page++;
-                    addLoading = true;
-                    List<NewsBean> mlist = FjsonUtil.parseArray(obj.getString("data")
-                            , NewsBean.class);
-                    if (null == mlist) {
+                try {
+                    JSONObject obj = FjsonUtil.parseObject(response.toString());
+                    if (null == obj) {
+                        news_nonetwork.setVisibility(View.VISIBLE);
                         return;
                     }
-                    if (mlist.size() >= pageSize) {
-                        adapter.showLoading = true;
+                    if (200 == obj.getIntValue("code")) {
+                        page++;
+                        addLoading = true;
+                        List<NewsBean> mlist = FjsonUtil.parseArray(obj.getString("data")
+                                , NewsBean.class);
+                        if (null == mlist) {
+                            return;
+                        }
+                        if (mlist.size() >= pageSize) {
+                            adapter.showLoading = true;
+                        }
+                        adapter.appendData(mlist, false, false);
+                        if (page > 1 && adapter.showLoading) {
+                            int count = adapter.getItemCount();
+                            adapter.showLoading = false;
+                            adapter.notifyItemRemoved(count);
+                        }
                     }
-                    adapter.appendData(mlist, false, false);
-                    LogUtils.i("listsize-->" + mlist.size());
-                    if (page > 1 && adapter.showLoading) {
-                        int count = adapter.getItemCount();
-                        adapter.showLoading = false;
-                        adapter.notifyItemRemoved(count);
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -175,7 +183,7 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
         if (tagBean.getIcon() != null) {
             details_head_tag_img.setVisibility(View.VISIBLE);
             SPUtil.displayImage(tagBean.getIcon(), details_head_tag_img
-                    , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Personal_center_News));
+                    , DisplayOptionFactory.Personal_center_News.options);
         }
         if (tagBean == null) {
             news_nonetwork.setVisibility(View.VISIBLE);
@@ -223,21 +231,6 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
                         OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.tag_click_url, new OkHttpClientManager.ResultCallback() {
                             @Override
                             public void onSuccess(Object response) {
-                                if (response == null) {
-                                    return;
-                                }
-                                Log.i("response", "response" + response.toString());
-                                JSONObject obj = null;
-                                try {
-                                    obj = JSONObject.parseObject(response.toString());
-                                } catch (Exception e) {
-                                    return;
-                                }
-                                if (obj == null) {
-                                    return;
-                                }
-                                if (200 == obj.getIntValue("code")) {
-                                }
                             }
 
                             @Override
@@ -267,7 +260,7 @@ public class TagActivity extends MBaseActivity implements View.OnClickListener {
         Intent mIntent = new Intent();
         mIntent.putExtra("newbean", nb);
         mIntent.putExtra("from", "newsitem");
-        adapter.setReadedId(nb.getNid());
+        adapter.setReadedId(nb);
         ////////////////////////////
         //1新闻  2图集  3直播 4专题  5关联新闻 6视频
         if ("1".equals(nb.getRtype())) {

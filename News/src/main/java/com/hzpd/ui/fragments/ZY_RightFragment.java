@@ -41,7 +41,6 @@ import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
@@ -194,7 +193,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
         if (null != spu.getUser()) {
             Log.i("test", "userimg-->" + spu.getUser().getAvatar_path());
             SPUtil.displayImage(spu.getUser().getAvatar_path(), zy_rfrag_iv_login,
-                    DisplayOptionFactory.getOption(OptionTp.Avatar));
+                    DisplayOptionFactory.Avatar.options);
             zy_rfrag_tv_login.setText("" + spu.getUser().getNickname());
         }
 
@@ -214,18 +213,21 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
                 new OkHttpClientManager.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
-                        Log.i("test", "result-->" + response.toString());
-                        JSONObject obj = FjsonUtil
-                                .parseObject(response.toString());
-                        if (null == obj) {
-                            return;
-                        }
-                        if (200 == obj.getIntValue("code")) {
-                            UserBean user = FjsonUtil.parseObject(
-                                    obj.getString("data"), UserBean.class);
-                            spu.setUser(user);
-                        } else {
-                            TUtils.toast(obj.getString("msg"));
+                        try {
+                            JSONObject obj = FjsonUtil
+                                    .parseObject(response.toString());
+                            if (null == obj) {
+                                return;
+                            }
+                            if (200 == obj.getIntValue("code")) {
+                                UserBean user = FjsonUtil.parseObject(
+                                        obj.getString("data"), UserBean.class);
+                                spu.setUser(user);
+                            } else if(isVisible){
+                                TUtils.toast(obj.getString("msg"));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 
@@ -252,7 +254,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
                 try {
                     zy_rfrag_tv_login.setText(currentProfile.getName());
                     SPUtil.displayImage(currentProfile.getProfilePictureUri(200, 200).toString(), zy_rfrag_iv_login
-                            , DisplayOptionFactory.getOption(OptionTp.Avatar));
+                            , DisplayOptionFactory.Avatar.options);
                     thirdlogin(tlb);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -415,7 +417,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
     private void setLogin() {
         Log.i("test", "imgUrl-->" + spu.getUser().getAvatar_path() + "  name-->" + spu.getUser().getNickname());
         SPUtil.displayImage(spu.getUser().getAvatar_path(), zy_rfrag_iv_login,
-                DisplayOptionFactory.getOption(OptionTp.Avatar));
+                DisplayOptionFactory.Avatar.options);
         zy_rfrag_tv_login.setText(spu.getUser().getNickname());
         // -----
         JPushInterface.setAlias(activity, spu.getUser().getUid(), new TagAliasCallback() {

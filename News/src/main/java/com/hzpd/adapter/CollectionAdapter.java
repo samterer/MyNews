@@ -16,7 +16,6 @@ import com.hzpd.modle.CollectionJsonBean;
 import com.hzpd.ui.App;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 
@@ -139,7 +138,7 @@ public class CollectionAdapter extends ListBaseAdapter<CollectionJsonBean> {
                     String s[] = cdb.getImgs();
                     holder.newsitem_title.setPadding(App.px_15dp, 0, 0, 0);
                     holder.ll_tag.setPadding(App.px_15dp, 0, 0, 0);
-                    SPUtil.displayImage(s[0], holder.newsitem_img1, DisplayOptionFactory.getOption(OptionTp.Small));
+                    SPUtil.displayImage(s[0], holder.newsitem_img1, DisplayOptionFactory.Small.options);
                 } else {
                     Log.i("cdb.getImgs()", "cdb.getImgs()--->" + cdb.getTitle());
                     holder.newsitem_img1.setVisibility(View.GONE);

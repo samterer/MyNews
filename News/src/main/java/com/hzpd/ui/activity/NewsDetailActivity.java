@@ -64,6 +64,8 @@ import com.hzpd.modle.ReplayBean;
 import com.hzpd.modle.TagBean;
 import com.hzpd.modle.ThirdLoginBean;
 import com.hzpd.modle.UserBean;
+import com.hzpd.modle.db.NewsBeanDB;
+import com.hzpd.modle.db.NewsBeanDBDao;
 import com.hzpd.modle.db.NewsItemBeanForCollection;
 import com.hzpd.modle.db.NewsItemBeanForCollectionDao;
 import com.hzpd.modle.db.UserLog;
@@ -625,12 +627,12 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 , new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-                Log.i("onSuccess","DalNewsPraise   onSuccess");
+                Log.i("onSuccess", "DalNewsPraise   onSuccess");
             }
 
             @Override
             public void onFailure(Request request, Exception e) {
-                Log.i("onSuccess","DalNewsPraise   onFailure");
+                Log.i("onSuccess", "DalNewsPraise   onFailure");
             }
         }, params);
     }
@@ -742,27 +744,31 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 new OkHttpClientManager.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
-                        JSONObject obj = FjsonUtil.parseObject(response.toString());
-                        if (null == obj) {
-                            return;
-                        }
-                        if (200 == obj.getIntValue("code")) {
-                            UserBean user = FjsonUtil.parseObject(
-                                    obj.getString("data"), UserBean.class);
-                            spu.setUser(user);
-                            if (!"0".equals(nb.getComflag())) {
-                                String smallimg = "";
-                                if (null != nb.getImgs() && nb.getImgs().length > 0) {
-                                    smallimg = nb.getImgs()[0];
-                                }
-                                ReplayBean bean = new ReplayBean(nb.getNid(), nb.getTitle(), "News", nb.getJson_url(), smallimg, nb.getComcount());
-                                Intent intent = new Intent(NewsDetailActivity.this, ZQ_ReplyActivity.class);
-                                intent.putExtra("replay", bean);
-                                startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
-                                AAnim.bottom2top(NewsDetailActivity.this);
+                        try {
+                            JSONObject obj = FjsonUtil.parseObject(response.toString());
+                            if (null == obj) {
+                                return;
                             }
-                        } else {
-                            TUtils.toast(getString(R.string.toast_cannot_connect_network));
+                            if (200 == obj.getIntValue("code")) {
+                                UserBean user = FjsonUtil.parseObject(
+                                        obj.getString("data"), UserBean.class);
+                                spu.setUser(user);
+                                if (!"0".equals(nb.getComflag())) {
+                                    String smallimg = "";
+                                    if (null != nb.getImgs() && nb.getImgs().length > 0) {
+                                        smallimg = nb.getImgs()[0];
+                                    }
+                                    ReplayBean bean = new ReplayBean(nb.getNid(), nb.getTitle(), "News", nb.getJson_url(), smallimg, nb.getComcount());
+                                    Intent intent = new Intent(NewsDetailActivity.this, ZQ_ReplyActivity.class);
+                                    intent.putExtra("replay", bean);
+                                    startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+                                    AAnim.bottom2top(NewsDetailActivity.this);
+                                }
+                            } else if (isResume) {
+                                TUtils.toast(getString(R.string.toast_cannot_connect_network));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 
@@ -1035,12 +1041,15 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 , new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-
-                if (response.toString() == null) {
-                    ll_rob.setVisibility(View.VISIBLE);
-                    comment_layout.setVisibility(View.GONE);
-                } else {
-                    parseCommentJson(response.toString());
+                try {
+                    if (response.toString() == null) {
+                        ll_rob.setVisibility(View.VISIBLE);
+                        comment_layout.setVisibility(View.GONE);
+                    } else {
+                        parseCommentJson(response.toString());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -1098,7 +1107,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             // 显示头像
             SPUtil.displayImage(item.getAvatar_path()
                     , comment_user_icon
-                    , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.XF_Avatar));
+                    , DisplayOptionFactory.XF_Avatar.options);
             comment_user_icon.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1198,23 +1207,23 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                                 , new OkHttpClientManager.ResultCallback() {
                                     @Override
                                     public void onSuccess(Object response) {
-                                        Log.d(getLogTag(), "赞-->" + response.toString());
-                                        JSONObject obj = JSONObject.parseObject(response.toString());
-
-                                        if (200 == obj.getInteger("code")) {
-                                            Log.e("", "m---->" + item.getPraise());
-                                            SharePreferecesUtils.setParam(NewsDetailActivity.this, "" + item.getCid(), "1");
-                                            if (TextUtils.isDigitsOnly(item.getPraise())) {
-                                                up_icon.setImageResource(R.drawable.details_icon_likeit);
-                                                int i = Integer.parseInt(item.getPraise());
-                                                i++;
-                                                Log.i("test", "i---->" + i);
-                                                comment_up_num.setText(i + "");
-                                                item.setPraise(i + "");
-                                                up_icon.setEnabled(false);
+                                        try {
+                                            JSONObject obj = JSONObject.parseObject(response.toString());
+                                            if (200 == obj.getInteger("code")) {
+                                                SharePreferecesUtils.setParam(NewsDetailActivity.this, "" + item.getCid(), "1");
+                                                if (TextUtils.isDigitsOnly(item.getPraise())) {
+                                                    up_icon.setImageResource(R.drawable.details_icon_likeit);
+                                                    int i = Integer.parseInt(item.getPraise());
+                                                    i++;
+                                                    comment_up_num.setText(i + "");
+                                                    item.setPraise(i + "");
+                                                    up_icon.setEnabled(false);
+                                                }
+                                            } else {
+                                                up_icon.setEnabled(true);
                                             }
-                                        } else {
-                                            up_icon.setEnabled(true);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
                                         }
                                     }
 
@@ -1277,7 +1286,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             OkHttpClientManager.getAsyn(tag, nb.getJson_url(), new OkHttpClientManager.ResultCallback() {
                 @Override
                 public void onSuccess(Object response) {
-                    Log.i("test", "获取详细信息--->onSuccess");
                     try {
                         String data = response.toString();
                         if (TextUtils.isEmpty(data)) {
@@ -1396,7 +1404,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             if (tagBean.getIcon() != null) {
                 details_head_tag_img.setVisibility(View.VISIBLE);
                 SPUtil.displayImage(mBean.getTag().get(0).getIcon(), details_head_tag_img
-                        , DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Personal_center_News));
+                        , DisplayOptionFactory.Personal_center_News.options);
             } else {
                 details_head_tag_img.setVisibility(View.GONE);
             }
@@ -1453,12 +1461,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                             OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.tag_click_url, new OkHttpClientManager.ResultCallback() {
                                 @Override
                                 public void onSuccess(Object response) {
-                                    JSONObject obj = null;
-                                    try {
-                                        obj = JSONObject.parseObject(response.toString());
-                                    } catch (Exception e) {
-                                        return;
-                                    }
                                 }
 
                                 @Override
@@ -1511,8 +1513,19 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 view.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (AvoidOnClickFastUtils.isFastDoubleClick(view))
+                        if (AvoidOnClickFastUtils.isFastDoubleClick(view)) {
                             return;
+                        }
+                        NewsBeanDB nbfc = DBHelper.getInstance(NewsDetailActivity.this).getNewsList().queryBuilder().where(NewsBeanDBDao.Properties.Nid.eq(bean.getNid())).build().unique();
+                        if (nbfc != null) {
+                            nbfc.setIsreaded("1");
+                            DBHelper.getInstance(NewsDetailActivity.this).getNewsList().update(nbfc);
+                        } else {
+                            nbfc = new NewsBeanDB(bean);
+                            nbfc.setIsreaded("1");
+                            DBHelper.getInstance(NewsDetailActivity.this).getNewsList().insert(nbfc);
+                        }
+
                         Intent mIntent = new Intent();
                         mIntent.putExtra("newbean", bean);
                         mIntent.putExtra("from", "newsitem");
@@ -1682,7 +1695,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             vhLeftPic.newsitem_title.setPadding(App.px_15dp, 0, 0, 0);
             vhLeftPic.ll_tag.setPadding(App.px_15dp, 0, 0, 0);
             SPUtil.displayImage(bean.getImgs()[0], vhLeftPic.newsitem_img,
-                    DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                    DisplayOptionFactory.Small.options);
         } else {
             Log.i("test", "addRelatedNewsView---> vhLeftPic.newsitem_img.setVisibility(View.GONE);");
             vhLeftPic.newsitem_img.setVisibility(View.GONE);
@@ -1761,17 +1774,17 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         vhThree.img2.setImageResource(R.drawable.default_bg);
         String s[] = bean.getImgs();
         if (s.length == 1) {
-            SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
-            SPUtil.displayImage("", vhThree.img1, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
-            SPUtil.displayImage("", vhThree.img2, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+            SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.Small.options);
+            SPUtil.displayImage("", vhThree.img1, DisplayOptionFactory.Small.options);
+            SPUtil.displayImage("", vhThree.img2, DisplayOptionFactory.Small.options);
         } else if (s.length == 2) {
-            SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
-            SPUtil.displayImage(s[1], vhThree.img1, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
-            SPUtil.displayImage("", vhThree.img2, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+            SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.Small.options);
+            SPUtil.displayImage(s[1], vhThree.img1, DisplayOptionFactory.Small.options);
+            SPUtil.displayImage("", vhThree.img2, DisplayOptionFactory.Small.options);
         } else if (s.length > 2) {
-            SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
-            SPUtil.displayImage(s[1], vhThree.img1, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
-            SPUtil.displayImage(s[2], vhThree.img2, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+            SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.Small.options);
+            SPUtil.displayImage(s[1], vhThree.img1, DisplayOptionFactory.Small.options);
+            SPUtil.displayImage(s[2], vhThree.img2, DisplayOptionFactory.Small.options);
         }
     }
 
@@ -1847,10 +1860,10 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 && null != bean.getImgs()
                 && bean.getImgs().length > 0) {
             SPUtil.displayImage(bean.getImgs()[0], vhLargePic.newsitem_img,
-                    DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                    DisplayOptionFactory.Small.options);
         } else {
             SPUtil.displayImage("", vhLargePic.newsitem_img,
-                    DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                    DisplayOptionFactory.Small.options);
         }
     }
 
@@ -2012,15 +2025,15 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     JSONObject obj = null;
                     try {
                         obj = JSONObject.parseObject(response.toString());
+
+                        if (200 == obj.getIntValue("code")) {
+                            JSONObject object = obj.getJSONObject("data");
+                            if ("1".equals(object.getString("status"))) {
+                                newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
+                            }
+                        }
                     } catch (Exception e) {
                         return;
-                    }
-
-                    if (200 == obj.getIntValue("code")) {
-                        JSONObject object = obj.getJSONObject("data");
-                        if ("1".equals(object.getString("status"))) {
-                            newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
-                        }
                     }
                 }
 

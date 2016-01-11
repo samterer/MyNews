@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.PushmsgBean;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.SPUtil;
 
 public class PushmsgAdapter extends ListBaseAdapter<PushmsgBean> {
@@ -34,7 +33,7 @@ public class PushmsgAdapter extends ListBaseAdapter<PushmsgBean> {
 		}
 		PushmsgBean pb = list.get(position);
 		SPUtil.displayImage(pb.getSmallimgurl(), holder.lehuo_img_id
-				, DisplayOptionFactory.getOption(OptionTp.Small));
+				, DisplayOptionFactory.Small.options);
 		holder.lehuo_content_txt.setText(pb.getTitle());
 		holder.lehuo_sj_txt.setText(pb.getTime());
 		return convertView;

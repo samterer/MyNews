@@ -152,45 +152,49 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
         OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.SEARCH, new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-                if (!isAdded()) {
-                    return;
-                }
-                loadingView.setVisibility(View.GONE);
-                JSONObject obj = FjsonUtil.parseObject(response.toString());
-                if (null == obj) {
-                    TUtils.toast(getString(R.string.toast_no_data_now));
-                    return;
-                }
-
-                if (200 == obj.getIntValue("code")) {
-                    page++;
-                    addLoading = true;
-                    List<NewsBean> l = FjsonUtil.parseArray(
-                            obj.getString("data"), NewsBean.class);
-                    if (null == l) {
+                try {
+                    if (!isAdded()) {
+                        return;
+                    }
+                    loadingView.setVisibility(View.GONE);
+                    JSONObject obj = FjsonUtil.parseObject(response.toString());
+                    if (null == obj) {
                         TUtils.toast(getString(R.string.toast_no_data_now));
                         return;
                     }
-                    Log.i("test", "l size-->" + l.size() + ":::" + l.get(0).toString());
-//                    recyclerView.setAdapter(null);
-//                    adapter.clear();
-                    adapter.appendData(l, false, false);
-                    if (page > 1 && adapter.showLoading) {
-                        int count = adapter.getItemCount();
-                        adapter.showLoading = false;
-                        adapter.notifyItemRemoved(count);
-                    }
-                    if (l.size() < pageSize) {
-                        Log.i("test", "PULL_FROM_START");
+
+                    if (200 == obj.getIntValue("code")) {
+                        page++;
+                        addLoading = true;
+                        List<NewsBean> l = FjsonUtil.parseArray(
+                                obj.getString("data"), NewsBean.class);
+                        if (null == l) {
+                            TUtils.toast(getString(R.string.toast_no_data_now));
+                            return;
+                        }
+                        Log.i("test", "l size-->" + l.size() + ":::" + l.get(0).toString());
+    //                    recyclerView.setAdapter(null);
+    //                    adapter.clear();
+                        adapter.appendData(l, false, false);
+                        if (page > 1 && adapter.showLoading) {
+                            int count = adapter.getItemCount();
+                            adapter.showLoading = false;
+                            adapter.notifyItemRemoved(count);
+                        }
+                        if (l.size() < pageSize) {
+                            Log.i("test", "PULL_FROM_START");
+                        } else {
+                            Log.i("test", "both");
+                            adapter.showLoading = true;
+                        }
+                        adapter.notifyDataSetChanged();
                     } else {
-                        Log.i("test", "both");
-                        adapter.showLoading = true;
+                        if (!isRefresh) {
+                            page--;
+                        }
                     }
-                    adapter.notifyDataSetChanged();
-                } else {
-                    if (!isRefresh) {
-                        page--;
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -229,7 +233,7 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
         Intent mIntent = new Intent();
         mIntent.putExtra("newbean", nb);
         mIntent.putExtra("from", "newsitem");
-        adapter.setReadedId(nb.getNid());
+        adapter.setReadedId(nb);
         ////////////////////////////
         //1新闻  2图集  3直播 4专题  5关联新闻 6视频
         if ("1".equals(nb.getRtype())) {

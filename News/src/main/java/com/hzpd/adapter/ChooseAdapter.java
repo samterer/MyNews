@@ -186,7 +186,7 @@ public class ChooseAdapter extends RecyclerView.Adapter {
                     holder.textView.setTextSize(fontSize);
                     holder.textView.setText(bean.getTitle());
                     holder.imageView.setImageResource(R.drawable.default_bg);
-                    SPUtil.displayImage(bean.getImgs()[0], holder.imageView, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                    SPUtil.displayImage(bean.getImgs()[0], holder.imageView, DisplayOptionFactory.Small.options);
                     holder.clickView.setTag(bean);
                     final StaggeredGridLayoutManager.LayoutParams lp =
                             (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
@@ -210,7 +210,7 @@ public class ChooseAdapter extends RecyclerView.Adapter {
                         holder.textView.setTextColor(color);
                     }
                     holder.imageView.setImageResource(R.drawable.default_bg);
-                    SPUtil.displayImage(bean.getImgs()[0], holder.imageView, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                    SPUtil.displayImage(bean.getImgs()[0], holder.imageView, DisplayOptionFactory.Small.options);
                     holder.clickView.setTag(bean);
                     final StaggeredGridLayoutManager.LayoutParams lp =
                             (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();

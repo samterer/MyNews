@@ -7,7 +7,6 @@ import android.widget.ImageView;
 
 import com.hzpd.hflt.R;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.ViewHolder;
 
@@ -25,7 +24,7 @@ public class VoteDetailMultiPicAdapter extends ListBaseAdapter<String> {
 		ImageView vote_detail_imge = ViewHolder.get(convertView, R.id.vote_detail_imge);
 		String imgUrl = list.get(position);
 		SPUtil.displayImage(imgUrl
-				, vote_detail_imge, DisplayOptionFactory.getOption(OptionTp.Small));
+				, vote_detail_imge, DisplayOptionFactory.Small.options);
 
 		return convertView;
 	}

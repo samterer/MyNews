@@ -322,7 +322,6 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
                         @Override
                         public void onSuccess(Object response) {
                             try {
-                                LogUtils.i("collection--list-->" + response.toString());
                                 JSONObject obj = FjsonUtil.parseObject(response.toString());
                                 if (null == obj) {
                                     return;
@@ -412,19 +411,16 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
 
                             @Override
                             public void onSuccess(Object response) {
-                                LogUtils.i("delete reply-->" + response.toString());
                                 JSONObject obj = null;
                                 try {
                                     obj = JSONObject.parseObject(response.toString());
-                                } catch (Exception e) {
-                                    return;
-                                }
                                 if (200 == obj.getIntValue("code")) {
                                     TUtils.toast(getString(R.string.toast_delete_success));
-
                                     colladAdapter.deleteItem(position);
                                     colladAdapter.notifyDataSetChanged();
-                                } else {
+                                }
+                                } catch (Exception e) {
+                                    return;
                                 }
                             }
 

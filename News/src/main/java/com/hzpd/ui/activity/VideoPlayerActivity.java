@@ -193,19 +193,21 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
         OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.videoItem, new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-                String json = response.toString();
-                LogUtils.i("loginSubmit-->" + json);
-                JSONObject obj = FjsonUtil.parseObject(response.toString());
-                if (null != obj) {
-                    if (200 == obj.getIntValue("code")) {
-
-                        vib = FjsonUtil.parseObject(obj.getString("data"), VideoItemBean.class);
-                        getData();
+                try {
+                    String json = response.toString();
+                    JSONObject obj = FjsonUtil.parseObject(response.toString());
+                    if (null != obj) {
+                        if (200 == obj.getIntValue("code")) {
+                            vib = FjsonUtil.parseObject(obj.getString("data"), VideoItemBean.class);
+                            getData();
+                        } else {
+                            TUtils.toast(getString(R.string.toast_cannot_connect_network));
+                        }
                     } else {
                         TUtils.toast(getString(R.string.toast_cannot_connect_network));
                     }
-                } else {
-                    TUtils.toast(getString(R.string.toast_cannot_connect_network));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -276,9 +278,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
                 , new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-                LogUtils.i("result-->" + response.toString());
                 JSONObject obj = null;
-
                 try {
                     obj = JSONObject.parseObject(response.toString());
                 } catch (Exception e) {
@@ -322,20 +322,23 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
             OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.ISCELLECTION, new OkHttpClientManager.ResultCallback() {
                 @Override
                 public void onSuccess(Object response) {
-                    LogUtils.i("isCollection result-->" + response.toString());
-                    JSONObject obj = null;
                     try {
-                        obj = JSONObject.parseObject(response.toString());
-                    } catch (Exception e) {
-                        return;
-                    }
-
-                    if (200 == obj.getIntValue("code")) {
-                        JSONObject object = obj.getJSONObject("data");
-                        if ("1".equals(object.getString("status"))) {
-                            // "已收藏"
-                            isCollected = true;
+                        JSONObject obj = null;
+                        try {
+                            obj = JSONObject.parseObject(response.toString());
+                        } catch (Exception e) {
+                            return;
                         }
+
+                        if (200 == obj.getIntValue("code")) {
+                            JSONObject object = obj.getJSONObject("data");
+                            if ("1".equals(object.getString("status"))) {
+                                // "已收藏"
+                                isCollected = true;
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -667,7 +670,6 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
                         public void onSuccess(Object response) {
                             try {
                                 String data = response.toString();
-                                LogUtils.i("result-->" + data);
                                 if (!TextUtils.isEmpty(data)) {
                                     SPUtil.saveFile(pathFile, data);
                                 }

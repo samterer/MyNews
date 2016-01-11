@@ -10,7 +10,6 @@ import com.hzpd.hflt.R;
 import com.hzpd.modle.VideoItemBean;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.SPUtil;
 
 public class VideoAdapter extends ListBaseAdapter<VideoItemBean> {
@@ -75,7 +74,7 @@ public class VideoAdapter extends ListBaseAdapter<VideoItemBean> {
 		holderBig.vib_iv_icon.setImageResource(icon_img[position % icon_img.length]);
 
 		SPUtil.displayImage(bean1.getMainpic(), holderBig.vib_iv_img,
-				DisplayOptionFactory.getOption(OptionTp.Small));
+				DisplayOptionFactory.Small.options);
 
 		return convertView;
 	}

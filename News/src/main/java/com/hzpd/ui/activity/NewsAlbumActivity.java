@@ -52,7 +52,6 @@ import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.Constant;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.MyCommonUtil;
@@ -138,14 +137,22 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                         , new OkHttpClientManager.ResultCallback() {
                             @Override
                             public void onSuccess(Object response) {
-                                SPUtil.saveFile(img, response.toString());
-                                TUtils.toast(getString(R.string.toast_downloaded_at, img.getAbsolutePath()));
-                                MediaScannerConnection.scanFile(NewsAlbumActivity.this, new String[]{imagePath}, null, null);
+                                try {
+                                    SPUtil.saveFile(img, response.toString());
+                                    MediaScannerConnection.scanFile(NewsAlbumActivity.this, new String[]{imagePath}, null, null);
+                                    if (isResume) {
+                                        TUtils.toast(getString(R.string.toast_downloaded_at, img.getAbsolutePath()));
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                             @Override
                             public void onFailure(Request request, Exception e) {
-                                TUtils.toast(getString(R.string.toast_download_failed));
+                                if (isResume) {
+                                    TUtils.toast(getString(R.string.toast_download_failed));
+                                }
                             }
 
 //                            @Override
@@ -358,7 +365,7 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
             photoView.setLayoutParams(params);
 
             SPUtil.displayImage(list.get(position).getSubphoto()
-                    , photoView, DisplayOptionFactory.getOption(OptionTp.Big)
+                    , photoView, DisplayOptionFactory.Big.options
                     , new ImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String imageUri, View view) {
@@ -590,8 +597,14 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                         , new OkHttpClientManager.ResultCallback() {
                             @Override
                             public void onSuccess(Object response) {
-                                SPUtil.saveFile(img, response.toString());
-                                TUtils.toast(getString(R.string.toast_downloaded_at, img.getAbsolutePath()));
+                                try {
+                                    SPUtil.saveFile(img, response.toString());
+                                    if (isResume) {
+                                        TUtils.toast(getString(R.string.toast_downloaded_at, img.getAbsolutePath()));
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                             @Override
@@ -663,20 +676,20 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                 , new OkHttpClientManager.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
-                        LogUtils.i("result-->" + response.toString());
-                        JSONObject obj = FjsonUtil.parseObject(response.toString());
-                        if (null == obj) {
-                            return;
-                        }
-                        if (200 == obj.getIntValue("code")) {
-                            JSONObject object = obj.getJSONObject("data");
-                            //1:收藏操作成功 2:取消收藏操作成功
-                            if ("1".equals(object.getString("status"))) {
-                            } else {
+                        try {
+                            JSONObject obj = FjsonUtil.parseObject(response.toString());
+                            if (null == obj) {
+                                return;
                             }
+                            if (200 == obj.getIntValue("code")) {
+                                JSONObject object = obj.getJSONObject("data");
+                                //1:收藏操作成功 2:取消收藏操作成功
+                                if ("1".equals(object.getString("status"))) {
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-
-                        TUtils.toast(obj.getString("msg"));
                     }
 
                     @Override
@@ -728,28 +741,29 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                 , new OkHttpClientManager.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
-                        String data = response.toString();
-                        if (!TextUtils.isEmpty(data)) {
-                            SPUtil.saveFile(file, data);
-                        }
+                        try {
+                            String data = response.toString();
+                            if (!TextUtils.isEmpty(data)) {
+                                SPUtil.saveFile(file, data);
+                            }
+                            JSONObject obj = FjsonUtil.parseObject(data);
+                            if (null == obj) {
+                                SPUtil.deleteFiles(filePath);
+                                return;
+                            }
+                            imgListBean = FjsonUtil.parseObject(obj.getString("data"), ImgListBean.class);
+                            if (null == imgListBean) {
+                                SPUtil.deleteFiles(filePath);
+                                return;
+                            }
+                            currentPosition = 0;
+                            simpleAdapter.setList(imgListBean.getSubphoto());
+                            mTextViewTitle.setText(imgListBean.getTitle());
 
-                        LogUtils.i("read data-->" + data);
-                        JSONObject obj = FjsonUtil.parseObject(data);
-
-                        if (null == obj) {
-                            SPUtil.deleteFiles(filePath);
-                            return;
+                            setVisible();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        imgListBean = FjsonUtil.parseObject(obj.getString("data"), ImgListBean.class);
-                        if (null == imgListBean) {
-                            SPUtil.deleteFiles(filePath);
-                            return;
-                        }
-                        currentPosition = 0;
-                        simpleAdapter.setList(imgListBean.getSubphoto());
-                        mTextViewTitle.setText(imgListBean.getTitle());
-
-                        setVisible();
                     }
 
                     @Override
@@ -791,29 +805,31 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                     , new OkHttpClientManager.ResultCallback() {
                         @Override
                         public void onSuccess(Object response) {
-                            String content = response.toString();
-                            if (!TextUtils.isEmpty(content)) {
-                                SPUtil.saveFile(file, content);
-                            }
-                            LogUtils.i("result-->" + content);
-                            JSONObject obj = JSONObject.parseObject(content);
-
-                            imgListBean = JSONObject.parseObject(
-                                    obj.getJSONObject("data").toJSONString()
-                                    , ImgListBean.class);
-
-                            NewsJumpBean albumdbbean = new NewsJumpBean(
-                                    json_url
-                                    , obj.getJSONObject("data").toJSONString());
                             try {
-                                dbHelper.getNewsJumpBeanDao().insert(albumdbbean);
+                                String content = response.toString();
+                                if (!TextUtils.isEmpty(content)) {
+                                    SPUtil.saveFile(file, content);
+                                }
+                                JSONObject obj = JSONObject.parseObject(content);
+
+                                imgListBean = JSONObject.parseObject(
+                                        obj.getJSONObject("data").toJSONString()
+                                        , ImgListBean.class);
+
+                                NewsJumpBean albumdbbean = new NewsJumpBean(
+                                        json_url
+                                        , obj.getJSONObject("data").toJSONString());
+                                try {
+                                    dbHelper.getNewsJumpBeanDao().insert(albumdbbean);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                currentPosition = 0;
+                                simpleAdapter.setList(imgListBean.getSubphoto());
+                                setVisible();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
-                            currentPosition = 0;
-                            simpleAdapter.setList(imgListBean.getSubphoto());
-                            setVisible();
                         }
 
                         @Override
@@ -894,36 +910,36 @@ public class NewsAlbumActivity extends MBaseActivity implements OnClickListener 
                 , new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-                LogUtils.i("loginSubmit-->" + response.toString());
-
-                JSONObject obj = FjsonUtil
-                        .parseObject(response.toString());
-                if (null == obj) {
-                    return;
-                }
-
-                if (200 == obj.getIntValue("code")) {
-
-                    List<CommentsCountBean> li = JSONObject.parseArray(obj.getString("data")
-                            , CommentsCountBean.class);
-                    if (null == li) {
+                try {
+                    JSONObject obj = FjsonUtil
+                            .parseObject(response.toString());
+                    if (null == obj) {
                         return;
                     }
-                    for (CommentsCountBean cc : li) {
-                        if (imgListBean.getPid().equals(cc.getNid())) {
-                            ccBean = cc;
-                            String snum = cc.getC_num();
-                            if (TextUtils.isDigitsOnly(snum)) {
-                                int count = Integer.parseInt(snum);
-//										TUtils.toast(count+"");
-                                if (count > 0) {
-                                    imgdetails_title_comment.setVisibility(View.VISIBLE);
-                                    imgdetails_title_num.setText(count + "");//设置评论数量
+                    if (200 == obj.getIntValue("code")) {
+                        List<CommentsCountBean> li = JSONObject.parseArray(obj.getString("data")
+                                , CommentsCountBean.class);
+                        if (null == li) {
+                            return;
+                        }
+                        for (CommentsCountBean cc : li) {
+                            if (imgListBean.getPid().equals(cc.getNid())) {
+                                ccBean = cc;
+                                String snum = cc.getC_num();
+                                if (TextUtils.isDigitsOnly(snum)) {
+                                    int count = Integer.parseInt(snum);
+                                    //										TUtils.toast(count+"");
+                                    if (count > 0) {
+                                        imgdetails_title_comment.setVisibility(View.VISIBLE);
+                                        imgdetails_title_num.setText(count + "");//设置评论数量
+                                    }
                                 }
                             }
                         }
-                    }
 
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 

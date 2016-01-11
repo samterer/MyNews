@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.services.InitService;
 import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.SharePreferecesUtils;
 
 /**
@@ -41,6 +42,7 @@ public class ConfigBean {
                 }
             }
         } catch (Exception e) {
+            Log.e("test", "News: " + e.toString());
             e.printStackTrace();
         }
     }

@@ -122,7 +122,6 @@ public class WelcomeActivity extends MWBaseActivity {
                 new OkHttpClientManager.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
-                        Log.i("channelCache", "channelCache  111");
                         try {
                             String json = response.toString();
                             if (json != null) {
@@ -252,7 +251,6 @@ public class WelcomeActivity extends MWBaseActivity {
                 , new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-                Log.i("onSuccess", "onSuccess");
                 final JSONObject obj = FjsonUtil
                         .parseObject(response.toString());
                 if (null != obj && obj.getIntValue("code") == 200) {

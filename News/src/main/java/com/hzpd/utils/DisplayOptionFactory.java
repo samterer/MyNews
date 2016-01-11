@@ -5,54 +5,31 @@ import android.graphics.Bitmap.Config;
 import com.hzpd.hflt.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.CircleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
-public class DisplayOptionFactory {
-    public enum OptionTp {
-        Small, Big, Paper, Logo, Circllogin, retRound, Avatar, XF_Avatar, Personal_center_News
+public enum DisplayOptionFactory {
+    Small, Big, Logo, Avatar, XF_Avatar, Personal_center_News;
+    public DisplayImageOptions options;
+
+    DisplayOptionFactory() {
+        options = getOption(ordinal());
     }
 
-    public static DisplayImageOptions getOption(OptionTp type) {
+    private static DisplayImageOptions getOption(int type) {
         DisplayImageOptions option;
         switch (type) {
-            case Big: {
-                option = new DisplayImageOptions.Builder()
-                        .bitmapConfig(Config.RGB_565)
-                        .showImageOnLoading(R.drawable.zy_thumbnail_small)
-                        .showImageOnFail(R.drawable.zy_thumbnail_small)
-                        .showImageForEmptyUri(R.drawable.zy_thumbnail_small)
-                        .cacheInMemory(true).cacheOnDisk(true)
-                        .imageScaleType(ImageScaleType.EXACTLY)
-                        .build();
-            }
-            break;
-            case Paper: {
-                option = new DisplayImageOptions.Builder()
-                        .bitmapConfig(Config.RGB_565)
-                        .bitmapConfig(Config.RGB_565)
-                        .showImageOnLoading(R.drawable.default_bg)
-                        .showImageOnFail(R.drawable.default_bg)
-                        .showImageForEmptyUri(R.drawable.default_bg)
-                        .cacheInMemory(true).cacheOnDisk(true)
-                        .displayer(new FadeInBitmapDisplayer(300))
-                        .imageScaleType(ImageScaleType.EXACTLY)
-                        .build();
-            }
-            break;
-            case retRound: {
+            case 0: {
                 option = new DisplayImageOptions.Builder()
                         .bitmapConfig(Config.RGB_565)
                         .showImageOnLoading(R.drawable.default_bg)
                         .showImageOnFail(R.drawable.default_bg)
                         .showImageForEmptyUri(R.drawable.default_bg)
                         .cacheInMemory(true).cacheOnDisk(true)
-                        .displayer(new FadeInBitmapDisplayer(300))
                         .imageScaleType(ImageScaleType.EXACTLY)
                         .build();
             }
             break;
-            case Logo: {
+            case 1: {
                 option = new DisplayImageOptions.Builder()
                         .bitmapConfig(Config.RGB_565)
                         .imageScaleType(ImageScaleType.EXACTLY)
@@ -64,20 +41,7 @@ public class DisplayOptionFactory {
                         .build();
             }
             break;
-            case Circllogin: {
-                option = new DisplayImageOptions.Builder()
-                        .bitmapConfig(Config.RGB_565)
-                        .imageScaleType(ImageScaleType.EXACTLY)
-                        .showImageOnFail(R.drawable.zy_pic_touxiang)
-                        .showImageForEmptyUri(R.drawable.zy_pic_touxiang)
-                        .showImageOnLoading(R.drawable.zy_pic_touxiang)
-                        .cacheInMemory(true).cacheOnDisk(true)
-                        .bitmapConfig(Config.RGB_565)
-                        .displayer(new CircleBitmapDisplayer())
-                        .build();
-            }
-            break;
-            case Avatar: {
+            case 2: {
                 option = new DisplayImageOptions.Builder()
                         .bitmapConfig(Config.RGB_565)
                         .imageScaleType(ImageScaleType.EXACTLY)
@@ -89,7 +53,7 @@ public class DisplayOptionFactory {
                         .build();
             }
             break;
-            case XF_Avatar: {
+            case 3: {
                 option = new DisplayImageOptions.Builder()
                         .bitmapConfig(Config.RGB_565)
                         .imageScaleType(ImageScaleType.EXACTLY)
@@ -100,7 +64,7 @@ public class DisplayOptionFactory {
                         .build();
             }
             break;
-            case Personal_center_News: {
+            case 4: {
                 option = new DisplayImageOptions.Builder()
                         .bitmapConfig(Config.RGB_565)
                         .imageScaleType(ImageScaleType.EXACTLY)
@@ -116,9 +80,9 @@ public class DisplayOptionFactory {
                 option = new DisplayImageOptions.Builder()
                         .bitmapConfig(Config.RGB_565)
                         .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
-                        .showImageOnFail(R.drawable.zy_thumbnail_small)
-                        .showImageForEmptyUri(R.drawable.zy_thumbnail_small)
-                        .showImageOnLoading(R.drawable.zy_thumbnail_small)
+                        .showImageOnFail(R.drawable.default_bg)
+                        .showImageForEmptyUri(R.drawable.default_bg)
+                        .showImageOnLoading(R.drawable.default_bg)
                         .displayer(new FadeInBitmapDisplayer(300))
                         .cacheInMemory(true).cacheOnDisk(true)
                         .build();

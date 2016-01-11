@@ -106,28 +106,29 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
                 , new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-                Log.i("test", "onSuccess");
-                JSONObject obj = FjsonUtil
-                        .parseObject(response.toString());
-                if (null == obj) {
-                    return;
-                }
-                if (200 == obj.getIntValue("code")) {
-                    JSONArray array = obj.getJSONArray("data");
-                    columnList = FjsonUtil.parseArray(array.toJSONString(), SubjectItemColumnsBean.class);
-                    if (null != columnList && columnList.size() > 0) {
-                        spu.setSubjectColumnList(array);
-                    } else {
-                        JSONArray oldarray = spu.getSubjectColumnList();
-                        columnList = FjsonUtil.parseArray(oldarray.toJSONString(), SubjectItemColumnsBean.class);
+                try {
+                    JSONObject obj = FjsonUtil
+                            .parseObject(response.toString());
+                    if (null == obj) {
+                        return;
                     }
-                    if (null != columnList && columnList.size() > 0) {
-                        for (SubjectItemColumnsBean sicb : columnList) {
-                            Log.i("test", "ZhuanTi   SubjectItemColumnsBean" + sicb.toString());
-                            getServerList(sicb);
-//                            getDbList(sicb);
+                    if (200 == obj.getIntValue("code")) {
+                        JSONArray array = obj.getJSONArray("data");
+                        columnList = FjsonUtil.parseArray(array.toJSONString(), SubjectItemColumnsBean.class);
+                        if (null != columnList && columnList.size() > 0) {
+                            spu.setSubjectColumnList(array);
+                        } else {
+                            JSONArray oldarray = spu.getSubjectColumnList();
+                            columnList = FjsonUtil.parseArray(oldarray.toJSONString(), SubjectItemColumnsBean.class);
+                        }
+                        if (null != columnList && columnList.size() > 0) {
+                            for (SubjectItemColumnsBean sicb : columnList) {
+                                getServerList(sicb);
+                            }
                         }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
             }
@@ -152,18 +153,20 @@ public class ZhuanTiActivity extends MBaseActivity implements OnClickListener {
                 , new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-                Log.i("test", "onSuccess");
-                final JSONObject obj = FjsonUtil.parseObject(response.toString());
-                if (null == obj) {
-                    Log.i("test", "null == obj");
-                    return;
-                }
-                JSONObject cache = obj.getJSONObject("cachetime");
-                //数据处理
-                if (200 == obj.getIntValue("code")) {
-                    List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
-                    adapter.appendData(columnid, list, false);
-                    adapter.notifyDataSetChanged();
+                try {
+                    final JSONObject obj = FjsonUtil.parseObject(response.toString());
+                    if (null == obj) {
+                        return;
+                    }
+                    JSONObject cache = obj.getJSONObject("cachetime");
+                    //数据处理
+                    if (200 == obj.getIntValue("code")) {
+                        List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
+                        adapter.appendData(columnid, list, false);
+                        adapter.notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 

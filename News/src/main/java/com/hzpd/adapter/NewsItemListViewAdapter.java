@@ -37,7 +37,7 @@ import com.hzpd.ui.widget.CircleIndicator;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
@@ -54,8 +54,11 @@ import de.greenrobot.event.EventBus;
 public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
     public static String AD_KEY = "1902056863352757_1942167249341718";
+    public static final int FPS = 60;
+    public static final int STANDARD_TIME = 16;
     public static final int STEP = 12;
     public static final int MAX_POSITION = 100;
+    LinearLayout.LayoutParams params;
 
     boolean isJokeGood = false;
     boolean isJokeBad = false;
@@ -93,6 +96,23 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
     TopviewpagerAdapter topviewAdapter;
     private HashMap<String, NativeAd> ads;
     int nextAdPosition = 6;
+
+    public NewsItemListViewAdapter(Context context, View.OnClickListener onClickListener) {
+        this.context = context;
+        this.onClickListener = onClickListener;
+        this.inflater = LayoutInflater.from(context);
+        list = new ArrayList<>();
+        dbHelper = DBHelper.getInstance(context);
+        spu = SPUtil.getInstance();
+        newsListDbTask = new NewsListDbTask(context);
+        readedNewsSet = new HashSet<>();
+        fontSize = spu.getTextSize();
+        topviewAdapter = new TopviewpagerAdapter((Activity) context);
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        int height = (int) (dm.widthPixels * 0.55);
+        params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, height);
+    }
 
     public void setAds(HashMap<String, NativeAd> ads) {
         this.ads = ads;
@@ -164,19 +184,6 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         }
     }
 
-
-    public NewsItemListViewAdapter(Context context, View.OnClickListener onClickListener) {
-        this.context = context;
-        this.onClickListener = onClickListener;
-        this.inflater = LayoutInflater.from(context);
-        list = new ArrayList<NewsBean>();
-        dbHelper = DBHelper.getInstance(context);
-        spu = SPUtil.getInstance();
-        newsListDbTask = new NewsListDbTask(context);
-        readedNewsSet = new HashSet<String>();
-        fontSize = spu.getTextSize();
-        topviewAdapter = new TopviewpagerAdapter((Activity) context);
-    }
 
     public void setFlashlist(List<NewsPageListBean> list) {
         if (list != null && list.size() > 0) {
@@ -252,6 +259,25 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         }
     }
 
+    public void setReadedId(NewsBean newsBean) {
+        readedNewsSet.add(newsBean.getNid());
+
+        try {
+            NewsBeanDB nbdb = dbHelper.getNewsList().queryBuilder().where(NewsBeanDBDao.Properties.Nid.eq(newsBean.getNid())).build().unique();
+            if (nbdb != null) {
+                nbdb.setNid(newsBean.getNid());
+                nbdb.setIsreaded("1");
+                dbHelper.getNewsList().update(nbdb);
+            }else {
+                nbdb=new NewsBeanDB(newsBean);
+                nbdb.setIsreaded("1");
+                dbHelper.getNewsList().insert(nbdb);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
@@ -290,6 +316,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        long start = System.currentTimeMillis();
         RecyclerView.ViewHolder viewHolder = null;
         View convertView;
         switch (viewType) {
@@ -339,11 +366,16 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                 viewHolder = new LoadingHolder(convertView);
                 break;
         }
+        int time = (int) (System.currentTimeMillis() - start);
+        if (time > STANDARD_TIME) {
+            Log.e("test", "News: " + time + "   => " + viewHolder.getClass().getSimpleName());
+        }
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        long start = System.currentTimeMillis();
         try {
             NewsBean bean = null;
             int type = getItemViewType(position);
@@ -354,7 +386,6 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             TypedValue typedValue = new TypedValue();
             context.getTheme().resolveAttribute(R.attr.item_title, typedValue, true);
             int color = typedValue.data;
-
             switch (type) {
                 case TYPE_LOADING:
                     if (showLoading && callBack != null) {
@@ -375,7 +406,6 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     TextViewHolder textViewHolder = (TextViewHolder) holder;
                     textViewHolder.newsitem_title.setTextSize(fontSize);
                     textViewHolder.newsitem_title.setText(bean.getTitle());
-                    textViewHolder.newsitem_title.setTextColor(color);
                     if (readedNewsSet.contains(bean.getNid())) {
                         textViewHolder.newsitem_title.setTextColor(App.getInstance()
                                 .getResources().getColor(R.color.grey_font));
@@ -449,14 +479,11 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     final JokeHolder jokeHolder = (JokeHolder) holder;
                     jokeHolder.newsitem_title.setTextSize(fontSize);
                     jokeHolder.newsitem_title.setText(bean.getTitle());
-                    jokeHolder.newsitem_title.setTextColor(App.getInstance()
-                            .getResources().getColor(R.color.item_title));
                     if (readedNewsSet.contains(bean.getNid())) {
                         jokeHolder.newsitem_title.setTextColor(App.getInstance()
                                 .getResources().getColor(R.color.grey_font));
                     } else {
-                        jokeHolder.newsitem_title.setTextColor(App.getInstance()
-                                .getResources().getColor(R.color.item_title));
+                        jokeHolder.newsitem_title.setTextColor(color);
                     }
                     final String nid = bean.getNid();
 
@@ -476,24 +503,24 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     String praise = SharePreferecesUtils.getParam(context, nid, "0").toString();
                     if (praise.equals("1")) {
                         isJokeGood = true;
-                        Log.i("joke_good_img","joke_good_img praise 1"+isJokeGood);
+                        Log.i("joke_good_img", "joke_good_img praise 1" + isJokeGood);
                         jokeHolder.joke_good_img.setImageResource(R.drawable.joke_good_select);
                         jokeHolder.joke_bad_layout.setEnabled(false);
                     } else if (praise.equals("2")) {
                         isJokeBad = true;
-                        Log.i("joke_bad_img","joke_bad_img praise 1"+isJokeBad);
+                        Log.i("joke_bad_img", "joke_bad_img praise 1" + isJokeBad);
                         jokeHolder.joke_bad_img.setImageResource(R.drawable.joke_bad_select);
                         jokeHolder.joke_good_layout.setEnabled(false);
                     } else {
                         isJokeGood = false;
                         isJokeBad = false;
-                        Log.i("joke","joke 1"+isJokeBad);
+                        Log.i("joke", "joke 1" + isJokeBad);
                     }
-                    Log.i("joke_good_img","joke_good_img praise 2"+isJokeGood);
+                    Log.i("joke_good_img", "joke_good_img praise 2" + isJokeGood);
                     jokeHolder.joke_good_layout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Log.i("joke_good_img","joke_good_img praise 3"+isJokeGood);
+                            Log.i("joke_good_img", "joke_good_img praise 3" + isJokeGood);
                             if (!isJokeGood) {//点赞操作
                                 SharePreferecesUtils.setParam(context, nid, "1");
                                 jokeHolder.joke_good_tv.setText("" + (Integer.parseInt(jokeLike) + 1));
@@ -563,14 +590,11 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     holder.itemView.setTag(bean);
                     vhThree.newsitem_title.setTextSize(fontSize);
                     vhThree.newsitem_title.setText(bean.getTitle());
-
-                    vhThree.newsitem_title.setTextColor(color);
                     if (readedNewsSet.contains(bean.getNid())) {
                         vhThree.newsitem_title.setTextColor(App.getInstance()
                                 .getResources().getColor(R.color.grey_font));
                     } else {
-                        vhThree.newsitem_title.setTextColor(App.getInstance()
-                                .getResources().getColor(R.color.item_title));
+                        vhThree.newsitem_title.setTextColor(color);
                     }
 
                     vhThree.img0.setImageResource(R.drawable.default_bg);
@@ -616,17 +640,17 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
                     String s[] = bean.getImgs();
                     if (s.length == 1) {
-                        SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.getOption(OptionTp.Small));
-                        SPUtil.displayImage("", vhThree.img1, DisplayOptionFactory.getOption(OptionTp.Small));
-                        SPUtil.displayImage("", vhThree.img2, DisplayOptionFactory.getOption(OptionTp.Small));
+                        SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.Small.options);
+                        SPUtil.displayImage("", vhThree.img1, DisplayOptionFactory.Small.options);
+                        SPUtil.displayImage("", vhThree.img2, DisplayOptionFactory.Small.options);
                     } else if (s.length == 2) {
-                        SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.getOption(OptionTp.Small));
-                        SPUtil.displayImage(s[1], vhThree.img1, DisplayOptionFactory.getOption(OptionTp.Small));
-                        SPUtil.displayImage("", vhThree.img2, DisplayOptionFactory.getOption(OptionTp.Small));
+                        SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.Small.options);
+                        SPUtil.displayImage(s[1], vhThree.img1, DisplayOptionFactory.Small.options);
+                        SPUtil.displayImage("", vhThree.img2, DisplayOptionFactory.Small.options);
                     } else if (s.length > 2) {
-                        SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.getOption(OptionTp.Small));
-                        SPUtil.displayImage(s[1], vhThree.img1, DisplayOptionFactory.getOption(OptionTp.Small));
-                        SPUtil.displayImage(s[2], vhThree.img2, DisplayOptionFactory.getOption(OptionTp.Small));
+                        SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.Small.options);
+                        SPUtil.displayImage(s[1], vhThree.img1, DisplayOptionFactory.Small.options);
+                        SPUtil.displayImage(s[2], vhThree.img2, DisplayOptionFactory.Small.options);
                     }
 
                     vhThree.newsitem_foot.setVisibility(View.GONE);
@@ -650,83 +674,49 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     SPUtil.setAtt(vhLeftPic.item_type_iv, bean.getAttname());
 
                     fav = bean.getFav();
+                    vhLeftPic.newsitem_collectcount.setVisibility(View.GONE);
                     if (!TextUtils.isEmpty(fav)) {
-
                         int fav_counts = Integer.parseInt(fav);
                         if (fav_counts > 0) {
+                            vhLeftPic.newsitem_collectcount.setText(String.valueOf(fav_counts));
                             vhLeftPic.newsitem_collectcount.setVisibility(View.VISIBLE);
-                            vhLeftPic.newsitem_collectcount.setText(fav_counts + "");
-                        } else {
-                            vhLeftPic.newsitem_collectcount.setVisibility(View.GONE);
                         }
-                    } else {
-                        vhLeftPic.newsitem_collectcount.setVisibility(View.GONE);
                     }
 
                     from = bean.getCopyfrom();
                     if (!TextUtils.isEmpty(from)) {
-                        vhLeftPic.newsitem_source.setVisibility(View.VISIBLE);
                         vhLeftPic.newsitem_source.setText(from);
+                        vhLeftPic.newsitem_source.setVisibility(View.VISIBLE);
                     } else {
                         vhLeftPic.newsitem_source.setVisibility(View.GONE);
                     }
 
+                    vhLeftPic.newsitem_commentcount.setVisibility(View.GONE);
                     comcount = bean.getComcount();
                     if (!TextUtils.isEmpty(comcount)) {
                         int counts = Integer.parseInt(comcount);
                         if (counts > 0) {
+                            bean.setComcount(String.valueOf(counts));
+                            vhLeftPic.newsitem_commentcount.setText(String.valueOf(counts));
                             vhLeftPic.newsitem_commentcount.setVisibility(View.VISIBLE);
-                            bean.setComcount(counts + "");
-                            vhLeftPic.newsitem_commentcount.setText(counts + "");
-                        } else {
-                            vhLeftPic.newsitem_commentcount.setVisibility(View.GONE);
                         }
-                    } else {
-                        vhLeftPic.newsitem_commentcount.setVisibility(View.GONE);
                     }
-
 
                     if (CalendarUtil.friendlyTime(bean.getUpdate_time(), context) == null) {
                         vhLeftPic.newsitem_time.setText("");
                     } else {
                         vhLeftPic.newsitem_time.setText(CalendarUtil.friendlyTime(bean.getUpdate_time(), context));
                     }
-
-
                     vhLeftPic.newsitem_img.setVisibility(View.VISIBLE);
                     vhLeftPic.nli_foot.setVisibility(View.GONE);
-
-                    vhLeftPic.newsitem_unlike.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Toast.makeText(context, "不喜欢", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                    if ("1".equals(bean.getType())) {
-                        vhLeftPic.newsitem_img.setVisibility(View.GONE);
-                    }
-
                     if (bean.getSid() != null && !"0".equals(bean.getSid())) {
                         vhLeftPic.nli_foot.setImageResource(R.drawable.zq_subscript_issue);
                         vhLeftPic.nli_foot.setVisibility(View.VISIBLE);
                     }
                     SPUtil.setRtype(bean.getRtype(), vhLeftPic.nli_foot);
-
                     vhLeftPic.newsitem_img.setImageResource(R.drawable.default_bg);
-
-                    if (vhLeftPic.newsitem_img.getVisibility() == View.VISIBLE
-                            && null != bean.getImgs()
-                            && bean.getImgs().length > 0) {
-                        vhLeftPic.newsitem_title.setPadding(App.px_15dp, 0, 0, 0);
-                        vhLeftPic.ll_tag.setPadding(App.px_15dp, 0, 0, 0);
-                        SPUtil.displayImage(bean.getImgs()[0], vhLeftPic.newsitem_img,
-                                DisplayOptionFactory.getOption(OptionTp.Small));
-                    } else {
-                        vhLeftPic.newsitem_img.setVisibility(View.GONE);
-                        vhLeftPic.newsitem_title.setPadding(0, 0, 0, App.px_15dp);
-                        vhLeftPic.ll_tag.setPadding(0, 0, 0, 0);
-                    }
+                    SPUtil.displayImage(bean.getImgs()[0], vhLeftPic.newsitem_img,
+                            DisplayOptionFactory.Small.options);
                 }
                 break;
                 case TYPE_AD:
@@ -754,7 +744,6 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                     VHLargePic vhLargePic = (VHLargePic) holder;
                     vhLargePic.newsitem_title.setTextSize(fontSize);
                     vhLargePic.newsitem_title.setText(bean.getTitle());
-                    vhLargePic.newsitem_title.setTextColor(color);
                     if (readedNewsSet.contains(bean.getNid())) {
                         vhLargePic.newsitem_title.setTextColor(App.getInstance()
                                 .getResources().getColor(R.color.grey_font));
@@ -824,12 +813,16 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                             && null != bean.getImgs()
                             && bean.getImgs().length > 0) {
                         SPUtil.displayImage(bean.getImgs()[0], vhLargePic.newsitem_img,
-                                DisplayOptionFactory.getOption(OptionTp.Small));
+                                DisplayOptionFactory.Small.options);
                     } else {
                         SPUtil.displayImage("", vhLargePic.newsitem_img,
-                                DisplayOptionFactory.getOption(OptionTp.Small));
+                                DisplayOptionFactory.Small.options);
                     }
                     break;
+            }
+            int time = (int) (System.currentTimeMillis() - start);
+            if (time > STANDARD_TIME) {
+                Log.e("test", "News: " + time + "  =>  " + holder.getClass().getName());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -908,11 +901,8 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             indicator_default = (CircleIndicator) v.findViewById(R.id.indicator_default);
             mTextView = (TextView) v.findViewById(R.id.viewpage_txt_id);
             news_viewpage_myroot = (FrameLayout) v.findViewById(R.id.news_viewpage_myroot);
+            news_viewpage_myroot.setLayoutParams(params);
             try {
-                DisplayMetrics dm = context.getResources().getDisplayMetrics();
-                int height = (int) (dm.widthPixels * 0.55);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, height);
                 news_viewpage_myroot.setLayoutParams(params);
                 mTextView.setText(viewPagelist.get(0).getTitle());
                 topViewpager.setCurrentItem(0, true);

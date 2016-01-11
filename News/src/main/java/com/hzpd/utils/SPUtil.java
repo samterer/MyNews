@@ -259,6 +259,7 @@ public class SPUtil {
     public static void displayImage(String uri, ImageView imageView, DisplayImageOptions options, ImageLoadingListener loadingListener,
                                     ImageLoadingProgressListener progressListener) {
         if (BuildConfig.DEBUG) {
+//            return;
         }
         if (isImageUri(uri)) {
             try {
@@ -359,7 +360,9 @@ public class SPUtil {
     }
 
     public static BitmapDrawable getBitmapDrawable(Resources resources, int rid) {
+        long start = System.currentTimeMillis();
         Bitmap bitmap = BitmapFactory.decodeResource(resources, rid);
+        Log.e("test", "News: " + (System.currentTimeMillis() - start));
         if (bitmap != null && !bitmap.isRecycled()) {
             return new BitmapDrawable(resources, bitmap);
         } else {
@@ -538,23 +541,31 @@ public class SPUtil {
     }
 
     public static void setRtype(String rtype, ImageView nli_foot) {
+        //1新闻  2图集  3直播 4专题  5关联新闻 6视频 7引用
         if (rtype != null) {
-            //1新闻  2图集  3直播 4专题  5关联新闻 6视频 7引用
-            if ("2".equals(rtype)) {
-                nli_foot.setImageResource(R.drawable.zq_subscript_album);
-                nli_foot.setVisibility(View.VISIBLE);
-            } else if ("3".equals(rtype)) {
-                nli_foot.setImageResource(R.drawable.zq_subscript_live);
-                //				vhLargePic.nli_foot.setVisibility(View.VISIBLE);
-            } else if ("4".equals(rtype)) {
-                nli_foot.setImageResource(R.drawable.zq_subscript_fokus);
-                nli_foot.setVisibility(View.VISIBLE);
-            } else if ("7".equals(rtype)) {
-                nli_foot.setImageResource(R.drawable.zq_subscript_html);
-                nli_foot.setVisibility(View.VISIBLE);
-            } else if ("6".equals(rtype)) {
-                nli_foot.setImageResource(R.drawable.zq_subscript_video);
-                nli_foot.setVisibility(View.VISIBLE);
+            switch (Integer.valueOf(rtype)) {
+                case 1:
+                    break;
+                case 2:
+                    nli_foot.setImageResource(R.drawable.zq_subscript_album);
+                    nli_foot.setVisibility(View.VISIBLE);
+                    break;
+                case 3:
+                    nli_foot.setImageResource(R.drawable.zq_subscript_live);
+                    nli_foot.setVisibility(View.VISIBLE);
+                    break;
+                case 4:
+                    nli_foot.setImageResource(R.drawable.zq_subscript_fokus);
+                    nli_foot.setVisibility(View.VISIBLE);
+                    break;
+                case 6:
+                    nli_foot.setImageResource(R.drawable.zq_subscript_video);
+                    nli_foot.setVisibility(View.VISIBLE);
+                    break;
+                case 7:
+                    nli_foot.setImageResource(R.drawable.zq_subscript_html);
+                    nli_foot.setVisibility(View.VISIBLE);
+                    break;
             }
         }
     }

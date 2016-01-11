@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.SPUtil;
 
 public class ZhuanTiListViewAdapter extends ListBaseAdapter<NewsBean> {
@@ -48,7 +47,7 @@ public class ZhuanTiListViewAdapter extends ListBaseAdapter<NewsBean> {
 			simg = s[0];
 		}
 		SPUtil.displayImage(simg, img,
-				DisplayOptionFactory.getOption(OptionTp.Small));
+				DisplayOptionFactory.Small.options);
 
 		title.setTextSize(fontSize);
 		title.setText(nb.getTitle());

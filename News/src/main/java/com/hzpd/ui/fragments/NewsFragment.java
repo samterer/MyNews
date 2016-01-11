@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.color.tools.mytools.LogUtils;
 import com.hzpd.adapter.NewsFragmentPagerAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsChannelBean;
@@ -205,44 +204,47 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
                 new OkHttpClientManager.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
-                        String json = response.toString();
-                        if (json != null) {
-                            LogUtils.i("channel-->" + json);
-                            JSONObject obj = FjsonUtil.parseObject(json);
-                            if (null == obj) {
-                                return;
-                            }
-                            // 读取json，获取频道信息
-                            JSONArray array = obj.getJSONArray("data");
-                            List<NewsChannelBean> newestChannels = JSONArray
-                                    .parseArray(array.toJSONString(),
-                                            NewsChannelBean.class);
-                            for (int i = 0; i < newestChannels.size(); i++) {
-                                NewsChannelBean newsChannelBean = newestChannels.get(i);
-                                newsChannelBean.getCnname();
-                            }
-                            try {
-                                List<NewsChannelBeanDB> dbs = null;
-                                dbs = dbHelper.getChannel().loadAll();
-                                // 如果没有缓存
-                                if (null == dbs || dbs.size() < 1) {
-                                    addLocalChannels(newestChannels);
-                                    dbs = new ArrayList<>();
-                                    for (NewsChannelBean bean : newestChannels) {
-                                        dbs.add(new NewsChannelBeanDB(bean));
-                                    }
-                                    for (int i = 0; i < dbs.size(); i++) {
-                                        dbs.get(i).setId((long) i);
-                                    }
-                                    dbHelper.getChannel().insertInTx(dbs);
-                                } else { // 如果有缓存
-                                    //TODO
+                        try {
+                            String json = response.toString();
+                            if (json != null) {
+                                JSONObject obj = FjsonUtil.parseObject(json);
+                                if (null == obj) {
+                                    return;
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                // 读取json，获取频道信息
+                                JSONArray array = obj.getJSONArray("data");
+                                List<NewsChannelBean> newestChannels = JSONArray
+                                        .parseArray(array.toJSONString(),
+                                                NewsChannelBean.class);
+                                for (int i = 0; i < newestChannels.size(); i++) {
+                                    NewsChannelBean newsChannelBean = newestChannels.get(i);
+                                    newsChannelBean.getCnname();
+                                }
+                                try {
+                                    List<NewsChannelBeanDB> dbs = null;
+                                    dbs = dbHelper.getChannel().loadAll();
+                                    // 如果没有缓存
+                                    if (null == dbs || dbs.size() < 1) {
+                                        addLocalChannels(newestChannels);
+                                        dbs = new ArrayList<>();
+                                        for (NewsChannelBean bean : newestChannels) {
+                                            dbs.add(new NewsChannelBeanDB(bean));
+                                        }
+                                        for (int i = 0; i < dbs.size(); i++) {
+                                            dbs.get(i).setId((long) i);
+                                        }
+                                        dbHelper.getChannel().insertInTx(dbs);
+                                    } else { // 如果有缓存
+                                        //TODO
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                app_progress_bar.setVisibility(View.GONE);
+                                readTitleData();
                             }
-                            app_progress_bar.setVisibility(View.GONE);
-                            readTitleData();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 

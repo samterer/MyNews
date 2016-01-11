@@ -64,7 +64,7 @@ public class XF_NewsCommentsFragment extends BaseFragment implements View.OnClic
         xf_comment_et_comment = (EditText) view.findViewById(R.id.xf_comment_et_comment);
         xf_comment_tv_publish = (TextView) view.findViewById(R.id.xf_comment_tv_publish);
         xf_comment_tv_publish.setOnClickListener(this);
-        tag= OkHttpClientManager.getTag();
+        tag = OkHttpClientManager.getTag();
 
         return view;
     }
@@ -180,7 +180,7 @@ public class XF_NewsCommentsFragment extends BaseFragment implements View.OnClic
 
 
         xf_comment_tv_publish.setClickable(false);
-        Map<String,String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("uid", spu.getUser().getUid());
         params.put("title", bean.getTitle());
         params.put("type", bean.getType());
@@ -194,20 +194,22 @@ public class XF_NewsCommentsFragment extends BaseFragment implements View.OnClic
                 , new OkHttpClientManager.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
-                        LogUtils.i("news-comment-->" + response.toString());
-                        JSONObject obj = FjsonUtil.parseObject(response.toString());
-                        if (null == obj) {
-                            return;
+                        try {
+                            JSONObject obj = FjsonUtil.parseObject(response.toString());
+                            if (null == obj) {
+                                return;
+                            }
+                            if (200 == obj.getIntValue("code")) {
+                                TUtil.toast(activity, obj.getString("msg"));
+                                xf_comment_et_comment.setText("");
+                                EventUtils.sendComment(activity);
+                            } else {
+                                TUtil.toast(activity, "评论失败");
+                            }
+                            xf_comment_tv_publish.setClickable(true);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-
-                        if (200 == obj.getIntValue("code")) {
-                            TUtil.toast(activity, obj.getString("msg"));
-                            xf_comment_et_comment.setText("");
-                            EventUtils.sendComment(activity);
-                        } else {
-                            TUtil.toast(activity, "评论失败");
-                        }
-                        xf_comment_tv_publish.setClickable(true);
                     }
 
                     @Override
@@ -226,7 +228,7 @@ public class XF_NewsCommentsFragment extends BaseFragment implements View.OnClic
         }
 
         xf_comment_tv_publish.setClickable(false);
-        Map<String,String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("uid", spu.getUser().getUid());
         params.put("title", bean.getTitle());
         params.put("type", bean.getType());
@@ -242,7 +244,6 @@ public class XF_NewsCommentsFragment extends BaseFragment implements View.OnClic
                 , new OkHttpClientManager.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
-                        LogUtils.i("news-comment-->" + response.toString());
                         JSONObject obj = FjsonUtil.parseObject(response.toString());
                         commentItemCid = null;
                         if (null == obj) {
@@ -253,8 +254,8 @@ public class XF_NewsCommentsFragment extends BaseFragment implements View.OnClic
                             TUtil.toast(activity, obj.getString("msg"));
                             xf_comment_et_comment.setText("");
                             EventUtils.sendComment(activity);
-                        } else {
-                            TUtil.toast(activity, "评论失败");
+                        } else if (isAdded()) {
+                            TUtil.toast(activity, getString(R.string.toast_collect_failed));
                         }
                         xf_comment_tv_publish.setClickable(true);
                     }

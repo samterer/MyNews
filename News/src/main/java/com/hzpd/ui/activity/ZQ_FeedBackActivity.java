@@ -103,13 +103,11 @@ public class ZQ_FeedBackActivity extends MBaseActivity implements View.OnClickLi
     private void submit(String content, String email) {
         if (TextUtils.isEmpty(content) || content.length() < 10) {
             TUtils.toast(getString(R.string.toast_feedback_cannot_be_short));//太短
-//            TUtils.toast(getString(R.string.toast_feedback_cannot_be_empty));//不能为空
             return;
         }
         if (!TextUtils.isEmpty(email)) {
             if (!isEmail(email)) {
                 TUtils.toast(getString(R.string.toast_email_cannot_be_error));//格式不正确
-                //TUtils.toast(getString(R.string.toast_email_cannot_be_empty));//不能为空
                 return;
             }
         }
@@ -130,7 +128,6 @@ public class ZQ_FeedBackActivity extends MBaseActivity implements View.OnClickLi
             public void onSuccess(Object response) {
                 app_progress_bar.setVisibility(View.GONE);
                 String json = response.toString();
-                LogUtils.i("loginSubmit-->" + json);
                 JSONObject obj = FjsonUtil.parseObject(json);
                 if (null != obj) {
                     if (200 == obj.getIntValue("code")) {

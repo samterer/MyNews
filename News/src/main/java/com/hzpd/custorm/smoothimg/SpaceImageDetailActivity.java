@@ -13,7 +13,6 @@ import android.widget.ImageView.ScaleType;
 import com.color.tools.mytools.LogUtils;
 import com.hzpd.ui.activity.MBaseActivity;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.SPUtil;
 
 import java.io.File;
@@ -66,7 +65,7 @@ public class SpaceImageDetailActivity extends MBaseActivity {
 
 		SPUtil.displayImage(displayString
 				, imageView
-				, DisplayOptionFactory.getOption(OptionTp.Small)
+				, DisplayOptionFactory.Small.options
 				);
 
 		imageView.setOnClickListener(new OnClickListener() {

@@ -17,7 +17,6 @@ import com.hzpd.ui.activity.ZhuanTiActivity;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.SPUtil;
 
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ public class TopviewpagerAdapter extends RecyclingPagerAdapter {
     private Activity context;
 
     public TopviewpagerAdapter(Activity mcontext) {
-        list = new ArrayList<NewsPageListBean>();
+        list = new ArrayList<>();
         this.context = mcontext;
 
     }
@@ -47,18 +46,8 @@ public class TopviewpagerAdapter extends RecyclingPagerAdapter {
         addData(mViewPagelist);
     }
 
-    public int getListSize() {
-        return list.size();
-    }
-
     public void addData(List<NewsPageListBean> mViewPagelist) {
         list.addAll(mViewPagelist);
-        if (list.size() > 1) {
-//            NewsPageListBean npbfirst = mViewPagelist.get(0);
-//            NewsPageListBean npbend = mViewPagelist.get(mViewPagelist.size() - 1);
-//            list.add(npbfirst);
-//            list.add(0, npbend);
-        }
         notifyDataSetChanged();
     }
 
@@ -72,7 +61,6 @@ public class TopviewpagerAdapter extends RecyclingPagerAdapter {
 
     @Override
     public int getCount() {
-//		return Integer.MAX_VALUE;
         return list.size();
     }
 
@@ -94,7 +82,7 @@ public class TopviewpagerAdapter extends RecyclingPagerAdapter {
 
         final NewsPageListBean nplb = list.get(getPosition(position));
         SPUtil.displayImage(nplb.getImgurl()
-                , iv, DisplayOptionFactory.getOption(OptionTp.Small));
+                , iv, DisplayOptionFactory.Small.options);
         iv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

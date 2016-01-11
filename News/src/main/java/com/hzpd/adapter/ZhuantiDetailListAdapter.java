@@ -330,7 +330,7 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
                 if (null != imgs && imgs.length > 0) {
                     img = imgs[0];
                 }
-                SPUtil.displayImage(img, headViewHolder.imageView, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                SPUtil.displayImage(img, headViewHolder.imageView, DisplayOptionFactory.Small.options);
             }
             break;
             case TYPE_BIGPIC: {
@@ -432,7 +432,7 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
                     vhLeftPic.newsitem_title.setPadding(App.px_15dp, 0, 0, 0);
                     vhLeftPic.ll_tag.setPadding(App.px_15dp, 0, 0, 0);
                     SPUtil.displayImage(bean.getImgs()[0], vhLeftPic.newsitem_img,
-                            DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                 } else {
                     vhLeftPic.newsitem_img.setVisibility(View.GONE);
                     vhLeftPic.newsitem_title.setPadding(0, 0, 0, App.px_15dp);
@@ -519,10 +519,10 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
                         && null != bean.getImgs()
                         && bean.getImgs().length > 0) {
                     SPUtil.displayImage(bean.getImgs()[0], vhLargePic.newsitem_img,
-                            DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                 } else {
                     SPUtil.displayImage("", vhLargePic.newsitem_img,
-                            DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                            DisplayOptionFactory.Small.options);
                 }
             }
             break;
@@ -585,17 +585,17 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
 
                 String s[] = bean.getImgs();
                 if (s.length == 1) {
-                    SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
-                    SPUtil.displayImage("", vhThree.img1, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
-                    SPUtil.displayImage("", vhThree.img2, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                    SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.Small.options);
+                    SPUtil.displayImage("", vhThree.img1, DisplayOptionFactory.Small.options);
+                    SPUtil.displayImage("", vhThree.img2, DisplayOptionFactory.Small.options);
                 } else if (s.length == 2) {
-                    SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
-                    SPUtil.displayImage(s[1], vhThree.img1, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
-                    SPUtil.displayImage("", vhThree.img2, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                    SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.Small.options);
+                    SPUtil.displayImage(s[1], vhThree.img1, DisplayOptionFactory.Small.options);
+                    SPUtil.displayImage("", vhThree.img2, DisplayOptionFactory.Small.options);
                 } else if (s.length > 2) {
-                    SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
-                    SPUtil.displayImage(s[1], vhThree.img1, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
-                    SPUtil.displayImage(s[2], vhThree.img2, DisplayOptionFactory.getOption(DisplayOptionFactory.OptionTp.Small));
+                    SPUtil.displayImage(s[0], vhThree.img0, DisplayOptionFactory.Small.options);
+                    SPUtil.displayImage(s[1], vhThree.img1, DisplayOptionFactory.Small.options);
+                    SPUtil.displayImage(s[2], vhThree.img2, DisplayOptionFactory.Small.options);
                 }
 
                 vhThree.newsitem_foot.setVisibility(View.GONE);

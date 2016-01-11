@@ -32,6 +32,7 @@
                 android:textSize="16sp" />
 
             <ImageView
+                android:visibility="gone"
                 android:id="@+id/dialog_btn_close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -96,35 +96,33 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
         OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.discovery_url, new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-                Log.i("getDiscoveryServer", "getDiscoveryServer  onSuccess");
-                if (response != null)
-                    Log.i("getDiscoveryServer", "getDiscoveryServer  response" + response);
-
-                JSONObject obj = FjsonUtil.parseObject(response.toString());
-                if (null == obj) {
-                    Log.i("getDiscoveryServer", "getDiscoveryServer  null == obj");
-                    return;
-                }
-                if (200 == obj.getIntValue("code")) {
-                    Log.i("getDiscoveryServer", "getDiscoveryServer  " + obj.toString());
-                    Page++;
-                    List<DiscoveryItemBean> mlist = FjsonUtil.parseArray(obj.getString("data")
-                            , DiscoveryItemBean.class);
-                    if (null == mlist) {
+                try {
+                    JSONObject obj = FjsonUtil.parseObject(response.toString());
+                    if (null == obj) {
                         return;
                     }
-
-                    for (int i = 0; i < mlist.size(); i++) {
-
-                        if (mlist.get(i).getNews() == null || mlist.get(i).getNews().size() < 1) {
-                            DiscoveryItemBean bean = mlist.get(i);
-                            mlist.remove(bean);
-                            i--;
+                    if (200 == obj.getIntValue("code")) {
+                        Page++;
+                        List<DiscoveryItemBean> mlist = FjsonUtil.parseArray(obj.getString("data")
+                                , DiscoveryItemBean.class);
+                        if (null == mlist) {
+                            return;
                         }
+
+                        for (int i = 0; i < mlist.size(); i++) {
+
+                            if (mlist.get(i).getNews() == null || mlist.get(i).getNews().size() < 1) {
+                                DiscoveryItemBean bean = mlist.get(i);
+                                mlist.remove(bean);
+                                i--;
+                            }
+                        }
+                        newAdapter.appendData(mlist, false);
+                    } else {
+                        Page--;
                     }
-                    newAdapter.appendData(mlist, false);
-                } else {
-                    Page--;
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 

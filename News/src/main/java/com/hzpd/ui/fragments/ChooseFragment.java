@@ -367,29 +367,33 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                 , new OkHttpClientManager.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
-                        isRefresh = false;
-                        mSwipeRefreshWidget.setRefreshing(false);
-                        if (response == null) {
-                            return;
-                        }
-                        final JSONObject obj = FjsonUtil.parseObject(response.toString());
-                        if (null != obj) {
-                            setData(obj);
-                            try {
-                                App.getInstance().newTime = obj.getString("newTime");
-                                App.getInstance().oldTime = obj.getString("oldTime");
-                            } catch (Exception e) {
+                        try {
+                            isRefresh = false;
+                            mSwipeRefreshWidget.setRefreshing(false);
+                            if (response == null) {
+                                return;
                             }
-                            List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
-                            if (list != null) {
-                                for (NewsBean bean : list) {
-                                    bean.setTid("" + NewsChannelBean.TYPE_RECOMMEND);
-                                    bean.setCnname("REKOMENDASI");
+                            final JSONObject obj = FjsonUtil.parseObject(response.toString());
+                            if (null != obj) {
+                                setData(obj);
+                                try {
+                                    App.getInstance().newTime = obj.getString("newTime");
+                                    App.getInstance().oldTime = obj.getString("oldTime");
+                                } catch (Exception e) {
+                                }
+                                List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
+                                if (list != null) {
+                                    for (NewsBean bean : list) {
+                                        bean.setTid("" + NewsChannelBean.TYPE_RECOMMEND);
+                                        bean.setCnname("REKOMENDASI");
+                                    }
+                                }
+                                if (null != list) {
+                                    new NewsListDbTask(getActivity()).saveList(list, null);
                                 }
                             }
-                            if (null != list) {
-                                new NewsListDbTask(getActivity()).saveList(list, null);
-                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 
@@ -572,7 +576,8 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
     }
 
     public void onEventMainThread(RefreshEvent event) {
-        if (isVisible) {
+        if (isVisible || event.force) {
+            mRecyclerView.scrollToPosition(0);
             mSwipeRefreshWidget.setRefreshing(true);
             pullRefresh = true;
             page = 1;

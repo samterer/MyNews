@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.alibaba.fastjson.JSONObject;
-import com.color.tools.mytools.LogUtils;
 import com.hzpd.hflt.R;
 import com.hzpd.url.InterfaceJsonfile;
 import com.hzpd.url.OkHttpClientManager;
@@ -99,7 +98,6 @@ public class ZQ_ReplyCommentActivity extends MBaseActivity implements View.OnCli
                 if (response == null) {
                     return;
                 }
-                LogUtils.i("news-comment-->" + response.toString());
                 JSONObject obj = null;
                 try {
                     obj = JSONObject.parseObject(response.toString());

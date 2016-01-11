@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.hzpd.adapter.NewsItemListViewAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
-import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.db.PushBeanDB;
 import com.hzpd.modle.db.PushBeanDBDao;
 import com.hzpd.utils.AAnim;
@@ -18,7 +17,6 @@ import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.Log;
 
-import java.nio.channels.Selector;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,7 +87,7 @@ public class MyPushActivity extends MBaseActivity implements View.OnClickListene
         Intent mIntent = new Intent();
         mIntent.putExtra("newbean", nb);
         mIntent.putExtra("from", "newsitem");
-        adapter.setReadedId(nb.getNid());
+        adapter.setReadedId(nb);
         ////////////////////////////
         //1新闻  2图集  3直播 4专题  5关联新闻 6视频
         if ("1".equals(nb.getRtype())) {

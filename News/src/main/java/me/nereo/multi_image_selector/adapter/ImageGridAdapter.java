@@ -11,7 +11,6 @@ import com.color.tools.mytools.LogUtils;
 import com.hzpd.adapter.ListBaseAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -186,7 +185,7 @@ public class ImageGridAdapter extends ListBaseAdapter<Image> {
 
 				if (mItemSize > 0) {
 					ImageLoader.getInstance().displayImage("file://" + data.path, list_image,
-							DisplayOptionFactory.getOption(OptionTp.Small));
+							DisplayOptionFactory.Small.options);
 				}
 
 				// 处理单选和多选状态

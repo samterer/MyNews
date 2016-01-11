@@ -86,10 +86,8 @@ public class SearchActivity extends MBaseActivity implements View.OnClickListene
                         public void onSuccess(Object response) {
                             //TODO 获取关键词
                             try {
-//                             String json = App.getFileContext(responseInfo.result);
                                 String json = response.toString();
                                 SPUtil.saveFile(target, json);
-                                Log.e("test", json);
                                 org.json.JSONArray jsonArray = new JSONObject(json).getJSONArray("data");
                                 int lenght = jsonArray.length();
                                 List<String> keys = new ArrayList<String>();

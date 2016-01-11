@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.ActionItemBean;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.DisplayOptionFactory.OptionTp;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.ViewHolder;
 
@@ -38,7 +37,7 @@ public class ActionListFmAdapter extends ListBaseAdapter<ActionItemBean> {
 
 		SPUtil.displayImage(aib.getHeadpic()
 				, actionlist_item_iv
-				, DisplayOptionFactory.getOption(OptionTp.Small));
+				, DisplayOptionFactory.Small.options);
 
 		return convertView;
 	}
