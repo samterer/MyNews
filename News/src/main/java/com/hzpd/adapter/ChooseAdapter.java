@@ -128,6 +128,7 @@ public class ChooseAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder value = null;
         try {
+            long start = System.currentTimeMillis();
             Context context = parent.getContext();
             switch (viewType) {
                 case TYPE_FIRST: {
@@ -153,6 +154,10 @@ public class ChooseAdapter extends RecyclerView.Adapter {
                 }
                 break;
             }
+            int time = (int) (System.currentTimeMillis() - start);
+            if (time > 16) {
+                Log.e("test", "News: " + time + "  =>  " + value.getClass().getName());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -161,7 +166,7 @@ public class ChooseAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder sHolder, int position) {
-
+        long start = System.currentTimeMillis();
         try {
             int type = getItemViewType(position);
             NewsBean bean = null;
@@ -238,6 +243,10 @@ public class ChooseAdapter extends RecyclerView.Adapter {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        int time = (int) (System.currentTimeMillis() - start);
+        if (time > 16) {
+            Log.e("test", "News: " + time + "  =>  " + sHolder.getClass().getName());
         }
     }
 

@@ -19,7 +19,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.color.tools.mytools.LogUtils;
 import com.facebook.ads.NativeAd;
 import com.hzpd.adapter.NewsItemListViewAdapter;
-import com.hzpd.hflt.BuildConfig;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsChannelBean;
@@ -211,7 +210,12 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         callBack = new NewsItemListViewAdapter.CallBack() {
             @Override
             public void loadMore() {
-                getServerList("");
+                mRecyclerView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getServerList("");
+                    }
+                }, 10);
             }
         };
         adapter.callBack = callBack;

@@ -1,147 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="1dp"
+    app:cardElevation="@dimen/list_cardview_padding"
+    app:cardMaxElevation="@dimen/list_cardview_padding"
+    app:cardPreventCornerOverlap="false">
 
-    <android.support.v7.widget.CardView
+    <com.balysv.materialripple.MaterialRippleLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="?fragment_choose_card_backgroup_color"
-        app:cardCornerRadius="1dp"
-        app:cardElevation="@dimen/list_cardview_padding"
-        app:cardMaxElevation="@dimen/list_cardview_padding"
-        app:cardPreventCornerOverlap="false">
+        app:rippleAlpha="0.6"
+        app:rippleColor="@color/click_color"
+        app:rippleDelayClick="true"
+        app:rippleDimension="4dp"
+        app:rippleDuration="400"
+        app:rippleFadeDuration="100"
+        app:rippleHover="false"
+        app:rippleOverlay="true"
+        app:ripplePersistent="false">
 
-        <com.balysv.materialripple.MaterialRippleLayout
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/news_item"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:rippleAlpha="0.6"
-            app:rippleColor="@color/click_color"
-            app:rippleDelayClick="true"
-            app:rippleDimension="4dp"
-            app:rippleDuration="400"
-            app:rippleFadeDuration="100"
-            app:rippleHover="false"
-            app:rippleOverlay="true"
-            app:ripplePersistent="false">
+            android:background="?news_item_btn_selector"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/news_item"
-                android:layout_width="wrap_content"
+            <!--图片展示-->
+            <com.hzpd.ui.widget.FixedImageView
+                android:id="@+id/newsitem_img"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:scaleType="centerCrop" />
+
+            <!--新闻介绍列表-->
+            <RelativeLayout
+                android:id="@+id/nitem_ll"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?news_item_btn_selector"
-                android:orientation="vertical">
+                android:layout_margin="10dp">
 
-                <!--图片展示-->
-                <com.hzpd.ui.widget.FixedImageView
-                    android:id="@+id/newsitem_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:scaleType="centerCrop" />
 
-                <!--新闻介绍列表-->
-                <RelativeLayout
-                    android:id="@+id/nitem_ll"
+                <!--标题-->
+                <com.hzpd.ui.widget.FontTextView
+                    android:id="@+id/newsitem_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp">
+                    android:layout_marginRight="5dp"
+                    android:textColor="?item_title"
+                    android:textSize="15sp" />
 
 
-                    <!--标题-->
-                    <com.hzpd.ui.widget.FontTextView
-                        android:id="@+id/newsitem_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
-                        android:textColor="?item_title"
-                        android:textSize="15sp" />
+            </RelativeLayout>
+            <!--标签列表-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
 
-
-                </RelativeLayout>
-                <!--标签列表-->
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <!--类型标签-->
+                <ImageView
+                    android:id="@+id/nli_foot"
+                    android:layout_width="50dp"
+                    android:layout_height="22dp"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+                <!--来源source-->
+                <com.hzpd.ui.widget.FontRobotoTextView
+                    android:id="@+id/newsitem_source"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
+                    android:ellipsize="end"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp">
+                    android:maxLines="1"
+                    android:text="Okezone"
+                    android:textColor="?item_tag"
+                    android:textSize="@dimen/tag" />
 
-                    <!--类型标签-->
-                    <ImageView
-                        android:id="@+id/nli_foot"
-                        android:layout_width="50dp"
-                        android:layout_height="22dp"
-                        android:scaleType="centerCrop"
-                        android:visibility="gone" />
-                    <!--来源source-->
-                    <com.hzpd.ui.widget.FontRobotoTextView
-                        android:id="@+id/newsitem_source"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="center_vertical"
-                        android:maxLines="1"
-                        android:text="Okezone"
-                        android:textColor="?item_tag"
-                        android:textSize="@dimen/tag" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+                <!--收藏数collect-->
+                <com.hzpd.ui.widget.FontRobotoTextView
+                    android:id="@+id/newsitem_collectcount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:drawableLeft="@drawable/main_collect_counts"
+                    android:drawablePadding="2dp"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:text="11"
+                    android:textColor="?item_tag"
+                    android:textSize="@dimen/tag" />
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1" />
-                    <!--收藏数collect-->
-                    <com.hzpd.ui.widget.FontRobotoTextView
-                        android:id="@+id/newsitem_collectcount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:drawableLeft="@drawable/main_collect_counts"
-                        android:drawablePadding="2dp"
-                        android:gravity="center_vertical"
-                        android:maxLines="1"
-                        android:text="11"
-                        android:textColor="?item_tag"
-                        android:textSize="@dimen/tag" />
+                <!--评论数-->
+                <com.hzpd.ui.widget.FontRobotoTextView
+                    android:id="@+id/newsitem_commentcount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:drawableLeft="@drawable/main_comment_counts"
+                    android:drawablePadding="2dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="3"
+                    android:text="11"
+                    android:textColor="?item_tag"
+                    android:textSize="@dimen/tag" />
 
-                    <!--评论数-->
-                    <com.hzpd.ui.widget.FontRobotoTextView
-                        android:id="@+id/newsitem_commentcount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:drawableLeft="@drawable/main_comment_counts"
-                        android:drawablePadding="2dp"
-                        android:ellipsize="end"
-                        android:gravity="center_vertical"
-                        android:maxLines="3"
-                        android:text="11"
-                        android:textColor="?item_tag"
-                        android:textSize="@dimen/tag" />
+                <!--时间-->
+                <com.hzpd.ui.widget.FontRobotoTextView
+                    android:id="@+id/newsitem_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="5dp"
+                    android:text="2015-11-11 11:11"
+                    android:textColor="@color/time_color"
+                    android:textSize="@dimen/tag"
+                    android:visibility="gone" />
 
-                    <!--时间-->
-                    <com.hzpd.ui.widget.FontRobotoTextView
-                        android:id="@+id/newsitem_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_marginLeft="5dp"
-                        android:text="2015-11-11 11:11"
-                        android:textColor="@color/time_color"
-                        android:textSize="@dimen/tag"
-                        android:visibility="gone" />
-
-                    <ImageView
-                        android:id="@+id/newsitem_unlike"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/main_unlike"
-                        android:gravity="bottom"
-                        android:visibility="invisible" />
-                </LinearLayout>
+                <ImageView
+                    android:id="@+id/newsitem_unlike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/main_unlike"
+                    android:gravity="bottom"
+                    android:visibility="invisible" />
             </LinearLayout>
-        </com.balysv.materialripple.MaterialRippleLayout>
-    </android.support.v7.widget.CardView>
-</FrameLayout>
+        </LinearLayout>
+    </com.balysv.materialripple.MaterialRippleLayout>
+</android.support.v7.widget.CardView>

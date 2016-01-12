@@ -38,7 +38,6 @@ import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
 import com.hzpd.utils.Log;
-import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.db.NewsListDbTask;

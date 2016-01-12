@@ -209,9 +209,14 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                 if (loading) {
                     return;
                 }
-                page = 2;
-                ++pageIndex;
-                getServerList("");
+                mRecyclerView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 2;
+                        ++pageIndex;
+                        getServerList("");
+                    }
+                }, 10);
             }
         };
         adapter.callBack = callBack;

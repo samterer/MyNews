@@ -1,70 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <!--android:layout_marginRight="10dp"-->
-    <!--android:layout_marginLeft="10dp"-->
-    <android.support.v7.widget.CardView
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="1dp"
+    app:cardElevation="@dimen/list_cardview_padding"
+    app:cardMaxElevation="@dimen/list_cardview_padding"
+    app:cardPreventCornerOverlap="false">
+
+    <com.balysv.materialripple.MaterialRippleLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="?fragment_choose_card_backgroup_color"
-        app:cardCornerRadius="1dp"
-        app:cardElevation="@dimen/list_cardview_padding"
-        app:cardMaxElevation="@dimen/list_cardview_padding"
-        app:cardPreventCornerOverlap="false">
+        app:rippleAlpha="0.6"
+        app:rippleColor="@color/click_color"
+        app:rippleDelayClick="true"
+        app:rippleDimension="4dp"
+        app:rippleDuration="400"
+        app:rippleFadeDuration="100"
+        app:rippleHover="false"
+        app:rippleOverlay="true"
+        app:ripplePersistent="false">
 
-        <com.balysv.materialripple.MaterialRippleLayout
+
+        <LinearLayout
+            android:id="@+id/news_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:rippleAlpha="0.6"
-            app:rippleColor="@color/click_color"
-            app:rippleDelayClick="true"
-            app:rippleDimension="4dp"
-            app:rippleDuration="400"
-            app:rippleFadeDuration="100"
-            app:rippleHover="false"
-            app:rippleOverlay="true"
-            app:ripplePersistent="false">
+            android:background="?news_item_btn_selector"
+            android:orientation="vertical">
 
-
-            <LinearLayout
-                android:id="@+id/news_item"
+            <!--图片展示-->
+            <com.hzpd.ui.widget.FixedImageView
+                android:id="@+id/newsitem_img"
                 android:layout_width="match_parent"
-                android:background="?news_item_btn_selector"
+                android:layout_height="150dp"
+                android:scaleType="centerCrop" />
+
+            <!--新闻介绍列表-->
+            <RelativeLayout
+                android:id="@+id/nitem_ll"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="@dimen/list_item_padding">
 
-                <!--图片展示-->
-                <com.hzpd.ui.widget.FixedImageView
-                    android:id="@+id/newsitem_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:scaleType="centerCrop" />
-
-                <!--新闻介绍列表-->
-                <RelativeLayout
-                    android:id="@+id/nitem_ll"
+                <!--标题-->
+                <com.hzpd.ui.widget.FontTextView
+                    android:id="@+id/newsitem_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="@dimen/list_item_padding">
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:textColor="?item_title"
+                    android:textSize="15sp" />
 
-                    <!--标题-->
-                    <com.hzpd.ui.widget.FontTextView
-                        android:id="@+id/newsitem_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="5dp"
-                        android:textColor="?item_title"
-                        android:textSize="15sp" />
+            </RelativeLayout>
+        </LinearLayout>
 
-                </RelativeLayout>
-            </LinearLayout>
-
-        </com.balysv.materialripple.MaterialRippleLayout>
-    </android.support.v7.widget.CardView>
-</FrameLayout>
+    </com.balysv.materialripple.MaterialRippleLayout>
+</android.support.v7.widget.CardView>

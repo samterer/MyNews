@@ -107,6 +107,7 @@ public class App extends Application {
 //            openStrictMode();
         }
         try {
+            init();
             long start = System.currentTimeMillis();
             com.hzpd.utils.Log.e("test", "News: App start " + start);
             super.onCreate();
