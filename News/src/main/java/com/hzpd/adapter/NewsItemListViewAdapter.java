@@ -260,15 +260,14 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
     public void setReadedId(NewsBean newsBean) {
         readedNewsSet.add(newsBean.getNid());
-
         try {
             NewsBeanDB nbdb = dbHelper.getNewsList().queryBuilder().where(NewsBeanDBDao.Properties.Nid.eq(newsBean.getNid())).build().unique();
             if (nbdb != null) {
                 nbdb.setNid(newsBean.getNid());
                 nbdb.setIsreaded("1");
                 dbHelper.getNewsList().update(nbdb);
-            }else {
-                nbdb=new NewsBeanDB(newsBean);
+            } else {
+                nbdb = new NewsBeanDB(newsBean);
                 nbdb.setIsreaded("1");
                 dbHelper.getNewsList().insert(nbdb);
             }
@@ -322,11 +321,19 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             case TYPE_FLASH://幻灯
                 convertView = inflater.inflate(
                         R.layout.news_item_flash_layout, parent, false);
+                int time = (int) (System.currentTimeMillis() - start);
+                if (time > STANDARD_TIME) {
+                    Log.e("test", "News:inflate FlashHolder " + time + "   => ");
+                }
                 viewHolder = new FlashHolder(convertView);
                 break;
             case TYPE_TEXT://纯文本
                 convertView = inflater.inflate(
                         R.layout.news_list_text_layout, parent, false);
+                time = (int) (System.currentTimeMillis() - start);
+                if (time > STANDARD_TIME) {
+                    Log.e("test", "News:inflate TextViewHolder " + time + "   => ");
+                }
                 viewHolder = new TextViewHolder(convertView);
                 break;
             case TYPE_JOKE://段子
@@ -342,6 +349,10 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             case TYPE_LEFTPIC://普通
                 convertView = inflater.inflate(
                         R.layout.news_list_item_layout, parent, false);
+                time = (int) (System.currentTimeMillis() - start);
+                if (time > STANDARD_TIME) {
+                    Log.e("test", "News:inflate VHLeftPic " + time + "   => ");
+                }
                 viewHolder = new VHLeftPic(convertView);
                 break;
             case TYPE_BIGPIC:
@@ -363,6 +374,10 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                 convertView = inflater.inflate(
                         R.layout.list_load_more_layout, parent, false);
                 viewHolder = new LoadingHolder(convertView);
+                time = (int) (System.currentTimeMillis() - start);
+                if (time > STANDARD_TIME) {
+                    Log.e("test", "News:inflate LoadingHolder " + time + "   => ");
+                }
                 break;
         }
         int time = (int) (System.currentTimeMillis() - start);

@@ -27,7 +27,6 @@ import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
-import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 
 import java.util.ArrayList;

@@ -320,6 +320,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     //获取新闻list
     @Override
     public void getServerList(String nids) {
+        Log.e("test", "News: " + isLoading);
         if (isLoading) {
             return;
         }

@@ -80,12 +80,8 @@ public class SettingActivity extends MBaseActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zqzx_setting_layout);
         super.changeStatusBar();
-
-
         initViews();
-
         stitle_tv_content.setText(R.string.title_settings);//标题
-
         EventBus.getDefault().register(this);
 
         if (spu.getUser() != null) {
@@ -389,7 +385,7 @@ public class SettingActivity extends MBaseActivity implements View.OnClickListen
     private void showNotification(String description) {
         NotificationManager notificationManager = (NotificationManager)
                 this.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification(R.drawable.logo,
+        Notification notification = new Notification(R.drawable.icon,
                 getString(R.string.app_name), System.currentTimeMillis());
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
         notification.flags |= Notification.FLAG_AUTO_CANCEL;

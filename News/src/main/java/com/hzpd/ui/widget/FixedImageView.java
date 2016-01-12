@@ -23,34 +23,9 @@ public class FixedImageView extends ImageView {
 
     @Override
     public void setImageBitmap(Bitmap bm) {
-        release();
         if (!bm.isRecycled()) {
             super.setImageBitmap(bm);
             bitmapDrawable = (BitmapDrawable) getDrawable();
-        }
-    }
-
-    @Override
-    public void setImageResource(int resId) {
-        release();
-        super.setImageResource(resId);
-//        bitmapDrawable = SPUtil.getBitmapDrawable(getResources(), resId);
-//        super.setImageDrawable(bitmapDrawable);
-//        bitmapDrawable = (BitmapDrawable) getDrawable();
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        release();
-        super.onDetachedFromWindow();
-    }
-
-    public void release() {
-        if (bitmapDrawable != null) {
-            super.setImageDrawable(null);
-            bitmapDrawable.getBitmap().recycle();
-            bitmapDrawable.setCallback(null);
-            bitmapDrawable = null;
         }
     }
 

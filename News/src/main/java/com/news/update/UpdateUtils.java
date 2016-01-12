@@ -299,7 +299,7 @@ public class UpdateUtils {
             String title = prefs.getString(KEY.KEY_NOTICE_TITLE, context.getString(R.string.app_name));
             String content = prefs.getString(KEY.KEY_NOTICE_CONTENT, "");
             String tickerText = title;
-            int smallIcon = R.drawable.logo;
+            int smallIcon = R.drawable.icon;
             Notification notification = new NotificationCompat.Builder(context)
                     .setContentIntent(pendingIntent)
                     .setSmallIcon(smallIcon)
@@ -333,7 +333,7 @@ public class UpdateUtils {
             String title = context.getString(R.string.local_update_done_ticker);
             String content = "";
             String tickerText = title;
-            int smallIcon = R.drawable.logo;
+            int smallIcon = R.drawable.icon;
             Notification notification = new NotificationCompat.Builder(context)
                     .setContentIntent(pendingIntent)
                     .setSmallIcon(smallIcon)
@@ -367,7 +367,7 @@ public class UpdateUtils {
         String title = context.getString(R.string.app_name);
         String content = context.getString(R.string.local_downloading, "" + progress + "%");
         String tickerText = context.getString(R.string.local_downloading_ticker);
-        int smallIcon = R.drawable.logo;
+        int smallIcon = R.drawable.icon;
         Intent intent = new Intent(context, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 6, intent, PendingIntent.FLAG_CANCEL_CURRENT);

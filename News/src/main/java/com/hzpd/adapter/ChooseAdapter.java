@@ -38,6 +38,7 @@ public class ChooseAdapter extends RecyclerView.Adapter {
         void loadMore();
     }
 
+    LayoutInflater inflate;
     private int fontSize;
     public CallBack callBack = null;
 
@@ -48,16 +49,11 @@ public class ChooseAdapter extends RecyclerView.Adapter {
 
     public ChooseAdapter(Context context, View.OnClickListener onClickListener) {
         this.context = context;
+        inflate = LayoutInflater.from(context);
         this.onClickListener = onClickListener;
         readedNewsSet = new HashSet<String>();
         dbHelper = DBHelper.getInstance(context);
         this.fontSize = SPUtil.getInstance().getTextSize();
-    }
-
-    public ChooseAdapter(Context context) {
-        this.context = context;
-        readedNewsSet = new HashSet<String>();
-        dbHelper = DBHelper.getInstance(context);
     }
 
     public void setReadedId(String nid) {
@@ -129,25 +125,32 @@ public class ChooseAdapter extends RecyclerView.Adapter {
         RecyclerView.ViewHolder value = null;
         try {
             long start = System.currentTimeMillis();
-            Context context = parent.getContext();
             switch (viewType) {
                 case TYPE_FIRST: {
                     FirstViewHolder holder = null;
-                    View view = LayoutInflater.from(context).inflate(R.layout.choose_item_first_layout, parent, false);
+                    View view = inflate.inflate(R.layout.choose_item_first_layout, parent, false);
+                    int time = (int) (System.currentTimeMillis() - start);
+                    if (time > 16) {
+                        Log.e("test", "News:inflate FirstViewHolder " + time + "   => ");
+                    }
                     holder = new FirstViewHolder(view);
                     holder.clickView.setOnClickListener(onClickListener);
                     value = holder;
                 }
                 break;
                 case TYPE_LOADING: {
-                    View view = LayoutInflater.from(context).inflate(
+                    View view = inflate.inflate(
                             R.layout.list_load_more_layout, parent, false);
                     value = new LoadingHolder(view);
                 }
                 break;
                 default: {
                     SecondViewHolder holder = null;
-                    View view = LayoutInflater.from(context).inflate(R.layout.choose_item_second_layout, parent, false);
+                    View view = inflate.inflate(R.layout.choose_item_second_layout, parent, false);
+                    int time = (int) (System.currentTimeMillis() - start);
+                    if (time > 16) {
+                        Log.e("test", "News:inflate SecondViewHolder " + time + "   => ");
+                    }
                     holder = new SecondViewHolder(view);
                     holder.clickView.setOnClickListener(onClickListener);
                     value = holder;

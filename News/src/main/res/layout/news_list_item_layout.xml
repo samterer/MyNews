@@ -47,15 +47,17 @@
                 android:id="@+id/ll_tag"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_gravity="bottom"
                 android:layout_weight="1"
                 android:gravity="bottom"
+                android:layout_gravity="bottom"
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
+                    android:gravity="bottom"
                     android:layout_weight="1">
 
                     <!--类型标签-->

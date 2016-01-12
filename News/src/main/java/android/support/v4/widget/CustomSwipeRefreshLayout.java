@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.hzpd.utils.AvoidOnClickFastUtils;
+import com.hzpd.utils.Log;
 
 public class CustomSwipeRefreshLayout extends SwipeRefreshLayout {
 
@@ -36,10 +37,21 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout {
         }
     }
 
+    boolean isRefresh = false;
+
+    @Override
+    public void setRefreshing(boolean refreshing) {
+        Log.e("test", "News: " + refreshing);
+        isRefresh = refreshing;
+        super.setRefreshing(refreshing);
+        if(!isRefresh){
+            super.setRefreshing(false);
+        }
+    }
 
     @Override
     public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
-        if (isRefreshing()) {
+        if (isRefresh || isRefreshing()) {
             return false;
         }
         return super.onStartNestedScroll(child, target, nestedScrollAxes);

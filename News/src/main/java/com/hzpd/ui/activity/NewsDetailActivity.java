@@ -187,7 +187,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
-        Log.e("test", "1 " + System.currentTimeMillis());
+        long start = System.currentTimeMillis();
         if (!TextUtils.isEmpty(ConfigBean.getInstance().news_details)) {
             AD_KEY = ConfigBean.getInstance().news_list;
         } else if (!TextUtils.isEmpty(ConfigBean.getInstance().default_key)) {
@@ -223,6 +223,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Log.e("test", "News: details " + (System.currentTimeMillis() - start));
+
     }
 
     //TODO 文章标题
@@ -486,7 +488,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         text_dal_praise = (TextView) headView.findViewById(R.id.text_dal_praise);
 
         if (!TextUtils.isEmpty(nb.getLike())) {
-            Log.e("like_counts", "like_counts--->" + like_counts + "::::" + nb.getNid());
             like_counts = Integer.parseInt(nb.getLike());
             text_dal_praise.setText("" + like_counts);
         } else {
@@ -985,6 +986,8 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         content = content.replaceAll("<p><br/></p>", "");
         content = content.replaceAll("<p><br></p>", "");
         content = content.replaceAll("<p></p>", "");
+        content = content.replaceAll("<br/>", "");
+        content = content.replaceAll("<br>", "");
         content = content.replaceAll("&nbsp;", "");
         content = content.replaceAll("width=\"[^\"]*?\"", "");
         content = content.replaceAll("width='[^']*?'", "");
@@ -2086,7 +2089,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 calendar.setTimeInMillis(enterTime);
                 DBHelper.getInstance(getApplicationContext()).getLog()
                         .insert(new UserLog(nb.getNid(), SPUtil.format(calendar), String.valueOf((System.currentTimeMillis() - enterTime) / 1000)));
-                final List<UserLog> logs = DBHelper.getInstance(getApplicationContext()).getLog().loadAll();
                 Intent intent = new Intent(this, InitService.class);
                 intent.setAction(InitService.UserLogAction);
                 startService(intent);

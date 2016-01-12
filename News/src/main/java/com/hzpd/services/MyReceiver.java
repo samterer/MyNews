@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.db.PushBeanDB;
+import com.hzpd.modle.db.PushBeanDBDao;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.FjsonUtil;
@@ -61,10 +62,9 @@ public class MyReceiver extends BroadcastReceiver {
             return;
         }
         NewsBean newsBean = FjsonUtil.parseObject(object.getString("data"), NewsBean.class);
-        List<NewsBean> list = new ArrayList<>();
-        list.add(0, newsBean);
-        if (list != null && list.size() != 0) {
-            Log.i(TAG, "MyReceiver" + newsBean.getNid());
+        Log.i(TAG, "MyReceiver" + newsBean.getNid());
+        PushBeanDB unique = DBHelper.getInstance(context).getPushList().queryBuilder().where(PushBeanDBDao.Properties.Nid.eq(newsBean.getNid())).build().unique();
+        if (unique==null){
             DBHelper.getInstance(context).getPushList().insert(new PushBeanDB(newsBean));
         }
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
