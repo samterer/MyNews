@@ -1399,10 +1399,11 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
 //        tag相关
         if ((mBean.getTag() != null && mBean.getTag().size() > 0)) {
-            final TagBean tagBean = mBean.getTag().get(0);
             rl_related.setVisibility(View.VISIBLE);
             ll_tag.setVisibility(View.VISIBLE);
             addRelatedTagView();
+
+            final TagBean tagBean = mBean.getTag().get(0);
             details_tag_layout.setVisibility(View.VISIBLE);
             if (tagBean.getIcon() != null) {
                 details_head_tag_img.setVisibility(View.VISIBLE);
