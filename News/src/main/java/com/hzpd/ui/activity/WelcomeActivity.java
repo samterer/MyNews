@@ -103,9 +103,7 @@ public class WelcomeActivity extends MWBaseActivity {
     }
 
     public void getChannelJson() {
-        final File target = App.getFile(App.getInstance().getAllDiskCacheDir() + File.separator + SPUtil.getCountry() + File.separator + "News");
-        List<NewsChannelBeanDB> channelBeanDBs = null;
-        channelBeanDBs = dbHelper.getChannel().loadAll();
+        List<NewsChannelBeanDB> channelBeanDBs = dbHelper.getChannel().loadAll();
         if (channelBeanDBs != null && channelBeanDBs.size() > 0) {
             loadMainUI();
         }

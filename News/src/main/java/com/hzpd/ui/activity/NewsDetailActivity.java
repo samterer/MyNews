@@ -1253,22 +1253,22 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         //TODO  获取详细信息
         try {
             File pageFile = App.getFile(detailPathRoot + "detail_" + nb.getNid());
-            Log.i("test", "获取详细信息--->" + pageFile.getAbsolutePath());
             //从缓存中获取
             if (GetFileSizeUtil.getInstance().getFileSizes(pageFile) > 30) {
-                Log.i("test", "获取详细信息--->");
                 try {
                     String data = App.getFileContext(pageFile);
                     JSONObject obj = JSONObject.parseObject(data);
-                    mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
-                    if (mBean == null) {
+                    try {
+                        mBean = JSONObject.parseObject(obj.getJSONObject("data").toJSONString(), NewsDetailBean.class);
+                    } catch (Exception e) {
+                        pageFile.delete();
+                    }
+                    if (mBean != null) {
+                        setContents();
+                        getLatestComm();
                         return;
                     }
-                    setContents();
-                    getLatestComm();
-                    return;
                 } catch (Exception e) {
-                    pageFile.delete();
                     e.printStackTrace();
                 }
 

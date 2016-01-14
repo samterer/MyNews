@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.CustomSwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -89,6 +88,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     private NewsChannelBean channelbean;//本频道
     private String newsItemPath;//本频道根目录flash
     private int page = 1;
+    private int lastPage = 1; // 记录之前的
     private static final int pageSize = 15;//
     private NewsListDbTask newsListDbTask; //新闻列表数据库
     // 是否刷新最新数据
@@ -142,6 +142,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        lastPage = page;
         page = 1;
         isRefresh = true;
         View view = inflater.inflate(R.layout.news_channel_fragment, container, false);
@@ -177,7 +178,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
         mSwipeRefreshWidget.setColorSchemeResources(R.color.google_blue);
 
-        mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSwipeRefreshWidget.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mSwipeRefreshWidget.setRefreshing(true);
@@ -225,6 +226,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     private void refresh() {
         mRecyclerView.scrollToPosition(0);
         pullRefresh = true;
+        lastPage = page;
         page = 1;
         mFlagRefresh = true;
         getFlash();
@@ -237,6 +239,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         EventBus.getDefault().register(this);
+        lastPage = page;
         page = 1;
         mFlagRefresh = true;
         firstLoading = false;
@@ -393,18 +396,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             case 200: {
                 List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
                 if (null != list && list.size() > 0) {
-//                    if (BuildConfig.DEBUG) {
-//                        Log.i("BuildConfig.DEBUG", "BuildConfig.DEBUG");
-//                        for (int i = 0; i < list.size(); i++) {
-//                            NewsBean bean = list.get(i);
-//                            if (bean.getType().equals("2")) {
-//                                bean.setType("11");
-//                                list.add(bean);
-//                                Log.i("BuildConfig.DEBUG", "BuildConfig.DEBUG   111");
-//                            }
-//                            Log.i("BuildConfig.DEBUG","BuildConfig.DEBUG"+list.get(i).getType());
-//                        }
-//                    }
                     newsListDbTask.saveList(list, null);
                     for (NewsBean bean : list) {
                         bean.setCnname(channelbean.getCnname());
@@ -442,9 +433,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             }
             break;
             default: {
-                if (pullRefresh) {
-                    TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
-                }
                 if (page > 1 && adapter.showLoading) {
                     int count = adapter.getItemCount();
                     adapter.showLoading = false;
@@ -455,6 +443,10 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                             addLoading = true;
                         }
                     }, 2000);
+                }
+                if (pullRefresh) {
+                    page = --lastPage;
+                    TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
                 }
             }
             break;

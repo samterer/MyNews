@@ -27,6 +27,7 @@ import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.CalendarUtil;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.DisplayOptionFactory;
+import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 
 import java.util.ArrayList;
@@ -44,8 +45,17 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
     private View.OnClickListener onClickListener;
 
     public void setShowLoading(boolean showLoading) {
+        if (this.showLoading == showLoading) {
+            return;
+        }
         this.showLoading = showLoading;
-        notifyDataSetChanged();
+        if (showLoading) {
+            int count = getItemCount();
+            notifyItemInserted(count);
+        } else {
+            int count = getItemCount();
+            notifyItemRemoved(count);
+        }
     }
 
     public DiscoveryItemNewAdapter(Context context, View.OnClickListener onClickListener) {
@@ -56,15 +66,27 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
         this.onClickListener = onClickListener;
     }
 
+
     public void appendData(List<DiscoveryItemBean> data, boolean isClearOld) {
         if (data == null) {
             return;
         }
+        Log.i("discovery", "discovery  appendData 0"+isClearOld);
         if (isClearOld) {
             list.clear();
         }
+        int index = getItemCount();
+        if (showLoading) {
+            index = index - 1;
+        }
         list.addAll(data);
-        notifyDataSetChanged();
+        if (isClearOld) {
+            Log.i("discovery", "discovery  appendData"+isClearOld);
+            notifyDataSetChanged();
+        } else {
+            Log.i("discovery", "discovery  appendData"+isClearOld);
+            notifyItemRangeInserted(index, data.size());
+        }
     }
 
     @Override

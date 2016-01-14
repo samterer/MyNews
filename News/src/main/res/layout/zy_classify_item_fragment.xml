@@ -50,4 +50,56 @@
             android:layout_gravity="center" />
     </FrameLayout>
 
+    <!--数据为空时显示-->
+    <FrameLayout
+        android:id="@+id/data_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?app_progress_bar_bg"
+        android:paddingBottom="100dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/background_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/main_none" />
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/click_here_to_refresh" />
+
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+    <!-- 为空时点击屏幕加载Loading-->
+    <FrameLayout
+        android:id="@+id/app_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="3dp"
+        android:background="?app_progress_bar_bg"
+        android:visibility="gone">
+
+        <ProgressBar
+            style="@style/loadingProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
 </FrameLayout>

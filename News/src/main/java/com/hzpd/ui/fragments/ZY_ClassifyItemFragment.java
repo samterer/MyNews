@@ -58,6 +58,8 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
     private FrameLayout progress_container;
     private LinearLayoutManager vlinearLayoutManager;
     private Object tag;
+    private View data_empty;
+    private View app_progress_bar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,6 +71,9 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
         View view = null;
         try {
             view = inflater.inflate(R.layout.zy_classify_item_fragment, container, false);
+            data_empty = view.findViewById(R.id.data_empty);
+            data_empty.setOnClickListener(this);
+            app_progress_bar = view.findViewById(R.id.app_progress_bar);
             tag = OkHttpClientManager.getTag();
             progress_container = (FrameLayout) view.findViewById(R.id.progress_container);
             hRecyclerView = (RecyclerView) view.findViewById(R.id.id_recyclerview_horizontal);
@@ -150,9 +155,15 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
                 }
             });
 
-            String json = (String) SharePreferecesUtils.getParam(getActivity(), KEY_CATEGERY, "{}");
-            parseJson(json);
-            getClassifyHorServer();
+            String json = (String) SharePreferecesUtils.getParam(getActivity(), KEY_CATEGERY, "");
+            if (!TextUtils.isEmpty(json)) {
+                parseJson(json);
+                getClassifyHorServer();
+            } else {
+                app_progress_bar.setVisibility(View.GONE);
+                data_empty.setVisibility(View.VISIBLE);
+                isFirst=true;
+            }
 
         } catch (Exception e) {
 
@@ -160,6 +171,8 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
         return view;
     }
 
+
+    private boolean isFirst;
     final static String KEY_CATEGERY = "tag_category";
 
     /**
@@ -174,6 +187,9 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
         OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.classify_top_url, new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
+                isFirst=false;
+                data_empty.setVisibility(View.GONE);
+                app_progress_bar.setVisibility(View.GONE);
                 try {
                     parseJson(response.toString());
                     if (isAdded()) {
@@ -186,6 +202,10 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
 
             @Override
             public void onFailure(Request request, Exception e) {
+                if (isFirst){
+                    app_progress_bar.setVisibility(View.GONE);
+                    data_empty.setVisibility(View.VISIBLE);
+                }
 
             }
 
@@ -325,6 +345,10 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
     @Override
     public void onClick(View v) {
         try {
+            if (v.getId() == R.id.data_empty) {
+                app_progress_bar.setVisibility(View.VISIBLE);
+                getClassifyHorServer();
+            }
             if (v.getTag() != null & v.getTag() instanceof ClassifyItemAdapter.ItemViewHolder) {
                 ClassifyItemAdapter.ItemViewHolder holder = (ClassifyItemAdapter.ItemViewHolder) v.getTag();
                 if (v.isSelected()) {

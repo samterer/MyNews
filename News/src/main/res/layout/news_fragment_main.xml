@@ -5,7 +5,7 @@
 
 
     <LinearLayout
-        android:id="@+id/ll_main"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/zqzx_bg_normal"
@@ -15,10 +15,12 @@
         <include layout="@layout/main_top_layout" />
 
         <FrameLayout
+
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:id="@+id/ll_main"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -91,6 +93,7 @@
                 android:id="@+id/main_no_news"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="?app_progress_bar_bg"
                 android:paddingBottom="100dp"
                 android:visibility="gone">
 
@@ -120,36 +123,34 @@
 
             </FrameLayout>
 
+            <!-- 为空时点击屏幕加载Loading-->
+            <FrameLayout
+                android:id="@+id/app_progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:background="?app_progress_bar_bg"
+                android:visibility="gone">
+
+                <ProgressBar
+                    style="@style/loadingProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+
+            </FrameLayout>
+
             <View
-                android:visibility="gone"
                 android:id="@+id/cover_top"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/add_transparency" />
+                android:background="@color/add_transparency"
+                android:visibility="gone" />
         </FrameLayout>
-
 
 
     </LinearLayout>
 
-
-
-    <!-- 为空时点击屏幕加载Loading-->
-    <FrameLayout
-        android:id="@+id/app_progress_bar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="3dp"
-        android:background="?app_progress_bar_bg"
-        android:visibility="gone">
-
-        <ProgressBar
-            style="@style/loadingProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-
-    </FrameLayout>
 
     <!--<include layout="@layout/transparent_layout" />-->
 

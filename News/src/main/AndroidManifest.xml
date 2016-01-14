@@ -49,6 +49,11 @@
         android:theme="@style/ThemeDefault"
         android:windowSoftInputMode="stateHidden|adjustResize">
 
+        <meta-data
+            android:name="JPUSH_APPKEY"
+            android:value="@string/jpush_key" />
+        <!-- <<< 极光推送组件声明 @string/jpush_key    测试key：de1d2a800d272841495b67b3    测试2：  34ec482282873b2ea8566860-->
+
         <service
             android:name="com.news.update.UpdateService"
             android:exported="true"></service>
@@ -81,9 +86,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"></activity>
-        <activity
-            android:name="com.hzpd.ui.activity.XF_NewsHtmlDetailActivity"
-            android:screenOrientation="portrait"></activity>
+
         <activity
             android:name="com.hzpd.ui.activity.WebActivity"
             android:screenOrientation="portrait"></activity>
@@ -163,7 +166,7 @@
             android:enabled="true">
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
-                <category android:name="com.joy.tl.news" />
+                <category android:name="${applicationId}" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -185,7 +188,7 @@
                 <action android:name="cn.jpush.android.ui.PushActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="com.joy.tl.news" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </activity>
         <!-- Required SDK核心功能-->
@@ -223,14 +226,10 @@
                 <!--Optional 用户接受Rich Push Javascript 回调函数的intent-->
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
                 <!-- 接收网络变化 连接/断开 since 1.6.3 -->
-                <category android:name="com.joy.tl.news" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
 
-        <meta-data
-            android:name="JPUSH_APPKEY"
-            android:value="@string/jpush_key" />
-        <!-- <<< 极光推送组件声明 @string/jpush_key    测试key：de1d2a800d272841495b67b3-->
 
         <service android:name="com.hzpd.services.InitService"></service>
         <service android:name="com.hzpd.services.ClearCacheService"></service>

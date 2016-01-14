@@ -49,7 +49,7 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
     private ViewPager pager;
     private View ll_news_button;
     private PagerSlidingTabStrip tabStrip;
-    private LinearLayout ll_main;
+    private View ll_main;
     private ImageView background_empty;
     private View main_no_news;
     private View app_progress_bar;
@@ -76,7 +76,7 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
         ll_news_button = view.findViewById(R.id.ll_news_button);
         ll_news_button.setOnClickListener(this);
         tabStrip = (PagerSlidingTabStrip) view.findViewById(R.id.psts_tabs_app);
-        ll_main = (LinearLayout) view.findViewById(R.id.ll_main);
+        ll_main = view.findViewById(R.id.ll_main);
         background_empty = (ImageView) view.findViewById(R.id.background_empty);
         main_no_news = view.findViewById(R.id.main_no_news);
         app_progress_bar = view.findViewById(R.id.app_progress_bar);
@@ -129,28 +129,32 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
         try {
             List<NewsChannelBeanDB> dbs = dbHelper.getChannel()
                     .queryBuilder().where(NewsChannelBeanDBDao.Properties.Default_show.eq("1")).build().list();
-            mList = new ArrayList<>();
-            for (NewsChannelBeanDB beanDB : dbs) {
-                mList.add(new NewsChannelBean(beanDB));
-            }
-            if (null == mList) {
-                mList = new ArrayList<NewsChannelBean>();
+            if (null == dbs || dbs.size() < 3) {
+                Log.i("NewsFragment", "NewsFragment  readTitleData  null == mList ");
                 ll_main.setVisibility(View.GONE);
                 main_no_news.setVisibility(View.VISIBLE);
                 app_progress_bar.setVisibility(View.GONE);
                 main_no_news.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Log.i("NewsFragment", "NewsFragment  readTitleData  onClick ");
                         app_progress_bar.setVisibility(View.VISIBLE);
                         main_no_news.setVisibility(View.GONE);
                         getChannelJson();
                     }
                 });
             } else {
+                Log.i("NewsFragment", "NewsFragment  readTitleData 111"+dbs.size());
                 ll_main.setVisibility(View.VISIBLE);
                 main_no_news.setVisibility(View.GONE);
                 app_progress_bar.setVisibility(View.GONE);
             }
+            mList = new ArrayList<>();
+            for (NewsChannelBeanDB beanDB : dbs) {
+                mList.add(new NewsChannelBean(beanDB));
+            }
+            Log.i("NewsFragment", "NewsFragment  readTitleData");
+
             adapter = new NewsFragmentPagerAdapter(fm);
             pager.setAdapter(adapter);
             adapter.sortChannel(mList);
@@ -195,7 +199,6 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
     }
 
     public void getChannelJson() {
-        final File target = App.getFile(App.getInstance().getAllDiskCacheDir() + File.separator + "News");
         String urlChannelList = InterfaceJsonfile.CHANNELLIST + "News";
         String country = SPUtil.getCountry();
         urlChannelList = urlChannelList.replace("#country#", country.toLowerCase());
@@ -258,17 +261,18 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
 
     //	直接添加本地频道
     private void addLocalChannels(List<NewsChannelBean> list) {
-
-        // 添加推荐频道
         NewsChannelBean channelRecommend = new NewsChannelBean();
         channelRecommend.setTid("" + NewsChannelBean.TYPE_RECOMMEND);
         channelRecommend.setType(NewsChannelBean.TYPE_RECOMMEND);
         channelRecommend.setCnname(getString(R.string.recommend));
+        channelRecommend.setDefault_show("1");
+        channelRecommend.setSort_order("0");
+        // 添加推荐频道
         if (!list.contains(channelRecommend)) {
             list.add(0, channelRecommend);
         }
-
     }
+
 
     public void onEventMainThread(ChangeChannelEvent event) {
         if (event.csl != null) {

@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
+import com.hzpd.utils.SharePreferecesUtils;
 import com.news.update.Utils;
 import com.squareup.okhttp.Request;
 
@@ -31,9 +33,12 @@ import de.greenrobot.event.EventBus;
 
 public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnClickListener {
 
-
+    final static String DISCOVERY_CATEGERY = "discovery_category";
     private RecyclerView discovery_recyclerview;
     private DiscoveryItemNewAdapter newAdapter;
+
+    private View discovery_data_empty;
+    private View app_progress_bar;
 
     @Override
     public String getAnalyticPageName() {
@@ -50,6 +55,9 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
         try {
             view = inflater.inflate(R.layout.zy_discovery_item_fragment, container, false);
             tag = OkHttpClientManager.getTag();
+            discovery_data_empty = view.findViewById(R.id.discovery_data_empty);
+            discovery_data_empty.setOnClickListener(this);
+            app_progress_bar = view.findViewById(R.id.app_progress_bar);
             discovery_recyclerview = (RecyclerView) view.findViewById(R.id.discovery_recyclerview);
             //设置布局管理器
             vlinearLayoutManager = new LinearLayoutManager(getActivity());
@@ -86,9 +94,24 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
 
     private int Page = 1;
     private int pageSize = 10;
+    private boolean isClearOld;
+    private boolean isFirst;
 
     private void getDiscoveryServer() {
-        Log.i("getDiscoveryServer", "getDiscoveryServer  000");
+        Log.i("discovery", "discovery  getDiscoveryServer");
+        if (Page == 1) {
+            Log.i("discovery", "discovery  Page==1");
+            String json = SharePreferecesUtils.getParam(getActivity(), DISCOVERY_CATEGERY, "").toString();
+            if (!TextUtils.isEmpty(json)) {
+                parseJson(json);
+                isClearOld = true;
+            } else {
+                discovery_data_empty.setVisibility(View.VISIBLE);
+                app_progress_bar.setVisibility(View.GONE);
+                isFirst = true;
+            }
+
+        }
         Map<String, String> params = RequestParamsUtils.getMaps();
         params.put("Page", Page + "");
         params.put("PageSize", pageSize + "");
@@ -96,31 +119,20 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
         OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.discovery_url, new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
+                isFirst = false;
+                discovery_data_empty.setVisibility(View.GONE);
+                app_progress_bar.setVisibility(View.GONE);
                 try {
-                    JSONObject obj = FjsonUtil.parseObject(response.toString());
-                    if (null == obj) {
-                        return;
-                    }
-                    if (200 == obj.getIntValue("code")) {
-                        Page++;
-                        List<DiscoveryItemBean> mlist = FjsonUtil.parseArray(obj.getString("data")
-                                , DiscoveryItemBean.class);
-                        if (null == mlist) {
-                            return;
+                    if (Page == 1) {
+                        if (isAdded()) {
+                            SharePreferecesUtils.setParam(getActivity(), DISCOVERY_CATEGERY, response.toString());
                         }
-
-                        for (int i = 0; i < mlist.size(); i++) {
-
-                            if (mlist.get(i).getNews() == null || mlist.get(i).getNews().size() < 1) {
-                                DiscoveryItemBean bean = mlist.get(i);
-                                mlist.remove(bean);
-                                i--;
-                            }
-                        }
-                        newAdapter.appendData(mlist, false);
-                    } else {
-                        Page--;
                     }
+                    boolean flag = parseJson(response.toString());
+                    if (!flag) {
+                        newAdapter.setShowLoading(false);
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -128,11 +140,49 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
 
             @Override
             public void onFailure(Request request, Exception e) {
-                Log.i("getDiscoveryServer", "getDiscoveryServer  onFailure");
-
-                Page--;
+                if (isFirst) {
+                    discovery_data_empty.setVisibility(View.VISIBLE);
+                    app_progress_bar.setVisibility(View.GONE);
+                }
+                newAdapter.setShowLoading(false);
             }
         }, params);
+    }
+
+
+    private boolean parseJson(String json) {
+        boolean flag = false;
+        if (!TextUtils.isEmpty(json)) {
+            Log.i("discovery", "discovery  json!=null");
+            JSONObject obj = FjsonUtil.parseObject(json);
+            if (null == obj) {
+                return false;
+            }
+            if (200 == obj.getIntValue("code")) {
+                Log.i("discovery", "discovery  code==200");
+                Page++;
+                List<DiscoveryItemBean> mlist = FjsonUtil.parseArray(obj.getString("data")
+                        , DiscoveryItemBean.class);
+                if (null == mlist) {
+                    return false;
+                } else {
+                    for (int i = 0; i < mlist.size(); i++) {
+                        if (mlist.get(i).getNews() == null || mlist.get(i).getNews().size() < 1) {
+                            DiscoveryItemBean bean = mlist.get(i);
+                            mlist.remove(bean);
+                            i--;
+                        }
+                    }
+                    newAdapter.appendData(mlist, isClearOld);
+                    isClearOld = false;
+                    return true;
+                }
+
+            } else {
+                Page--;
+            }
+        }
+        return flag;
     }
 
     @Override
@@ -156,6 +206,10 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
     @Override
     public void onClick(View v) {
         try {
+            if (v.getId() == R.id.discovery_data_empty) {
+                app_progress_bar.setVisibility(View.VISIBLE);
+                getDiscoveryServer();
+            }
             if (v.getTag() != null && v.getTag() instanceof DiscoveryItemNewAdapter.ItemViewHolder) {
                 Log.i("DiscoveryItemNewAdapter.ItemViewHolder", "DiscoveryItemNewAdapter.ItemViewHolder");
                 DiscoveryItemNewAdapter.ItemViewHolder viewHolder = (DiscoveryItemNewAdapter.ItemViewHolder) v.getTag();
@@ -184,7 +238,7 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
 
                             @Override
                             public void onFailure(Request request, Exception e) {
-                                Log.i("onFailure","onFailure");
+                                Log.i("onFailure", "onFailure");
                             }
                         }, params);
                     }
