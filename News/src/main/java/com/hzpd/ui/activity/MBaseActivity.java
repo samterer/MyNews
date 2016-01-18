@@ -58,7 +58,7 @@ public class MBaseActivity extends FragmentActivity implements AnalyticCallback 
         spu = SPUtil.getInstance();
         startMills = System.currentTimeMillis();
         analyMap = new HashMap<String, String>();
-        dbHelper = DBHelper.getInstance(getApplicationContext());
+        dbHelper = DBHelper.getInstance();
     }
 
     public void changeStatusBar() {

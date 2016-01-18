@@ -1,8 +1,5 @@
 package com.hzpd.utils;
 
-import android.app.Activity;
-import android.content.Context;
-
 import com.hzpd.modle.db.AlbumBeanDBDao;
 import com.hzpd.modle.db.DaoMaster;
 import com.hzpd.modle.db.DaoSession;
@@ -30,8 +27,7 @@ public class DBHelper {
     private final NewsChannelBeanDBDao channel;
     private final NewsItemBeanForCollectionDao collectionDBUitls;
 
-    private DBHelper(Context mContext) {
-        Log.e("DBHelper", "DBHelper collectionDBUitls ");
+    private DBHelper() {
         DaoMaster daoMaster = App.getInstance().daoMaster;
         DaoSession session = daoMaster.newSession();
         newsJumpBeanDao = session.getNewsJumpBeanDao();
@@ -46,18 +42,15 @@ public class DBHelper {
         channel = session.getNewsChannelBeanDBDao();
     }
 
-    public static synchronized DBHelper getInstance(Context context) {
-        if (context instanceof Activity) {
-            context = context.getApplicationContext();
-        }
+    public static synchronized DBHelper getInstance() {
         if (null == instance) {
-            instance = new DBHelper(context);
+            instance = new DBHelper();
         }
         return instance;
     }
 
-    public static synchronized void setInstance(Context context) {
-        instance = new DBHelper(context);
+    public static synchronized void setInstance() {
+        instance = new DBHelper();
     }
 
     public void clear() {

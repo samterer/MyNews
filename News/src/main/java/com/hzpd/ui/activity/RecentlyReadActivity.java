@@ -57,13 +57,16 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
 //        recylerlist = search_listview_id.getRefreshableView();
         recylerlist.setAdapter(adapter);
 
+        long startTime=System.currentTimeMillis();
         try {
-            List<NewsBeanDB> list = DBHelper.getInstance(this).getNewsList()
+            Log.e("News","News: startTime1=="+(System.currentTimeMillis()-startTime));
+            List<NewsBeanDB> list = DBHelper.getInstance().getNewsList()
                     .queryBuilder().where(NewsBeanDBDao.Properties.Isreaded.eq("1"))
                     .orderDesc(NewsBeanDBDao.Properties.Id)
                     .build()
                     .list();
 
+            Log.e("News","News: startTime2=="+(System.currentTimeMillis()-startTime));
             if (null != list) {
                 pushmsg_tv_empty.setVisibility(View.GONE);
                 Log.i("isreaded", "isreaded" + list + ":::" + list.size());
@@ -77,6 +80,7 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
             } else {
                 pushmsg_tv_empty.setVisibility(View.VISIBLE);
             }
+            Log.e("News","News: startTime3=="+(System.currentTimeMillis()-startTime));
         } catch (Exception e) {
             e.printStackTrace();
         }

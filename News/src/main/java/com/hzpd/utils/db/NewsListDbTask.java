@@ -21,7 +21,7 @@ public class NewsListDbTask {
     private NewsBeanDBDao newsListDb;
 
     public NewsListDbTask(Context context) {
-        newsListDb = DBHelper.getInstance(context).getNewsList();
+        newsListDb = DBHelper.getInstance().getNewsList();
     }
 
     public void findList(NewsChannelBean channelbean

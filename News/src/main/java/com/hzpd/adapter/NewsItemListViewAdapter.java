@@ -101,7 +101,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         this.onClickListener = onClickListener;
         this.inflater = LayoutInflater.from(context);
         list = new ArrayList<>();
-        dbHelper = DBHelper.getInstance(context);
+        dbHelper = DBHelper.getInstance();
         spu = SPUtil.getInstance();
         newsListDbTask = new NewsListDbTask(context);
         readedNewsSet = new HashSet<>();
@@ -357,7 +357,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                 break;
             case TYPE_BIGPIC:
                 convertView = inflater.inflate(
-                        R.layout.news_big_item_layout, parent, false);
+                        R.layout.list_video_item, parent, false);
                 viewHolder = new VHBigPic(convertView);
                 break;
             case TYPE_LARGE://大图
@@ -436,6 +436,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             if (time > STANDARD_TIME) {
                 Log.e("test", "News: " + time + "  =>  " + holder.getClass().getName());
             }
+            Log.e("test", "News: " + time + " bind ");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -933,6 +934,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
     }
 
+    //幻灯片
     private class FlashHolder extends RecyclerView.ViewHolder {
         private TopPicViewPager topViewpager;//顶部轮播图
         private CircleIndicator indicator_default;
@@ -973,7 +975,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         }
     }
 
-    //JOKE 段子，评论，时间，脚标
+    //JOKE 段子
     private class JokeHolder extends RecyclerView.ViewHolder {
         private TextView newsitem_title;
         private TextView joke_good_tv;
@@ -1119,13 +1121,9 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
 
     private class VHBigPic extends RecyclerView.ViewHolder {
 
-        private ImageView news_big_item1;
-
-
         public VHBigPic(View v) {
             super(v);
-            news_big_item1 = (ImageView) v.findViewById(R.id.news_big_item1);
-            v.setOnClickListener(onClickListener);
+//            v.setOnClickListener(onClickListener);
         }
     }
 

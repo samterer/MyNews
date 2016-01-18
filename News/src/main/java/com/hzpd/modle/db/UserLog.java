@@ -25,7 +25,6 @@ public class UserLog {
         this.active_time = active_time;
     }
     public UserLog(String newsId, String time, String active_time) {
-        this.id = id;
         this.newsId = newsId;
         this.time = time;
         this.active_time = active_time;

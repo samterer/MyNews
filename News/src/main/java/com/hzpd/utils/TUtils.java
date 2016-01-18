@@ -14,59 +14,58 @@ import com.hzpd.ui.App;
 
 public class TUtils {
 
-	private static Handler baseHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-				case 0: {
-					Bundle bundle = msg.getData();
-					String text = bundle.getString("text");
-					int duration = bundle.getInt("duration");
-					makeText(App.getInstance(), text, duration).show();
-				}
-				break;
-				default: {
+    private static Handler baseHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0: {
+                    Bundle bundle = msg.getData();
+                    String text = bundle.getString("text");
+                    int duration = bundle.getInt("duration");
+                    makeText(App.getInstance(), text, duration).show();
+                }
+                break;
+                default: {
 
-				}
-				break;
-			}
-		}
-	};
+                }
+                break;
+            }
+        }
+    };
 
-	public static void toast(String str) {
-		Message msg = baseHandler.obtainMessage(0);
-		Bundle bundle = new Bundle();
-		bundle.putString("text", str);
-		bundle.putInt("duration", Toast.LENGTH_SHORT);
-		msg.setData(bundle);
-		baseHandler.sendMessage(msg);
-	}
+    public static void toast(String str) {
+        Message msg = baseHandler.obtainMessage(0);
+        Bundle bundle = new Bundle();
+        bundle.putString("text", str);
+        bundle.putInt("duration", Toast.LENGTH_SHORT);
+        msg.setData(bundle);
+        baseHandler.sendMessage(msg);
+    }
 
-	public static void toast(String str, int duration) {
-		Message msg = baseHandler.obtainMessage(0);
-		Bundle bundle = new Bundle();
-		bundle.putString("text", str);
-		bundle.putInt("duration", duration);
-		msg.setData(bundle);
-		baseHandler.sendMessage(msg);
-	}
+    public static void toast(String str, int duration) {
+        Message msg = baseHandler.obtainMessage(0);
+        Bundle bundle = new Bundle();
+        bundle.putString("text", str);
+        bundle.putInt("duration", duration);
+        msg.setData(bundle);
+        baseHandler.sendMessage(msg);
+    }
 
-	public static Toast makeText(Context context, CharSequence text,
-	                             int duration) {
+    public static Toast makeText(Context context, CharSequence text,
+                                 int duration) {
 
-		if (null == context) {
-			return null;
-		}
+        if (null == context) {
+            return null;
+        }
 
-		Toast result = new Toast(context);
+        Toast result = new Toast(context);
 
-		View v = LayoutInflater.from(context).inflate(R.layout.color_toast, null);
-		result.setView(v);
-		TextView tv = (TextView) v.findViewById(R.id.message);
-		tv.setText(text);
-//		result.setGravity(17, 0, 0);
-		result.setDuration(duration);
+        View v = LayoutInflater.from(context).inflate(R.layout.color_toast, null);
+        result.setView(v);
+        TextView tv = (TextView) v.findViewById(R.id.message);
+        tv.setText(text);
+        result.setDuration(duration);
 
-		return result;
-	}
+        return result;
+    }
 }

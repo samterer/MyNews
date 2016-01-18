@@ -208,6 +208,7 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
         try {
             if (v.getId() == R.id.discovery_data_empty) {
                 app_progress_bar.setVisibility(View.VISIBLE);
+                discovery_data_empty.setVisibility(View.GONE);
                 getDiscoveryServer();
             }
             if (v.getTag() != null && v.getTag() instanceof DiscoveryItemNewAdapter.ItemViewHolder) {

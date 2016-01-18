@@ -52,7 +52,7 @@ public class MyPushActivity extends MBaseActivity implements View.OnClickListene
         recylerlist.setAdapter(adapter);
 
         try {
-            List<PushBeanDB> list = DBHelper.getInstance(this).getPushList().queryBuilder().orderDesc(PushBeanDBDao.Properties.Id).list();
+            List<PushBeanDB> list = DBHelper.getInstance().getPushList().queryBuilder().orderDesc(PushBeanDBDao.Properties.Id).list();
             if (null != list) {
                 pushmsg_tv_empty.setVisibility(View.GONE);
                 List<NewsBean> nblist = new ArrayList<>();

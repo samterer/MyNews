@@ -40,7 +40,7 @@ public class InitService extends IntentService {
     public static final String SHARE_CONFIG_ETAG = "key_config_etag";
     public static final String SHARE_SEND_LOG = "key_send_log";
 
-    public static long SEND_TIME = 1000 * 60 * 2;
+    public static long SEND_TIME = 1000 * 10;
 
     private Object tag;
 
@@ -123,7 +123,7 @@ public class InitService extends IntentService {
         if (user != null && !TextUtils.isEmpty(user.getUid())) {
             uid = user.getUid();
         }
-        final UserLogDao dbUtils = DBHelper.getInstance(getApplicationContext()).getLog();
+        final UserLogDao dbUtils = DBHelper.getInstance().getLog();
         try {
             final List<UserLog> logs = dbUtils.loadAll();
             if (logs == null || logs.isEmpty()) {

@@ -19,7 +19,7 @@ public abstract class MyBaseAdater extends BaseAdapter {
 		mContext = c;
 		mImageLoader = ImageLoader.getInstance();
 		mLayoutInflater = LayoutInflater.from(c);
-		dbHelper = DBHelper.getInstance(c);
+		dbHelper = DBHelper.getInstance();
 	}
 
 }

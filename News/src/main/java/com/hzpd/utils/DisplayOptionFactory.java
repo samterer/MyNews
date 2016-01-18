@@ -33,9 +33,9 @@ public enum DisplayOptionFactory {
                 option = new DisplayImageOptions.Builder()
                         .bitmapConfig(Config.RGB_565)
                         .imageScaleType(ImageScaleType.EXACTLY)
-                        .showImageOnFail(R.drawable.logo)
-                        .showImageForEmptyUri(R.drawable.logo)
-                        .showImageOnLoading(R.drawable.logo)
+                        .showImageOnFail(R.drawable.default_bg)
+                        .showImageForEmptyUri(R.drawable.default_bg)
+                        .showImageOnLoading(R.drawable.default_bg)
                         .cacheInMemory(true).cacheOnDisk(true)
                         .displayer(new FadeInBitmapDisplayer(300))
                         .build();

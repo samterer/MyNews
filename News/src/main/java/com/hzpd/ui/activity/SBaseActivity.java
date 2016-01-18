@@ -38,7 +38,7 @@ public class SBaseActivity extends FragmentActivity {
 		mImageLoader = ImageLoader.getInstance();
 		startMills = System.currentTimeMillis();
 		analyMap = new HashMap<String, String>();
-		dbHelper = DBHelper.getInstance(getApplicationContext());
+		dbHelper = DBHelper.getInstance();
 
 
 	}

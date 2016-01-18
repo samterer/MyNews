@@ -136,24 +136,29 @@ public class OkHttpClientManager {
         return execute;
     }
 
-    private Call deliveryResult(final ResultCallback callback, Request request) {
+    private Call deliveryResult(final ResultCallback callback, final Request request) {
         final Call call = mOkHttpClient.newCall(request);
         call.enqueue(new Callback() {
-            @Override
-            public void onFailure(final Request request, final IOException e) {
-                sendFailedStringCallback(request, e, callback);
-            }
+                         @Override
+                         public void onFailure(final Request request, final IOException e) {
+                             sendFailedStringCallback(request, e, callback);
+                         }
 
-            @Override
-            public void onResponse(final Response response) {
-                try {
-                    final String string = response.body().string();
-                    sendSuccessResultCallback(string, callback);
-                } catch (IOException e) {
-                    sendFailedStringCallback(response.request(), e, callback);
-                }
-            }
-        });
+                         @Override
+                         public void onResponse(final Response response) {
+                             try {
+                                 String string = "";
+                                 if (response.code() < 300) {
+                                     string = response.body().string();
+                                 }
+                                 sendSuccessResultCallback(string, callback);
+                             } catch (IOException e) {
+                                 sendFailedStringCallback(response.request(), e, callback);
+                             }
+                         }
+                     }
+
+        );
         return call;
     }
 

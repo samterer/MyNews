@@ -41,7 +41,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:paddingBottom="60dp"
-                android:src="@drawable/zqzx_nonetwork" />
+                android:src="@drawable/zqzx_nonetwork"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/update_counts"

@@ -50,7 +50,6 @@ import com.hzpd.utils.db.NewsListDbTask;
 import com.news.update.Utils;
 import com.squareup.okhttp.Request;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -211,12 +210,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         callBack = new NewsItemListViewAdapter.CallBack() {
             @Override
             public void loadMore() {
-                mRecyclerView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        getServerList("");
-                    }
-                }, 10);
+                getServerList("");
             }
         };
         adapter.callBack = callBack;
@@ -299,21 +293,24 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
             @Override
             public void setList(List<NewsBeanDB> list) {
-                String nids = "";
+                final long start = System.currentTimeMillis();
                 if (null != list && list.size() > 5) {
-                    StringBuilder sb = new StringBuilder();
-                    List<NewsBean> nbList = new ArrayList<NewsBean>();
+                    isLoading = true;
+                    List<NewsBean> nbList = new ArrayList<>();
                     for (NewsBeanDB nbdb : list) {
-                        sb.append(nbdb.getNid() + ",");
                         NewsBean newsBean = nbdb.getNewsBean();
+                    Log.e("test", "News:NewsBeanDB  " + (System.currentTimeMillis() - start));
                         newsBean.setCnname(channelbean.getCnname());
                         nbList.add(newsBean);
+                        background_empty.setVisibility(View.GONE);
                     }
                     addLoading = true;
+                    Log.e("test", "News:getDbList  " + (System.currentTimeMillis() - start));
                     adapter.appendData(nbList, mFlagRefresh, true);
-                    background_empty.setVisibility(View.GONE);
                 }
+                Log.e("test", "News:getDbList  " + (System.currentTimeMillis() - start));
                 getServerList("");
+                Log.e("test", "News:getDbList  " + (System.currentTimeMillis() - start));
             }
         });
     }
@@ -347,7 +344,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         isLoading = true;
         OkHttpClientManager.postAsyn(tag
                 , InterfaceJsonfile.NEWSLIST
-
                 , new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
@@ -413,16 +409,14 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                     }
 
                     if (page == 1) {
-                        if (list.size() > 7) {
-                            adapter.removeOld();
-                        }
+                        adapter.removeOld();
                     }
                     if (list.size() >= 5) {
                         adapter.showLoading = true;
                     } else {
                         addLoading = true;
                     }
-
+                    checkNews(list);
                     adapter.appendData(list, mFlagRefresh, false);
                     background_empty.setVisibility(View.GONE);
                     if (page == 1) {
@@ -455,59 +449,56 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         mFlagRefresh = false;
     }
 
+    private void checkNews(List<NewsBean> list) {
+        if (list != null) {
+        }
+    }
+
     //获取幻灯
     private void getFlash() {
         if (TextUtils.isEmpty(channelbean.getTid())) {
             return;
         }
-        final File pageFile = App.getFile(newsItemPath + File.separator
-                + "channel_" + channelbean.getTid()
-                + File.separator + "flash");
         String path = InterfaceJsonfile.FLASH + channelbean.getTid();
         String country = SPUtil.getCountry();
         path = path.replace("#country#", country.toLowerCase());
-        Log.i("", "pageFile.getAbsolutePath()" + pageFile.getAbsolutePath());
-//        HttpHandler httpHandler =
-        OkHttpClientManager.getAsyn(tag,
-                path
-//                        , pageFile.getAbsolutePath()
+        OkHttpClientManager.getAsyn(tag, path
                 , new OkHttpClientManager.ResultCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        try {
-                            if (!isAdded()) {
-                                return;
-                            }
-                            String data = response.toString();
-                            JSONObject obj = FjsonUtil.parseObject(data);
-                            if (null == obj) {
-                                return;
-                            }
-                            mSwipeRefreshWidget.setRefreshing(false);
-                            List<NewsPageListBean> mViewPagelist = null;
-                            if (200 == obj.getIntValue("code")) {
-                                JSONObject object = obj.getJSONObject("data");
-                                mViewPagelist = FjsonUtil.parseArray(object.getString("flash"), NewsPageListBean.class);
-                                if (mRecyclerView.computeVerticalScrollOffset() < 10) {
-                                    mRecyclerView.scrollToPosition(0);
-                                }
-                            }
-                            if (mViewPagelist != null && mViewPagelist.size() > 0) {
-                                adapter.setFlashlist(mViewPagelist);
-                                background_empty.setVisibility(View.GONE);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+            @Override
+            public void onSuccess(Object response) {
+                try {
+                    if (!isAdded()) {
+                        return;
+                    }
+                    String data = response.toString();
+                    JSONObject obj = FjsonUtil.parseObject(data);
+                    if (null == obj) {
+                        return;
+                    }
+                    mSwipeRefreshWidget.setRefreshing(false);
+                    List<NewsPageListBean> mViewPagelist = null;
+                    if (200 == obj.getIntValue("code")) {
+                        JSONObject object = obj.getJSONObject("data");
+                        mViewPagelist = FjsonUtil.parseArray(object.getString("flash"), NewsPageListBean.class);
+                        if (mRecyclerView.computeVerticalScrollOffset() < 10) {
+                            mRecyclerView.scrollToPosition(0);
                         }
                     }
-
-                    @Override
-                    public void onFailure(Request request, Exception e) {
-                        LogUtils.i("getFlash-failed");
+                    if (mViewPagelist != null && mViewPagelist.size() > 0) {
+                        adapter.setFlashlist(mViewPagelist);
+                        background_empty.setVisibility(View.GONE);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
-                });
-//        handlerList.add(httpHandler);
+            @Override
+            public void onFailure(Request request, Exception e) {
+                LogUtils.i("getFlash-failed");
+            }
+
+        });
     }
 
     @Override
@@ -528,13 +519,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     }
 
     public void onEventMainThread(JokeGoodEvent event) {
-        String nid = event.nid;
-        Log.i("JokeGoodEvent", "JokeGoodEvent---nid:" + nid + "isJokeGood:" + event.isJokeGood);
-        if (event.isJokeGood) {//点赞
-
-        } else {
-
-        }
     }
 
 

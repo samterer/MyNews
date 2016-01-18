@@ -86,7 +86,7 @@ public class SPUtil {
     public static void updateChannel() {
         try {
             if (dbs != null) dbs.clear();
-            dbs = DBHelper.getInstance(App.getInstance()).getChannel().loadAll();
+            dbs = DBHelper.getInstance().getChannel().loadAll();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,7 +117,7 @@ public class SPUtil {
             App.getInstance().updateDao();
             SharePreferecesUtils.init();
             getInstance().msp = ACache.get(App.getInstance().getApplicationContext(), getCountry());
-            DBHelper.setInstance(App.getInstance());
+            DBHelper.setInstance();
         }
     }
 
@@ -132,7 +132,7 @@ public class SPUtil {
 
             SharePreferecesUtils.init();
             getInstance().msp = ACache.get(App.getInstance().getApplicationContext(), getCountry());
-            DBHelper.setInstance(App.getInstance());
+            DBHelper.setInstance();
         }
     }
 

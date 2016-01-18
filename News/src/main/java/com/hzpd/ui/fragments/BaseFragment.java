@@ -65,7 +65,7 @@ public class BaseFragment extends Fragment implements AnalyticCallback {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = activity;
-        dbHelper = DBHelper.getInstance(getActivity().getApplicationContext());
+        dbHelper = DBHelper.getInstance();
     }
 
     public void onResume() {

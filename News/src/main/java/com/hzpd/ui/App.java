@@ -89,6 +89,7 @@ public class App extends Application {
     public static final boolean debug = BuildConfig.DEBUG;
     public static InputMethodManager inputMethodManager;//输入法管理
     public static ExecutorService executorService = Executors.newFixedThreadPool(5);
+    public static ExecutorService uiService = Executors.newFixedThreadPool(5);
 
     public String themeName;
 
@@ -103,9 +104,6 @@ public class App extends Application {
 
     @Override
     public void onCreate() {
-        if (BuildConfig.DEBUG) {
-//            openStrictMode();
-        }
         try {
             init();
             long start = System.currentTimeMillis();
@@ -122,6 +120,7 @@ public class App extends Application {
                 FacebookSdk.sdkInitialize(getApplicationContext());
             }
             initImageLoader();
+            sendAnalytic();
             initAnalytics();
             com.hzpd.utils.Log.e("App", "App Success here " + (System.currentTimeMillis() - start));
             refWatcher = LeakCanary.install(this);
@@ -217,8 +216,10 @@ public class App extends Application {
             JPushInterface.setDebugMode(false);    // 设置开启日志,发布时请关闭日志
             com.hzpd.utils.Log.e("App", "App JPushInterface 4here ");
             JPushInterface.init(this);
+            if (BuildConfig.DEBUG) {
+                JPushInterface.setAlias(this, "debug", null);
+            }
             com.hzpd.utils.Log.e("App", "App JPushInterface  5here ");
-            sendAnalytic();
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -260,11 +261,15 @@ public class App extends Application {
 
 
     private void sendAnalytic() {
-        MobclickAgent.setDebugMode(BuildConfig.DEBUG);
-        Map<String, String> map = new HashMap<>();
-        SPUtil.addParams(map);
-        MobclickAgent.onEventValue(this, "2016", map, 1);
-        AnalyticUtils.sendGaEvent(this, "Startup", "Startup", "Startup", 1L);
+        try {
+            MobclickAgent.setDebugMode(BuildConfig.DEBUG);
+            Map<String, String> map = new HashMap<>();
+            SPUtil.addParams(map);
+            MobclickAgent.onEventValue(this, "2016", map, 1);
+            AnalyticUtils.sendGaEvent(this, "Startup", "Startup", "Startup", 1L);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -149,6 +149,7 @@
         <!-- >>> 极光推送组件声明 -->
         <!-- Required -->
         <service
+            android:process=":push"
             android:name="cn.jpush.android.service.PushService"
             android:enabled="true"
             android:exported="false">
@@ -193,6 +194,7 @@
         </activity>
         <!-- Required SDK核心功能-->
         <service
+            android:process=":push"
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
             android:exported="false"></service>

@@ -34,11 +34,9 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.color.tools.mytools.TUtil;
 import com.facebook.CallbackManager;
 import com.facebook.Profile;
 import com.facebook.ads.Ad;
@@ -187,6 +185,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
+        enterTime = System.currentTimeMillis();
         long start = System.currentTimeMillis();
         if (!TextUtils.isEmpty(ConfigBean.getInstance().news_details)) {
             AD_KEY = ConfigBean.getInstance().news_list;
@@ -378,7 +377,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     }
 
     private void initNew() {
-        dbUtils = DBHelper.getInstance(this).getCollectionDBUitls();
+        dbUtils = DBHelper.getInstance().getCollectionDBUitls();
         isCollection();
     }
 
@@ -775,7 +774,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
                     @Override
                     public void onFailure(Request request, Exception e) {
-                        Log.e("test", "test login failed");
+                        TUtils.toast(getString(R.string.toast_cannot_connect_network));
                     }
                 }, params);
     }
@@ -1232,7 +1231,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
                                     @Override
                                     public void onFailure(Request request, Exception e) {
-                                        Log.e(getLogTag(), "赞failed!");
                                         TUtils.toast(getString(R.string.toast_server_no_response));
                                         up_icon.setEnabled(true);
                                     }
@@ -1252,7 +1250,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private void getNewsDetails() {
         //TODO  获取详细信息
         try {
-            File pageFile = App.getFile(detailPathRoot + "detail_" + nb.getNid());
+            File pageFile = App.getFile(detailPathRoot + nb.getNid());
             //从缓存中获取
             if (GetFileSizeUtil.getInstance().getFileSizes(pageFile) > 30) {
                 try {
@@ -1285,7 +1283,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
             final String target = detailPathRoot + "detail_" + nb.getNid();
             final File file = App.getFile(target);
-//            detailPathRoot + "detail_" + nb.getNid(),
             OkHttpClientManager.getAsyn(tag, nb.getJson_url(), new OkHttpClientManager.ResultCallback() {
                 @Override
                 public void onSuccess(Object response) {
@@ -1296,7 +1293,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                             SPUtil.deleteFiles(target);
                             showEmpty();
                             if (isResume) {
-                                TUtil.toast(NewsDetailActivity.this, getString(R.string.error_delete));
+                                TUtils.toast(getString(R.string.error_delete));
                             }
                             return;
                         }
@@ -1304,7 +1301,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         if (null == obj) {
                             SPUtil.deleteFiles(target);
                             if (isResume) {
-                                TUtil.toast(NewsDetailActivity.this, getString(R.string.error_delete));
+                                TUtils.toast(getString(R.string.error_delete));
                             }
                             return;
                         }
@@ -1321,15 +1318,18 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         }
                         getLatestComm();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        SPUtil.deleteFiles(target);
+                        if (isResume) {
+                            TUtils.toast(getString(R.string.error_delete));
+                        }
                     }
                 }
 
                 @Override
                 public void onFailure(Request request, Exception e) {
-                    Log.i("test", "获取详细信息--->onFailure");
                     showEmpty();
                     if (isResume) {
+                        TUtils.toast(getString(R.string.toast_cannot_connect_network));
                         AnalyticUtils.sendGaEvent(getApplicationContext(), AnalyticUtils.ACTION.networkErrorOnDetail, null, null, 0L);
                         AnalyticUtils.sendUmengEvent(getApplicationContext(), AnalyticUtils.ACTION.networkErrorOnDetail);
                     }
@@ -1343,7 +1343,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private boolean isTagSelect;
 
     private void setContents() {
-        Log.i("setContents", "setContents--->" + mBean.toString());
         int textSize = spu.getTextSize();
         setupWebView(textSize);
         mRoot.setVisibility(View.VISIBLE);
@@ -1454,7 +1453,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         details_tv_subscribe.setCompoundDrawables(null, null, null, null);
                         EventBus.getDefault().post(new TagEvent(mBean.getTag().get(0)));
                         details_tv_subscribe.setText(getString(R.string.look_over));
-                        Toast.makeText(NewsDetailActivity.this, getString(R.string.tag_followed), Toast.LENGTH_SHORT).show();
+                        TUtils.toast(getString(R.string.tag_followed));
                         if (Utils.isNetworkConnected(NewsDetailActivity.this)) {
                             Map<String, String> params = RequestParamsUtils.getMapWithU();
                             if (spu.getUser() != null) {
@@ -1520,14 +1519,14 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         if (AvoidOnClickFastUtils.isFastDoubleClick(view)) {
                             return;
                         }
-                        NewsBeanDB nbfc = DBHelper.getInstance(NewsDetailActivity.this).getNewsList().queryBuilder().where(NewsBeanDBDao.Properties.Nid.eq(bean.getNid())).build().unique();
+                        NewsBeanDB nbfc = DBHelper.getInstance().getNewsList().queryBuilder().where(NewsBeanDBDao.Properties.Nid.eq(bean.getNid())).build().unique();
                         if (nbfc != null) {
                             nbfc.setIsreaded("1");
-                            DBHelper.getInstance(NewsDetailActivity.this).getNewsList().update(nbfc);
+                            DBHelper.getInstance().getNewsList().update(nbfc);
                         } else {
                             nbfc = new NewsBeanDB(bean);
                             nbfc.setIsreaded("1");
-                            DBHelper.getInstance(NewsDetailActivity.this).getNewsList().insert(nbfc);
+                            DBHelper.getInstance().getNewsList().insert(nbfc);
                         }
 
                         Intent mIntent = new Intent();
@@ -1966,8 +1965,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 dbUtils.insert(nibfc);
                 TUtils.toast(getString(R.string.toast_collect_success));
                 long co = dbUtils.count();
-                Log.i("test", "num:" + co);
-                Log.i("test", "type-->" + nibfc.getType());
                 newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
 
             } else {
@@ -2088,7 +2085,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
             if (null != nb && !TextUtils.isEmpty(nb.getNid())) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(enterTime);
-                DBHelper.getInstance(getApplicationContext()).getLog()
+                DBHelper.getInstance().getLog()
                         .insert(new UserLog(nb.getNid(), SPUtil.format(calendar), String.valueOf((System.currentTimeMillis() - enterTime) / 1000)));
                 Intent intent = new Intent(this, InitService.class);
                 intent.setAction(InitService.UserLogAction);
@@ -2099,7 +2096,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         }
     }
 
-    private long enterTime = 0;
+    private long enterTime = System.currentTimeMillis();
 
     private final int MAX_SIZE = 30;
 }

@@ -15,9 +15,6 @@ import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.FjsonUtil;
 import com.hzpd.utils.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.jpush.android.api.JPushInterface;
 
 /**
@@ -63,9 +60,9 @@ public class MyReceiver extends BroadcastReceiver {
         }
         NewsBean newsBean = FjsonUtil.parseObject(object.getString("data"), NewsBean.class);
         Log.i(TAG, "MyReceiver" + newsBean.getNid());
-        PushBeanDB unique = DBHelper.getInstance(context).getPushList().queryBuilder().where(PushBeanDBDao.Properties.Nid.eq(newsBean.getNid())).build().unique();
+        PushBeanDB unique = DBHelper.getInstance().getPushList().queryBuilder().where(PushBeanDBDao.Properties.Nid.eq(newsBean.getNid())).build().unique();
         if (unique==null){
-            DBHelper.getInstance(context).getPushList().insert(new PushBeanDB(newsBean));
+            DBHelper.getInstance().getPushList().insert(new PushBeanDB(newsBean));
         }
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);

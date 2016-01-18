@@ -47,7 +47,7 @@ public class ClearCacheService extends IntentService {
         try {
             DataCleanManager.deleteDir(new File(App.getInstance().getJsonFileCacheRootDir()));
             ImageLoader.getInstance().getDiskCache().clear();
-            DBHelper.getInstance(this).clear();
+            DBHelper.getInstance().clear();
             EventBus.getDefault().post(new RefreshEvent(true));
         } catch (Exception e) {
             e.printStackTrace();

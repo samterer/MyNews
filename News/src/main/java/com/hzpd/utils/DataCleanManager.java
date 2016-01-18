@@ -159,11 +159,11 @@ public class DataCleanManager {
                 }
                 //删除图集
                 if (null != albumIds && albumIds.size() > 0) {
-                    DBHelper.getInstance(context).getAlbumDBUitls().deleteAll();
+                    DBHelper.getInstance().getAlbumDBUitls().deleteAll();
                 }
                 //删除视频
                 if (null != videoIds && videoIds.size() > 0) {
-                    DBHelper.getInstance(context).getVideoDBUitls().deleteAll();
+                    DBHelper.getInstance().getVideoDBUitls().deleteAll();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

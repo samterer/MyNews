@@ -60,7 +60,7 @@ public class ZhuantiDetailListAdapter extends RecyclerView.Adapter {
         this.nb = nb;
         readedNewsSet = new HashSet<String>();
         newsListDbTask = new NewsListDbTask(context);
-        dbHelper = DBHelper.getInstance(context);
+        dbHelper = DBHelper.getInstance();
     }
 
     public void setReadedId(String nid) {

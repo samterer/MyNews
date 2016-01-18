@@ -52,7 +52,7 @@ public class ChooseAdapter extends RecyclerView.Adapter {
         inflate = LayoutInflater.from(context);
         this.onClickListener = onClickListener;
         readedNewsSet = new HashSet<String>();
-        dbHelper = DBHelper.getInstance(context);
+        dbHelper = DBHelper.getInstance();
         this.fontSize = SPUtil.getInstance().getTextSize();
     }
 

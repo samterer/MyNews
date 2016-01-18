@@ -30,7 +30,7 @@ public class MWBaseActivity extends FragmentActivity implements AnalyticCallback
         action.onCreate(this);
         activity = this;
         spu = SPUtil.getInstance();
-        dbHelper = DBHelper.getInstance(getApplicationContext());
+        dbHelper = DBHelper.getInstance();
     }
 
     @Override

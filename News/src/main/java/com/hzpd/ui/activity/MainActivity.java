@@ -180,9 +180,11 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        SPUtil.setGlobal(InitService.SHARE_SEND_LOG, "1000");
         Intent intent = new Intent(this, InitService.class);
         intent.setAction(InitService.UserLogAction);
         startService(intent);
+        App.uiService.shutdownNow();
     }
 
     @Override

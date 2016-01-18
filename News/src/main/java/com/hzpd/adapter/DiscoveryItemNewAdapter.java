@@ -228,14 +228,14 @@ public class DiscoveryItemNewAdapter extends RecyclerView.Adapter {
                                 return;
                             }
                             
-                            NewsBeanDB nbfc = DBHelper.getInstance(context).getNewsList().queryBuilder().where(NewsBeanDBDao.Properties.Nid.eq(itembean.getNid())).build().unique();
+                            NewsBeanDB nbfc = DBHelper.getInstance().getNewsList().queryBuilder().where(NewsBeanDBDao.Properties.Nid.eq(itembean.getNid())).build().unique();
                             if (nbfc != null) {
                                 nbfc.setIsreaded("1");
-                                DBHelper.getInstance(context).getNewsList().update(nbfc);
+                                DBHelper.getInstance().getNewsList().update(nbfc);
                             } else {
                                 nbfc = new NewsBeanDB(itembean);
                                 nbfc.setIsreaded("1");
-                                DBHelper.getInstance(context).getNewsList().insert(nbfc);
+                                DBHelper.getInstance().getNewsList().insert(nbfc);
                             }
 
                             Intent mIntent = new Intent(context, NewsDetailActivity.class);
