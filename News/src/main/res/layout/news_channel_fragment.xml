@@ -42,7 +42,7 @@
                 android:layout_gravity="center"
                 android:paddingBottom="60dp"
                 android:src="@drawable/zqzx_nonetwork"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
             <TextView
                 android:id="@+id/update_counts"
@@ -53,6 +53,16 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:visibility="gone" />
+
+
+            <com.pnikosis.materialishprogress.ProgressWheel
+                android:id="@+id/app_progress_bar"
+                style="@style/MaterialProgressWheelStyle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_toLeftOf="@+id/zqzx_setting_cache"
+                />
 
         </FrameLayout>
 

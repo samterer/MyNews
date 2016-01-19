@@ -31,6 +31,7 @@ public class ConfigBean {
                 JSONObject json = FjsonUtil.parseObject(data);
                 if (json.getString("code").equals("200")) {
                     json = json.getJSONObject("data");
+                    Log.e("test", "News: " + json.toJSONString());
                     instance.open_channel = json.getString("open_channel");
                     instance.open_tag = json.getString("open_tag");
                     instance.default_key = json.getString("default_key");

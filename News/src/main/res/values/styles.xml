@@ -372,7 +372,7 @@
     <style name="MaterialProgressWheelStyle">
         <item name="android:layout_width">80dp</item>
         <item name="android:layout_height">80dp</item>
-        <item name="matProg_barColor">#f86e6e</item>
+        <item name="matProg_barColor">#0177d9</item>
         <item name="matProg_progressIndeterminate">true</item>
     </style>
 

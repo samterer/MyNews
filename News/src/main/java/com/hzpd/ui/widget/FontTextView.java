@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
 
 /**
@@ -19,10 +18,7 @@ public class FontTextView extends TextView {
 
     public FontTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        long startTime = System.currentTimeMillis();
-        Log.e("setFont","News: setFont3=="+(System.currentTimeMillis()-startTime));
         SPUtil.setFont(this);
-        Log.e("setFont", "News: setFont4==" + (System.currentTimeMillis() - startTime));
     }
 
     public FontTextView(Context context, AttributeSet attrs, int defStyleAttr) {

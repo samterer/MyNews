@@ -11,7 +11,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
@@ -40,6 +39,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListe
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -289,10 +289,10 @@ public class SPUtil {
         }
     };
 
-    private static String FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static String format(Calendar calendar) {
-        return "" + DateFormat.format(FORMAT, calendar);
+        return FORMAT.format(calendar.getTime());
     }
 
     /**

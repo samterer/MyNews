@@ -28,12 +28,10 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.db.NewsListDbTask;
-
 import com.news.update.UpdateService;
 import com.news.update.Utils;
 import com.squareup.okhttp.Request;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +66,7 @@ public class WelcomeActivity extends MWBaseActivity {
         // 初始化服务
         Intent service = new Intent(this, InitService.class);
         service.setAction(InitService.InitAction);
-        this.startService(service);
+        startService(service);
         // 更新服务
         service = new Intent(this, UpdateService.class);
         this.startService(service);

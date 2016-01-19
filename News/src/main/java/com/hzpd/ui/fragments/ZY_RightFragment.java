@@ -86,7 +86,6 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
     private LoginQuitBR br;
     private CallbackManager callbackManager;
     private TextView night_mode;
-    private TextView version;
     private TextView personal_item_text;
     private ImageView image_skin_mode;
     private View coverTop;
@@ -144,7 +143,6 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
         zy_rfrag_tv_login = (TextView) view.findViewById(R.id.zy_rfrag_tv_login);
         zy_rfrag_iv_login = (CircleImageView) view.findViewById(R.id.zy_rfrag_iv_login);
         night_mode = (TextView) view.findViewById(R.id.night_mode);
-        version = (TextView) view.findViewById(R.id.zy_version);
         image_skin_mode = (ImageView) view.findViewById(R.id.image_skin_mode);
         personal_item_text = (TextView) view.findViewById(R.id.choose_country);
         coverTop = view.findViewById(R.id.cover_top);
@@ -178,15 +176,13 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         try {
-            version.setText(getResources().getString(R.string.app_name) + "  v" + getActivity().getPackageManager().getPackageInfo(getActivity()
-                    .getPackageName(), 0).versionName);
             br = new LoginQuitBR();
             IntentFilter filter = new IntentFilter();
             filter.addAction(ZY_RightFragment.ACTION_QUIT);
             filter.addAction(ZY_RightFragment.ACTION_USER);
             filter.addAction(ZY_RightFragment.ACTION_QUIT_LOGIN);
             activity.registerReceiver(br, filter);
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

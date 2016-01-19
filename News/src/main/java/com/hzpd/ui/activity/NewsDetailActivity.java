@@ -1279,8 +1279,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                 }
                 return;
             }
-            final long start = System.currentTimeMillis();
-
             final String target = detailPathRoot + "detail_" + nb.getNid();
             final File file = App.getFile(target);
             OkHttpClientManager.getAsyn(tag, nb.getJson_url(), new OkHttpClientManager.ResultCallback() {
@@ -2077,7 +2075,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     @Override
     protected void onStop() {
-        super.onStop();
         try {
             if (BuildConfig.DEBUG) {
                 return;
@@ -2094,6 +2091,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         } catch (Exception e) {
             e.printStackTrace();
         }
+        super.onStop();
     }
 
     private long enterTime = System.currentTimeMillis();

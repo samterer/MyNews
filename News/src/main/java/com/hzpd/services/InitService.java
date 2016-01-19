@@ -2,10 +2,8 @@ package com.hzpd.services;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.Environment;
 import android.text.TextUtils;
 
-import com.color.tools.mytools.LogUtils;
 import com.hzpd.hflt.BuildConfig;
 import com.hzpd.modle.UserBean;
 import com.hzpd.modle.db.UserLog;
@@ -19,15 +17,11 @@ import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
-import com.news.update.UpdateUtils;
 import com.news.update.Utils;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import java.io.File;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,9 +45,7 @@ public class InitService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (ConfigBean.getInstance().send_log_time > 1000) {
-            SEND_TIME = ConfigBean.getInstance().send_log_time;
-        }
+        SEND_TIME = ConfigBean.getInstance().send_log_time;
         tag = OkHttpClientManager.getTag();
     }
 
@@ -66,14 +58,13 @@ public class InitService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        LogUtils.i("initService");
         if (intent != null) {
             if (InitService.InitAction.equals(intent.getAction())) {
                 debugTest();
                 //TODO 获取服务器配置  AD_KEY
                 getConfig();
             } else if (InitService.UserLogAction.equals(intent.getAction())) {
-                Log.e("test", "send use log");
+                Log.e("test", "News: " + InitService.UserLogAction);
                 sendUserLog();
             }
         }
@@ -81,7 +72,7 @@ public class InitService extends IntentService {
 
     private void getConfig() {
         try {
-            if (!Utils.isNetworkConnected(this)) {
+            if (BuildConfig.DEBUG || !Utils.isNetworkConnected(this)) {
                 return;
             }
             Map<String, String> params = new HashMap<>();
@@ -96,7 +87,6 @@ public class InitService extends IntentService {
             }
             String data = OkHttpClientManager.get(InterfaceJsonfile.AD_CONFIG);
             if (!TextUtils.isEmpty(data)) {
-                Log.e("test", "News: " + data);
                 com.alibaba.fastjson.JSONObject json = FjsonUtil.parseObject(data);
                 if (json.getString("code").equals("200")) {
                     SharePreferecesUtils.setParam(this, SHARE_KEY_AD_CONFIG, data);
@@ -113,11 +103,10 @@ public class InitService extends IntentService {
         if (BuildConfig.DEBUG || !Utils.isNetworkConnected(this)) {
             return;
         }
-        long send_user_log_time = SPUtil.getGlobal(SHARE_SEND_LOG, System.currentTimeMillis());
+        long send_user_log_time = SPUtil.getGlobal(SHARE_SEND_LOG, 0L);
         if (System.currentTimeMillis() - send_user_log_time < SEND_TIME) {
             return;
         }
-
         UserBean user = SPUtil.getInstance().getUser();
         String uid = "";
         if (user != null && !TextUtils.isEmpty(user.getUid())) {
@@ -134,7 +123,8 @@ public class InitService extends IntentService {
             params.put("uid", uid);
             params.put("json", json);
             SPUtil.addParams(params);
-            String str = OkHttpClientManager.post(InterfaceJsonfile.USER_LOG, params);
+            String str;
+            str = OkHttpClientManager.post(InterfaceJsonfile.USER_LOG, params);
             if (!str.isEmpty() && str.contains("200")) {
                 dbUtils.deleteAll();
                 send_user_log_time = System.currentTimeMillis();
@@ -148,35 +138,6 @@ public class InitService extends IntentService {
 
     public void debugTest() {
         if (BuildConfig.DEBUG) {
-            String url = "http://s3-ap-southeast-1.amazonaws.com/ltcms-apk/com.joy.tl.news/GooglePlay/1/567c9e57069ba.apk";
-            OkHttpClientManager.ResultCallback callBack = new OkHttpClientManager.ResultCallback<File>() {
-
-                @Override
-                public void onLoading(int total, int current) {
-                    Log.e("test", "News " + total + ":" + current);
-                    int progress = (int) (1.0f * current / total * 100);
-                    Log.e("progress", "progress -- " + progress);
-                }
-
-                @Override
-                public void onSuccess(File response) {
-                    try {
-                        Log.e("test", "News " + response.getAbsolutePath());
-                        Log.e("test", "News " + UpdateUtils.getHash(response.getAbsolutePath(), "MD5"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Request request, Exception e) {
-                    Log.e("test", "News " + request + ":" + e.toString());
-                }
-            };
-            File file = Environment.getExternalStorageDirectory();
-            file = new File(file, "news.test.apk");
         }
     }
 }

@@ -8,6 +8,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -138,6 +139,8 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     boolean pullRefresh = false;
     private Object tag;
 
+    private View app_progress_bar;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -146,6 +149,8 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         isRefresh = true;
         View view = inflater.inflate(R.layout.news_channel_fragment, container, false);
         view.findViewById(R.id.main_top_layout).setVisibility(View.GONE);
+        app_progress_bar=view.findViewById(R.id.app_progress_bar);
+        app_progress_bar.setVisibility(View.VISIBLE);
         if (!ConfigBean.getInstance().open_channel.contains(SPUtil.getCountry())) {
             view.findViewById(R.id.main_top_layout).setVisibility(View.VISIBLE);
             View main_top_search = view.findViewById(R.id.main_top_search);
@@ -290,27 +295,27 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     @Override
     public void getDbList() {
         newsListDbTask.findList(channelbean, page, pageSize, new I_SetList<NewsBeanDB>() {
-
             @Override
             public void setList(List<NewsBeanDB> list) {
                 final long start = System.currentTimeMillis();
                 if (null != list && list.size() > 5) {
-                    isLoading = true;
+                    app_progress_bar.setVisibility(View.GONE);
+//                    isLoading = true;
                     List<NewsBean> nbList = new ArrayList<>();
+                    Log.e("test", "News:getDbList  1=" + (System.currentTimeMillis() - start));
                     for (NewsBeanDB nbdb : list) {
                         NewsBean newsBean = nbdb.getNewsBean();
-                    Log.e("test", "News:NewsBeanDB  " + (System.currentTimeMillis() - start));
                         newsBean.setCnname(channelbean.getCnname());
                         nbList.add(newsBean);
                         background_empty.setVisibility(View.GONE);
                     }
                     addLoading = true;
-                    Log.e("test", "News:getDbList  " + (System.currentTimeMillis() - start));
+                    Log.e("test", "News:getDbList  2=" + (System.currentTimeMillis() - start));
                     adapter.appendData(nbList, mFlagRefresh, true);
+                    Log.e("test", "News:getDbList  3=" + (System.currentTimeMillis() - start));
                 }
-                Log.e("test", "News:getDbList  " + (System.currentTimeMillis() - start));
                 getServerList("");
-                Log.e("test", "News:getDbList  " + (System.currentTimeMillis() - start));
+                Log.e("test", "News:getDbList  4=" + (System.currentTimeMillis() - start));
             }
         });
     }
@@ -347,6 +352,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 , new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
+                app_progress_bar.setVisibility(View.GONE);
                 try {
                     isLoading = false;
                     mSwipeRefreshWidget.setRefreshing(false);
@@ -365,6 +371,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
             @Override
             public void onFailure(Request request, Exception e) {
+                app_progress_bar.setVisibility(View.GONE);
                 showEmpty();
                 TUtils.toast(getString(R.string.toast_cannot_connect_network));
                 AnalyticUtils.sendGaEvent(getActivity(), AnalyticUtils.ACTION.networkErrorOnList, null, null, 0L);
@@ -391,6 +398,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         switch (obj.getIntValue("code")) {
             case 200: {
                 List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
+                adapter.checkList(list);
                 if (null != list && list.size() > 0) {
                     newsListDbTask.saveList(list, null);
                     for (NewsBean bean : list) {
@@ -416,7 +424,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                     } else {
                         addLoading = true;
                     }
-                    checkNews(list);
                     adapter.appendData(list, mFlagRefresh, false);
                     background_empty.setVisibility(View.GONE);
                     if (page == 1) {
@@ -428,15 +435,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
             break;
             default: {
                 if (page > 1 && adapter.showLoading) {
-                    int count = adapter.getItemCount();
-                    adapter.showLoading = false;
-                    adapter.notifyItemRemoved(count);
-                    mRecyclerView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            addLoading = true;
-                        }
-                    }, 2000);
+                    mRecyclerView.smoothScrollBy(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics()));
                 }
                 if (pullRefresh) {
                     page = --lastPage;
@@ -450,8 +449,6 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     }
 
     private void checkNews(List<NewsBean> list) {
-        if (list != null) {
-        }
     }
 
     //获取幻灯

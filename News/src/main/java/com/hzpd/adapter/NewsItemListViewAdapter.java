@@ -62,6 +62,24 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
     boolean isJokeGood = false;
     boolean isJokeBad = false;
 
+    public void checkList(List<NewsBean> sList) {
+        try {
+            if (list != null && sList != null && sList.size() > 0) {
+                for (int i = 0; i < list.size(); i++) {
+                    String nid = list.get(i).getNid();
+                    for (int j = 0; j < sList.size(); j++) {
+                        if (sList.get(j).getNid().equals(nid)) {
+                            sList.remove(j);
+                            break;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public interface CallBack {
         void loadMore();
     }
@@ -118,6 +136,8 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
     }
 
     public void setNativeAd() {
+        long start = System.currentTimeMillis();
+        Log.e("test", "News:setNativeAd  start=" + (System.currentTimeMillis() - start));
         if (ads == null) {
             return;
         }
@@ -129,15 +149,14 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         final NativeAd nativeAd = new NativeAd(context.getApplicationContext(), AD_KEY);
         ads.put("" + nextAdPosition, nativeAd);
         final int adPos = nextAdPosition;
+        Log.e("test", "News:setNativeAd  start=" + (System.currentTimeMillis() - start));
         nativeAd.setAdListener(new AdListener() {
             @Override
             public void onError(Ad ad, AdError adError) {
-//                Log.e("test", "onError->" + nextAdPosition + ": " + adError.getErrorMessage());
             }
 
             @Override
             public void onAdLoaded(Ad ad) {
-//                Log.e("test", "onAdLoaded->" + nextAdPosition + ": " + nativeAd);
                 try {
                     if (!isAdd) {
                         return;
@@ -176,11 +195,17 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             }
 
         });
+        Log.e("test", "News:setNativeAd  start=" + (System.currentTimeMillis() - start));
         nativeAd.loadAd();
+        Log.e("test", "News:setNativeAd  start=" + (System.currentTimeMillis() - start));
+
         nextAdPosition += STEP + random.nextInt(STEP);
         if (MAX_POSITION < nextAdPosition) {
             nextAdPosition = Integer.MAX_VALUE;
         }
+
+        Log.e("test", "News:setNativeAd  end=" + (System.currentTimeMillis() - start));
+
     }
 
 
@@ -201,6 +226,8 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
     }
 
     public void appendData(List<NewsBean> data, boolean isClearOld, boolean isDb) {
+        long start = System.currentTimeMillis();
+        Log.e("test", "News:appendData  start=" + (System.currentTimeMillis() - start));
         if (data == null && isClearOld) {
             list.clear();
             return;
@@ -214,22 +241,28 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             SPUtil.clearAds(ads);
         }
         list.addAll(data);
+        Log.e("test", "News:appendData  1=" + (System.currentTimeMillis() - start));
         getReaded(data);
+        Log.e("test", "News:appendData  2=" + (System.currentTimeMillis() - start));
         if (isDb) {
             appendoldlist = data;
         }
+        Log.e("test", "News:appendData  3=" + (System.currentTimeMillis() - start));
         if (isClearOld) {
             notifyDataSetChanged();
             nextAdPosition = 6;
         } else {
             notifyItemRangeInserted(index, data.size());
         }
+        Log.e("test", "News:appendData  4=" + (System.currentTimeMillis() - start));
         while (list.size() > nextAdPosition) {
             if (ads == null) {
                 return;
             }
             setNativeAd();
         }
+        Log.e("test", "News:appendData  end=" + (System.currentTimeMillis() - start));
+
     }
 
     public void removeOld() {
@@ -345,6 +378,10 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                 convertView = inflater.inflate(
                         R.layout.news_3_item_layout, parent, false);
                 viewHolder = new VHThree(convertView);
+                time = (int) (System.currentTimeMillis() - start);
+                if (time > STANDARD_TIME) {
+                    Log.e("test", "News:inflate VHThree " + time + "   => ");
+                }
                 break;
             case TYPE_LEFTPIC://普通
                 convertView = inflater.inflate(
@@ -364,11 +401,19 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
                 convertView = inflater.inflate(
                         R.layout.news_large_item_layout, parent, false);
                 viewHolder = new VHLargePic(convertView);
+                time = (int) (System.currentTimeMillis() - start);
+                if (time > STANDARD_TIME) {
+                    Log.e("test", "News:inflate VHLargePic " + time + "   => ");
+                }
                 break;
             case TYPE_AD://广告
                 convertView = inflater.inflate(
                         R.layout.news_list_ad_layout, parent, false);
                 viewHolder = new AdHolder(convertView);
+                time = (int) (System.currentTimeMillis() - start);
+                if (time > STANDARD_TIME) {
+                    Log.e("test", "News:inflate AdHolder " + time + "   => ");
+                }
                 break;
             case TYPE_LOADING://加载
                 convertView = inflater.inflate(
