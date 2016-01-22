@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -51,7 +52,8 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
     private PagerSlidingTabStrip tabStrip;
     private View ll_main;
     private ImageView background_empty;
-    private View main_no_news;
+    private View data_empty;
+    private Button click_refresh_btn;
     private View app_progress_bar;
 
     private NewsFragmentPagerAdapter adapter;
@@ -78,7 +80,8 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
         tabStrip = (PagerSlidingTabStrip) view.findViewById(R.id.psts_tabs_app);
         ll_main = view.findViewById(R.id.ll_main);
         background_empty = (ImageView) view.findViewById(R.id.background_empty);
-        main_no_news = view.findViewById(R.id.main_no_news);
+        data_empty = view.findViewById(R.id.data_empty);
+        click_refresh_btn= (Button) view.findViewById(R.id.click_refresh_btn);
         app_progress_bar = view.findViewById(R.id.app_progress_bar);
         coverTop = view.findViewById(R.id.cover_top);
         main_top_search = view.findViewById(R.id.main_top_search);
@@ -132,21 +135,21 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
             if (null == dbs || dbs.size() < 3) {
                 Log.i("NewsFragment", "NewsFragment  readTitleData  null == mList ");
                 ll_main.setVisibility(View.GONE);
-                main_no_news.setVisibility(View.VISIBLE);
+                data_empty.setVisibility(View.VISIBLE);
                 app_progress_bar.setVisibility(View.GONE);
-                main_no_news.setOnClickListener(new View.OnClickListener() {
+                click_refresh_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Log.i("NewsFragment", "NewsFragment  readTitleData  onClick ");
                         app_progress_bar.setVisibility(View.VISIBLE);
-                        main_no_news.setVisibility(View.GONE);
+                        data_empty.setVisibility(View.GONE);
                         getChannelJson();
                     }
                 });
             } else {
                 Log.i("NewsFragment", "NewsFragment  readTitleData 111"+dbs.size());
                 ll_main.setVisibility(View.VISIBLE);
-                main_no_news.setVisibility(View.GONE);
+                data_empty.setVisibility(View.GONE);
                 app_progress_bar.setVisibility(View.GONE);
             }
             mList = new ArrayList<>();
@@ -254,7 +257,7 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
                     @Override
                     public void onFailure(Request request, Exception e) {
                         app_progress_bar.setVisibility(View.GONE);
-                        main_no_news.setVisibility(View.VISIBLE);
+                        data_empty.setVisibility(View.VISIBLE);
                     }
                 });
     }

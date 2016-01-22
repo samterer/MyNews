@@ -441,9 +441,6 @@ public class Utils {
      */
     public static String getLanguage(Context context) {
         String result = Locale.getDefault().getLanguage();
-        if (context != null) {
-            return testLanguage(result);
-        }
         return result;
     }
 

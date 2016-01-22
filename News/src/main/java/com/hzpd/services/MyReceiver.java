@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.db.PushBeanDB;
 import com.hzpd.modle.db.PushBeanDBDao;
+import com.hzpd.ui.activity.MainActivity;
 import com.hzpd.ui.activity.NewsDetailActivity;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.FjsonUtil;
@@ -85,6 +86,10 @@ public class MyReceiver extends BroadcastReceiver {
             if (myintent != null) {
                 myintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 Log.e(TAG, "通知跳转到详情页面成功");
+                context.startActivity(myintent);
+            }else{
+                myintent=new Intent();
+                myintent.setClass(context, MainActivity.class);
                 context.startActivity(myintent);
             }
         } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {

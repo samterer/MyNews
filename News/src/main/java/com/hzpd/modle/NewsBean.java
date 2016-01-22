@@ -7,6 +7,7 @@ import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.db.PushBeanDB;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 
 public class NewsBean implements Serializable {
@@ -102,14 +103,6 @@ public class NewsBean implements Serializable {
             unlike = nb.getUnlike();
 
         }
-    }
-
-    @Override
-    public String toString() {
-        return "NewsBean{" +
-                " nid='" + nid + '\'' +
-                ", json_url='" + json_url + '\'' +
-                '}';
     }
 
     public String getTagId() {
@@ -304,5 +297,33 @@ public class NewsBean implements Serializable {
         this.fav = fav;
     }
 
-
+    @Override
+    public String toString() {
+        return "NewsBean{" +
+                "tagId='" + tagId + '\'' +
+                ", nid='" + nid + '\'' +
+                ", title='" + title + '\'' +
+                ", sid='" + sid + '\'' +
+                ", tid='" + tid + '\'' +
+                ", cnname='" + cnname + '\'' +
+                ", authorname='" + authorname + '\'' +
+                ", outline='" + outline + '\'' +
+                ", type='" + type + '\'' +
+                ", update_time='" + update_time + '\'' +
+                ", json_url='" + json_url + '\'' +
+                ", imgs=" + Arrays.toString(imgs) +
+                ", rtype='" + rtype + '\'' +
+                ", comcount='" + comcount + '\'' +
+                ", sort_order='" + sort_order + '\'' +
+                ", status='" + status + '\'' +
+                ", comflag='" + comflag + '\'' +
+                ", subjectsort='" + subjectsort + '\'' +
+                ", columnid='" + columnid + '\'' +
+                ", copyfrom='" + copyfrom + '\'' +
+                ", fav='" + fav + '\'' +
+                ", attname='" + attname + '\'' +
+                ", like='" + like + '\'' +
+                ", unlike='" + unlike + '\'' +
+                '}';
+    }
 }

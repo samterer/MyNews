@@ -89,39 +89,7 @@
                     android:layout_weight="1" />
             </LinearLayout>
             <!--数据为空时显示-->
-            <FrameLayout
-                android:id="@+id/main_no_news"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?app_progress_bar_bg"
-                android:paddingBottom="100dp"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/background_empty"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/main_none" />
-
-                    <TextView
-                        android:id="@+id/text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/click_here_to_refresh" />
-
-
-                </LinearLayout>
-
-
-            </FrameLayout>
+            <include layout="@layout/data_empty_layout" />
 
             <!-- 为空时点击屏幕加载Loading-->
             <FrameLayout

@@ -1341,6 +1341,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private boolean isTagSelect;
 
     private void setContents() {
+        Log.i("test","setContents="+mBean.getTag().toString());
         int textSize = spu.getTextSize();
         setupWebView(textSize);
         mRoot.setVisibility(View.VISIBLE);
@@ -2050,12 +2051,14 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     protected void onPause() {
         super.onPause();
         try {
-            SharePreferecesUtils.setParam(this, StationConfig.DETAILS_LOCATION + nb.getNid(), mWebView.getScrollY());
-            SharePreferecesUtils.setParam(this, StationConfig.DETAILS_LOCATION + nb.getNid(), mWebView.getScrollY());
-            super.onPause();
-            long totalTime = System.currentTimeMillis() - enterTime;
-            totalTime = totalTime / 1000;
-            AnalyticUtils.sendGaEvent(this, AnalyticUtils.CATEGORY.newsDetail, AnalyticUtils.ACTION.viewPage, PREFIX + nb.getTid() + "#" + nb.getNid(), totalTime);
+            if (nb != null && mWebView != null) {
+                SharePreferecesUtils.setParam(this, StationConfig.DETAILS_LOCATION + nb.getNid(), mWebView.getScrollY());
+                SharePreferecesUtils.setParam(this, StationConfig.DETAILS_LOCATION + nb.getNid(), mWebView.getScrollY());
+                super.onPause();
+                long totalTime = System.currentTimeMillis() - enterTime;
+                totalTime = totalTime / 1000;
+                AnalyticUtils.sendGaEvent(this, AnalyticUtils.CATEGORY.newsDetail, AnalyticUtils.ACTION.viewPage, PREFIX + nb.getTid() + "#" + nb.getNid(), totalTime);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2075,6 +2078,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
     @Override
     protected void onStop() {
+        super.onStop();
         try {
             if (BuildConfig.DEBUG) {
                 return;
@@ -2091,7 +2095,6 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
         } catch (Exception e) {
             e.printStackTrace();
         }
-        super.onStop();
     }
 
     private long enterTime = System.currentTimeMillis();

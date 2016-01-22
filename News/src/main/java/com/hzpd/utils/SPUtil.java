@@ -101,7 +101,52 @@ public class SPUtil {
         return current;
     }
 
+    public static String getCountryCode() {
+        if (country_code != null) {
+            return country_code;
+        }
+        String temp = SPUtil.getGlobal("Location_CountryCode", "0");
+        country_code = temp;
+        return current;
+    }
+
+    public static String getCity() {
+        if (city != null) {
+            return city;
+        }
+        String temp = SPUtil.getGlobal("Location_City", "");
+        city = temp;
+        return city;
+    }
+
+    public static String getAddress() {
+        if (address != null) {
+            return address;
+        }
+        String temp = SPUtil.getGlobal("Location_Address", "");
+        address = temp;
+        return address;
+    }
+
+    public static void setCountryCode(String country_code) {
+        SPUtil.setGlobal("Location_CountryCode", country_code);
+        SPUtil.country_code = country_code;
+    }
+
+    public static void setCity(String city) {
+        SPUtil.setGlobal("Location_City", city);
+        SPUtil.city = city;
+    }
+
+    public static void setAddress(String address) {
+        SPUtil.setGlobal("Location_Address", address);
+        SPUtil.address = address;
+    }
+
     private static String current = null;
+    private static String country_code = null;
+    private static String city = null;
+    private static String address = null;
 
     public static void setCountry(String country) {
         if (!TextUtils.isEmpty(country)) {
@@ -226,9 +271,17 @@ public class SPUtil {
         params.put(ANDROID_ID, Utils.getAndroidId(context));
         params.put(IMEI, Utils.getIMEI(context));
         params.put(LAUGUAGE, Utils.getLanguage(context));
-        params.put(VERSION_CODE, "" + Utils.getVersionCode(context));
+        params.put(VERSION_CODE, String.valueOf(Utils.getVersionCode(context)));
         params.put(PACKAGE_NAME_SELF, context.getPackageName());
-        params.put(IS_ROM, "" + Utils.isRomVersion(context));
+        params.put(IS_ROM, String.valueOf(Utils.isRomVersion(context)));
+        params.put(OS_VERSION, Utils.getOsVersion());
+    }
+
+    public static void addLogParams(Map<String, String> params) {
+        SPUtil.addParams(params);
+        params.put(COUNTRY_CODE, getCountryCode());
+        params.put(CITY, getCity());
+        params.put(ADDRESS, getAddress());
     }
 
     public static Intent getIntent(Context context) {
@@ -622,6 +675,18 @@ public class SPUtil {
         return PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getLong(key, value);
     }
 
+    /**
+     * 国家代码
+     */
+    public static final String COUNTRY_CODE = "country_code";
+    /**
+     * 城市
+     */
+    public static final String CITY = "city";
+    /**
+     * 街道
+     */
+    public static final String ADDRESS = "address";
     /**
      */
     public static final String IS_ROM = "is_rom";

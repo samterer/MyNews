@@ -24,6 +24,7 @@ import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AnalyticUtils;
 import com.hzpd.utils.FjsonUtil;
+import com.hzpd.utils.LocationUtils;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.RequestParamsUtils;
 import com.hzpd.utils.SPUtil;
@@ -55,9 +56,14 @@ public class WelcomeActivity extends MWBaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
-        Log.e("test", "  WelcomeActivity " + getResources().getBoolean(R.bool.isRom));
+        LocationUtils.getLocation(getApplicationContext());
         exists = false;
         setContentView(R.layout.frame_welcome);
+//        if (true){
+//            Intent intent =new Intent(WelcomeActivity.this,VideoPlayerActivity.class);
+//            startActivity(intent);
+//            return;
+//        }
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction tran = fm.beginTransaction();
         fragment = new AdFlashFragment();

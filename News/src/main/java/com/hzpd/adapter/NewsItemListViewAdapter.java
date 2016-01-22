@@ -88,7 +88,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
     public CallBack callBack;
     Context context;
     LayoutInflater inflater;
-    List<NewsBean> list = null;
+    public List<NewsBean> list = null;
     List<NewsPageListBean> viewPagelist = new ArrayList<>();
     DBHelper dbHelper;
     List<NewsBean> appendoldlist = null;

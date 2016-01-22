@@ -149,7 +149,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         isRefresh = true;
         View view = inflater.inflate(R.layout.news_channel_fragment, container, false);
         view.findViewById(R.id.main_top_layout).setVisibility(View.GONE);
-        app_progress_bar=view.findViewById(R.id.app_progress_bar);
+        app_progress_bar = view.findViewById(R.id.app_progress_bar);
         app_progress_bar.setVisibility(View.VISIBLE);
         if (!ConfigBean.getInstance().open_channel.contains(SPUtil.getCountry())) {
             view.findViewById(R.id.main_top_layout).setVisibility(View.VISIBLE);
@@ -300,9 +300,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 final long start = System.currentTimeMillis();
                 if (null != list && list.size() > 5) {
                     app_progress_bar.setVisibility(View.GONE);
-//                    isLoading = true;
                     List<NewsBean> nbList = new ArrayList<>();
-                    Log.e("test", "News:getDbList  1=" + (System.currentTimeMillis() - start));
                     for (NewsBeanDB nbdb : list) {
                         NewsBean newsBean = nbdb.getNewsBean();
                         newsBean.setCnname(channelbean.getCnname());
@@ -310,12 +308,10 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                         background_empty.setVisibility(View.GONE);
                     }
                     addLoading = true;
-                    Log.e("test", "News:getDbList  2=" + (System.currentTimeMillis() - start));
                     adapter.appendData(nbList, mFlagRefresh, true);
                     Log.e("test", "News:getDbList  3=" + (System.currentTimeMillis() - start));
                 }
                 getServerList("");
-                Log.e("test", "News:getDbList  4=" + (System.currentTimeMillis() - start));
             }
         });
     }
@@ -371,7 +367,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
             @Override
             public void onFailure(Request request, Exception e) {
-                app_progress_bar.setVisibility(View.GONE);
+
                 showEmpty();
                 TUtils.toast(getString(R.string.toast_cannot_connect_network));
                 AnalyticUtils.sendGaEvent(getActivity(), AnalyticUtils.ACTION.networkErrorOnList, null, null, 0L);
@@ -381,8 +377,12 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     }
 
     private void showEmpty() {
+        if (adapter.list == null || adapter.list.size() == 0) {
+            background_empty.setVisibility(View.VISIBLE);
+        }
         isLoading = false;
         pullRefresh = false;
+        app_progress_bar.setVisibility(View.GONE);
         mSwipeRefreshWidget.setRefreshing(false);
         if (!isAdded()) {
             return;
@@ -400,6 +400,7 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
                 adapter.checkList(list);
                 if (null != list && list.size() > 0) {
+                    Log.i("text", "text" + list.toString());
                     newsListDbTask.saveList(list, null);
                     for (NewsBean bean : list) {
                         bean.setCnname(channelbean.getCnname());

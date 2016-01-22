@@ -11,6 +11,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.alibaba.fastjson.JSONObject;
@@ -59,6 +60,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
     private LinearLayoutManager vlinearLayoutManager;
     private Object tag;
     private View data_empty;
+    private Button click_refresh_btn;
     private View app_progress_bar;
 
     @Override
@@ -72,7 +74,8 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
         try {
             view = inflater.inflate(R.layout.zy_classify_item_fragment, container, false);
             data_empty = view.findViewById(R.id.data_empty);
-            data_empty.setOnClickListener(this);
+            click_refresh_btn= (Button) view.findViewById(R.id.click_refresh_btn);
+            click_refresh_btn.setOnClickListener(this);
             app_progress_bar = view.findViewById(R.id.app_progress_bar);
             tag = OkHttpClientManager.getTag();
             progress_container = (FrameLayout) view.findViewById(R.id.progress_container);
@@ -158,12 +161,10 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
             String json = (String) SharePreferecesUtils.getParam(getActivity(), KEY_CATEGERY, "");
             if (!TextUtils.isEmpty(json)) {
                 parseJson(json);
-                getClassifyHorServer();
-            } else {
-                app_progress_bar.setVisibility(View.GONE);
-                data_empty.setVisibility(View.VISIBLE);
-                isFirst=true;
             }
+            getClassifyHorServer();
+            app_progress_bar.setVisibility(View.GONE);
+            data_empty.setVisibility(View.VISIBLE);
 
         } catch (Exception e) {
 
@@ -187,7 +188,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
         OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.classify_top_url, new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
-                isFirst=false;
+                isFirst = false;
                 data_empty.setVisibility(View.GONE);
                 app_progress_bar.setVisibility(View.GONE);
                 try {
@@ -202,7 +203,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
 
             @Override
             public void onFailure(Request request, Exception e) {
-                if (isFirst){
+                if (isFirst) {
                     app_progress_bar.setVisibility(View.GONE);
                     data_empty.setVisibility(View.VISIBLE);
                 }
@@ -345,7 +346,7 @@ public class ZY_ClassifyItemFragment extends BaseFragment implements View.OnClic
     @Override
     public void onClick(View v) {
         try {
-            if (v.getId() == R.id.data_empty) {
+            if (v.getId() == R.id.click_refresh_btn) {
                 app_progress_bar.setVisibility(View.VISIBLE);
                 getClassifyHorServer();
             }

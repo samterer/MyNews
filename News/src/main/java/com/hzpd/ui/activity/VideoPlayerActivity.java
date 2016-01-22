@@ -130,8 +130,8 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
             });
 
 
-            if (false) {
-                mVideoView.setVideoURI(Uri.parse("http://10.80.3.123/cmsv2/Public/Uploads/video/1446794282887.mp4"));
+            if (true) {
+                mVideoView.setVideoURI(Uri.parse("http://7xkbzx.com1.z0.glb.clouddn.com/SampleVideo_720x480_10mb.mp4"));
                 return;
             }
             // ~~~ 获取播放地址和标题
@@ -472,7 +472,7 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mGestureDetector.onTouchEvent(event)) {
+        if (mGestureDetector!=null&&mGestureDetector.onTouchEvent(event)) {
             return true;
         }
 
@@ -662,7 +662,6 @@ public class VideoPlayerActivity extends MBaseActivity implements MediaPlayer.On
                 mVideoView.setVideoPath(mPath);
             }
         } else {
-            String albumPath = App.getInstance().getJsonFileCacheRootDir() + File.separator + "temp" + File.separator + "album";
             final File pathFile = App.getFile(App.getInstance().getJsonFileCacheRootDir() + File.separator + "temp" + File.separator + "album");
             OkHttpClientManager.getAsyn(tag, jsonurl,
                     new OkHttpClientManager.ResultCallback() {

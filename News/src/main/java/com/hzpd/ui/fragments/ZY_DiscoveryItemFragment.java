@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hzpd.adapter.DiscoveryItemNewAdapter;
@@ -37,7 +38,8 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
     private RecyclerView discovery_recyclerview;
     private DiscoveryItemNewAdapter newAdapter;
 
-    private View discovery_data_empty;
+    private View data_empty;
+    private Button click_refresh_btn;
     private View app_progress_bar;
 
     @Override
@@ -55,8 +57,9 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
         try {
             view = inflater.inflate(R.layout.zy_discovery_item_fragment, container, false);
             tag = OkHttpClientManager.getTag();
-            discovery_data_empty = view.findViewById(R.id.discovery_data_empty);
-            discovery_data_empty.setOnClickListener(this);
+            data_empty = view.findViewById(R.id.data_empty);
+            click_refresh_btn= (Button) view.findViewById(R.id.click_refresh_btn);
+            click_refresh_btn.setOnClickListener(this);
             app_progress_bar = view.findViewById(R.id.app_progress_bar);
             discovery_recyclerview = (RecyclerView) view.findViewById(R.id.discovery_recyclerview);
             //设置布局管理器
@@ -106,7 +109,7 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
                 parseJson(json);
                 isClearOld = true;
             } else {
-                discovery_data_empty.setVisibility(View.VISIBLE);
+                data_empty.setVisibility(View.VISIBLE);
                 app_progress_bar.setVisibility(View.GONE);
                 isFirst = true;
             }
@@ -120,7 +123,7 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
             @Override
             public void onSuccess(Object response) {
                 isFirst = false;
-                discovery_data_empty.setVisibility(View.GONE);
+                data_empty.setVisibility(View.GONE);
                 app_progress_bar.setVisibility(View.GONE);
                 try {
                     if (Page == 1) {
@@ -141,7 +144,7 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
             @Override
             public void onFailure(Request request, Exception e) {
                 if (isFirst) {
-                    discovery_data_empty.setVisibility(View.VISIBLE);
+                    data_empty.setVisibility(View.VISIBLE);
                     app_progress_bar.setVisibility(View.GONE);
                 }
                 newAdapter.setShowLoading(false);
@@ -206,9 +209,9 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
     @Override
     public void onClick(View v) {
         try {
-            if (v.getId() == R.id.discovery_data_empty) {
+            if (v.getId() == R.id.click_refresh_btn) {
                 app_progress_bar.setVisibility(View.VISIBLE);
-                discovery_data_empty.setVisibility(View.GONE);
+                data_empty.setVisibility(View.GONE);
                 getDiscoveryServer();
             }
             if (v.getTag() != null && v.getTag() instanceof DiscoveryItemNewAdapter.ItemViewHolder) {

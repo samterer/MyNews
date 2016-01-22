@@ -103,10 +103,6 @@ public class InitService extends IntentService {
         if (BuildConfig.DEBUG || !Utils.isNetworkConnected(this)) {
             return;
         }
-        long send_user_log_time = SPUtil.getGlobal(SHARE_SEND_LOG, 0L);
-        if (System.currentTimeMillis() - send_user_log_time < SEND_TIME) {
-            return;
-        }
         UserBean user = SPUtil.getInstance().getUser();
         String uid = "";
         if (user != null && !TextUtils.isEmpty(user.getUid())) {
@@ -122,13 +118,11 @@ public class InitService extends IntentService {
             Map<String, String> params = RequestParamsUtils.getMaps();
             params.put("uid", uid);
             params.put("json", json);
-            SPUtil.addParams(params);
+            SPUtil.addLogParams(params);
             String str;
             str = OkHttpClientManager.post(InterfaceJsonfile.USER_LOG, params);
             if (!str.isEmpty() && str.contains("200")) {
                 dbUtils.deleteAll();
-                send_user_log_time = System.currentTimeMillis();
-                SPUtil.setGlobal(SHARE_SEND_LOG, send_user_log_time);
             }
         } catch (Exception e) {
             e.printStackTrace();

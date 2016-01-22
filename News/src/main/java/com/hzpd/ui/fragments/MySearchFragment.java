@@ -173,8 +173,8 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
                             return;
                         }
                         Log.i("test", "l size-->" + l.size() + ":::" + l.get(0).toString());
-    //                    recyclerView.setAdapter(null);
-    //                    adapter.clear();
+                        //                    recyclerView.setAdapter(null);
+                        //                    adapter.clear();
                         adapter.appendData(l, false, false);
                         if (page > 1 && adapter.showLoading) {
                             int count = adapter.getItemCount();

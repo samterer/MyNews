@@ -111,9 +111,6 @@ public class MainActivity extends BaseActivity {
         Thread.setDefaultUncaughtExceptionHandler(App.uncaughtExceptionHandler);
         App.isStartApp = true;
         EventUtils.sendStart(this);
-        Intent intent = new Intent(this, InitService.class);
-        intent.setAction(InitService.UserLogAction);
-        startService(intent);
         showLocalUpdateDialog(this);
         showFeedback();
     }
@@ -180,7 +177,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        SPUtil.setGlobal(InitService.SHARE_SEND_LOG, 1000);
         Intent intent = new Intent(this, InitService.class);
         intent.setAction(InitService.UserLogAction);
         startService(intent);
