@@ -71,9 +71,10 @@ public class NewsBeanDB {
         this.like = like;
         this.unlike = unlike;
     }
-	
-	    public NewsBeanDB(NewsBean nb) {
-        nid =nb.getNid();
+
+    public NewsBeanDB(NewsBean nb) {
+        nid = nb.getNid();
+        tagId = nb.getTagId();
         authorname = nb.getAuthorname();
         title = nb.getTitle();
         sid = nb.getSid();

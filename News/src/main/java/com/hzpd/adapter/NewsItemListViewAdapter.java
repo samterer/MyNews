@@ -149,7 +149,6 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
         final NativeAd nativeAd = new NativeAd(context.getApplicationContext(), AD_KEY);
         ads.put("" + nextAdPosition, nativeAd);
         final int adPos = nextAdPosition;
-        Log.e("test", "News:setNativeAd  start=" + (System.currentTimeMillis() - start));
         nativeAd.setAdListener(new AdListener() {
             @Override
             public void onError(Ad ad, AdError adError) {
@@ -195,9 +194,7 @@ public class NewsItemListViewAdapter extends RecyclerView.Adapter {
             }
 
         });
-        Log.e("test", "News:setNativeAd  start=" + (System.currentTimeMillis() - start));
         nativeAd.loadAd();
-        Log.e("test", "News:setNativeAd  start=" + (System.currentTimeMillis() - start));
 
         nextAdPosition += STEP + random.nextInt(STEP);
         if (MAX_POSITION < nextAdPosition) {

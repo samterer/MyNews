@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.color.tools.mytools.LogUtils;
@@ -119,6 +120,8 @@ public class XF_NewsCommentsActivity extends MBaseActivity implements View.OnCli
                     Log.i("MyCommentListBean", "MyCommentListBean" + mlist.toString());
                     myCommentListAdapter.appendData(mlist);
 //                    myCommentListAdapter.notifyDataSetChanged();
+                }else{
+                    Toast.makeText(XF_NewsCommentsActivity.this,getString(R.string.toast_server_no_response),Toast.LENGTH_SHORT).show();
                 }
             }
 

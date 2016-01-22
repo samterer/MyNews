@@ -203,7 +203,7 @@ public class MySearchFragment extends BaseFragment implements View.OnClickListen
                 if (!isAdded()) {
                     return;
                 }
-                TUtils.toast(getString(R.string.toast_server_no_response));
+                TUtils.toast(getString(R.string.toast_no_data_now));
                 loadingView.setVisibility(View.GONE);
                 if (!isRefresh) {
                     page--;

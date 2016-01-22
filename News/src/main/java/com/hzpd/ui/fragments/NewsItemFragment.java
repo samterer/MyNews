@@ -327,7 +327,9 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
         }
         if (!Utils.isNetworkConnected(App.getInstance())) {
             showEmpty();
-            TUtils.toast(getString(R.string.toast_check_network));
+            if (isAdded()) {
+                TUtils.toast(getString(R.string.toast_check_network));
+            }
             return;
         }
         Map<String, String> params = RequestParamsUtils.getMaps();
@@ -367,9 +369,10 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
 
             @Override
             public void onFailure(Request request, Exception e) {
-
                 showEmpty();
-                TUtils.toast(getString(R.string.toast_cannot_connect_network));
+                if (isAdded()) {
+                    TUtils.toast(getString(R.string.toast_cannot_connect_network));
+                }
                 AnalyticUtils.sendGaEvent(getActivity(), AnalyticUtils.ACTION.networkErrorOnList, null, null, 0L);
                 AnalyticUtils.sendUmengEvent(getActivity(), AnalyticUtils.ACTION.networkErrorOnList);
             }
@@ -377,15 +380,19 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
     }
 
     private void showEmpty() {
-        if (adapter.list == null || adapter.list.size() == 0) {
-            background_empty.setVisibility(View.VISIBLE);
-        }
-        isLoading = false;
-        pullRefresh = false;
-        app_progress_bar.setVisibility(View.GONE);
-        mSwipeRefreshWidget.setRefreshing(false);
-        if (!isAdded()) {
-            return;
+        try {
+            if (!isAdded()) {
+                return;
+            }
+            if (adapter.list == null || adapter.list.size() == 0) {
+                background_empty.setVisibility(View.VISIBLE);
+            }
+            isLoading = false;
+            pullRefresh = false;
+            app_progress_bar.setVisibility(View.GONE);
+            mSwipeRefreshWidget.setRefreshing(false);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -400,11 +407,11 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 List<NewsBean> list = FjsonUtil.parseArray(obj.getString("data"), NewsBean.class);
                 adapter.checkList(list);
                 if (null != list && list.size() > 0) {
-                    Log.i("text", "text" + list.toString());
-                    newsListDbTask.saveList(list, null);
                     for (NewsBean bean : list) {
+                        bean.setTagId(channelbean.getId());
                         bean.setCnname(channelbean.getCnname());
                     }
+                    newsListDbTask.saveList(list, null);
                     if (isRefreshCounts) {
                         update_counts.setVisibility(View.VISIBLE);
                         update_counts.setText(String.format(getString(R.string.update_counts), list.size()));
@@ -440,16 +447,15 @@ public class NewsItemFragment extends BaseFragment implements I_Control, View.On
                 }
                 if (pullRefresh) {
                     page = --lastPage;
-                    TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
+                    if (isAdded()) {
+                        TUtils.toast(getString(R.string.pull_to_refresh_reached_end));
+                    }
                 }
             }
             break;
         }
         pullRefresh = false;
         mFlagRefresh = false;
-    }
-
-    private void checkNews(List<NewsBean> list) {
     }
 
     //获取幻灯

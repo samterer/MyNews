@@ -12,7 +12,6 @@ import com.hzpd.ui.App;
 import com.hzpd.ui.interfaces.I_Result;
 import com.hzpd.ui.interfaces.I_SetList;
 import com.hzpd.utils.DBHelper;
-import com.hzpd.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -198,7 +197,7 @@ public class NewsListDbTask {
                 List<NewsBeanDB> list = new ArrayList<NewsBeanDB>();
                 for (NewsBean nb : nbList) {
                     if (nb.getNid() == null || "null".equals(nb.getNid())) {
-                        Log.e("test", nb);
+                        continue;
                     }
                     NewsBeanDB nbdb = new NewsBeanDB(nb);
                     list.add(nbdb);
@@ -207,15 +206,15 @@ public class NewsListDbTask {
                 for (NewsBeanDB nbdb : list) {
                     try {
                         NewsBeanDB newsBeanDB;
-                        if (!TextUtils.isEmpty(nbdb.getTid())) {
-                            newsBeanDB = newsListDb.queryBuilder()
-                                    .where(NewsBeanDBDao.Properties.Nid.eq(nbdb.getNid()))
-                                    .where(NewsBeanDBDao.Properties.Tid.eq(nbdb.getTid()))
-                                    .build().unique();
-                        } else {
+                        if (!TextUtils.isEmpty(nbdb.getTagId())) {
                             newsBeanDB = newsListDb.queryBuilder()
                                     .where(NewsBeanDBDao.Properties.Nid.eq(nbdb.getNid()))
                                     .where(NewsBeanDBDao.Properties.TagId.eq(nbdb.getTagId()))
+                                    .build().unique();
+                        } else {
+                            newsBeanDB = newsListDb.queryBuilder()
+                                    .where(NewsBeanDBDao.Properties.Tid.eq(nbdb.getTid()))
+                                    .where(NewsBeanDBDao.Properties.Nid.eq(nbdb.getNid()))
                                     .build().unique();
 
                         }
