@@ -345,7 +345,7 @@
     <string name="editcolumn_ok">完成</string>
     <string name="edit_my_colum">我的頻道</string>
     <string name="edit_other_colum">推薦頻道</string>
-    <string name="click_here_to_refresh">點此刷新</string>
+    <string name="click_here_to_refresh">網絡出故障啦！</string>
     <string name="delete">刪除</string>
     <string name="setting_skin">換膚</string>
     <string name="skin_style_blue">蓝色</string>
@@ -375,6 +375,7 @@
     <string name="welcome_to_comment">歡迎評論</string>
     <string name="tag_followed">訂閱成功，精彩內容將在首頁展示</string>
     <string name="rate_us">評分</string>
+    <string name="click_refresh_btn_tv">重新加載</string>
 
 
 

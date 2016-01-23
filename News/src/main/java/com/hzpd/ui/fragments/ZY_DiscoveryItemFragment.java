@@ -3,6 +3,7 @@ package com.hzpd.ui.fragments;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.widget.CustomSwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -41,7 +42,7 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
     private View data_empty;
     private Button click_refresh_btn;
     private View app_progress_bar;
-
+    private CustomSwipeRefreshLayout mSwipeRefreshWidget;
     @Override
     public String getAnalyticPageName() {
         return AnalyticUtils.SCREEN.leftMenu;
@@ -58,6 +59,7 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
             view = inflater.inflate(R.layout.zy_discovery_item_fragment, container, false);
             tag = OkHttpClientManager.getTag();
             data_empty = view.findViewById(R.id.data_empty);
+            mSwipeRefreshWidget = (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
             click_refresh_btn= (Button) view.findViewById(R.id.click_refresh_btn);
             click_refresh_btn.setOnClickListener(this);
             app_progress_bar = view.findViewById(R.id.app_progress_bar);
@@ -68,7 +70,15 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
             discovery_recyclerview.setLayoutManager(vlinearLayoutManager);
             newAdapter = new DiscoveryItemNewAdapter(getContext(), this);
             discovery_recyclerview.setAdapter(newAdapter);
-
+            mSwipeRefreshWidget.setColorSchemeResources(R.color.google_blue);
+            mSwipeRefreshWidget.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    mSwipeRefreshWidget.setRefreshing(true);
+                    Log.i("test", "ZY_DiscoveryItemFragment===onCreate");
+                    refresh();
+                }
+            });
             discovery_recyclerview.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
                 @Override
@@ -93,6 +103,11 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
 
         }
         return view;
+    }
+    private void refresh() {
+        discovery_recyclerview.scrollToPosition(0);
+        Page = 1;
+        getDiscoveryServer();
     }
 
     private int Page = 1;
@@ -122,6 +137,7 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
         OkHttpClientManager.postAsyn(tag, InterfaceJsonfile.discovery_url, new OkHttpClientManager.ResultCallback() {
             @Override
             public void onSuccess(Object response) {
+                mSwipeRefreshWidget.setRefreshing(false);
                 isFirst = false;
                 data_empty.setVisibility(View.GONE);
                 app_progress_bar.setVisibility(View.GONE);
@@ -143,6 +159,7 @@ public class ZY_DiscoveryItemFragment extends BaseFragment implements View.OnCli
 
             @Override
             public void onFailure(Request request, Exception e) {
+                mSwipeRefreshWidget.setRefreshing(false);
                 if (isFirst) {
                     data_empty.setVisibility(View.VISIBLE);
                     app_progress_bar.setVisibility(View.GONE);

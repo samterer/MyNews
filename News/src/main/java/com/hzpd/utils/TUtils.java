@@ -4,8 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,4 +71,38 @@ public class TUtils {
 
         return result;
     }
+
+    public static void TosatExit() {
+
+    }
+
+    public static void ToastLeftAndRight(Context context, ViewGroup root, int drawableId, String tvString) {
+        View layout = LayoutInflater.from(context).inflate(R.layout.toast_left_and_right, root);
+        TextView text = (TextView) layout.findViewById(R.id.text);
+        ImageView mImageView = (ImageView) layout.findViewById(R.id.iv);
+        mImageView.setBackgroundResource(drawableId);
+        text.setText(tvString);
+        text.setTextColor(context.getResources().getColor(R.color.white));
+        Toast toast = new Toast(context);
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
+    }
+
+    public static void ToastUpAndDown(Context context, ViewGroup root, int drawableId, String tvString) {
+        View layout = LayoutInflater.from(context).inflate(R.layout.toast_up_and_down, root);
+        TextView text = (TextView) layout.findViewById(R.id.text);
+        ImageView mImageView = (ImageView) layout.findViewById(R.id.iv);
+        mImageView.setBackgroundResource(drawableId);
+        text.setText(tvString);
+        text.setTextColor(context.getResources().getColor(R.color.white));
+        Toast toast = new Toast(context);
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
+    }
+
+
 }

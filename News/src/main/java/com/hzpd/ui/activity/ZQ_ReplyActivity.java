@@ -138,7 +138,7 @@ public class ZQ_ReplyActivity extends MBaseActivity implements View.OnClickListe
                     }
                     if (200 == obj.getIntValue("code")) {
                         setComcountsId(bean.getId(), comcount);
-                        TUtils.toast(getString(R.string.comment_ok));
+                        TUtils.ToastUpAndDown(ZQ_ReplyActivity.this, null, R.drawable.notice_succeed, getString(R.string.comment_ok));
                         Intent resultIntent = new Intent();
                         Bundle bundle = new Bundle();
                         bundle.putString("result", content);

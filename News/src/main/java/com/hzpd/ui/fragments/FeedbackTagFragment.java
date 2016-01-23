@@ -183,10 +183,10 @@ public class FeedbackTagFragment extends AnalyticBaseDialogFragment implements V
     }
 
     private void submit(String content, int rate) {
-        httpTag= OkHttpClientManager.getTag();
+        httpTag = OkHttpClientManager.getTag();
         sending = true;
         String feedback_url = InterfaceJsonfile.feedback;
-        Map<String ,String> params = RequestParamsUtils.getMaps();
+        Map<String, String> params = RequestParamsUtils.getMaps();
         params.put("siteid", "1");
         params.put("rate", "" + rate);
         params.put("content", content);
@@ -219,9 +219,9 @@ public class FeedbackTagFragment extends AnalyticBaseDialogFragment implements V
 
                     @Override
                     public void onFailure(Request request, Exception e) {
-                        Log.i("submit","submit  onFailure");
+                        Log.i("submit", "submit  onFailure");
                         sending = false;
-                        if (isAdded()){
+                        if (isAdded()) {
                             TUtils.toast(getString(R.string.toast_server_error));
                         }
                     }

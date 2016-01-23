@@ -17,6 +17,7 @@ import com.hzpd.utils.AAnim;
 import com.hzpd.utils.AvoidOnClickFastUtils;
 import com.hzpd.utils.DBHelper;
 import com.hzpd.utils.Log;
+import com.hzpd.utils.db.NewsListDbTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +30,35 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
     private NewsItemListViewAdapter adapter;
     private View coverTop;
     private View pushmsg_tv_empty;
+    private TextView stitle_tv_delete;
+    List<NewsBeanDB> list;
+    private NewsListDbTask newsListDbTask; //新闻列表数据库
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recently_read_layout);
         super.changeStatusBar();
-        pushmsg_tv_empty=findViewById(R.id.pushmsg_tv_empty);
+        newsListDbTask = new NewsListDbTask(this);
+        pushmsg_tv_empty = findViewById(R.id.pushmsg_tv_empty);
         stitle_tv_content = (TextView) findViewById(R.id.stitle_tv_content);
         stitle_tv_content.setText(getResources().getString(R.string.recently_read));
+//        stitle_tv_delete = (TextView) findViewById(R.id.stitle_tv_delete);
+//        stitle_tv_delete.setVisibility(View.VISIBLE);
+//        stitle_tv_delete.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (list != null || list.size() > 0) {
+//                    for (int i = 0; i < list.size(); i++) {
+//                        NewsBeanDB newsBeanDB = list.get(i);
+//                        newsBeanDB.setIsreaded("0");
+//                        DBHelper.getInstance().getNewsList().update(newsBeanDB);
+//                    }
+//                    setRead();
+////                    adapter.notifyDataSetChanged();
+//                }
+//            }
+//        });
         findViewById(R.id.stitle_ll_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,16 +78,20 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
 //        recylerlist = search_listview_id.getRefreshableView();
         recylerlist.setAdapter(adapter);
 
-        long startTime=System.currentTimeMillis();
+        setRead();
+    }
+
+    private void setRead() {
+        long startTime = System.currentTimeMillis();
         try {
-            Log.e("News","News: startTime1=="+(System.currentTimeMillis()-startTime));
-            List<NewsBeanDB> list = DBHelper.getInstance().getNewsList()
+            Log.e("News", "News: startTime1==" + (System.currentTimeMillis() - startTime));
+            list = DBHelper.getInstance().getNewsList()
                     .queryBuilder().where(NewsBeanDBDao.Properties.Isreaded.eq("1"))
                     .orderDesc(NewsBeanDBDao.Properties.Id)
                     .build()
                     .list();
 
-            Log.e("News","News: startTime2=="+(System.currentTimeMillis()-startTime));
+            Log.e("News", "News: startTime2==" + (System.currentTimeMillis() - startTime));
             if (null != list) {
                 pushmsg_tv_empty.setVisibility(View.GONE);
                 Log.i("isreaded", "isreaded" + list + ":::" + list.size());
@@ -80,7 +105,7 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
             } else {
                 pushmsg_tv_empty.setVisibility(View.VISIBLE);
             }
-            Log.e("News","News: startTime3=="+(System.currentTimeMillis()-startTime));
+            Log.e("News", "News: startTime3==" + (System.currentTimeMillis() - startTime));
         } catch (Exception e) {
             e.printStackTrace();
         }

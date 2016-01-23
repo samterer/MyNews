@@ -432,27 +432,31 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                 , new OkHttpClientManager.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
-                        loading = false;
-                        isRefresh = false;
-                        if (!isAdded()) {
-                            return;
-                        }
                         try {
-                            mSwipeRefreshWidget.setRefreshing(false);
-                            final JSONObject obj = FjsonUtil.parseObject(response.toString());
-                            if (null != obj) {
-                                setData(obj);//处理数据
-                                try {
-                                    if (!TextUtils.isEmpty(obj.getString("newTime"))) {
-                                        App.getInstance().newTime = obj.getString("newTime");
-                                    } else if (!TextUtils.isEmpty(obj.getString("oldTime"))) {
-                                        App.getInstance().oldTime = obj.getString("oldTime");
+                            loading = false;
+                            isRefresh = false;
+                            if (!isAdded()) {
+                                return;
+                            }
+                            try {
+                                mSwipeRefreshWidget.setRefreshing(false);
+                                final JSONObject obj = FjsonUtil.parseObject(response.toString());
+                                if (null != obj) {
+                                    setData(obj);//处理数据
+                                    try {
+                                        if (!TextUtils.isEmpty(obj.getString("newTime"))) {
+                                            App.getInstance().newTime = obj.getString("newTime");
+                                        } else if (!TextUtils.isEmpty(obj.getString("oldTime"))) {
+                                            App.getInstance().oldTime = obj.getString("oldTime");
+                                        }
+                                    } catch (Exception e) {
                                     }
-                                } catch (Exception e) {
                                 }
+                            } catch (Exception e) {
+                                onFailure(null, null);
                             }
                         } catch (Exception e) {
-                            onFailure(null, null);
+                            e.printStackTrace();
                         }
                     }
 

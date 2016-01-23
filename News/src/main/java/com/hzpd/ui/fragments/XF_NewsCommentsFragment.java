@@ -244,20 +244,24 @@ public class XF_NewsCommentsFragment extends BaseFragment implements View.OnClic
                 , new OkHttpClientManager.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
-                        JSONObject obj = FjsonUtil.parseObject(response.toString());
-                        commentItemCid = null;
-                        if (null == obj) {
-                            return;
-                        }
+                        try {
+                            JSONObject obj = FjsonUtil.parseObject(response.toString());
+                            commentItemCid = null;
+                            if (null == obj) {
+                                return;
+                            }
 
-                        if (200 == obj.getIntValue("code")) {
-                            TUtil.toast(activity, obj.getString("msg"));
-                            xf_comment_et_comment.setText("");
-                            EventUtils.sendComment(activity);
-                        } else if (isAdded()) {
-                            TUtil.toast(activity, getString(R.string.toast_collect_failed));
+                            if (200 == obj.getIntValue("code")) {
+                                TUtil.toast(activity, obj.getString("msg"));
+                                xf_comment_et_comment.setText("");
+                                EventUtils.sendComment(activity);
+                            } else if (isAdded()) {
+                                TUtil.toast(activity, getString(R.string.toast_collect_failed));
+                            }
+                            xf_comment_tv_publish.setClickable(true);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        xf_comment_tv_publish.setClickable(true);
                     }
 
                     @Override

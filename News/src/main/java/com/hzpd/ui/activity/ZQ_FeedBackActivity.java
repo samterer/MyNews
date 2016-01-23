@@ -126,20 +126,24 @@ public class ZQ_FeedBackActivity extends MBaseActivity implements View.OnClickLi
 
             @Override
             public void onSuccess(Object response) {
-                app_progress_bar.setVisibility(View.GONE);
-                String json = response.toString();
-                JSONObject obj = FjsonUtil.parseObject(json);
-                if (null != obj) {
-                    if (200 == obj.getIntValue("code")) {
-                        TUtils.toast(getString(R.string.feed_ok));
-                        zq_feedback_et_content.setText("");
-                        zq_feedback_et_email.setText("");
-                        finish();
+                try {
+                    app_progress_bar.setVisibility(View.GONE);
+                    String json = response.toString();
+                    JSONObject obj = FjsonUtil.parseObject(json);
+                    if (null != obj) {
+                        if (200 == obj.getIntValue("code")) {
+                            TUtils.toast(getString(R.string.feed_ok));
+                            zq_feedback_et_content.setText("");
+                            zq_feedback_et_email.setText("");
+                            finish();
+                        } else {
+                            TUtils.toast(getString(R.string.feed_fail));
+                        }
                     } else {
-                        TUtils.toast(getString(R.string.feed_fail));
+                        TUtils.toast(getString(R.string.toast_server_error));
                     }
-                } else {
-                    TUtils.toast(getString(R.string.toast_server_error));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 

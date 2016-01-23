@@ -26,7 +26,7 @@ public class ExitApplication {
 			activity.finish();
 		} else {
 			beforeTime = currentTime;
-			TUtils.toast(activity.getString(R.string.toast_press_again_to_exit));
+			TUtils.ToastLeftAndRight(activity, null, R.drawable.notice_failure, activity.getString(R.string.toast_press_again_to_exit));
 		}
 	}
 }

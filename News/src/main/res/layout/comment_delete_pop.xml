@@ -16,25 +16,23 @@
             android:id="@+id/comment_delete_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="@dimen/margin_10"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/comment_delete_img"
                 android:layout_width="wrap_content"
                 android:layout_height="21dp"
-                android:layout_marginRight="3dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="3dp"
                 android:src="@drawable/bt_shanchu_unselected"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="3dp"
-                android:layout_marginLeft="3dp"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/general_color"
+                android:paddingLeft="@dimen/margin_5"
                 android:text="@string/delete"/>
 
         </LinearLayout>

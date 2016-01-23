@@ -273,7 +273,7 @@
     <string name="load_more_loading">loading more ...</string>
     <string name="reply_share">share to Facebook</string>
     <string name="update_counts_head">has update</string>
-    <string name="click_here_to_refresh">Press for Refresh</string>
+    <string name="click_here_to_refresh">Network failure</string>
 
     <string name="delete">Delete</string>
     <string name="setting_skin">Theme Color</string>
@@ -304,7 +304,7 @@
     <string name="welcome_to_comment">Welcome to comment</string>
     <string name="tag_followed">Followed,article at the main page</string>
     <string name="rate_us">Rate Me</string>
-
+    <string name="click_refresh_btn_tv">Reload</string>
 
 
 

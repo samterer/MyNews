@@ -1341,7 +1341,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
     private boolean isTagSelect;
 
     private void setContents() {
-        Log.i("test","setContents="+mBean.getTag().toString());
+        Log.i("test", "setContents=" + mBean.getTag().toString());
         int textSize = spu.getTextSize();
         setupWebView(textSize);
         mRoot.setVisibility(View.VISIBLE);
@@ -1452,7 +1452,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                         details_tv_subscribe.setCompoundDrawables(null, null, null, null);
                         EventBus.getDefault().post(new TagEvent(mBean.getTag().get(0)));
                         details_tv_subscribe.setText(getString(R.string.look_over));
-                        TUtils.toast(getString(R.string.tag_followed));
+                        TUtils.ToastLeftAndRight(NewsDetailActivity.this, null, R.drawable.notice_succeed, getString(R.string.tag_followed));
                         if (Utils.isNetworkConnected(NewsDetailActivity.this)) {
                             Map<String, String> params = RequestParamsUtils.getMapWithU();
                             if (spu.getUser() != null) {
@@ -1962,7 +1962,7 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
                     .build().unique();
             if (mnbean == null) {
                 dbUtils.insert(nibfc);
-                TUtils.toast(getString(R.string.toast_collect_success));
+                TUtils.ToastUpAndDown(NewsDetailActivity.this, null, R.drawable.notice_succeed, getString(R.string.toast_collect_success));
                 long co = dbUtils.count();
                 newdetail_collection.setImageResource(R.drawable.details_collect_already_select);
 

@@ -286,7 +286,7 @@
     <string name="editcolumn_edit">Edit</string>
     <string name="editcolumn_ok">Berhasil</string>
     <string name="update_counts">berita terbaru%1$dartikel</string>
-    <string name="click_here_to_refresh">Tekan untuk Perbaharui</string>
+    <string name="click_here_to_refresh">Internet Bermasalah!</string>
     <!--发现%1$d条更新-->
     <string name="delete">Hapus</string>
     <string name="setting_skin">Warna Tema</string>
@@ -317,5 +317,6 @@
     <string name="welcome_to_comment">Berikan Pendapat Anda</string>
     <string name="tag_followed">Pilihan berhasil,artikel di halaman depan</string>
     <string name="rate_us">Rate Me</string>
+    <string name="click_refresh_btn_tv">Unduh Kembali</string>
 
 </resources>

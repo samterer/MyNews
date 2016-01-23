@@ -78,6 +78,7 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
     private View stitle_ll_back;
     private Object tag;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
@@ -115,10 +116,9 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
 
     OnItemLongClickListener onItemLongClickListener = new OnItemLongClickListener() {
         @Override
-        public boolean onItemLongClick(AdapterView<?> parent,
-                                       View view, int position, long id) {
-            CollectionJsonBean cb = (CollectionJsonBean) colladAdapter.getItem(position - 1);
-            deletePop(view, cb, position - 1);
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            CollectionJsonBean cb = (CollectionJsonBean) colladAdapter.getItem(position);
+            deletePop(view, cb, position);
             return true;
         }
     };
@@ -154,6 +154,8 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
                 }
             }
         });
+
+        pushmsg_lv.setOnItemLongClickListener(onItemLongClickListener);
 
         pushmsg_lv.postDelayed(new Runnable() {
             @Override
@@ -414,11 +416,11 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
                                 JSONObject obj = null;
                                 try {
                                     obj = JSONObject.parseObject(response.toString());
-                                if (200 == obj.getIntValue("code")) {
-                                    TUtils.toast(getString(R.string.toast_delete_success));
-                                    colladAdapter.deleteItem(position);
-                                    colladAdapter.notifyDataSetChanged();
-                                }
+                                    if (200 == obj.getIntValue("code")) {
+                                        TUtils.toast(getString(R.string.toast_delete_success));
+                                        colladAdapter.deleteItem(position);
+                                        colladAdapter.notifyDataSetChanged();
+                                    }
                                 } catch (Exception e) {
                                     return;
                                 }
