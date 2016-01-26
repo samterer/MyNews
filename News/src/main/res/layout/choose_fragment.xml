@@ -9,8 +9,6 @@
         android:id="@+id/swipe_refresh_widget"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:scrollbars="none">
 
         <android.support.v7.widget.RecyclerView

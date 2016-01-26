@@ -102,7 +102,6 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
 
     };
     private TextView update_counts;
-    int padding = 20;
     public static int scroll_status = RecyclerView.SCROLL_STATE_IDLE;
     boolean addLoading = false;
     ChooseAdapter.CallBack callBack;
@@ -165,17 +164,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
             }
         });
         mSwipeRefreshWidget = (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
-//        mSwipeRefreshWidget.setLayoutMode();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recylerlist);
-
-//        try {
-//            padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
-//            mRecyclerView.setOnScrollListener(new RecyclerViewPauseOnScrollListener(ImageLoader.getInstance(), true, true));
-//            mRecyclerView.addItemDecoration(new SpacingItemDecoration(0, padding));
-//            mRecyclerView.setClipToPadding(false);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         mSwipeRefreshWidget.setColorSchemeResources(R.color.google_blue);
         mSwipeRefreshWidget.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -190,18 +179,12 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         });
 
 
-//        mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
-//        final StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(getActivity());
-//        layoutManager.setOrientation(StaggeredGridLayoutManager.Orientation.VERTICAL);
-//        layoutManager.setNumColumns(ChooseAdapter.COUNT_COLUMS);
         mRecyclerView.setOnScrollListener(onScrollListener);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         adapter = new ChooseAdapter(getActivity(), this);
         mRecyclerView.setAdapter(adapter);
-//        mRecyclerView.addItemDecoration(itemDecoration);
-//        paddingTop = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
         callBack = new ChooseAdapter.CallBack() {
             @Override
             public void loadMore() {
