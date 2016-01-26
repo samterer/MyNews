@@ -182,11 +182,6 @@ public class ChooseAdapter extends RecyclerView.Adapter {
                     if (showLoading && callBack != null) {
                         callBack.loadMore();
                     }
-                    final StaggeredGridLayoutManager.LayoutParams lp =
-                            (StaggeredGridLayoutManager.LayoutParams) sHolder.itemView.getLayoutParams();
-                    lp.span = COUNT_COLUMS;
-                    lp.setMargins(0, 0, 0, 0);
-                    sHolder.itemView.setLayoutParams(lp);
                 }
                 break;
                 case TYPE_FIRST: {
@@ -196,11 +191,6 @@ public class ChooseAdapter extends RecyclerView.Adapter {
                     holder.imageView.setImageResource(R.drawable.default_bg);
                     SPUtil.displayImage(bean.getImgs()[0], holder.imageView, DisplayOptionFactory.Small.options);
                     holder.clickView.setTag(bean);
-                    final StaggeredGridLayoutManager.LayoutParams lp =
-                            (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
-                    lp.span = COUNT_COLUMS;
-                    lp.setMargins(0, 0, 0, 0);
-                    holder.itemView.setLayoutParams(lp);
                 }
                 break;
                 default: {
@@ -220,11 +210,6 @@ public class ChooseAdapter extends RecyclerView.Adapter {
                     holder.imageView.setImageResource(R.drawable.default_bg);
                     SPUtil.displayImage(bean.getImgs()[0], holder.imageView, DisplayOptionFactory.Small.options);
                     holder.clickView.setTag(bean);
-                    final StaggeredGridLayoutManager.LayoutParams lp =
-                            (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
-                    lp.span = 1;
-                    lp.setMargins(0, 0, 0, 0);
-                    holder.itemView.setLayoutParams(lp);
 
                     holder.fromView.setVisibility(View.GONE);
                     holder.collView.setVisibility(View.GONE);

@@ -120,12 +120,12 @@ public class RecentlyReadActivity extends MBaseActivity implements View.OnClickL
         if (null != title) {
             title.setTextColor(getResources().getColor(R.color.grey_font));
         }
-
         NewsBean nb = (NewsBean) view.getTag();
+        Log.i("onClick", "onClick:nb==" + nb.getJson_url() + "\nnb.getRtype==" + nb.getRtype());
         Intent mIntent = new Intent();
         mIntent.putExtra("newbean", nb);
         mIntent.putExtra("from", "newsitem");
-        adapter.setReadedId(nb);
+//        adapter.setReadedId(nb);
         ////////////////////////////
         //1新闻  2图集  3直播 4专题  5关联新闻 6视频
         if ("1".equals(nb.getRtype())) {

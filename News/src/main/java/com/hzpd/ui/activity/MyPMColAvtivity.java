@@ -181,10 +181,14 @@ public class MyPMColAvtivity extends MBaseActivity implements View.OnClickListen
         Intent intent = new Intent();
         intent.putExtra("from", "collection");
         boolean flag = false;//是否是预定类型
-        NewsItemBeanForCollection bean = dbHelper.getCollectionDBUitls().queryBuilder()
-                .where(NewsItemBeanForCollectionDao.Properties.Nid.eq(cb.getData().getId())).build().unique();
-        if (bean != null) {
-            cdb.setNid(bean.getNid());
+        try {
+            NewsItemBeanForCollection bean = dbHelper.getCollectionDBUitls().queryBuilder()
+                    .where(NewsItemBeanForCollectionDao.Properties.Nid.eq(cb.getData().getId())).build().unique();
+            if (bean != null) {
+                cdb.setNid(bean.getNid());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         //跳转脚标）1新闻  2图集  3视频 4html5
         LogUtils.i("type-->" + cb.getType());
