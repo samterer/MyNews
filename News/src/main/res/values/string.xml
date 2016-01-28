@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="icon_name">Berita Kini</string>
     <string name="error_delete">Berita dihapus</string>
     <string name="feedback_hint_suggestion">Bantu kami untuk lebih baik !</string>
     <string name="feedback_rating">Nilai</string>
@@ -32,7 +31,7 @@
 		gt(>) (&#62; 或 &gt;) 
 
     -->
-    <string name="app_name">BERITA TERKINI</string>
+    <string name="app_name">Berkin</string>
     <string name="VideoView_error_text_unknown">Maaf, video ini tidak dapat diputar</string>
     <string name="VideoView_error_text_invalid_progressive_playback">Maaf, video ini tidak dapat diputar di device anda
 </string>

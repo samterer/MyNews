@@ -19,8 +19,6 @@
 		gt(>) (&#62; 或 &gt;) 
 
     -->
-    <string name="app_name">熱門資訊</string>
-    <string name="icon_name">熱門資訊</string>
     <string name="error_delete">新聞已刪除</string>
     <string name="VideoView_error_text_unknown">對不起，這個影片不能播放。</string>
     <string name="VideoView_error_text_invalid_progressive_playback">Sorry, this video is not valid for streaming to

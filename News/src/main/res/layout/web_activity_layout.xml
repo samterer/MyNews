@@ -71,20 +71,6 @@
             android:progressDrawable="@drawable/progressbar_drawable"
             android:visibility="visible" />
         <!-- 加载Loading-->
-        <FrameLayout
-            android:id="@+id/app_progress_bar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="0dp"
-            android:background="?app_progress_bar_bg"
-            android:visibility="visible">
-
-            <ProgressBar
-                style="@style/loadingProgressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-
-        </FrameLayout>
+        <include layout="@layout/loading_layout" />
     </FrameLayout>
 </LinearLayout>

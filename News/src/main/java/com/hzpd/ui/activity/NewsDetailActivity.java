@@ -1272,13 +1272,13 @@ public class NewsDetailActivity extends MBaseActivity implements OnClickListener
 
             }
 
-            if (!Utils.isNetworkConnected(this)) {
-                showEmpty();
-                if (isResume) {
-                    TUtils.toast(getString(R.string.toast_check_network));
-                }
-                return;
-            }
+//            if (!Utils.isNetworkConnected(this)) {
+//                showEmpty();
+//                if (isResume) {
+//                    TUtils.toast(getString(R.string.toast_check_network));
+//                }
+//                return;
+//            }
             final String target = detailPathRoot + "detail_" + nb.getNid();
             final File file = App.getFile(target);
             OkHttpClientManager.getAsyn(tag, nb.getJson_url(), new OkHttpClientManager.ResultCallback() {

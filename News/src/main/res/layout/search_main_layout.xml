@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?fragment_main_backgroup">
@@ -12,25 +11,8 @@
         android:layout_height="match_parent"
         android:divider="@color/fragment_background" />
 
-    <FrameLayout
-        android:id="@+id/app_progress_bar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.mingle.widget.LoadingView
-            android:id="@+id/loadView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            app:loadingText="@string/load_more_loading" />
-
-        <ProgressBar
-            style="@style/loadingProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </FrameLayout>
+    <!-- 加载Loading-->
+    <include layout="@layout/loading_layout" />
 
 
 </FrameLayout>

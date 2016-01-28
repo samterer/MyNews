@@ -54,15 +54,15 @@
                 android:padding="5dp"
                 android:visibility="gone" />
 
-
-            <com.pnikosis.materialishprogress.ProgressWheel
-                android:id="@+id/app_progress_bar"
-                style="@style/MaterialProgressWheelStyle"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_toLeftOf="@+id/zqzx_setting_cache"
-                />
+                android:src="@drawable/loading"
+                android:visibility="gone"/>
+
+            <!-- 加载Loading-->
+            <include layout="@layout/loading_layout" />
 
         </FrameLayout>
 

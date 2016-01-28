@@ -44,7 +44,7 @@
         android:background="@color/white">
 
         <ProgressBar
-            style="@style/loadingProgressBar"
+            style="@style/JoyNews.Widget.ProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
@@ -58,12 +58,11 @@
         android:id="@+id/app_progress_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="3dp"
         android:background="?app_progress_bar_bg"
         android:visibility="gone">
 
         <ProgressBar
-            style="@style/loadingProgressBar"
+            style="@style/JoyNews.Widget.ProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />

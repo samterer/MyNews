@@ -30,6 +30,10 @@ public class OkHttpClientManager {
 
     private OkHttpClientManager() {
         mOkHttpClient = new OkHttpClient();
+//        mOkHttpClient.getConnectTimeout();
+//        mOkHttpClient.getReadTimeout();
+//        mOkHttpClient.getCache();
+//        mOkHttpClient.getConnectionPool().getConnectionCount();
         //cookie enabled
         mOkHttpClient.setCookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
         mDelivery = new Handler(Looper.getMainLooper());

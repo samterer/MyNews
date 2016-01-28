@@ -168,6 +168,7 @@
     <color name="divider_color">#55504a</color>
     <!--special color-->
     <color name="black_a10_color">#1a000000</color>
+    <color name="loading_color">#f79518</color>
 
 
 </resources>

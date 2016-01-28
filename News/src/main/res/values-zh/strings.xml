@@ -21,7 +21,6 @@
     <string name="local_update_check">检查更新</string>
     <string name="local_my_collection">我的收藏</string>
 
-    <string name="app_name">热点资讯</string>
     <string name="feedback_hint_suggestion">帮助我们做得更好 !</string>
     <string name="feedback_rating">评分</string>
     <string name="error_delete">新闻已删除</string>

@@ -23,10 +23,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.color.tools.mytools.LogUtils;
+import com.facebook.ads.NativeAd;
 import com.hzpd.adapter.ChooseAdapter;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsBean;
 import com.hzpd.modle.NewsChannelBean;
+import com.hzpd.modle.NewsPageListBean;
 import com.hzpd.modle.UserBean;
 import com.hzpd.modle.db.NewsBeanDB;
 import com.hzpd.modle.event.FontSizeEvent;
@@ -54,6 +57,7 @@ import org.lucasr.twowayview.widget.SpacingItemDecoration;
 import org.lucasr.twowayview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -123,6 +127,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
 
     private int color;
     private Object tag;
+    private HashMap<String, NativeAd> ads = new HashMap<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -173,6 +178,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                 page = 1;
                 ++tagIndex;
                 pageIndex = 1;
+                getFlash();
                 getServerList("");
                 isRefreshCounts = false;
             }
@@ -196,18 +202,65 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
                     public void run() {
                         page = 2;
                         ++pageIndex;
+                        getFlash();
                         getServerList("");
                     }
                 }, 10);
             }
         };
         adapter.callBack = callBack;
-
+        adapter.setAds(ads);
         mFloatBtn = (FloatingActionButton) view.findViewById(R.id.float_feedback_btn);
 
         return view;
     }
 
+    //获取幻灯
+    private void getFlash() {
+        if (TextUtils.isEmpty(channelbean.getTid())) {
+            return;
+        }
+        String path = InterfaceJsonfile.FLASH + channelbean.getTid();
+        String country = SPUtil.getCountry();
+        path = path.replace("#country#", country.toLowerCase());
+        OkHttpClientManager.getAsyn(tag, path
+                , new OkHttpClientManager.ResultCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                try {
+                    if (!isAdded()) {
+                        return;
+                    }
+                    String data = response.toString();
+                    JSONObject obj = FjsonUtil.parseObject(data);
+                    if (null == obj) {
+                        return;
+                    }
+                    mSwipeRefreshWidget.setRefreshing(false);
+                    List<NewsPageListBean> mViewPagelist = null;
+                    if (200 == obj.getIntValue("code")) {
+                        JSONObject object = obj.getJSONObject("data");
+                        mViewPagelist = FjsonUtil.parseArray(object.getString("flash"), NewsPageListBean.class);
+                        if (mRecyclerView.computeVerticalScrollOffset() < 10) {
+                            mRecyclerView.scrollToPosition(0);
+                        }
+                    }
+                    if (mViewPagelist != null && mViewPagelist.size() > 0) {
+                        adapter.setFlashlist(mViewPagelist);
+                        background_empty.setVisibility(View.GONE);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Request request, Exception e) {
+                LogUtils.i("getFlash-failed");
+            }
+
+        });
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -230,7 +283,27 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         mFloatBtn.setVisibility(View.VISIBLE);
         loading = false;
         page = 1;
+        firstLoading = false;
         getDbList();
+    }
+
+    boolean firstLoading = false;
+
+    public void loadData() {
+        if (firstLoading) {
+            return;
+        }
+        if (page == 1 && mRecyclerView != null) {
+            firstLoading = true;
+            mRecyclerView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getFlash();
+                    getDbList();
+                    isRefresh = true;
+                }
+            }, 200);
+        }
     }
 
 
@@ -257,6 +330,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
         OkHttpClientManager.cancel(tag);
+        SPUtil.clearAds(ads);
     }
 
     //新闻列表
