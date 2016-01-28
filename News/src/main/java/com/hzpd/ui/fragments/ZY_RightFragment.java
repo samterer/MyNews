@@ -89,14 +89,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
     private TextView personal_item_text;
     private ImageView image_skin_mode;
     private View coverTop;
-    private View zy_rfrag_ll_comm;
-    private View zy_rfrag_ll_collect;
-    private View zy_rfrag_ll_push;
-    private View zy_rfrag_ll_setting;
-    private View zy_rfrag_ll_feedback;
-    private View zy_rfrag_ll_download;
-    private View zy_rfrag_ll_night;
-    private View zy_rfrag_ll_read;
+    private View zy_rfrag_ll_comm, zy_rfrag_ll_collect, zy_rfrag_ll_push, zy_rfrag_ll_setting, zy_rfrag_ll_feedback, zy_rfrag_ll_download, zy_rfrag_ll_night, zy_rfrag_ll_read;
     private View zy_rfrag_ll_rate_us;
 
     private Object tag;
@@ -219,7 +212,7 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
                                 UserBean user = FjsonUtil.parseObject(
                                         obj.getString("data"), UserBean.class);
                                 spu.setUser(user);
-                            } else if(isVisible){
+                            } else if (isVisible) {
                                 TUtils.toast(obj.getString("msg"));
                             }
                         } catch (Exception e) {

@@ -121,7 +121,7 @@ public class XF_NewsCommentsActivity extends MBaseActivity implements View.OnCli
                     myCommentListAdapter.appendData(mlist);
 //                    myCommentListAdapter.notifyDataSetChanged();
                 }else{
-                    Toast.makeText(XF_NewsCommentsActivity.this,getString(R.string.toast_server_no_response),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(XF_NewsCommentsActivity.this,getString(R.string.toast_no_data_now),Toast.LENGTH_SHORT).show();
                 }
             }
 

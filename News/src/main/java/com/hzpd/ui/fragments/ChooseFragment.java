@@ -574,9 +574,6 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         }
         try {
             if (v.getTag() instanceof NewsBean) {
-                if (AvoidOnClickFastUtils.isFastDoubleClick(v)) {
-                    return;
-                }
                 TextView title = (TextView) v.findViewById(R.id.newsitem_title);
                 if (null != title) {
                     title.setTextColor(getResources().getColor(R.color.grey_font));

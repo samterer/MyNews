@@ -16,6 +16,10 @@ public class AvoidOnClickFastUtils {
     public static boolean isFastDoubleClick(final View view) {
         long time = System.currentTimeMillis();
         if (view.hashCode() != hash) {//不是同一个
+            long timeD = time - lastClickTime;
+            if (0 < timeD && timeD < 200) {
+                return true;
+            }
             lastClickTime = time;
             hash = view.hashCode();
             return false;
