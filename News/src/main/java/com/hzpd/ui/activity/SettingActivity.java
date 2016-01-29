@@ -379,28 +379,4 @@ public class SettingActivity extends MBaseActivity implements View.OnClickListen
         }
     }
 
-    /**
-     * 在状态栏显示通知更新
-     */
-    private void showNotification(String description) {
-        NotificationManager notificationManager = (NotificationManager)
-                this.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification(R.drawable.icon,
-                getString(R.string.app_name), System.currentTimeMillis());
-        notification.flags |= Notification.FLAG_ONGOING_EVENT;
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-        notification.defaults = Notification.DEFAULT_LIGHTS;
-        notification.ledARGB = Color.BLUE;
-        notification.ledOnMS = 5000; //闪光时间，毫秒
-        CharSequence contentTitle = getString(R.string.app_name); // 通知栏标题
-        CharSequence contentText = description; // 通知栏内容
-        final String appPackageName = getPackageName();
-        Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)); // 点击该通知后要跳转的Activity
-        PendingIntent contentItent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        notification.setLatestEventInfo(this, contentTitle, contentText, contentItent);
-        // 把Notification传递给NotificationManager
-        notificationManager.notify(0, notification);
-    }
-
 }
