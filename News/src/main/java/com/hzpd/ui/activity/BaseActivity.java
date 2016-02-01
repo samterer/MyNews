@@ -12,6 +12,7 @@ import android.view.WindowManager;
 
 import com.hzpd.hflt.R;
 import com.hzpd.ui.App;
+import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SystemBarTintManager;
 
 import org.common.lib.analytics.ActivityLifecycleAction;
@@ -21,9 +22,12 @@ public class BaseActivity extends FragmentActivity implements AnalyticCallback {
 
     private ActivityLifecycleAction action = new ActivityLifecycleAction(this);
     protected FragmentManager fm;
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
     }
+
+    protected SPUtil spu;//
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,7 @@ public class BaseActivity extends FragmentActivity implements AnalyticCallback {
         }
         super.onCreate(null);
         action.onCreate(this);
+        spu = SPUtil.getInstance();
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         changeStatus();
         fm = getSupportFragmentManager();

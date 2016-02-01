@@ -25,6 +25,7 @@ import com.hzpd.custorm.CircleImageView;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.ThirdLoginBean;
 import com.hzpd.modle.UserBean;
+import com.hzpd.modle.event.LoginEvent;
 import com.hzpd.modle.event.LoginOutEvent;
 import com.hzpd.modle.event.RestartEvent;
 import com.hzpd.modle.event.SetThemeEvent;
@@ -456,6 +457,15 @@ public class ZY_RightFragment extends BaseFragment implements View.OnClickListen
 
     public void onEventMainThread(LoginOutEvent loginOutEvent) {
         loginManager.logOut();
+    }
+
+    public void onEventMainThread(LoginEvent loginEvent) {
+        //TODO 首页提示登录
+        loginManager.setDefaultAudience(DefaultAudience.FRIENDS);
+        loginManager.setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);
+        loginManager.logInWithReadPermissions(this, permissions);
+        Log.i("onEventMainThread", "onEventMainThread   LoginEvent");
+
     }
 
 }

@@ -8,7 +8,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.color.tools.mytools.LogUtils;
 import com.hzpd.hflt.R;
 import com.hzpd.ui.App;
 import com.hzpd.url.InterfaceJsonfile;
@@ -127,6 +126,7 @@ public class ZQ_FeedBackActivity extends MBaseActivity implements View.OnClickLi
             @Override
             public void onSuccess(Object response) {
                 try {
+                    SPUtil.setGlobal(MainActivity.FEEDBACK_COUNT, 4L);
                     app_progress_bar.setVisibility(View.GONE);
                     String json = response.toString();
                     JSONObject obj = FjsonUtil.parseObject(json);

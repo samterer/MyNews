@@ -50,11 +50,8 @@ import com.hzpd.utils.TUtils;
 import com.hzpd.utils.db.NewsListDbTask;
 import com.melnykov.fab.FloatingActionButton;
 import com.news.update.Utils;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.okhttp.Request;
 
-import org.lucasr.twowayview.widget.SpacingItemDecoration;
-import org.lucasr.twowayview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;

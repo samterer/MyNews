@@ -317,5 +317,9 @@
     <string name="tag_followed">Pilihan berhasil,artikel di halaman depan</string>
     <string name="rate_us">Rate Me</string>
     <string name="click_refresh_btn_tv">Unduh Kembali</string>
-
+    <!-- Sign-in status messages -->
+    <string name="signed_in_fmt">Signed in as: %s</string>
+    <string name="loading">Loading…</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="signed_out">Signed out</string>
 </resources>

@@ -122,7 +122,7 @@ public class InitService extends IntentService {
             String str;
             str = OkHttpClientManager.post(InterfaceJsonfile.USER_LOG, params);
             if (!str.isEmpty() && str.contains("200")) {
-                dbUtils.deleteAll();
+                dbUtils.deleteInTx(logs);
             }
         } catch (Exception e) {
             e.printStackTrace();

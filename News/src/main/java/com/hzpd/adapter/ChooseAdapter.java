@@ -41,7 +41,6 @@ import com.hzpd.utils.SPUtil;
 import com.hzpd.utils.SharePreferecesUtils;
 import com.hzpd.utils.db.NewsListDbTask;
 
-import org.lucasr.twowayview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;

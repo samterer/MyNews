@@ -1,7 +1,9 @@
 package com.hzpd.ui.activity;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,11 +13,11 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.color.tools.mytools.LogUtils;
 import com.hzpd.adapter.MainPagerAdapter;
 import com.hzpd.custorm.MyViewPager;
 import com.hzpd.hflt.R;
 import com.hzpd.modle.NewsChannelBean;
+import com.hzpd.modle.event.LoginEvent;
 import com.hzpd.modle.event.RefreshEvent;
 import com.hzpd.modle.event.RestartEvent;
 import com.hzpd.modle.event.SetThemeEvent;
@@ -24,15 +26,16 @@ import com.hzpd.ui.App;
 import com.hzpd.ui.ConfigBean;
 import com.hzpd.ui.fragments.BaseFragment;
 import com.hzpd.ui.fragments.FeedbackTagFragment;
+import com.hzpd.ui.fragments.LoginTagFragment;
 import com.hzpd.ui.fragments.NewsFragment;
 import com.hzpd.ui.fragments.NewsItemFragment;
 import com.hzpd.ui.fragments.ZY_DiscoveryFragment;
 import com.hzpd.ui.fragments.ZY_RightFragment;
+import com.hzpd.url.OkHttpClientManager;
 import com.hzpd.utils.EventUtils;
 import com.hzpd.utils.ExitApplication;
 import com.hzpd.utils.Log;
 import com.hzpd.utils.SPUtil;
-import com.hzpd.utils.TUtils;
 import com.news.update.DownloadService;
 import com.news.update.LocalUpdateDialogFragment;
 import com.news.update.LocalUpdateEvent;
@@ -40,19 +43,19 @@ import com.news.update.UpdateUtils;
 import com.news.update.Utils;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
 
 public class MainActivity extends BaseActivity {
-
     public final static String TAG = "NEWS";
     public final static String TAG_DIALOG = "NEWS_DIALOG";
 
     public MainActivity() {
         super();
     }
-
 
     private MyViewPager viewPager;
     private MainPagerAdapter adapter;
@@ -65,12 +68,14 @@ public class MainActivity extends BaseActivity {
         super.finish();
     }
 
+    private AlertDialog.Builder mDeleteDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
         EventBus.getDefault().register(this);
         setContentView(R.layout.app_main);
+        tag = OkHttpClientManager.getTag();
         viewPager = (MyViewPager) findViewById(R.id.main_pager);
         adapter = new MainPagerAdapter(getSupportFragmentManager());
         fragments = new BaseFragment[3];
@@ -113,6 +118,32 @@ public class MainActivity extends BaseActivity {
         EventUtils.sendStart(this);
         showLocalUpdateDialog(this);
         showFeedback();
+//        showLoginFragment();
+//        showLogin();
+    }
+
+    private void showLogin() {
+        mDeleteDialog = new AlertDialog.Builder(this);
+        mDeleteDialog.setTitle("FaceBook登录");
+        mDeleteDialog.setMessage("登录以后更加精彩");
+        mDeleteDialog.setNegativeButton(android.R.string.ok,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Log.i("MainActivity", "FaceBook登录");
+                        EventBus.getDefault().post(new LoginEvent());
+                    }
+                });
+        mDeleteDialog.setPositiveButton(android.R.string.cancel,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        if (spu.getUser() == null)
+            mDeleteDialog.show();
     }
 
     public void onClickIndex(int index) {
@@ -137,41 +168,78 @@ public class MainActivity extends BaseActivity {
     }
 
     private static final String FEEDBACK_TIME = "feedback_time";
-    private static final String FEEDBACK_COUNT = "feedback_count";
+    public static final String FEEDBACK_COUNT = "feedback_count";
+
+    private static final String LOGIN_TIME = "feedback_time";
+    public static final String LOGIN_COUNT = "feedback_count";
 
     public void showFeedback() {
-        if (FeedbackTagFragment.shown) {
+        if (FeedbackTagFragment.shown || LoginTagFragment.shown) {
             return;
         }
-        int count = (int) SPUtil.getGlobal(FEEDBACK_COUNT, 0L);
+        int countLogin = (int) SPUtil.getGlobal(LOGIN_COUNT, 0L);
+        if (countLogin < 3) {
+            long lastLogin = SPUtil.getGlobal(LOGIN_TIME, 0L);
+            ++countLogin;
+            if (lastLogin == 0 || System.currentTimeMillis() - lastLogin > countLogin * ConfigBean.getInstance().rate_time) {
+                SPUtil.setGlobal(LOGIN_COUNT, countLogin);
+                SPUtil.setGlobal(LOGIN_TIME, System.currentTimeMillis());
+                LoginTagFragment fragment = new LoginTagFragment();
+                fragment.show(getSupportFragmentManager(), LoginTagFragment.TAG);
+                return;
+            }
+        }
+
+
+        int countFeedBack = (int) SPUtil.getGlobal(FEEDBACK_COUNT, 0L);
+        if (countFeedBack < 3) {
+            long last = SPUtil.getGlobal(FEEDBACK_TIME, 0L);
+            if (last == 0) {
+                SPUtil.setGlobal(FEEDBACK_TIME, System.currentTimeMillis());
+                return;
+            }
+            ++countFeedBack;
+            if (System.currentTimeMillis() - last > countFeedBack * ConfigBean.getInstance().rate_time) {
+                SPUtil.setGlobal(FEEDBACK_COUNT, countFeedBack);
+                SPUtil.setGlobal(FEEDBACK_TIME, System.currentTimeMillis());
+                FeedbackTagFragment fragment = new FeedbackTagFragment();
+                fragment.show(getSupportFragmentManager(), FeedbackTagFragment.TAG);
+            }
+        }
+
+
+    }
+
+
+    public void showLoginFragment() {
+        if (LoginTagFragment.shown) {
+            return;
+        }
+        int count = (int) SPUtil.getGlobal(LOGIN_COUNT, 0L);
         if (count >= 3) {
             return;
         }
-        long last = SPUtil.getGlobal(FEEDBACK_TIME, 0L);
+        long last = SPUtil.getGlobal(LOGIN_TIME, 0L);
         if (last == 0) {
-            SPUtil.setGlobal(FEEDBACK_TIME, System.currentTimeMillis());
+            SPUtil.setGlobal(LOGIN_TIME, System.currentTimeMillis());
             return;
         }
         ++count;
         if (System.currentTimeMillis() - last > count * ConfigBean.getInstance().rate_time) {
-            SPUtil.setGlobal(FEEDBACK_COUNT, count);
-            SPUtil.setGlobal(FEEDBACK_TIME, System.currentTimeMillis());
-            FeedbackTagFragment fragment = new FeedbackTagFragment();
-            fragment.show(getSupportFragmentManager(), FeedbackTagFragment.TAG);
+            SPUtil.setGlobal(LOGIN_COUNT, count);
+            SPUtil.setGlobal(LOGIN_TIME, System.currentTimeMillis());
+            LoginTagFragment fragment = new LoginTagFragment();
+            fragment.show(getSupportFragmentManager(), LoginTagFragment.TAG);
         }
+
     }
+
+    private Object tag;
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (2 == requestCode) {
-            if (resultCode == RESULT_OK) {
-                Bundle bundle = data.getExtras();
-                String result = bundle.getString("result");
-                LogUtils.i("result--->" + result);
-                TUtils.toast(getString(R.string.toast_scan_content, result));
-            }
-        }
     }
 
     @Override
@@ -190,6 +258,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
+        OkHttpClientManager.cancel(tag);
         super.onDestroy();
     }
 
